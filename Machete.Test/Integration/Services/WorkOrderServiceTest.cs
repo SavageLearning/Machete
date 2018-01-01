@@ -29,6 +29,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Machete.Test.Integration;
 
 namespace Machete.Test.Integration.Service
 {
@@ -123,7 +124,8 @@ namespace Machete.Test.Integration.Service
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
         public void get_GroupView()
         {
-            // Arrange
+            // Arrange            
+            frb.AddLookupCache();
             frb.AddWorkOrder(status: WorkOrder.iActive, dateTimeOfWork: DateTime.Now).AddWorkAssignment();
             //
             //Act
@@ -151,10 +153,10 @@ namespace Machete.Test.Integration.Service
             o.sortColName = "WOID";
             //
             //Act
-            dataTableResult<DTO.WorkOrderList> result = frb.ToServWorkOrder().GetIndexView(o);
+            dataTableResult<DTO.WorkOrdersList> result = frb.ToServWorkOrder().GetIndexView(o);
             //
             //Assert
-            IEnumerable<DTO.WorkOrderList> query = result.query.ToList();
+            IEnumerable<DTO.WorkOrdersList> query = result.query.ToList();
             Assert.IsNotNull(result, "IEnumerable is Null");
             Assert.IsNotNull(query, "IEnumerable.query is null");
             Assert.AreEqual(6, query.Count(), "Expected 6, but GetIndexView returned {0} records", query.Count());
@@ -167,10 +169,10 @@ namespace Machete.Test.Integration.Service
             //
             //Arrange
             var wo = frb.ToWorkOrder();
-            var map = frb.ToMapper();
+            var map = frb.ToWebMapper();
             //
             //Act
-            var dto_wolist = map.Map<Machete.Domain.WorkOrder, Machete.Service.DTO.WorkOrderList>(wo);
+            var dto_wolist = map.Map<Machete.Domain.WorkOrder, Machete.Service.DTO.WorkOrdersList>(wo);
             //
             //Assert
             Assert.IsNotNull(dto_wolist, "DTO.WorkOrderList is Null");
@@ -183,10 +185,10 @@ namespace Machete.Test.Integration.Service
             //
             //Arrange
             var wo = frb.AddWorkAssignment(assignWorker: false).ToWorkOrder();
-            var map = frb.ToMapper();
+            var map = frb.ToWebMapper();
             //
             //Act
-            var dto_wolist = map.Map<Machete.Domain.WorkOrder, Machete.Service.DTO.WorkOrderList>(wo);
+            var dto_wolist = map.Map<Machete.Domain.WorkOrder, Machete.Service.DTO.WorkOrdersList>(wo);
             //
             //Assert
             Assert.IsNotNull(dto_wolist, "DTO.WorkOrderList is Null");
@@ -199,10 +201,10 @@ namespace Machete.Test.Integration.Service
             //
             //Arrange
             var wo = frb.AddWorkAssignment(assignWorker: true).ToWorkOrder();
-            var map = frb.ToMapper();
+            var map = frb.ToWebMapper();
             //
             //Act
-            var dto_wolist = map.Map<Machete.Domain.WorkOrder, Machete.Service.DTO.WorkOrderList>(wo);
+            var dto_wolist = map.Map<Machete.Domain.WorkOrder, Machete.Service.DTO.WorkOrdersList>(wo);
             //
             //Assert
             Assert.IsNotNull(dto_wolist, "DTO.WorkOrderList is Null");

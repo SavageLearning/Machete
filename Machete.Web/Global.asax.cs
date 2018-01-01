@@ -42,6 +42,7 @@ using System.Web.Routing;
 using System.Web.Http;
 using Unity.Mvc4;
 using AutoMapper;
+using Newtonsoft.Json;
 
 namespace Machete.Web
 {
@@ -82,6 +83,7 @@ namespace Machete.Web
 
         protected void Application_Start()
         {
+            GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.Re‌​ferenceLoopHandling = ReferenceLoopHandling.Ignore;
             //HibernatingRhinos.Profiler.Appender.EntityFramework.EntityFrameworkProfiler.Initialize();
             AreaRegistration.RegisterAllAreas();
             // from MVC 4 template
@@ -107,8 +109,8 @@ namespace Machete.Web
             //Create UnityContainer          
             IUnityContainer container = new UnityContainer()
             //.RegisterType<IControllerActivator, CustomControllerActivator>()
-            .RegisterType<IUserStore<ApplicationUser>, UserStore<ApplicationUser>>(new PerResolveLifetimeManager())//HttpContextLifetimeManager<IUserStore<ApplicationUser>>())
-            .RegisterType<IMyUserManager<ApplicationUser>, MyUserManager>(new PerResolveLifetimeManager())//HttpContextLifetimeManager<IMyUserManager<ApplicationUser>>())
+            .RegisterType<IUserStore<MacheteUser>, UserStore<MacheteUser>>(new PerResolveLifetimeManager())//HttpContextLifetimeManager<IUserStore<ApplicationUser>>())
+            .RegisterType<IMacheteUserManager<MacheteUser>, MacheteUserManager>(new PerResolveLifetimeManager())//HttpContextLifetimeManager<IMyUserManager<ApplicationUser>>())
             .RegisterType<IDatabaseFactory, DatabaseFactory>(new PerResolveLifetimeManager(), new InjectionConstructor("macheteConnection"))
             .RegisterType<IUnitOfWork, UnitOfWork>(new PerResolveLifetimeManager())
             .RegisterType<IEmailConfig, EmailConfig>(new PerResolveLifetimeManager())

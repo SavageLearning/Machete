@@ -20,6 +20,7 @@ namespace Machete.Test
         public const string Data = "Layer-Data";
         //
         //
+        public const string OnlineOrders = "Area-OnlineOrders";
         public const string WorkOrders = "Area-WorkOrders";
         public const string Activities = "Area-Activities";
         public const string Employers = "Area-Employers";
@@ -33,5 +34,7 @@ namespace Machete.Test
         public const string Reports = "Area-Reports";
         public const string Lookups = "Area-Lookups";
         public const string Configs = "Area-Configs";
+        public const string TransportRules = "Area-TransportRules";
+        public const string ScheduleRules = "Area-ScheduleRules";
     }
 }

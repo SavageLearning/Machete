@@ -29,19 +29,21 @@ namespace Machete.Service
 {
     public interface IWorkerRequestService : IService<WorkerRequest>
     {
-        WorkerRequest GetWorkerRequestsByNum(int woid, int wrid);
+        WorkerRequest GetByWorkerID(int woid, int wrid);
     }
     public class WorkerRequestService : ServiceBase<WorkerRequest>, IWorkerRequestService
     {
         //
-        public WorkerRequestService(IWorkerRequestRepository wrRepo, IUnitOfWork uow) : base(wrRepo, uow)
+        private readonly IWorkerRequestRepository wrRepo;
+        public WorkerRequestService(IWorkerRequestRepository repo, IUnitOfWork uow) : base(repo, uow)
         {
             this.logPrefix = "WorkerRequest";
+            this.wrRepo = repo;
         }
 
-        public WorkerRequest GetWorkerRequestsByNum(int woid, int wkrid)
+        public WorkerRequest GetByWorkerID(int woid, int wkrid)
         {
-            return repo.Get(wr => wr.WorkOrderID == woid && wr.WorkerID == wkrid);
+            return wrRepo.GetByWorkerID(woid, wkrid);
         }
 
     }

@@ -12,6 +12,7 @@ Machete.Api/
 [Pp]ackages/
 obj/*
 build/
+node_modules/
 
 log.txt*
 #Visual Studio files
@@ -90,3 +91,5 @@ Machete.Test/BeanShell Sampler.jmx
 .vscode/
 */node_modules/*
 
+
+Identity/appsettings\.config

@@ -163,10 +163,10 @@ namespace Machete.Web.Controllers
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI =  CI;
             //Get all the records
-            dataTableResult<DTO.WorkOrderList> dtr = woServ.GetIndexView(vo);
+            dataTableResult<DTO.WorkOrdersList> dtr = woServ.GetIndexView(vo);
             var result = dtr.query
                 .Select(
-                    e => map.Map<DTO.WorkOrderList, ViewModel.WorkOrderList>(e)
+                    e => map.Map<DTO.WorkOrdersList, ViewModel.WorkOrdersList>(e)
                 ).AsEnumerable();
             return Json(new
             {
@@ -287,7 +287,7 @@ namespace Machete.Web.Controllers
             // Stale requests to remove
             foreach (var rem in workOrder.workerRequests.Except<WorkerRequest>(workerRequestList, new WorkerRequestComparer()).ToArray())
             {
-                var request = wrServ.GetWorkerRequestsByNum(workOrder.ID, rem.WorkerID);
+                var request = wrServ.GetByWorkerID(workOrder.ID, rem.WorkerID);
                 wrServ.Delete(request.ID, userName);
                 workOrder.workerRequests.Remove(rem);
             }

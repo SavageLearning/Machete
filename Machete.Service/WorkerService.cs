@@ -34,7 +34,7 @@ namespace Machete.Service
 {
     public interface IWorkerService : IService<Worker>
     {
-        Worker GetWorkerByNum(int dwccardnum);
+        Worker GetByMemberID(int dwccardnum);
         int GetNextWorkerNum();
         dataTableResult<DTO.WorkerList> GetIndexView(viewOptions o);
         // IQueryable<Worker> GetPriorEmployees(int employerId);
@@ -47,10 +47,11 @@ namespace Machete.Service
         private readonly IWorkOrderRepository woRepo;
         private readonly IPersonRepository pRepo;
         private readonly IMapper map;
-        private readonly ILookupCache lcache;
+        private readonly ILookupRepository lRepo;
+        private readonly IWorkerRepository wRepo;
 
         public WorkerService(IWorkerRepository wRepo, 
-            ILookupCache lcache,
+            ILookupRepository lRepo,
             IUnitOfWork uow, 
             IWorkAssignmentRepository waRepo, 
             IWorkOrderRepository woRepo, 
@@ -63,13 +64,13 @@ namespace Machete.Service
             this.woRepo = woRepo;
             this.pRepo = pRepo;
             this.map = map;
-            this.lcache = lcache;
+            this.lRepo = lRepo;
+            this.wRepo = wRepo;
         }
 
-        public Worker GetWorkerByNum(int dwccardnum)
+        public Worker GetByMemberID(int dwccardnum)
         {
-            Worker worker = repo.Get(w => w.dwccardnum == dwccardnum);
-            return worker;
+            return wRepo.GetByMemberID(dwccardnum);
         }
 
         public int GetNextWorkerNum()
@@ -97,7 +98,7 @@ namespace Machete.Service
 
         public override Worker Create(Worker record, string user)
         {
-            record.Person = pRepo.Get(p => p.ID == record.ID);
+            record.Person = pRepo.GetById(record.ID);
             var result = base.Create(record, user);
             updateComputedFields(ref result);
             uow.Commit();
@@ -112,9 +113,9 @@ namespace Machete.Service
 
         private void updateComputedFields(ref Worker record)
         {
-            record.memberStatusEN = lcache.textByID(record.memberStatusID, "EN");
-            record.memberStatusES = lcache.textByID(record.memberStatusID, "ES");
-            record.typeOfWork = lcache.getByID(record.typeOfWorkID).ltrCode;
+            record.memberStatusEN = lRepo.GetById(record.memberStatusID).text_EN;
+            record.memberStatusES = lRepo.GetById(record.memberStatusID).text_EN;
+            record.typeOfWork = lRepo.GetById(record.typeOfWorkID).ltrCode;
             record.skillCodes = getSkillCodes(record);
             record.fullNameAndID = record.dwccardnum + " " + record.Person.fullName;
         }
@@ -124,17 +125,17 @@ namespace Machete.Service
             string rtnstr = "E" + w.englishlevelID + " ";
             if (w.skill1 != null)
             {
-                var lookup = lcache.getByID((int)w.skill1);
+                var lookup = lRepo.GetById((int)w.skill1);
                 rtnstr = rtnstr + lookup.ltrCode + lookup.level + " ";
             }
             if (w.skill2 != null)
             {
-                var lookup = lcache.getByID((int)w.skill2);
+                var lookup = lRepo.GetById((int)w.skill2);
                 rtnstr = rtnstr + lookup.ltrCode + lookup.level + " ";
             }
             if (w.skill3 != null)
             {
-                var lookup = lcache.getByID((int)w.skill3);
+                var lookup = lRepo.GetById((int)w.skill3);
                 rtnstr = rtnstr + lookup.ltrCode + lookup.level;
             }
             return rtnstr;

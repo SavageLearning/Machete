@@ -79,8 +79,7 @@ namespace Machete.Test.Integration.Service
             List<dynamic> result = frb.ToServReportsV2().getQuery(o);
             // Assert
             Assert.IsNotNull(result);
-            Assert.AreEqual("2013-01-01T00:00:00-2014-01-01T00:00:00-63", result[0].id);
-            Assert.AreEqual("general labor", result[0].label);
+            Assert.AreEqual("20130101-20140101-DispatchesByJob-63", result[0].id);
         }
         [ExpectedException(typeof(InvalidOperationException),  "Exception not thrown on bad query.")]
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]

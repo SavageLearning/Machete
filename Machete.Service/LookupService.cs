@@ -34,6 +34,7 @@ namespace Machete.Service
     public interface ILookupService : IService<Lookup>
     {
         IEnumerable<DTO.ConfigList> GetIndexView(viewOptions o);
+        Lookup GetByKey(string category, string key);
     }
 
     // Business logic for Lookup record management
@@ -87,6 +88,45 @@ namespace Machete.Service
                 record.selected = true;
             }
             base.Save(record, user);
+        }
+
+        public void populateStaticIds()
+        {
+            #region WORKERS
+            Worker.iActive = GetByKey(LCategory.memberstatus, LMemberStatus.Active).ID;
+            Worker.iSanctioned = GetByKey(LCategory.memberstatus, LMemberStatus.Sanctioned).ID;
+            Worker.iExpelled = GetByKey(LCategory.memberstatus, LMemberStatus.Expelled).ID;
+            Worker.iExpired = GetByKey(LCategory.memberstatus, LMemberStatus.Expired).ID;
+            Worker.iInactive = GetByKey(LCategory.memberstatus, LMemberStatus.Inactive).ID;
+            //
+            #endregion  
+            #region WORKORDERS
+            WorkOrder.iActive = GetByKey(LCategory.orderstatus, LOrderStatus.Active).ID;
+            WorkOrder.iPending = GetByKey(LCategory.orderstatus, LOrderStatus.Pending).ID;
+            WorkOrder.iCompleted = GetByKey(LCategory.orderstatus, LOrderStatus.Completed).ID;
+            WorkOrder.iCancelled = GetByKey(LCategory.orderstatus, LOrderStatus.Cancelled).ID;
+            WorkOrder.iExpired = GetByKey(LCategory.orderstatus, LOrderStatus.Expired).ID;
+            #endregion
+            #region EMAILS
+            Email.iReadyToSend = GetByKey(LCategory.emailstatus, LEmailStatus.ReadyToSend).ID;
+            Email.iSent = GetByKey(LCategory.emailstatus, LEmailStatus.Sent).ID;
+            Email.iSending = GetByKey(LCategory.emailstatus, LEmailStatus.Sending).ID;
+            Email.iPending = GetByKey(LCategory.emailstatus, LEmailStatus.Pending).ID;
+            Email.iTransmitError = GetByKey(LCategory.emailstatus, LEmailStatus.TransmitError).ID;
+            #endregion
+        }
+
+        // copied from lookupcache because lookupcache will eventually die
+        public Lookup GetByKey(string category, string key)
+        {
+            try
+            {
+                return lrepo.GetByKey(category, key);
+            }
+            catch
+            {
+                throw new MacheteIntegrityException("Unable to Lookup Category: " + category + ", text: " + key);
+            }
         }
     }
 }

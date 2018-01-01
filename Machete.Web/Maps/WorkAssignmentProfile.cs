@@ -11,13 +11,14 @@ namespace Machete.Web.Maps
     {
         public WorkAssignmentProfile()
         {
+            CreateMap<Service.DTO.WorkAssignmentsList, Web.ViewModel.WorkAssignment >();
             CreateMap<Domain.WorkAssignment, ViewModel.WorkAssignment>()
                 .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/WorkAssignment/Edit/" + Convert.ToString(d.ID)))
                 .ForMember(v => v.tablabel, opt => opt.MapFrom(d =>
                     Resources.WorkAssignments.tabprefix +
                     System.String.Format("{0,5:D5}-{1,2:D2}", d.workOrder.paperOrderNum, d.pseudoID)))
             ;
-            CreateMap<Domain.WorkAssignment, Service.DTO.WorkAssignmentList>()
+            CreateMap<Domain.WorkAssignment, Service.DTO.WorkAssignmentsList>()
                  .ForMember(v => v.employername, opt => opt.MapFrom(d => d.workOrder.Employer.name))
                  .ForMember(v => v.earnings, opt => opt.MapFrom(d => d.minEarnings))
                  .ForMember(v => v.maxEarnings, opt => opt.MapFrom(d => d.maxEarnings))
@@ -30,7 +31,7 @@ namespace Machete.Web.Maps
                  .ForMember(v => v.timeZoneOffset, opt => opt.MapFrom(d => d.workOrder.timeZoneOffset))
 
             ;
-            CreateMap<Service.DTO.WorkAssignmentList, ViewModel.WorkAssignmentList>()
+            CreateMap<Service.DTO.WorkAssignmentsList, ViewModel.WorkAssignmentsList>()
                 .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/WorkAssignment/Edit/" + Convert.ToString(d.ID)))
                 .ForMember(v => v.tablabel, opt => opt.MapFrom(d =>
                     Resources.WorkAssignments.tabprefix +
@@ -53,7 +54,7 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.asmtStatus, opt => opt.MapFrom(d => AssignmentStatus(d)))
             ;
         }
-        public static string AssignmentStatus(Service.DTO.WorkAssignmentList d)
+        public static string AssignmentStatus(Service.DTO.WorkAssignmentsList d)
         {
             if (d.workerAssignedID > 0 && d.workerSigninID > 0) // green
                 return "completed";

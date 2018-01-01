@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Machete.Service.DTO
 {
-    public class WorkOrderList
+    public class WorkOrdersList
     {
         public int ID { get; set; }
         public int EmployerID { get; set; }
@@ -24,6 +24,8 @@ namespace Machete.Service.DTO
         public bool onlineSource { get; set; }
         public string updatedby { get; set; }
         public DateTime dateupdated { get; set; }
+        public DateTime datecreated { get; set; }
+        public string city { get; set; }
         public int WAcount { get; set; }
         public int emailSentCount { get; set; }
         public int emailErrorCount { get; set; }

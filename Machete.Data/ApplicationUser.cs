@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Machete.Data
 {
-    public class ApplicationUser : IdentityUser
+    public class MacheteUser : IdentityUser
     {
-        public ApplicationUser()
+        public MacheteUser()
         {
             CreateDate = DateTime.Now;
             IsApproved = false;
@@ -16,7 +19,8 @@ namespace Machete.Data
             FailedPasswordAnswerAttemptWindowStart = DateTime.Parse("1/1/1754");
             FailedPasswordAttemptWindowStart = DateTime.Parse("1/1/1754");
         }
-
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public Guid ApplicationId { get; set; }
         public string MobileAlias { get; set; }
         public bool IsAnonymous { get; set; }

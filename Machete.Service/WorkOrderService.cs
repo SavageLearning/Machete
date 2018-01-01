@@ -37,7 +37,6 @@ namespace Machete.Service
 {
     public interface IWorkOrderService : IService<WorkOrder>
     {
-        IEnumerable<WorkOrder> GetByEmployer(int id);
         IEnumerable<WorkOrder> GetActiveOrders(DateTime date, bool assignedOnly);
         IQueryable<WorkOrderSummary> GetSummary(string search);
         IQueryable<WorkOrderSummary> GetSummary();
@@ -46,7 +45,7 @@ namespace Machete.Service
             bool orderDescending,
             int displayStart,
             int displayLength);
-        dataTableResult<DTO.WorkOrderList> GetIndexView(viewOptions opt);
+        dataTableResult<DTO.WorkOrdersList> GetIndexView(viewOptions opt);
     }
 
     // Business logic for WorkOrder record management
@@ -55,7 +54,7 @@ namespace Machete.Service
     {
         private readonly IWorkAssignmentService waServ;
         private readonly IMapper map;
-        private readonly ILookupCache lc;
+        private readonly ILookupRepository lc;
         private readonly IConfigService cfg;
         /// <summary>
         /// Constructor
@@ -65,7 +64,7 @@ namespace Machete.Service
         /// <param name="uow">Unit of Work</param>
         public WorkOrderService(IWorkOrderRepository repo, 
                                 IWorkAssignmentService waServ,
-                                ILookupCache lc,
+                                ILookupRepository lc,
                                 IUnitOfWork uow,
                                 IMapper map,
                                 IConfigService cfg) : base(repo, uow)
@@ -77,17 +76,6 @@ namespace Machete.Service
             this.logPrefix = "WorkOrder";
         }
 
-        /// <summary>
-        /// Retrieve all worker orders for a specific Employer, or all work orders if null
-        /// </summary>
-        /// <param name="id">Employer ID</param>
-        /// <returns>WorkOrders associated with employer</returns>
-        public IEnumerable<WorkOrder> GetByEmployer(int id)
-        {
-            // TODO: investigate what happens if ID = null (should return all WO)
-            // Retrieve work orders for given employer
-             return repo.GetMany(w => w.EmployerID == id);
-        }
         /// <summary>
         /// Retrieve active orders for a given day. Active and assigned OR all active
         /// </summary>
@@ -147,13 +135,14 @@ namespace Machete.Service
         /// </summary>
         /// <param name="vo">viewOptions object</param>
         /// <returns>Table of work orders</returns>
-        public dataTableResult<DTO.WorkOrderList> GetIndexView(viewOptions o)
+        public dataTableResult<DTO.WorkOrdersList> GetIndexView(viewOptions o)
         {
             //Get all the records
-            var result = new dataTableResult<DTO.WorkOrderList>();
+            var result = new dataTableResult<DTO.WorkOrdersList>();
             IQueryable<WorkOrder> q = repo.GetAllQ();
             //
             if (o.EmployerID != null) IndexViewBase.filterEmployer(o, ref q);
+            if (o.employerGuid != null) IndexViewBase.filterEmployerByGuid(o, ref q);
             if (o.status != null) IndexViewBase.filterStatus(o, ref q);
             if (o.onlineSource == true) IndexViewBase.filterOnlineSource(o, ref q);
             if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
@@ -161,7 +150,7 @@ namespace Machete.Service
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
             //
             result.filteredCount = q.Count();
-            result.query = q.ProjectTo<DTO.WorkOrderList>(map.ConfigurationProvider)
+            result.query = q.ProjectTo<DTO.WorkOrdersList>(map.ConfigurationProvider)
             .Skip(o.displayStart)
             .Take(o.displayLength)
             .AsEnumerable();
@@ -229,10 +218,10 @@ namespace Machete.Service
         }
         private void updateComputedValues(ref WorkOrder record)
         {
-            record.statusES = lc.textByID(record.statusID, "ES");
-            record.statusEN = lc.textByID(record.statusID, "EN");
-            record.transportMethodEN = lc.textByID(record.transportMethodID, "EN");
-            record.transportMethodES = lc.textByID(record.transportMethodID, "ES");
+            record.statusES = lc.GetById(record.statusID).text_ES;
+            record.statusEN = lc.GetById(record.statusID).text_EN;
+            record.transportMethodEN = lc.GetById(record.transportMethodID).text_EN;
+            record.transportMethodES = lc.GetById(record.transportMethodID).text_ES;
         }
         public override void Save(WorkOrder workOrder, string user)
         {

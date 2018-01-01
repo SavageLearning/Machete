@@ -47,7 +47,7 @@ namespace Machete.Test.Unit.Service
         Mock<IWorkerRequestService> _wrServ;
         Mock<IUnitOfWork> _uow;
         Mock<IImageService> _iServ;
-        Mock<IConfigService> _cServ;
+        Mock<IConfigService> _cServ = null;
         Mock<IMapper> _map;
         List<WorkerSignin> _signins;
         List<Worker> _workers;
@@ -101,7 +101,7 @@ namespace Machete.Test.Unit.Service
             //
             // Arrange WorkerSignin
             _wsiRepo = new Mock<IWorkerSigninRepository>();
-            _wsiRepo.Setup(s => s.GetAll()).Returns(_signins);
+            _wsiRepo.Setup(s => s.GetAllQ()).Returns(_signins.AsQueryable());
             // Arrange Worker
             _wServ = new Mock<IWorkerService>();
             _wServ.Setup(w => w.GetAll()).Returns(_workers);

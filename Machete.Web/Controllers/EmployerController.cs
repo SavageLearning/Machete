@@ -83,11 +83,11 @@ namespace Machete.Web.Controllers
         {
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI = CI;
-            dataTableResult<DTO.EmployerList> list = serv.GetIndexView(vo);
+            dataTableResult<DTO.EmployersList> list = serv.GetIndexView(vo);
             //return what's left to datatables
             var result = list.query
                 .Select(
-                    e => map.Map<DTO.EmployerList, ViewModel.EmployerList>(e)
+                    e => map.Map<DTO.EmployersList, ViewModel.EmployerList>(e)
                 ).AsEnumerable();
             return Json(new
             {

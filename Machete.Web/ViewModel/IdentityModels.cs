@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Machete.Web.ViewModel
 {
-    public interface IMyUserManager<TUser>
+    public interface IMacheteUserManager<TUser>
     {
         Task<TUser> FindAsync(string userName, string password);
         Task<IdentityResult> CreateAsync(TUser user, string password);
@@ -19,7 +19,7 @@ namespace Machete.Web.ViewModel
         Task<IdentityResult> AddLoginAsync(string userId, UserLoginInfo login);
         Task<IdentityResult> CreateAsync(TUser user);
         Task<System.Collections.Generic.IList<UserLoginInfo>> GetLoginsAsync(string userId);
-        IList<UserLoginInfo> GetLogins(string userId);
+        //IList<UserLoginInfo> GetLogins(string userId);
         Task<ClaimsIdentity> CreateIdentityAsync(TUser user, string authenticationType);
         Task<IdentityResult> ChangePasswordAsync(string userId, string currentPassword, string newPassword);
         Task<IdentityResult> AddPasswordAsync(string userId, string password);
@@ -32,12 +32,12 @@ namespace Machete.Web.ViewModel
         void Dispose();
     }
 
-    public class MyUserManager : UserManager<ApplicationUser>, IMyUserManager<ApplicationUser>
+    public class MacheteUserManager : UserManager<MacheteUser>, IMacheteUserManager<MacheteUser>
     {
-        public MyUserManager(IDatabaseFactory factory)
-            : base(new UserStore<ApplicationUser>(factory.Get()))
+        public MacheteUserManager(IDatabaseFactory factory)
+            : base(new UserStore<MacheteUser>(factory.Get()))
         {
-            this.UserValidator = new UserValidator<ApplicationUser>(this) 
+            this.UserValidator = new UserValidator<MacheteUser>(this) 
             { 
                 AllowOnlyAlphanumericUserNames = false 
             };
@@ -130,64 +130,4 @@ namespace Machete.Web.ViewModel
             return this.GetLogins(userId);
         }
     }
-
-    /* Note: only used by OldAccountController
-    public class IdentityManager
-    {
-        IDatabaseFactory Db;
-        public IdentityManager(IDatabaseFactory plop)
-        {
-            Db = plop;
-        }
-
-        public bool RoleExists(string name)
-        {
-            var rm = new RoleManager<IdentityRole>(
-                new RoleStore<IdentityRole>(Db.Get()));
-            return rm.RoleExists(name);
-        }
-
-
-        public bool CreateRole(string name)
-        {
-            var rm = new RoleManager<IdentityRole>(
-                new RoleStore<IdentityRole>(Db.Get()));
-            var idResult = rm.Create(new IdentityRole(name));
-            return idResult.Succeeded;
-        }
-
-
-        public bool CreateUser(ApplicationUser user, string password)
-        {
-            var um = new UserManager<ApplicationUser>(
-                new UserStore<ApplicationUser>(Db.Get()));
-            var idResult = um.Create(user, password);
-            return idResult.Succeeded;
-        }
-
-
-        public bool AddUserToRole(string userId, string roleName)
-        {
-            var um = new UserManager<ApplicationUser>(
-                new UserStore<ApplicationUser>(Db.Get()));
-            var idResult = um.AddToRole(userId, roleName);
-            return idResult.Succeeded;
-        }
-
-
-        public void ClearUserRoles(string userId)
-        {
-            var um = new UserManager<ApplicationUser>(
-                new UserStore<ApplicationUser>(Db.Get()));
-            var user = um.FindById(userId);
-            var currentRoles = new List<IdentityUserRole>();
-            currentRoles.AddRange(user.Roles);
-            foreach (var role in currentRoles)
-            {
-                um.RemoveFromRole(userId, role.Role.Name);
-            }
-        }
-    }
-    */
-
 }

@@ -46,27 +46,39 @@ namespace Machete.Data
     // Interfaces referenced in Service layer 
     //
     public interface IWorkerSigninRepository : IRepository<WorkerSignin> { }
-    public interface IEmployerRepository : IRepository<Employer> { }
+    public interface IEmployerRepository : IRepository<Employer>
+    {
+        Employer GetBySubject(string subject);
+    }
     public interface IEmailRepository : IRepository<Email> 
     {
         IEnumerable<Email> GetEmailsToSend();
     }
     public interface IWorkOrderRepository : IRepository<WorkOrder> { }
-    public interface IWorkerRequestRepository : IRepository<WorkerRequest> { }
-    public interface IWorkerRepository : IRepository<Worker>  { }
+    public interface IWorkerRequestRepository : IRepository<WorkerRequest> {
+        WorkerRequest GetByWorkerID(int woid, int workerID);
+    }
+    public interface IWorkerRepository : IRepository<Worker>
+    {
+        Worker GetByMemberID(int memberID);
+    }
     public interface IWorkAssignmentRepository : IRepository<WorkAssignment> { }
     public interface IPersonRepository : IRepository<Person> { }
     public interface IEventRepository : IRepository<Event> { }
+    public interface IScheduleRuleRepository : IRepository<ScheduleRule> { }
+    public interface ITransportRuleRepository : IRepository<TransportRule> { }
+    public interface ITransportCostRuleRepository : IRepository<TransportCostRule> { }
     public interface IImageRepository : IRepository<Image> { }
     public interface ILookupRepository : IRepository<Lookup> 
     {
         void clearSelected(string category);
+        Lookup GetByKey(string category, string key);
     }
     public interface IActivityRepository : IRepository<Activity> { }
-    public interface IActivitySigninRepository : IRepository<ActivitySignin> { }
-    /// <summary>
-    /// 
-    /// </summary>
+    public interface IActivitySigninRepository : IRepository<ActivitySignin>
+    {
+        ActivitySignin GetByPersonID(int actID, int personID);
+    }
     public class WorkerSigninRepository : RepositoryBase<WorkerSignin>, IWorkerSigninRepository
     {
         public WorkerSigninRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
@@ -83,6 +95,13 @@ namespace Machete.Data
         {
             //return dbset.Include(a => a.worker).AsQueryable();
             return dbset.Include(a => a.Activity).AsNoTracking().AsQueryable();
+        }
+        public ActivitySignin GetByPersonID(int actID, int personID)
+        {
+            var q = from o in dbset.AsQueryable()
+                    where (o.activityID.Equals(actID) && o.personID.Equals(personID))
+                    select o;
+            return q.FirstOrDefault();
         }
     }
     /// <summary>
@@ -103,6 +122,14 @@ namespace Machete.Data
     public class EmployerRepository : RepositoryBase<Employer>, IEmployerRepository
     {
         public EmployerRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
+
+        public Employer GetBySubject(string subject)
+        {
+            var q = from o in dbset.AsQueryable()
+                    where o.onlineSigninID.Equals(subject)
+                    select o;
+            return q.FirstOrDefault();
+        }
     }
     /// <summary>
     /// 
@@ -144,6 +171,14 @@ namespace Machete.Data
         {
             return dbset.Include(a => a.workerRequested).AsNoTracking().AsQueryable();
         }
+
+        public WorkerRequest GetByWorkerID(int woid, int workerID)
+        {
+            var q = from o in dbset.AsQueryable()
+                    where (o.WorkOrderID.Equals(woid) && o.WorkerID.Equals(workerID))
+                    select o;
+            return q.FirstOrDefault();
+        }
     }
     /// <summary>
     /// 
@@ -155,6 +190,14 @@ namespace Machete.Data
         override public IQueryable<Worker> GetAllQ()
         {
             return dbset.Include(a => a.Person).AsNoTracking().AsQueryable();
+        }
+
+        public Worker GetByMemberID(int memberID)
+        {
+            var q = from o in dbset.AsQueryable()
+                    where o.dwccardnum.Equals(memberID)
+                    select o;
+            return q.FirstOrDefault();
         }
     }
     /// <summary>
@@ -209,6 +252,34 @@ namespace Machete.Data
                 l.selected = false;
             }            
         }
+
+        public Lookup GetByKey(string category, string key)
+        {
+            var q = from o in dbset.AsQueryable()
+                    where (o.category.Equals(category) && o.key.Equals(key))
+                    select o;
+            return q.FirstOrDefault();
+        }
+    }
+
+    public class ScheduleRuleRepository : RepositoryBase<ScheduleRule>, IScheduleRuleRepository
+    {
+        public ScheduleRuleRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
+    }
+
+    public class TransportRuleRepository : RepositoryBase<TransportRule>, ITransportRuleRepository
+    {
+        public TransportRuleRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
+        public override IQueryable<TransportRule> GetAllQ()
+        {
+            return dbset.Include(a => a.costRules).AsNoTracking();
+        }
+    }
+
+    public class TransportCostRuleRepository : RepositoryBase<TransportCostRule>, ITransportCostRuleRepository
+    {
+        public TransportCostRuleRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
+
     }
 }
 

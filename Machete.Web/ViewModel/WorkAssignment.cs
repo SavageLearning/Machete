@@ -14,7 +14,7 @@ namespace Machete.Web.ViewModel
         public string tablabel { get; set; }
     }
 
-    public class WorkAssignmentList
+    public class WorkAssignmentsList
     {
         public string tabref { get; set; }          // SharedWAI
         public string tablabel { get; set; }        // SharedWAI

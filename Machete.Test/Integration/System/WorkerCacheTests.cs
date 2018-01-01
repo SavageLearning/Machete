@@ -66,7 +66,7 @@ namespace Machete.Test.Integration.System
             var _w = frb.ToWorker();
             //Act
             frb.ToServWorker().ExpireMembers();
-            IEnumerable<Worker> result = frb.ToRepoWorker().GetAll().AsEnumerable()
+            IEnumerable<Worker> result = frb.ToRepoWorker().GetAllQ().AsEnumerable()
                 .Where(p => p.memberStatusID == Worker.iExpired && p.dwccardnum == _w.dwccardnum);
             //Assert
             Assert.AreEqual(1, result.Count(), "Failed to expire members");
@@ -82,7 +82,7 @@ namespace Machete.Test.Integration.System
             var _w = frb.ToWorker();
             //Act
             frb.ToServWorker().ExpireMembers();
-            IEnumerable<Worker> result = frb.ToRepoWorker().GetAll().AsEnumerable()
+            IEnumerable<Worker> result = frb.ToRepoWorker().GetAllQ().AsEnumerable()
                 .Where(p => p.memberStatusID == Worker.iExpired && p.dwccardnum == _w.dwccardnum);
             //Assert
             Assert.AreNotEqual(0, Worker.iInactive, "Worker Inactive constant set to zero");
@@ -99,7 +99,7 @@ namespace Machete.Test.Integration.System
             var _w = frb.ToWorker();
             //Act
             frb.ToServWorker().ReactivateMembers();
-            IEnumerable<Worker> result = frb.ToRepoWorker().GetAll().AsEnumerable()
+            IEnumerable<Worker> result = frb.ToRepoWorker().GetAllQ().AsEnumerable()
                 .Where(p => p.memberStatusID == Worker.iActive && p.dwccardnum == _w.dwccardnum);
             //Assert
             Assert.AreEqual(1, result.Count(), "Failed to reactivate members");
@@ -115,7 +115,7 @@ namespace Machete.Test.Integration.System
             var _w = frb.ToWorker();
             //Act
             frb.ToServWorker().ReactivateMembers();
-            IEnumerable<Worker> result = frb.ToRepoWorker().GetAll().AsEnumerable()
+            IEnumerable<Worker> result = frb.ToRepoWorker().GetAllQ().AsEnumerable()
                 .Where(p => p.memberStatusID == Worker.iSanctioned && p.dwccardnum == _w.dwccardnum);
             //Assert
             Assert.AreEqual(1, result.Count(), "Failed to reactivate members");
@@ -131,7 +131,7 @@ namespace Machete.Test.Integration.System
             var _w = frb.ToWorker();
             //Act
             frb.ToServWorker().ReactivateMembers();
-            IEnumerable<Worker> result = frb.ToRepoWorker().GetAll().AsEnumerable()
+            IEnumerable<Worker> result = frb.ToRepoWorker().GetAllQ().AsEnumerable()
                 .Where(p => p.memberStatusID == Worker.iSanctioned && p.dwccardnum == _w.dwccardnum);
             //Assert
             Assert.AreEqual(1, result.Count(), "Failed to reactivate members");

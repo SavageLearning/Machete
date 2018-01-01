@@ -57,7 +57,7 @@ namespace Machete.Test.Integration.Data
         {
             // arrange
             var context = frb.ToFactory().Get();
-            var reports = frb.ToRepoReports().GetAll();
+            var reports = frb.ToRepoReports().GetAllQ();
 
             foreach (var r in reports)
             {
@@ -86,7 +86,7 @@ namespace Machete.Test.Integration.Data
         {
             var repo = frb.ToRepoReports();
             var ctxt = frb.ToFactory().Get();
-            var list = repo.GetAll();
+            var list = repo.GetAllQ();
             foreach (var l in list)
             {
                 l.columnsJson = SqlServerUtils.getUIColumnsJson(ctxt, l.sqlquery);

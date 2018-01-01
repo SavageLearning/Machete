@@ -34,6 +34,7 @@ namespace Machete.Test
 {
     public static class Records
     {
+        private static readonly DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         public static int GetNextMemberID(DbSet<Worker> db)
         {
             //debug
@@ -210,6 +211,34 @@ namespace Machete.Test
             transportTransactID = "#6169"
         };
 
+        public static Machete.Api.ViewModel.WorkOrder onlineOrder = new Api.ViewModel.WorkOrder
+        {
+            workSiteAddress1 = "2400 Main Ave E",
+            workSiteAddress2 = "Apt 207",
+            statusID = 42,
+            city = "Seattle",
+            state = "WA",
+            zipcode = "12345",
+            phone = "123-456-7890",
+            //typeOfWorkID = 20,
+            timeFlexible = true,
+            englishRequired = false,
+           // lunchSupplied = false,
+           // permanentPlacement = false,
+            transportMethodID = 1,
+            transportFee = 20.75,
+            //transportFeeExtra = 0,
+            englishRequiredNote = "",
+            description = "description string",
+            dateTimeofWork = DateTime.Today.ToUniversalTime().Subtract(epoch).TotalMilliseconds,
+            datecreated = DateTime.Now.ToUniversalTime().Subtract(epoch).TotalMilliseconds,
+            dateupdated = DateTime.Now.ToUniversalTime().Subtract(epoch).TotalMilliseconds,       
+            createdby = "initialization script",
+            updatedby = "initialization script",
+            //transportTransactType = 256,
+           // transportTransactID = "#6169"
+        };
+
         public static WorkAssignment assignment = new WorkAssignment
         {
             //ID = 1,
@@ -269,6 +298,22 @@ namespace Machete.Test
         };
 
         public static WorkerRequest request = new WorkerRequest
+        {
+            datecreated = DateTime.Now,             //datetime
+            dateupdated = DateTime.Now,              //datetime
+            createdby = "TestInitializer",
+            updatedby = "TestInitializer"
+        };
+
+        public static TransportRule transportRule = new TransportRule
+        {
+            datecreated = DateTime.Now,             //datetime
+            dateupdated = DateTime.Now,              //datetime
+            createdby = "TestInitializer",
+            updatedby = "TestInitializer"
+        };
+
+        public static ScheduleRule scheduleRule = new ScheduleRule
         {
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime

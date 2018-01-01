@@ -88,10 +88,10 @@ namespace Machete.Web.Controllers
             //Get all the records            
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI = CI;
-            dataTableResult<Service.DTO.WorkAssignmentList> was = waServ.GetIndexView(vo);
+            dataTableResult<Service.DTO.WorkAssignmentsList> was = waServ.GetIndexView(vo);
             var result = was.query
             .Select(
-                e => map.Map<Service.DTO.WorkAssignmentList, ViewModel.WorkAssignmentList>(e)
+                e => map.Map<Service.DTO.WorkAssignmentsList, ViewModel.WorkAssignmentsList>(e)
             ).AsEnumerable();
             return Json(new
             {

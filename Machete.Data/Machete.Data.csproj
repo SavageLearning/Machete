@@ -258,20 +258,20 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="dotless.Core, Version=1.5.2.0, Culture=neutral, PublicKeyToken=96b446c9e63eae34, processorArchitecture=MSIL">
+      <HintPath>..\packages\dotless.1.5.2\lib\dotless.Core.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="EntityFramework.SqlServer">
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -295,6 +295,7 @@
     <Compile Include="Infrastructure\UnitOfWork.cs" />
     <Compile Include="Initialize\MacheteLookups.cs" />
     <Compile Include="Initialize\MacheteReportDefinitions.cs" />
+    <Compile Include="Initialize\MacheteRules.cs" />
     <Compile Include="Initialize\MacheteUsers.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\MacheteIntercepterTransientErrors.cs" />
@@ -357,6 +358,14 @@
     <Compile Include="Migrations\201705070423149_v1_12_0_reports.Designer.cs">
       <DependentUpon>201705070423149_v1_12_0_reports.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201708200456007_v1_13_0-online_orders.cs" />
+    <Compile Include="Migrations\201708200456007_v1_13_0-online_orders.Designer.cs">
+      <DependentUpon>201708200456007_v1_13_0-online_orders.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712232240329_v1_13_1-replace_paypal_fields.cs" />
+    <Compile Include="Migrations\201712232240329_v1_13_1-replace_paypal_fields.Designer.cs">
+      <DependentUpon>201712232240329_v1_13_1-replace_paypal_fields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AllRepositories.cs" />
     <Compile Include="Repositories\ConfigRepository.cs" />
@@ -373,9 +382,7 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Readme\Elmah.txt" />
@@ -438,6 +445,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201705070423149_v1_12_0_reports.resx">
       <DependentUpon>201705070423149_v1_12_0_reports.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708200456007_v1_13_0-online_orders.resx">
+      <DependentUpon>201708200456007_v1_13_0-online_orders.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712232240329_v1_13_1-replace_paypal_fields.resx">
+      <DependentUpon>201712232240329_v1_13_1-replace_paypal_fields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

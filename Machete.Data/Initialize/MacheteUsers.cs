@@ -20,15 +20,15 @@ namespace Machete.Data
             ir = rm.Create(new IdentityRole("User"));
             ir = rm.Create(new IdentityRole("Hirer")); // This role is used exclusively for the online hiring interface
 
-            var um = new UserManager<ApplicationUser>(
-                new UserStore<ApplicationUser>(DB));
-            var admin = new ApplicationUser()
+            var um = new UserManager<MacheteUser>(
+                new UserStore<MacheteUser>(DB));
+            var admin = new MacheteUser()
             {
                 UserName = "jadmin",
                 IsApproved = true,
                 Email = "here@there.org"
             };
-            var user = new ApplicationUser()
+            var user = new MacheteUser()
             {
                 UserName = "juser",
                 IsApproved = true,

@@ -312,20 +312,11 @@
   <data name="editCancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
-  <data name="hirerAccount" xml:space="preserve">
-    <value>Contratar a un trabajador</value>
-  </data>
-  <data name="hireWorker" xml:space="preserve">
-    <value>Hire a Worker</value>
-  </data>
   <data name="workOrders" xml:space="preserve">
     <value>Orden de trabajo</value>
   </data>
   <data name="listWorkAssignments" xml:space="preserve">
     <value>List Of Work Assignments</value>
-  </data>
-  <data name="hirerProfile" xml:space="preserve">
-    <value>Perfil</value>
   </data>
   <data name="businessHoursModal" xml:space="preserve">
     <value>Business Hours</value>

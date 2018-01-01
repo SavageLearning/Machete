@@ -38,7 +38,7 @@ namespace Machete.Service
         IQueryable<WorkAssignmentSummary> GetSummary(string search);
         bool Assign(WorkAssignment assignment, WorkerSignin signin, string user);
         bool Unassign(int? wsiid, int? waid, string user);
-        dataTableResult<DTO.WorkAssignmentList> GetIndexView(viewOptions o);
+        dataTableResult<DTO.WorkAssignmentsList> GetIndexView(viewOptions o);
     }
 
     // Business logic for WorkAssignment record management
@@ -50,7 +50,6 @@ namespace Machete.Service
         private readonly IWorkerSigninRepository wsiRepo;
         private readonly IUnitOfWork unitOfWork;
         private readonly ILookupRepository lRepo;
-        private readonly ILookupCache lcache;
         private readonly IMapper map;
         //
         //
@@ -59,7 +58,6 @@ namespace Machete.Service
             IWorkerRepository wRepo, 
             ILookupRepository lRepo, 
             IWorkerSigninRepository wsiRepo,
-            ILookupCache lc,
             IUnitOfWork unitOfWork,
             IMapper map
             ) : base(waRepo, unitOfWork)
@@ -69,7 +67,6 @@ namespace Machete.Service
             this.wRepo = wRepo;
             this.lRepo = lRepo;
             this.wsiRepo = wsiRepo;
-            this.lcache = lc;
             this.map = map;
             this.logPrefix = "WorkAssignment";
         }
@@ -86,9 +83,9 @@ namespace Machete.Service
             }         
             return wa;
         }
-        public dataTableResult<DTO.WorkAssignmentList> GetIndexView(viewOptions o)
+        public dataTableResult<DTO.WorkAssignmentsList> GetIndexView(viewOptions o)
         {
-            var result = new dataTableResult<DTO.WorkAssignmentList>();
+            var result = new dataTableResult<DTO.WorkAssignmentsList>();
             IQueryable<WorkAssignment> q = waRepo.GetAllQ();
             //
             // 
@@ -103,7 +100,7 @@ namespace Machete.Service
             if (o.dwccardnum > 0)
             {
                 var worker = wRepo.GetById((int)o.dwccardnum);
-                IndexViewBase.filterOnSkill(o, q, lcache, worker);
+                IndexViewBase.filterOnSkill(o, q, lRepo, worker);
             }
             //Sort the Persons based on column selection
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
@@ -111,14 +108,14 @@ namespace Machete.Service
             result.filteredCount = q.Count();
             if (o.displayLength > 0)
             {
-                result.query = q.ProjectTo<DTO.WorkAssignmentList>(map.ConfigurationProvider)
+                result.query = q.ProjectTo<DTO.WorkAssignmentsList>(map.ConfigurationProvider)
                 .Skip(o.displayStart)
                 .Take(o.displayLength)
                 .AsEnumerable();
             }
             else
             {
-                result.query = q.ProjectTo<DTO.WorkAssignmentList>(map.ConfigurationProvider)
+                result.query = q.ProjectTo<DTO.WorkAssignmentsList>(map.ConfigurationProvider)
                 .AsEnumerable();
             }
             result.totalCount = waRepo.GetAllQ().Count();
@@ -243,7 +240,7 @@ namespace Machete.Service
         /// <returns></returns>
         private int assignCheckWSI_cardnumber_match(WorkerSignin wsi)
         {
-            Worker worker = wRepo.Get(w => w.dwccardnum == wsi.dwccardnum);
+            Worker worker = wRepo.GetByMemberID(wsi.dwccardnum);
             if (worker == null) throw new NullReferenceException("Worker for key " + wsi.dwccardnum.ToString() + " is null");
             if (worker.ID != wsi.WorkerID) throw new MacheteIntegrityException("WorkerSignin's internal WorkerID and public worker ID don't match");
             return worker.ID;
@@ -417,8 +414,8 @@ namespace Machete.Service
 
         private void updateComputedValues(ref WorkAssignment record)
         {
-            record.skillEN = lcache.textByID(record.skillID, "EN");
-            record.skillES = lcache.textByID(record.skillID, "ES");
+            record.skillEN = lRepo.GetById(record.skillID).text_EN;
+            record.skillES = lRepo.GetById(record.skillID).text_ES;
             record.minEarnings = (record.days * record.surcharge) + (record.hourlyWage * record.hours * record.days);
             record.maxEarnings = record.hourRange == null ? 0 : (record.days * record.surcharge) + (record.hourlyWage * (int)record.hourRange * record.days);
             record.fullWAID = System.String.Format("{0,5:D5}-{1,2:D2}",

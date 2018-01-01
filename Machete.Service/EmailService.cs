@@ -134,7 +134,7 @@ namespace Machete.Service
 
         new public IEnumerable<Email> GetMany(Func<Email, bool> predicate)
         {
-            return repo.GetMany(predicate);
+            return repo.GetManyQ(predicate);
         }
 
         public IEnumerable<Email> GetEmailsToSend()

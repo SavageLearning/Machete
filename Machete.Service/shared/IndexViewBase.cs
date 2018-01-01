@@ -251,7 +251,7 @@ namespace Machete.Service
         public static IEnumerable<WorkAssignment> filterOnSkill(
             viewOptions o, 
             IQueryable<WorkAssignment> q,
-            ILookupCache lc,
+            ILookupRepository l,
             Worker worker)
         {
             //  "Machete --A series of good intentions, marinated in panic."
@@ -280,9 +280,8 @@ namespace Machete.Service
                 foreach (var skillid in primeskills)
                 {
                     skills.Push(skillid);
-                    Lookup skill = lc.getByID(skillid);
-                    foreach (var subskill in lc.getCache()
-                        .Where(a => a.category == skill.category &&
+                    Lookup skill = l.GetById(skillid);
+                    foreach (var subskill in l.GetManyQ(a => a.category == skill.category &&
                                     a.subcategory == skill.subcategory &&
                                     a.level < skill.level))
                     {
@@ -295,7 +294,7 @@ namespace Machete.Service
                 if (skills.Count() != 0) skill4 = skills.Pop();
                 if (skills.Count() != 0) skill5 = skills.Pop();
                 if (skills.Count() != 0) skill6 = skills.Pop();
-                filteredWA = filteredWA.Join(lc.getCache(), //LINQ
+                filteredWA = filteredWA.Join(l.GetAllQ(), //LINQ
                                                    wa => wa.skillID,
                                                    sk => sk.ID,
                                                    (wa, sk) => new { wa, sk }
@@ -359,6 +358,11 @@ namespace Machete.Service
                                 p.updatedby.Contains(o.sSearch));
             }
         }
+        public static void filterEmployerByGuid(viewOptions o, ref IQueryable<WorkOrder> q)
+        {
+            q = q.Where(p => p.Employer.onlineSigninID.Equals((string)o.employerGuid)); //EmployerID for WorkOrderIndex view
+        }
+
         public static void filterEmployer(viewOptions o, ref IQueryable<WorkOrder> q)
         {
             q = q.Where(p => p.EmployerID.Equals((int)o.EmployerID)); //EmployerID for WorkOrderIndex view

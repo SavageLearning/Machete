@@ -22,6 +22,7 @@
 // 
 #endregion
 using Machete.Domain;
+using Machete.Test.Integration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -73,7 +74,7 @@ namespace Machete.Test.Integration.Data
             var count = cache.Count();
             // Act
             Machete.Data.MacheteReportDefinitions.Initialize(context);
-            var result = frb.ToRepoReports().GetAll().Count();
+            var result = frb.ToRepoReports().GetAllQ().Count();
             // Assert
             Assert.AreEqual(count, result, "static cache and DB report definitions' count not equal");
         }

@@ -41,16 +41,16 @@ namespace Machete.Service
     // Ïf I made a non-web app, would I still need the code? If yes, put in here.
     public class PersonService : ServiceBase<Person>, IPersonService
     {
-        private readonly ILookupCache lcache;
+        private readonly ILookupRepository lRepo;
         private readonly IMapper map;
         public PersonService(IPersonRepository pRepo,
                              IUnitOfWork unitOfWork,
-                             ILookupCache _lcache,
+                             ILookupRepository lRepo,
                              IMapper map
                              ) : base(pRepo, unitOfWork)
         {
             this.logPrefix = "Person";
-            this.lcache = _lcache;
+            this.lRepo = lRepo;
             this.map = map;
         }
 
@@ -65,8 +65,18 @@ namespace Machete.Service
             if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
             if (o.showWorkers == true) IndexViewBase.getWorkers(o, ref q);
             if (o.showNotWorkers == true) IndexViewBase.getNotWorkers(o, ref q);
-            if (o.showExpiredWorkers == true) IndexViewBase.getExpiredWorkers(o, lcache.getByKeys(LCategory.memberstatus, LMemberStatus.Expired), ref q);
-            if (o.showSExWorkers == true) IndexViewBase.getSExWorkers(o, lcache.getByKeys(LCategory.memberstatus, LMemberStatus.Sanctioned), lcache.getByKeys(LCategory.memberstatus, LMemberStatus.Expelled), ref q);
+            if (o.showExpiredWorkers == true) {
+                IndexViewBase.getExpiredWorkers(o, 
+                    lRepo.GetByKey(LCategory.memberstatus, LMemberStatus.Expired).ID,
+                    ref q);
+            }
+            if (o.showSExWorkers == true) {
+                IndexViewBase.getSExWorkers(o,
+                    lRepo.GetByKey(LCategory.memberstatus, LMemberStatus.Sanctioned).ID,
+                    lRepo.GetByKey(LCategory.memberstatus, LMemberStatus.Expelled).ID, 
+                    ref q);
+
+            }
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
 
             result.filteredCount = q.Count();

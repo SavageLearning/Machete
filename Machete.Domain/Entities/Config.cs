@@ -22,5 +22,6 @@ namespace Machete.Domain
         public string value { get; set; }
         public string description { get; set; }
         public string category { get; set; }
+        public Boolean publicConfig { get; set; } 
     }
 }

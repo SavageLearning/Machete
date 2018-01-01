@@ -28,6 +28,7 @@ namespace Machete.Service
 {
     public class viewOptions
     {
+        public string employerGuid;
         public CultureInfo CI;
         public string category;
         public string sSearch;
