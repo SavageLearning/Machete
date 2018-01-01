@@ -97,6 +97,11 @@ namespace Machete.Api.Controllers
             {
                 throwInvalidOrder(orderID);
             }
+            if (order.EmployerID != employer.ID)
+            {
+                throwInvalidOrder(orderID);
+            }
+
             // TODO: Not mapping to view object throws JsonSerializationException, good to test error
             // handling with...(delay in error)
             var result = map.Map<Domain.WorkOrder, WorkOrder>(order);
@@ -106,14 +111,14 @@ namespace Machete.Api.Controllers
         // POST: api/OnlineOrders
         [HttpPost]
         [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Employer })]
-        public IHttpActionResult Post([FromBody]WorkOrder order)
+        public IHttpActionResult Post([FromBody]Domain.WorkOrder order)
         {
 
-            var domain = map.Map<WorkOrder, Domain.WorkOrder>(order);
-            domain.EmployerID = employer.ID;
+            //var domain = map.Map<WorkOrder, Domain.WorkOrder>(order);
+            order.EmployerID = employer.ID;
             Domain.WorkOrder newOrder = null;
             try {
-                newOrder = serv.Create(domain, employer.email ?? employer.name);
+                newOrder = serv.Create(order, employer.email ?? employer.name);
             }
             catch(MacheteValidationException e)
             {

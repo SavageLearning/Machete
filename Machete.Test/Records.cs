@@ -220,14 +220,14 @@ namespace Machete.Test
             state = "WA",
             zipcode = "12345",
             phone = "123-456-7890",
-            typeOfWorkID = 20,
+            //typeOfWorkID = 20,
             timeFlexible = true,
             englishRequired = false,
-            lunchSupplied = false,
-            permanentPlacement = false,
+           // lunchSupplied = false,
+           // permanentPlacement = false,
             transportMethodID = 1,
             transportFee = 20.75,
-            transportFeeExtra = 0,
+            //transportFeeExtra = 0,
             englishRequiredNote = "",
             description = "description string",
             dateTimeofWork = DateTime.Today.ToUniversalTime().Subtract(epoch).TotalMilliseconds,
@@ -235,8 +235,8 @@ namespace Machete.Test
             dateupdated = DateTime.Now.ToUniversalTime().Subtract(epoch).TotalMilliseconds,       
             createdby = "initialization script",
             updatedby = "initialization script",
-            transportTransactType = 256,
-            transportTransactID = "#6169"
+            //transportTransactType = 256,
+           // transportTransactID = "#6169"
         };
 
         public static WorkAssignment assignment = new WorkAssignment
