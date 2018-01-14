@@ -104,6 +104,17 @@ namespace Machete.Test.UnitTests.Controllers
             // Assert
             result.StatusCode.ShouldBeEquivalentTo(System.Net.HttpStatusCode.NotModified);
         }
+
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Reports)]
+        public void Post_WithBadQuery_ReturnsErrors_With200()
+        {
+            // Arrange
+            var expectedResult = ReportsControllerTestHelpers.FakeSqlErrors();
+            // Act
+            var result = controller.Post("badQuery").AsCSharpObject<List<string>>();
+            // Assert
+            result.ShouldBeEquivalentTo(expectedResult, x => x.ExcludingMissingMembers());
+        }
     }
     public static class ReportsControllerTestHelpers
     {
@@ -139,10 +150,15 @@ namespace Machete.Test.UnitTests.Controllers
         public static void SetupPost(this Mock<IReportsV2Service> service)
         {
             service.Setup(rs => rs.validateQuery(It.Is<string>(x => x == "goodQuery"))).Returns(new List<string>());
-            service.Setup(rs => rs.validateQuery(It.Is<string>(x => x == "badQuery"))).Returns(new List<string> {
+            service.Setup(rs => rs.validateQuery(It.Is<string>(x => x == "badQuery"))).Returns(FakeSqlErrors);
+        }
+
+        public static List<string> FakeSqlErrors()
+        {
+            return new List<string> {
                 "Error: The light shall burn you!",
                 "Error: I will be your death!"
-            });
+            };
         }
 
         public static List<Domain.ReportDefinition> FakeReportList()
