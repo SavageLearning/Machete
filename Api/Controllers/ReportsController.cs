@@ -74,18 +74,17 @@ namespace Machete.Api.Controllers
         {
             try {
                 var validationMessages = serv.validateQuery(query);
-                if (validationMessages.Count == 0) { 
+                if (validationMessages.Count == 0) {
+                    // "no modification needed"; http speak good human
                     return StatusCode(HttpStatusCode.NotModified);
                 } else {
-                    // 200 status code is correct; we wanted validation messages, and got them.
+                    // 200; we wanted validation messages, and got them.
                     return Json(new { data = validationMessages });
                 }
             } catch (Exception) {
-                // SQL errors are expected but they will be returned as strings.
-                // Service level errors will be added to that object, if the service fails.
+                // SQL errors are expected but they will be returned as strings (200).
                 // in this case, something happened that we were not expecting; return 500.
                 return StatusCode(HttpStatusCode.InternalServerError);
-                // TODO logging....
             }
         }
 

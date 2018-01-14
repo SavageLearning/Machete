@@ -34,8 +34,8 @@ namespace Machete.Test.UnitTests.Controllers
             serv = new Mock<IReportsV2Service>();
             serv.SetupGetList();
             serv.SetupGet();
-            // This is a really contrived example; needs work
             serv.SetupGetQuery(testStartDate, testEndDate);
+            serv.SetupPost();
 
             map = new MapperConfig().getMapper();
 
@@ -94,16 +94,30 @@ namespace Machete.Test.UnitTests.Controllers
             // Assert
             result.ShouldBeEquivalentTo(expectedResult, x => x.ExcludingMissingMembers());
         }
+
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Reports)]
+        public void Post_WithGoodQuery_Returns304()
+        {
+            // Arrange
+            // Act
+            var result = controller.Post("goodQuery").AsHttpResponseMessage();
+            // Assert
+            result.StatusCode.ShouldBeEquivalentTo(System.Net.HttpStatusCode.NotModified);
+        }
     }
     public static class ReportsControllerTestHelpers
     {
-        // my extension methods
         public static T AsCSharpObject<T>(this IHttpActionResult result)
         {
-            var response = result.ExecuteAsync(CancellationToken.None).Result;
+            var response = result.AsHttpResponseMessage();
             var sResponse = response.Content.ReadAsStringAsync().Result;
             var jsonResponse = JsonConvert.DeserializeObject<Dictionary<string, object>>(sResponse);
             return JsonConvert.DeserializeObject<T>(jsonResponse["data"].ToString());
+        }
+
+        public static HttpResponseMessage AsHttpResponseMessage(this IHttpActionResult result)
+        {
+            return result.ExecuteAsync(CancellationToken.None).Result;
         }
 
         public static IReturnsResult<IReportsV2Service> SetupGetList(this Mock<IReportsV2Service> service)
@@ -119,6 +133,16 @@ namespace Machete.Test.UnitTests.Controllers
         public static IReturnsResult<IReportsV2Service> SetupGetQuery(this Mock<IReportsV2Service> service, DateTime beginDate, DateTime endDate)
         {
             return service.Setup(rs => rs.getQuery(It.IsAny<Service.DTO.SearchOptions>())).Returns((Service.DTO.SearchOptions o) => new List<dynamic> { FakeReportList().Single(report => System.String.Equals(report.name, o.idOrName))});
+        }
+
+        // not sure why I needed the return types on the other methods? I think I was trying to string them together...
+        public static void SetupPost(this Mock<IReportsV2Service> service)
+        {
+            service.Setup(rs => rs.validateQuery(It.Is<string>(x => x == "goodQuery"))).Returns(new List<string>());
+            service.Setup(rs => rs.validateQuery(It.Is<string>(x => x == "badQuery"))).Returns(new List<string> {
+                "Error: The light shall burn you!",
+                "Error: I will be your death!"
+            });
         }
 
         public static List<Domain.ReportDefinition> FakeReportList()
