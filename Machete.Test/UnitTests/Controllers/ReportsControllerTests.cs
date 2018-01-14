@@ -115,6 +115,15 @@ namespace Machete.Test.UnitTests.Controllers
             // Assert
             result.ShouldBeEquivalentTo(expectedResult, x => x.ExcludingMissingMembers());
         }
+
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Reports)]
+        public void Post_Returns500WhenExceptionIsThrown() {
+            // Arrange
+            // Act
+            var result = controller.Post("throwPlease").AsHttpResponseMessage();
+            // Assert
+            result.StatusCode.ShouldBeEquivalentTo(System.Net.HttpStatusCode.InternalServerError);
+        }
     }
     public static class ReportsControllerTestHelpers
     {
@@ -151,6 +160,7 @@ namespace Machete.Test.UnitTests.Controllers
         {
             service.Setup(rs => rs.validateQuery(It.Is<string>(x => x == "goodQuery"))).Returns(new List<string>());
             service.Setup(rs => rs.validateQuery(It.Is<string>(x => x == "badQuery"))).Returns(FakeSqlErrors);
+            service.Setup(rs => rs.validateQuery(It.Is<string>(x => x == "throwPlease"))).Throws(new Exception("You should log these!"));
         }
 
         public static List<string> FakeSqlErrors()
