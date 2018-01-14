@@ -11,7 +11,7 @@ namespace Machete.Api.ViewModel
         public string additionalNotes { get; set; }
         public string city { get; set; }
         public string contactName { get; set; }
-        public Double dateTimeofWork { get; set; }
+        public string dateTimeofWork { get; set; }
         public string description { get; set; }
         public bool? disclosureAgreement { get; set; }
         public int EmployerID { get; set; }
