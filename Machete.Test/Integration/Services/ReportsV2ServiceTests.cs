@@ -193,6 +193,12 @@ namespace Machete.Test.Integration.Service
             // assert
             Assert.IsNotNull(result);
         }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
+        public void ValidateReturnsEmptyList_WhenNoErrorsAreFound() { }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
+        public void ValidateReturnsListOfErrors_WhenTheyAreFound() { }
     }
 
 }

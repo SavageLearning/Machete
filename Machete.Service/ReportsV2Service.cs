@@ -149,20 +149,7 @@ namespace Machete.Service
 
         public List<string> validateQuery(string query)
         {
-            // I *think* List<string> will be easier for the JSON parser, but I don't know.
-            var result = new List<string>();
-            try {
-                var sqlErrors = repo.validate(query).ToList();
-                sqlErrors.ForEach(error => result.Add(error));
-            } catch (Exception ex) {
-                // this shouldn't happen; exceptions are handled and parsed and returned
-                // at the lower layer (hence the return type). so add what just happened
-                // to the list<string> as { innerException, exception } and bubble it up.
-                result.Add(ex.InnerException.ToString());
-                result.Add(ex.ToString());
-                // at the end is fine; return what we have. TODO logging
-            }
-            return result;
+            return repo.validate(query).ToList();
         }
     }
 }
