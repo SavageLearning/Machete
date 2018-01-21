@@ -120,7 +120,7 @@ namespace Machete.Test.Integration
                 var param = command.CreateParameter();
                 param.ParameterName = "@statement";
                 param.Value = @"
-CREATE LOGIN readonlyLogin WITH PASSWORD='testpassword'
+CREATE LOGIN readonlyLogin WITH PASSWORD='@testPassword1'
 CREATE USER readonlyUser FROM LOGIN readonlyLogin
 EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
                     ";
