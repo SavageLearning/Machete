@@ -111,26 +111,28 @@ namespace Machete.Test.Integration
         {
             if (_dbFactory == null) throw new InvalidOperationException("You must first initialize the database.");
             var db = _dbFactory.Get();
-            using (var connection = (db as DbContext).Database.Connection)
+            var connection = (db as DbContext).Database.Connection;
+
+            using (var command = connection.CreateCommand())
             {
-                using (var command = connection.CreateCommand())
-                {
-                    command.CommandText = "sp_executesql";
-                    command.CommandType = CommandType.StoredProcedure;
-                    var param = command.CreateParameter();
-                    param.ParameterName = "@statement";
-                    param.Value = @"
+                command.CommandText = "sp_executesql";
+                command.CommandType = CommandType.StoredProcedure;
+                var param = command.CreateParameter();
+                param.ParameterName = "@statement";
+                param.Value = @"
 CREATE LOGIN readonlyLogin WITH PASSWORD='testpassword'
 CREATE USER readonlyUser FROM LOGIN readonlyLogin
 EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
                     ";
-                    command.Parameters.Add(param);
-                    connection.Open();
-                    try { 
-                        command.ExecuteNonQuery();
-                    } catch (SqlException ex) {     // user already exists
-                        if (ex.Errors[0].Number.Equals(15025)) { } else throw ex;
-                    }
+                command.Parameters.Add(param);
+                connection.Open();
+                try
+                {
+                    command.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {                               // user already exists
+                    if (ex.Errors[0].Number.Equals(15025)) { } else throw ex;
                 }
             }
 
@@ -623,15 +625,7 @@ EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
         public FluentRecordBase AddRepoReports()
         {
             if (_dbFactory == null) AddDBFactory();
-            if (_dbReadOnly == null)
-            {
-                AddDBReadonly();
-                // this is a hack; if we don't reinitialize the DB here, the
-                // connection isn't open and calls in the repo fail....
-                // the PROBLEM with that is that the .validate() method
-                // uses the same using... that closes the connection above
-                AddDBFactory();
-            }
+            if (_dbReadOnly == null) AddDBReadonly();
 
             _repoR = new ReportsRepository(_dbFactory, _dbReadOnly);
             return this;

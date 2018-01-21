@@ -48,28 +48,30 @@ namespace Machete.Data.Infrastructure
         public List<string> ExecuteSql(MacheteContext context, string query)
         {
             var errors = new List<string>();
-            using (var connection = (context as System.Data.Entity.DbContext).Database.Connection)
+            var connection = (context as System.Data.Entity.DbContext).Database.Connection;
+
+            using (var command = connection.CreateCommand())
             {
-                using (var command = connection.CreateCommand())
+                command.CommandText = "sp_executesql";
+                command.CommandType = CommandType.StoredProcedure;
+                var param = command.CreateParameter();
+                param.ParameterName = "@statement";
+                param.Value = query;
+                command.Parameters.Add(param);
+                connection.Open();
+                try
                 {
-                    command.CommandText = "sp_executesql";
-                    command.CommandType = CommandType.StoredProcedure;
-                    var param = command.CreateParameter();
-                    param.ParameterName = "@statement";
-                    param.Value = query;
-                    command.Parameters.Add(param);
-                    connection.Open();
-                    try
+                    command.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+                    for (var i = 0; i < ex.Errors.Count; i++)
                     {
-                        command.ExecuteNonQuery();
-                    } catch (SqlException ex) {
-                        for (var i = 0; i < ex.Errors.Count; i++)
-                        {
-                            // just get the messages for now; more is available: https://stackoverflow.com/a/5842100/2496266
-                            errors.Add(ex.Errors[i].Message);
-                        }
+                        // just messages for now; more available: https://stackoverflow.com/a/5842100/2496266
+                        errors.Add(ex.Errors[i].Message);
                     }
                 }
+
             }
             return errors;
         }
