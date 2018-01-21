@@ -50,6 +50,7 @@ namespace Machete.Test.Integration
         private EmailRepository _repoEM;
         private EventRepository _repoEV;
         private DatabaseFactory _dbFactory;
+        private ReadOnlyContext _dbReadOnly;
         private LookupCache _lcache;
         private WorkerService _servW;
         private ImageService _servI;
@@ -102,6 +103,13 @@ namespace Machete.Test.Integration
 
             AddLookupCache();
             return this;
+        }
+
+        private void AddDBReadonly(string connStringName = "readonlyConnection")
+        {
+            // this should be sufficient? we don't need to run migrations, etc.; wouldn't work anyway
+            if (_dbFactory == null) throw new InvalidOperationException("You must first initialize the database.");
+            _dbReadOnly = new ReadOnlyContext(connStringName);
         }
 
         public void Dispose()
@@ -590,8 +598,9 @@ namespace Machete.Test.Integration
         public FluentRecordBase AddRepoReports()
         {
             if (_dbFactory == null) AddDBFactory();
+            if (_dbReadOnly == null) AddDBReadonly();
 
-            _repoR = new ReportsRepository(_dbFactory);
+            _repoR = new ReportsRepository(_dbFactory, _dbReadOnly);
             return this;
         }
 

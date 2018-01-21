@@ -195,7 +195,12 @@ namespace Machete.Test.Integration.Service
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
-        public void ValidateReturnsEmptyList_WhenNoErrorsAreFound() { }
+        public void ValidateReturnsEmptyList_WhenNoErrorsAreFound() {
+            var errorList = new List<string>();
+            var query = "SELECT 1 from dbo.ReportDefinitions";
+            errorList = frb.ToServReportsV2().validateQuery(query);
+            Assert.AreEqual(0, errorList.Count);
+        }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
         public void ValidateReturnsListOfErrors_WhenTheyAreFound() { }

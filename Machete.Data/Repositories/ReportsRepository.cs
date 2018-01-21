@@ -23,7 +23,7 @@ namespace Machete.Data
         List<ReportDefinition> getList();
         List<QueryMetadata> getColumns(string tableName);
         DataTable getDataTable(string query, DTO.SearchOptions o);
-        string[] validate(string query);
+        List<string> validate(string query);
     }
     public class ReportsRepository : RepositoryBase<ReportDefinition>, IReportsRepository
     {
@@ -190,10 +190,10 @@ namespace Machete.Data
         }
         #endregion
 
-        public string[] validate(string query)
+        public List<string> validate(string query)
         {
             var context = readOnlyContext.Get();
-            return readOnlyContext.ExecuteSql(context, query);
+            return readOnlyContext.ExecuteSql(context, query).ToList();
         }
     }
 

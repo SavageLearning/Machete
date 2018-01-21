@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Reflection;
@@ -6,7 +7,7 @@ using System.Reflection;
 namespace Machete.Data.Infrastructure
 {
     public interface IReadOnlyContext : IDatabaseFactory {
-       string[] ExecuteSql(MacheteContext context, string query);
+       List<string> ExecuteSql(MacheteContext context, string query);
     }
     public class ReadOnlyContext : Disposable, IReadOnlyContext
     {
@@ -38,22 +39,34 @@ namespace Machete.Data.Infrastructure
             }
         }
 
-        public string[] ExecuteSql(MacheteContext context, string query) {
-            string[] errors = { };
-            try { 
-                var connection = (context as System.Data.Entity.DbContext).Database.Connection;
-                var command = connection.CreateCommand();
-                command.CommandText = "sp_executesql";
-                command.CommandType = CommandType.StoredProcedure;
-                // connection already exists...
-                command.ExecuteNonQuery();
-            } catch (SqlException ex) {
-                for (var i = 0; i < ex.Errors.Count; i++) {
-                    // just get the messages for now; more is available: https://stackoverflow.com/a/5842100/2496266
-                    errors[i] = ex.Errors[i].Message;
+        public List<string> ExecuteSql(MacheteContext context, string query) {
+            var errors = new List<string>();
+            try
+            {
+                using (var connection = (context as System.Data.Entity.DbContext).Database.Connection)
+                {
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = "sp_executesql";
+                        command.CommandType = CommandType.StoredProcedure;
+                        var param = command.CreateParameter();
+                        param.ParameterName = "@statement";
+                        param.Value = query;
+                        command.Parameters.Add(param);
+                        // connection already exists...in theory...debugging with this, it should probably be removed
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                    }
                 }
             }
-            // zero errors or many; return them all!
+            catch (SqlException ex)
+            {
+                for (var i = 0; i < ex.Errors.Count; i++)
+                {
+                    // just get the messages for now; more is available: https://stackoverflow.com/a/5842100/2496266
+                    errors.Add(ex.Errors[i].Message);
+                }
+            }
             return errors;
         }
     }
