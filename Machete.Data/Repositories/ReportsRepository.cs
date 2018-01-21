@@ -204,16 +204,4 @@ namespace Machete.Data
         public string system_type_name { get; set; }
         public bool include { get; set; } /// default value for the UI
     }
-    
-    public interface IReportValidator
-    {
-        List<string> validate(string query);
-    }
-    public class ReportValidator : IReportValidator
-    {
-        public List<string> validate(string query)
-        {
-            throw new NotImplementedException();
-        }
-    }
 }

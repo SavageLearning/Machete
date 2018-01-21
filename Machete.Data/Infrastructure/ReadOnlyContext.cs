@@ -6,8 +6,9 @@ using System.Reflection;
 
 namespace Machete.Data.Infrastructure
 {
-    public interface IReadOnlyContext : IDatabaseFactory {
-       List<string> ExecuteSql(MacheteContext context, string query);
+    public interface IReadOnlyContext : IDatabaseFactory
+    {
+        List<string> ExecuteSql(MacheteContext context, string query);
     }
     public class ReadOnlyContext : Disposable, IReadOnlyContext
     {
@@ -20,8 +21,9 @@ namespace Machete.Data.Infrastructure
         // which connection string should be used (i.e., the readonly one).
         // not validating the connection string here, because this class
         // should have no knowledge of connection strings.
-        public ReadOnlyContext(string connectionString) {
-            this.bindFlags = BindingFlags.Instance 
+        public ReadOnlyContext(string connectionString)
+        {
+            this.bindFlags = BindingFlags.Instance
                            | BindingFlags.Public
                            | BindingFlags.NonPublic
                            | BindingFlags.Static;
@@ -31,40 +33,42 @@ namespace Machete.Data.Infrastructure
 
         // we don't want the base get() because it allows you to pass in
         // nothing and get MacheteConnection(), which uses "macheteContext"
-        public MacheteContext Get() {
-            if (String.IsNullOrEmpty(connectionString)) {
+        public MacheteContext Get()
+        {
+            if (String.IsNullOrEmpty(connectionString))
+            {
                 throw new ArgumentNullException(paramName: "connectionString", message: "An instance of MacheteContext was requested but no connection string was provided.");
-            } else {
+            }
+            else
+            {
                 return new MacheteContext(connectionString);
             }
         }
 
-        public List<string> ExecuteSql(MacheteContext context, string query) {
+        public List<string> ExecuteSql(MacheteContext context, string query)
+        {
             var errors = new List<string>();
-            try
+            using (var connection = (context as System.Data.Entity.DbContext).Database.Connection)
             {
-                using (var connection = (context as System.Data.Entity.DbContext).Database.Connection)
+                using (var command = connection.CreateCommand())
                 {
-                    using (var command = connection.CreateCommand())
+                    command.CommandText = "sp_executesql";
+                    command.CommandType = CommandType.StoredProcedure;
+                    var param = command.CreateParameter();
+                    param.ParameterName = "@statement";
+                    param.Value = query;
+                    command.Parameters.Add(param);
+                    connection.Open();
+                    try
                     {
-                        command.CommandText = "sp_executesql";
-                        command.CommandType = CommandType.StoredProcedure;
-                        var param = command.CreateParameter();
-                        param.ParameterName = "@statement";
-                        param.Value = query;
-                        command.Parameters.Add(param);
-                        // connection already exists...in theory...debugging with this, it should probably be removed
-                        connection.Open();
                         command.ExecuteNonQuery();
+                    } catch (SqlException ex) {
+                        for (var i = 0; i < ex.Errors.Count; i++)
+                        {
+                            // just get the messages for now; more is available: https://stackoverflow.com/a/5842100/2496266
+                            errors.Add(ex.Errors[i].Message);
+                        }
                     }
-                }
-            }
-            catch (SqlException ex)
-            {
-                for (var i = 0; i < ex.Errors.Count; i++)
-                {
-                    // just get the messages for now; more is available: https://stackoverflow.com/a/5842100/2496266
-                    errors.Add(ex.Errors[i].Message);
                 }
             }
             return errors;

@@ -203,7 +203,14 @@ namespace Machete.Test.Integration.Service
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
-        public void ValidateReturnsListOfErrors_WhenTheyAreFound() { }
+        public void ValidateReturnsListOfErrors_WhenTheyAreFound()
+        {
+            var errorList = new List<string>();
+            var query = "DROP TABLE dbo.ReportDefinitions";
+            errorList = frb.ToServReportsV2().validateQuery(query);
+            Assert.AreEqual(1, errorList.Count);
+            Assert.IsTrue(errorList[0].Equals("Cannot drop the table 'ReportDefinitions', because it does not exist or you do not have permission."));
+        }
     }
 
 }
