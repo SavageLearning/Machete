@@ -1298,10 +1298,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Api\Api.csproj">
-      <Project>{c0d0505f-a72a-4570-8e62-1d54101d2046}</Project>
-      <Name>Api</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Machete.Data\Machete.Data.csproj">
       <Project>{a9f879bc-ca11-4470-a655-8541b5da41a1}</Project>
       <Name>Machete.Data</Name>
