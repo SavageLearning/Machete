@@ -149,7 +149,7 @@ namespace Machete.Service
 
         public List<string> validateQuery(string query)
         {
-            return repo.validate(query).ToList();
+            return rRepo.validate(query).ToList();
         }
     }
 }
