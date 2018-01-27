@@ -241,6 +241,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\HirerAccountController.cs" />
     <Compile Include="Controllers\ReportsV2Controller.cs" />
     <Compile Include="Controllers\V2Controller.cs" />
     <Compile Include="Maps\ActivityProfile.cs" />
@@ -942,6 +943,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\PublishProfiles\" />
+    <Folder Include="Views\HirerAccount\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
