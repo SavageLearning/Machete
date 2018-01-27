@@ -37,7 +37,7 @@ namespace Machete.Service
     public interface IService<T> where T : Record
     {
         T Get(int id);
-        T Get(Func<T, bool> where);
+        //T Get(Func<T, bool> where);
         IEnumerable<T> GetAll();
         IEnumerable<T> GetMany(Func<T, bool> where);
         T Create(T record, string user);
@@ -78,14 +78,14 @@ namespace Machete.Service
         /// 
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<T> GetAll() 
+        public IEnumerable<T> GetAll()
         {
-            return repo.GetAll();
+            return repo.GetAllQ();
         }
 
         public IEnumerable<T> GetMany(Func<T, bool> where)
         {
-            return repo.GetMany(where);
+            return repo.GetManyQ(where);
         }
         /// <summary>
         /// 
@@ -97,10 +97,10 @@ namespace Machete.Service
             return repo.GetById(id);
         }
 
-        public virtual T Get(Func<T, bool> where)
-        {
-            return repo.Get(where);
-        }
+        //public virtual T Get(Func<T, bool> where)
+        //{
+        //    return repo.Get(where);
+        //}
         /// <summary>
         /// 
         /// </summary>

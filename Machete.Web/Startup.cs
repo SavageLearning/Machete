@@ -9,6 +9,8 @@ namespace Machete.Web
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
+            //var api = new Machete.Api.Startup();
+            //api.Configuration(app);
         }
     }
 }

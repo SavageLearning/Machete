@@ -29,11 +29,11 @@ namespace Machete.Service
 
     public class ReportsV2Service : ServiceBase<ReportDefinition>, IReportsV2Service
     {
-        private readonly IReportsRepository repo;
+        private readonly IReportsRepository rRepo;
         private readonly IMapper map;
-        public ReportsV2Service(IReportsRepository repo, IUnitOfWork unitOfWork, IMapper map) : base(repo, unitOfWork)
+        public ReportsV2Service(IReportsRepository rRepo, IUnitOfWork unitOfWork, IMapper map) : base(rRepo, unitOfWork)
         {
-            this.repo = repo;
+            this.rRepo = rRepo;
             this.map = map;
         }
 
@@ -43,16 +43,16 @@ namespace Machete.Service
             int id = 0;
             if (!Int32.TryParse(o.idOrName, out id))
             {
-                id = repo.GetMany(r => string.Equals(r.name, o.idOrName, StringComparison.OrdinalIgnoreCase)).First().ID;
+                id = repo.GetManyQ(r => string.Equals(r.name, o.idOrName, StringComparison.OrdinalIgnoreCase)).First().ID;
             }
 
             var oo = map.Map<DTO.SearchOptions, Data.DTO.SearchOptions>(o);
-            return repo.getDynamicQuery(id, oo);
+            return rRepo.getDynamicQuery(id, oo);
         }
 
         public List<ReportDefinition> getList()
         {
-            return repo.getList();
+            return rRepo.getList();
         }
 
         public ReportDefinition Get(string idOrName)
@@ -66,14 +66,14 @@ namespace Machete.Service
             }
             else
             {
-                result = repo.GetMany(r => string.Equals(r.name, idOrName, StringComparison.OrdinalIgnoreCase)).First();
+                result = repo.GetManyQ(r => string.Equals(r.name, idOrName, StringComparison.OrdinalIgnoreCase)).First();
             }
             return result;
         }
 
         public List<QueryMetadata> getColumns(string tableName)
         {
-            var result = repo.getColumns(tableName);
+            var result = rRepo.getColumns(tableName);
             result.ForEach(c => c.include = true);
             return result;
         }
@@ -81,14 +81,14 @@ namespace Machete.Service
         public DataTable getDataTable(string query, DTO.SearchOptions o)
         {
             var oo = map.Map<DTO.SearchOptions, Data.DTO.SearchOptions>(o);
-            return repo.getDataTable(query, oo);
+            return rRepo.getDataTable(query, oo);
         }
 
 
         public void getXlsxFile(DTO.SearchOptions o, ref byte[] bytes)
         {
             var oo = map.Map<DTO.SearchOptions, Data.DTO.SearchOptions>(o);
-            var tbl = repo.getDataTable(buildExportQuery(o), oo);
+            var tbl = rRepo.getDataTable(buildExportQuery(o), oo);
 
             using (ExcelPackage pck = new ExcelPackage())
             {

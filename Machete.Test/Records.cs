@@ -29,11 +29,13 @@ using Machete.Domain;
 using Machete.Data;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
+using System.Globalization;
 
 namespace Machete.Test 
 {
     public static class Records
     {
+        private static readonly DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         public static int GetNextMemberID(DbSet<Worker> db)
         {
             //debug
@@ -219,23 +221,23 @@ namespace Machete.Test
             state = "WA",
             zipcode = "12345",
             phone = "123-456-7890",
-            typeOfWorkID = 20,
+            //typeOfWorkID = 20,
             timeFlexible = true,
             englishRequired = false,
-            lunchSupplied = false,
-            permanentPlacement = false,
+           // lunchSupplied = false,
+           // permanentPlacement = false,
             transportMethodID = 1,
             transportFee = 20.75,
-            transportFeeExtra = 0,
+            //transportFeeExtra = 0,
             englishRequiredNote = "",
             description = "description string",
-            dateTimeofWork = DateTime.Today,
-            datecreated = DateTime.Now,             //datetime
-            dateupdated = DateTime.Now,              //datetime
+            dateTimeofWork = DateTime.Today.ToString("o", CultureInfo.InvariantCulture),
+            datecreated = DateTime.Now.ToString("o", CultureInfo.InvariantCulture),
+            dateupdated = DateTime.Now.ToString("o", CultureInfo.InvariantCulture),       
             createdby = "initialization script",
             updatedby = "initialization script",
-            transportTransactType = 256,
-            transportTransactID = "#6169"
+            //transportTransactType = 256,
+           // transportTransactID = "#6169"
         };
 
         public static WorkAssignment assignment = new WorkAssignment

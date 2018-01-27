@@ -41,16 +41,16 @@ namespace Machete.Service
     // Ïf I made a non-web app, would I still need the code? If yes, put in here.
     public class PersonService : ServiceBase<Person>, IPersonService
     {
-        private readonly ILookupRepository lcache;
+        private readonly ILookupRepository lRepo;
         private readonly IMapper map;
         public PersonService(IPersonRepository pRepo,
                              IUnitOfWork unitOfWork,
-                             ILookupRepository _lcache,
+                             ILookupRepository lRepo,
                              IMapper map
                              ) : base(pRepo, unitOfWork)
         {
             this.logPrefix = "Person";
-            this.lcache = _lcache;
+            this.lRepo = lRepo;
             this.map = map;
         }
 
@@ -67,17 +67,13 @@ namespace Machete.Service
             if (o.showNotWorkers == true) IndexViewBase.getNotWorkers(o, ref q);
             if (o.showExpiredWorkers == true) {
                 IndexViewBase.getExpiredWorkers(o, 
-                    lcache.Get(s => s.category == LCategory.memberstatus && 
-                                    s.key == LMemberStatus.Expired
-                               ).ID,
+                    lRepo.GetByKey(LCategory.memberstatus, LMemberStatus.Expired).ID,
                     ref q);
             }
             if (o.showSExWorkers == true) {
-                IndexViewBase.getSExWorkers(o, 
-                    lcache.Get(s => s.category == LCategory.memberstatus &&
-                                    s.key == LMemberStatus.Sanctioned).ID, 
-                    lcache.Get(s => s.category == LCategory.memberstatus &&
-                                    s.key == LMemberStatus.Expelled).ID, 
+                IndexViewBase.getSExWorkers(o,
+                    lRepo.GetByKey(LCategory.memberstatus, LMemberStatus.Sanctioned).ID,
+                    lRepo.GetByKey(LCategory.memberstatus, LMemberStatus.Expelled).ID, 
                     ref q);
 
             }

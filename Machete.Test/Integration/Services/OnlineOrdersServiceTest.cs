@@ -15,217 +15,222 @@ namespace Machete.Test.Integration.Services
     [TestClass]
     public class OnlineOrdersServiceTest
     {
-        [TestClass]
-        public class ReportsV2ServiceTests
+        FluentRecordBase frb;
+
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext c) { }
+
+        [TestInitialize]
+        public void TestInitialize()
         {
-            DTO.SearchOptions o;
-            FluentRecordBase frb;
-            WorkOrder wo;
-            OnlineOrdersService serv;
-            IMapper map;
+            frb = new FluentRecordBase();
+        }
 
-            [ClassInitialize]
-            public static void ClassInitialize(TestContext c) {}
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.OnlineOrders)]
+        public void AutoMapper_OnlineOrder()
+        {
+            //
+            //Arrange
+            var wo = frb.CloneOnlineOrder();
+            var serv = frb.ToServOnlineOrders();
+            var map = frb.ToApiMapper();
+            //
+            //Act
+            var result = map.Map<Api.ViewModel.WorkOrder, Machete.Domain.WorkOrder>(wo);
+            //
+            //Assert
+            Assert.IsNotNull(result, "DTO.WorkOrderList is Null");
+            Assert.IsTrue(result.GetType() == typeof(Machete.Domain.WorkOrder));
+        }
 
-            [TestInitialize]
-            public void TestInitialize()
-            {
-                frb = new FluentRecordBase();
-            }
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.OnlineOrders)]
+        public void CreateOnlineOrder_Succeeds()
+        {
+            //
+            // Arrange
+            var e = frb.ToEmployer();
+            var wo = frb.CloneWorkOrder();
+            var lserv = frb.ToServLookup();
 
-            [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.OnlineOrders)]
-            public void AutoMapper_OnlineOrder()
-            {
-                //
-                //Arrange
-                var wo = frb.CloneOnlineOrder();
-                var serv = frb.ToServOnlineOrders();
-                var map = frb.ToApiMapper();
-                //
-                //Act
-                var result = map.Map<Api.ViewModel.WorkOrder,  Machete.Domain.WorkOrder>(wo);
-                //
-                //Assert
-                Assert.IsNotNull(result, "DTO.WorkOrderList is Null");
-                Assert.IsTrue(result.GetType() == typeof(Machete.Domain.WorkOrder));
-            }
+            wo.zipcode = "98118";
+            wo.EmployerID = e.ID;
+            var ll = lserv.GetByKey(LCategory.transportmethod, "transport_bus");
+            wo.transportMethodID = ll.ID;
+            wo.workAssignments = new List<WorkAssignment>();
+            var wa = frb.CloneWorkAssignment();
+            wa.transportCost = 5; wa.ID = 1;
+            wo.workAssignments.Add(wa);
+            var serv = frb.ToServOnlineOrders();
 
-            [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.OnlineOrders)]
-            public void CreateOnlineOrder_Succeeds()
-            {
-                //
-                // Arrange
-                var e = frb.ToEmployer();
-                var wo = frb.CloneWorkOrder();
-                var lserv = frb.ToServLookup();
+            // 
+            // Act
+            var result = serv.Create(wo, "CreateOnlineOrder_Succeeds");
+            //
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.workAssignments);
+            Assert.IsTrue(result.workAssignments.Count() == 1);
+        }
 
-                wo.zipcode = "98118";
-                wo.EmployerID = e.ID;
-                var ll = lserv.Get(l => l.key == "transport_bus");
-                wo.transportMethodID = ll.ID;
-                wo.workAssignments = new List<WorkAssignment>();
-                var wa = frb.CloneWorkAssignment();
-                wa.transportCost = 5; wa.ID = 1;
-                wo.workAssignments.Add(wa);
-                var serv = frb.ToServOnlineOrders();
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.OnlineOrders)]
+        [ExpectedException(typeof(MacheteValidationException))]
+        public void CreateOnlineOrder_WA_empty_throws_error()
+        {
+            //
+            // Arrange
+            var e = frb.ToEmployer();
+            var wo = frb.CloneWorkOrder();
+            var lserv = frb.ToServLookup();
 
-                // 
-                // Act
-                var result = serv.Create(wo, "CreateOnlineOrder_Succeeds");
-                //
-                // Assert
-                Assert.IsNotNull(result);
-                Assert.IsNotNull(result.workAssignments);
-                Assert.IsTrue(result.workAssignments.Count() == 1);
-            }
+            wo.zipcode = "98118";
+            wo.EmployerID = e.ID;
+            var ll = lserv.GetByKey(LCategory.transportmethod, "transport_bus");
+            wo.transportMethodID = ll.ID;
+            wo.workAssignments = new List<WorkAssignment>();
+            var serv = frb.ToServOnlineOrders();
 
-            [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.OnlineOrders)]
-            [ExpectedException(typeof(MacheteInvalidInputException))]
-            public void CreateOnlineOrder_WA_empty_throws_error()
-            {
-                //
-                // Arrange
-                var e = frb.ToEmployer();
-                var wo = frb.CloneWorkOrder();
-                var lserv = frb.ToServLookup();
+            // 
+            // Act
+            var result = serv.Create(wo, "CreateOnlineOrder_WA_empty_throws_error");
 
-                wo.zipcode = "98118";
-                wo.EmployerID = e.ID;
-                var ll = lserv.Get(l => l.key == "transport_bus");
-                wo.transportMethodID = ll.ID;
-                wo.workAssignments = new List<WorkAssignment>();
-                var serv = frb.ToServOnlineOrders();
+        }
 
-                // 
-                // Act
-                var result = serv.Create(wo, "CreateOnlineOrder_WA_empty_throws_error");
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.OnlineOrders)]
+        [ExpectedException(typeof(MacheteValidationException))]
+        public void CreateOnlineOrder_wrong_cost_throws_error()
+        {
+            //
+            // Arrange
+            var e = frb.ToEmployer();
+            var wo = frb.CloneWorkOrder();
+            var lserv = frb.ToServLookup();
 
-            }
+            wo.zipcode = "98118";
+            wo.EmployerID = e.ID;
+            var ll = lserv.GetByKey(LCategory.transportmethod, "transport_bus");
+            wo.transportMethodID = ll.ID;
+            wo.workAssignments = new List<WorkAssignment>();
+            var wa = frb.CloneWorkAssignment();
+            wa.transportCost = 0;
+            wo.workAssignments.Add(wa);
+            var serv = frb.ToServOnlineOrders();
 
-            [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.OnlineOrders)]
-            [ExpectedException(typeof(MacheteInvalidInputException))]
-            public void CreateOnlineOrder_wrong_cost_throws_error()
-            {
-                //
-                // Arrange
-                var e = frb.ToEmployer();
-                var wo = frb.CloneWorkOrder();
-                var lserv = frb.ToServLookup();
+            // 
+            // Act
+            var result = serv.Create(wo, "CreateOnlineOrder_wrong_cost_throws_error");
+            //
+            // Assert
+        }
 
-                wo.zipcode = "98118";
-                wo.EmployerID = e.ID;
-                var ll = lserv.Get(l => l.key == "transport_bus");
-                wo.transportMethodID = ll.ID;
-                wo.workAssignments = new List<WorkAssignment>();
-                var wa = frb.CloneWorkAssignment();
-                wa.transportCost = 0;
-                wo.workAssignments.Add(wa);
-                var serv = frb.ToServOnlineOrders();
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.OnlineOrders)]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void CreateOnlineOrder_unknown_zipcode_throws_error()
+        {
+            //
+            // Arrange
+            var e = frb.ToEmployer();
+            var wo = frb.CloneWorkOrder();
+            var lserv = frb.ToServLookup();
 
-                // 
-                // Act
-                var result = serv.Create(wo, "CreateOnlineOrder_wrong_cost_throws_error");
-                //
-                // Assert
-            }
+            wo.zipcode = "12345";
+            wo.EmployerID = e.ID;
+            var ll = lserv.GetByKey(LCategory.transportmethod, "transport_bus");
+            wo.transportMethodID = ll.ID;
+            wo.workAssignments = new List<WorkAssignment>();
+            var wa = frb.CloneWorkAssignment();
+            wa.transportCost = 5;
+            wo.workAssignments.Add(wa);
+            var serv = frb.ToServOnlineOrders();
 
-            [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.OnlineOrders)]
-            [ExpectedException(typeof(InvalidOperationException))]
-            public void CreateOnlineOrder_unknown_zipcode_throws_error()
-            {
-                //
-                // Arrange
-                var e = frb.ToEmployer();
-                var wo = frb.CloneWorkOrder();
-                var lserv = frb.ToServLookup();
-
-                wo.zipcode = "12345";
-                wo.EmployerID = e.ID;
-                var ll = lserv.Get(l => l.key == "transport_bus");
-                wo.transportMethodID = ll.ID;
-                wo.workAssignments = new List<WorkAssignment>();
-                var wa = frb.CloneWorkAssignment();
-                wa.transportCost = 5;
-                wo.workAssignments.Add(wa);
-                var serv = frb.ToServOnlineOrders();
-
-                // 
-                // Act
-                var result = serv.Create(wo, "CreateOnlineOrder_unknown_zipcode_throws_error");
-                //
-                // Assert
-            }
+            // 
+            // Act
+            var result = serv.Create(wo, "CreateOnlineOrder_unknown_zipcode_throws_error");
+            //
+            // Assert
+        }
 
 
-            [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.OnlineOrders)]
-            public void CreateOnlineOrder_verify_tiered_pricing()
-            {
-                //
-                // Arrange
-                var e = frb.ToEmployer();
-                var wo = frb.CloneWorkOrder();
-                var lserv = frb.ToServLookup();
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.OnlineOrders)]
+        public void CreateOnlineOrder_verify_tiered_pricing()
+        {
+            //
+            // Arrange
+            var e = frb.ToEmployer();
+            var wo = frb.CloneWorkOrder();
+            var lserv = frb.ToServLookup();
 
-                wo.zipcode = "98118"; // affects transport cost 
-                wo.EmployerID = e.ID;
-                var ll = lserv.Get(l => l.key == "transport_van");
-                wo.transportMethodID = ll.ID;
-                wo.workAssignments = new List<WorkAssignment>();
-                var wa = frb.CloneWorkAssignment();
-                wa.transportCost = 15; wa.ID = 1;
-                wo.workAssignments.Add(wa);
-                wa = frb.CloneWorkAssignment();
-                wa.transportCost = 5; wa.ID = 2;
-                wo.workAssignments.Add(wa);
-                wa = frb.CloneWorkAssignment();
-                wa.transportCost = 0; wa.ID = 3;
-                wo.workAssignments.Add(wa);
+            wo.zipcode = "98118"; // affects transport cost 
+            wo.EmployerID = e.ID;
+            var ll = lserv.GetByKey(LCategory.transportmethod, "transport_van");
+            wo.transportMethodID = ll.ID;
+            wo.workAssignments = new List<WorkAssignment>();
+            var wa = frb.CloneWorkAssignment();
+            wa.transportCost = 15; wa.ID = 1;
+            wo.workAssignments.Add(wa);
+            wa = frb.CloneWorkAssignment();
+            wa.transportCost = 5; wa.ID = 2;
+            wo.workAssignments.Add(wa);
+            wa = frb.CloneWorkAssignment();
+            wa.transportCost = 0; wa.ID = 3;
+            wo.workAssignments.Add(wa);
 
-                var serv = frb.ToServOnlineOrders();
+            var serv = frb.ToServOnlineOrders();
 
-                // 
-                // Act
-                var result = serv.Create(wo, "verify_tiered_pricing");
-                //
-                // Assert
-                Assert.IsNotNull(result);
-                Assert.IsNotNull(result.workAssignments);
-                Assert.IsTrue(result.workAssignments.Count() == 3);
-            }
+            // 
+            // Act
+            var result = serv.Create(wo, "verify_tiered_pricing");
+            //
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.workAssignments);
+            Assert.IsTrue(result.workAssignments.Count() == 3);
+        }
 
-            [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.OnlineOrders)]
-            [ExpectedException(typeof(MacheteInvalidInputException))]
-            public void CreateOnlineOrder_tiered_IDs_throws_error()
-            {
-                //
-                // Arrange
-                var e = frb.ToEmployer();
-                var wo = frb.CloneWorkOrder();
-                var lserv = frb.ToServLookup();
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.OnlineOrders)]
+        [ExpectedException(typeof(MacheteValidationException))]
+        public void CreateOnlineOrder_tiered_IDs_throws_error()
+        {
+            //
+            // Arrange
+            var e = frb.ToEmployer();
+            var wo = frb.CloneWorkOrder();
+            var lserv = frb.ToServLookup();
 
-                wo.zipcode = "98118"; // affects transport cost 
-                wo.EmployerID = e.ID;
-                var ll = lserv.Get(l => l.key == "transport_van");
-                wo.transportMethodID = ll.ID;
-                wo.workAssignments = new List<WorkAssignment>();
-                var wa = frb.CloneWorkAssignment();
-                wa.transportCost = 15; wa.ID = 1;
-                wo.workAssignments.Add(wa);
-                wa = frb.CloneWorkAssignment();
-                wa.transportCost = 5; wa.ID = 2;
-                wo.workAssignments.Add(wa);
-                wa = frb.CloneWorkAssignment();
-                wa.transportCost = 0; wa.ID = 2;
-                wo.workAssignments.Add(wa);
+            wo.zipcode = "98118"; // affects transport cost 
+            wo.EmployerID = e.ID;
+            var ll = lserv.GetByKey(LCategory.transportmethod, "transport_van");
+            wo.transportMethodID = ll.ID;
+            wo.workAssignments = new List<WorkAssignment>();
+            var wa = frb.CloneWorkAssignment();
+            wa.transportCost = 15; wa.ID = 1;
+            wo.workAssignments.Add(wa);
+            wa = frb.CloneWorkAssignment();
+            wa.transportCost = 5; wa.ID = 2;
+            wo.workAssignments.Add(wa);
+            wa = frb.CloneWorkAssignment();
+            wa.transportCost = 0; wa.ID = 2;
+            wo.workAssignments.Add(wa);
 
-                var serv = frb.ToServOnlineOrders();
+            var serv = frb.ToServOnlineOrders();
 
-                // 
-                // Act
-                var result = serv.Create(wo, "tiered_IDs_throws_error");
-                //
-                // Assert
-            }
+            // 
+            // Act
+            var result = serv.Create(wo, "tiered_IDs_throws_error");
+            //
+            // Assert
+        }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.OnlineOrders)]
+        public void CreateOnlineOrder_get_workorder()
+        {
+            // arrange
+            var wo = frb.ToWorkOrder();
+            var serv = frb.ToServOnlineOrders();
+            // act
+            var result = serv.Get(wo.ID);
+            // 
+            Assert.IsNotNull(result);
         }
     }
+    
 }

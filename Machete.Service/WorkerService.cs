@@ -34,7 +34,7 @@ namespace Machete.Service
 {
     public interface IWorkerService : IService<Worker>
     {
-        Worker GetWorkerByNum(int dwccardnum);
+        Worker GetByMemberID(int dwccardnum);
         int GetNextWorkerNum();
         dataTableResult<DTO.WorkerList> GetIndexView(viewOptions o);
         // IQueryable<Worker> GetPriorEmployees(int employerId);
@@ -48,6 +48,7 @@ namespace Machete.Service
         private readonly IPersonRepository pRepo;
         private readonly IMapper map;
         private readonly ILookupRepository lRepo;
+        private readonly IWorkerRepository wRepo;
 
         public WorkerService(IWorkerRepository wRepo, 
             ILookupRepository lRepo,
@@ -64,12 +65,12 @@ namespace Machete.Service
             this.pRepo = pRepo;
             this.map = map;
             this.lRepo = lRepo;
+            this.wRepo = wRepo;
         }
 
-        public Worker GetWorkerByNum(int dwccardnum)
+        public Worker GetByMemberID(int dwccardnum)
         {
-            Worker worker = repo.Get(w => w.dwccardnum == dwccardnum);
-            return worker;
+            return wRepo.GetByMemberID(dwccardnum);
         }
 
         public int GetNextWorkerNum()
@@ -97,7 +98,7 @@ namespace Machete.Service
 
         public override Worker Create(Worker record, string user)
         {
-            record.Person = pRepo.Get(p => p.ID == record.ID);
+            record.Person = pRepo.GetById(record.ID);
             var result = base.Create(record, user);
             updateComputedFields(ref result);
             uow.Commit();

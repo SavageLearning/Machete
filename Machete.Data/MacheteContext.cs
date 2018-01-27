@@ -94,6 +94,9 @@ namespace Machete.Data
             modelBuilder.Configurations.Add(new TransportRuleBuilder());
             modelBuilder.Configurations.Add(new TransportCostRuleBuilder());
             modelBuilder.Configurations.Add(new ScheduleRuleBuilder());
+            modelBuilder.Configurations.Add(new EmployerBuilder());
+            modelBuilder.Configurations.Add(new WorkOrderBuilder());
+            modelBuilder.Configurations.Add(new WorkAssignmentBuilder());
 
             modelBuilder.Entity<Employer>().ToTable("Employers");
             modelBuilder.Entity<WorkOrder>().ToTable("WorkOrders");

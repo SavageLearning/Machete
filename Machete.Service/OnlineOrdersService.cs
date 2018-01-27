@@ -11,8 +11,7 @@ namespace Machete.Service
 {
     public interface IOnlineOrdersService
     {
-        //WorkOrder Get(int id);
-        IEnumerable<WorkOrder> GetAll();
+        WorkOrder Get(int id);
         IEnumerable<WorkOrder> GetMany(Func<WorkOrder, bool> where);
         WorkOrder Create(WorkOrder order, string user);
     }
@@ -20,7 +19,7 @@ namespace Machete.Service
     public class OnlineOrdersService : IOnlineOrdersService
     {
         private readonly IMapper map;
-        private readonly IEmployerService eserv;
+        //private readonly IEmployerService eserv;
         private readonly IWorkOrderService woserv;
         private readonly IWorkAssignmentService waserv;
         private readonly ITransportRuleService trServ;
@@ -43,9 +42,9 @@ namespace Machete.Service
             this.lServ = lServ;
         }
 
-        public IEnumerable<WorkOrder> GetAll()
+        public WorkOrder Get(int id)
         {
-            return woserv.GetAll();
+            return woserv.Get(id);
         }
 
         public IEnumerable<WorkOrder> GetMany(Func<WorkOrder, bool> where)
@@ -74,25 +73,25 @@ namespace Machete.Service
         public bool validateTransportRules(WorkOrder order)
         {
             if (order.workAssignments == null)
-                throw new MacheteNullObjectException("WorkAssignments can't be null");
+                throw new MacheteValidationException("WorkAssignments can't be null");
 
             if (order.workAssignments.Count() == 0)
-                throw new MacheteInvalidInputException("WorkAssignments can't be empty");
+                throw new MacheteValidationException("WorkAssignments can't be empty");
 
             if (order.transportMethodID == 0)
-                throw new MacheteInvalidInputException("TransportMethod can't be 0");
+                throw new MacheteValidationException("TransportMethod can't be 0");
 
             var transMethod = lServ.Get(order.transportMethodID);
             if (transMethod == null)
-                throw new MacheteNullObjectException("Transport method lookup returned null");
+                throw new MacheteValidationException("Transport method lookup returned null");
 
             var trRules = trServ.GetMany(a => a.lookupKey == transMethod.key);
             if (trRules == null || trRules.Count() == 0)
-                throw new MacheteNullObjectException("TransportMethod does not have rules associated with it");
+                throw new MacheteValidationException("TransportMethod does not have rules associated with it");
 
-            var trRule = trRules.Where(r => r.zipcodes.Contains(order.zipcode)).First();
+            var trRule = trRules.Where(r => r.zipcodes.Contains(order.zipcode) || r.zipcodes.Contains("*")).First();
             if (trRule == null)
-                throw new MacheteNullObjectException("No rule matching order zipcode");
+                throw new MacheteValidationException("No rule matching order zipcode");
             //
             // the code assumes that IDs sent from the client
             // are unique and sequential. They determine price and are prescribed for the pricing logic:
@@ -100,7 +99,7 @@ namespace Machete.Service
             foreach (var wa in order.workAssignments.OrderBy(a => a.ID))
             {
                 if (wa.ID != i)
-                    throw new MacheteInvalidInputException("Work Assignment ID invalid");
+                    throw new MacheteValidationException("Work Assignment ID invalid");
                 i++;
             }
 
@@ -111,10 +110,10 @@ namespace Machete.Service
                 // later on down in the code
                 var costRule = trRule.costRules.Where(c => wa.ID >= c.minWorker && wa.ID <= c.maxWorker).First();
                 if (costRule == null)
-                    throw new MacheteNullObjectException("No cost rule matching workAssignment ID");
+                    throw new MacheteValidationException("No cost rule matching workAssignment ID");
 
                 if (wa.transportCost != costRule.cost)
-                    throw new MacheteInvalidInputException("Unexpected transport cost from client");
+                    throw new MacheteValidationException("Unexpected transport cost from client");
             }
 
             return true;

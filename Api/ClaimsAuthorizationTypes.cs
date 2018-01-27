@@ -15,11 +15,18 @@ namespace Machete.Api
     public struct CV
     {
         public const string Admin = "Administrator";
-        public const string Hirer = "Hirer";
+        public const string Employer = "Hirer";
         public const string User = "User";
         public const string Phonedesk = "Phonedesk";
         public const string Manager = "Manager";
         public const string Checkin = "Check-in";
         public const string Teacher = "Teacher";
+    }
+
+    public struct Cfg
+    {
+        public const string PaypalId = "PayPalClientID";
+        public const string PaypalSecret = "PayPalClientSecret";
+        public const string PaypalUrl = "PayPalUrl";
     }
 }

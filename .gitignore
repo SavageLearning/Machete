@@ -5,7 +5,7 @@
 Machete.suo
 Machete.Api/
 *.Web.Publish.xml
-*/Properties/PublishProfiles/*
+*/Properties/PublishProfiles/*.user
 # Build results
 [Dd]ebug/
 [Rr]elease/

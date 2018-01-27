@@ -15,61 +15,6 @@ namespace Machete.Identity
             new Client
             {
                 Enabled = true,
-                ClientName = "JS Client",
-                ClientId = "js",
-                Flow = Flows.Implicit,
-
-                RedirectUris = new List<string>
-                {
-                    "http://localhost:56668/popup.html",
-                    // The new page is a valid redirect page after login
-                    "http://localhost:56668/silent-renew.html",
-                },
-                // Valid URLs after logging out
-                PostLogoutRedirectUris = new List<string>
-                {
-                    "http://localhost:56668/index.html",
-                },
-                AllowedCorsOrigins = new List<string>
-                {
-                    "http://localhost:56668",
-                    "http://localhost:4200"
-
-                },
-
-                AllowAccessToAllScopes = true,
-                AccessTokenLifetime = 3600
-            },
-            new Client
-            {
-                Enabled = true,
-                ClientName = "JMurphzyo!",
-                ClientId = "oidc-client-poc",
-                Flow = Flows.Implicit,
-                RequireConsent = false,
-                RedirectUris = new List<string>
-                {
-                    "http://localhost:4200/auth.html",
-                    // The new page is a valid redirect page after login
-                    "http://localhost:4200/silent-renew.html"
-                },
-                // Valid URLs after logging out
-                PostLogoutRedirectUris = new List<string>
-                {
-                    "http://localhost:4200/index.html"
-                },
-                AllowedCorsOrigins = new List<string>
-                {
-                    "http://localhost:4200"
-
-                },
-
-                AllowAccessToAllScopes = true,
-                AccessTokenLifetime = 3600
-            },
-            new Client
-            {
-                Enabled = true,
                 ClientName = "Machete UI (local)",
                 ClientId = "machete-ui-local",
                 Flow = Flows.Implicit,

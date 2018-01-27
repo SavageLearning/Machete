@@ -71,20 +71,20 @@ namespace Machete.Data.Infrastructure
                     dataContext = new MacheteContext(connString);
                 }
             }
-            //log_connection_count();
+            log_connection_count();
             return dataContext;
         }
 
-        //private void log_connection_count()
-        //{
-        //    var sb = new StringBuilder();
-        //    var conn1 = (dataContext as System.Data.Entity.DbContext).Database.Connection;
-        //    var objid1 = field.GetValue(conn1);
-        //    sb.AppendFormat("-----------DatabaseFactory SqlConnection # [{0}], Conn: {1}",
-        //        objid1.ToString(),
-        //        connString);
-        //    Debug.WriteLine(sb.ToString());
-        //}
+        private void log_connection_count()
+        {
+            var sb = new StringBuilder();
+            var conn1 = (dataContext as System.Data.Entity.DbContext).Database.Connection;
+            var objid1 = field.GetValue(conn1);
+            sb.AppendFormat("-----------DatabaseFactory SqlConnection # [{0}], Conn: {1}",
+                objid1.ToString(),
+                connString);
+            Debug.WriteLine(sb.ToString());
+        }
         //public void Set(MacheteContext context)
         //{
         //    dataContext = context;

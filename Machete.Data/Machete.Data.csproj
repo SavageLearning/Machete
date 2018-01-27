@@ -363,6 +363,10 @@
     <Compile Include="Migrations\201708200456007_v1_13_0-online_orders.Designer.cs">
       <DependentUpon>201708200456007_v1_13_0-online_orders.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712232240329_v1_13_1-replace_paypal_fields.cs" />
+    <Compile Include="Migrations\201712232240329_v1_13_1-replace_paypal_fields.Designer.cs">
+      <DependentUpon>201712232240329_v1_13_1-replace_paypal_fields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AllRepositories.cs" />
     <Compile Include="Repositories\ConfigRepository.cs" />
@@ -445,6 +449,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201708200456007_v1_13_0-online_orders.resx">
       <DependentUpon>201708200456007_v1_13_0-online_orders.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712232240329_v1_13_1-replace_paypal_fields.resx">
+      <DependentUpon>201712232240329_v1_13_1-replace_paypal_fields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

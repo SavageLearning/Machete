@@ -82,23 +82,15 @@ namespace Machete.Web.Controllers
 
             if (User.Identity.IsAuthenticated)
             {
+                // leave this until everything is converted over
+                // Employers could still login to the old page, so redirect
                 if (User.IsInRole("Hirer"))
                 {
-                    return RedirectToLocal("/V2/Employers"); //  RedirectToAction("Index", "HirerWorkOrder");
+                    return RedirectToLocal("/V2/Onlineorders");
                 }
                 else
                 {
                     return RedirectToAction("Index", "Home");
-                }
-            }
-
-            if (returnUrl != null && returnUrl != "")
-            {
-                // Redirect users back to external signin
-                string[] controller = returnUrl.Split(new Char[] {'/'});
-                if (controller.Length >= 2 && (controller[1] == "HirerWorkOrder" || controller[1] == "HirerAccount"))
-                {
-                    return RedirectToAction("Login", "HirerAccount");
                 }
             }
 
@@ -606,22 +598,6 @@ namespace Machete.Web.Controllers
 
             ViewBag.ReturnUrl = returnUrl;
             return View(model);
-        }
-
-        //
-        // GET: /Account/Signup
-        [AllowAnonymous]
-        public ActionResult Signup()
-        {
-            return View("Signup");
-        }
-
-        //
-        // GET: /Account/Signup
-        [AllowAnonymous]
-        public ActionResult HirerSignon()
-        {
-            return RedirectToAction("Login", "Account");
         }
 
         //

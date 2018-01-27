@@ -22,7 +22,7 @@ namespace Machete.Api.Controllers
         }
 
         // GET: api/ScheduleRules
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Hirer })]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Employer })]
         public IHttpActionResult Get()
         {
 

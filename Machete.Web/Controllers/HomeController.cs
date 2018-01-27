@@ -36,12 +36,9 @@ namespace Machete.Web.Controllers
             {
                 if (User.IsInRole("Hirer"))
                 {
-                    return RedirectToAction("Index", "HirerWorkOrder");
+                    return Redirect("/V2/Onlineorders");
                 }
-                else
-                {
-                    return View();
-                }
+                return View();
             }
             return RedirectToAction("Login", "Account");
         }

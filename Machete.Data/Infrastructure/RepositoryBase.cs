@@ -38,13 +38,8 @@ namespace Machete.Data.Infrastructure
         void Delete(T entity);
         void Delete(Func<T, Boolean> predicate);
         T GetById(int Id);
-        T Get(Func<T, Boolean> where);
-        IEnumerable<T> GetAll();
-        IEnumerable<T> GetMany(Func<T, bool> where);
         IQueryable<T> GetAllQ();
         IQueryable<T> GetManyQ(Func<T, bool> where);
-        IQueryable<T> GetManyQ();
-        T GetQ(Func<T, bool> where);
     }
     // class-declaration is a type-declaration that declares a new class
     //
@@ -108,43 +103,14 @@ namespace Machete.Data.Infrastructure
             return dbset.Find(id);
         }
 
-        public virtual IEnumerable<T> GetAll()
-        {
-            return dbset.AsEnumerable();
-        }
         public virtual IQueryable<T> GetAllQ()
         {
             return dbset.AsNoTracking().AsQueryable();
         }
-        public virtual IEnumerable<T> GetMany(Func<T, bool> where)
-        {
-            return dbset.Where(where);
-        }
-        /// <summary>
-        /// Returns tracked objects from database
-        /// </summary>
-        /// <param name="where"></param>
-        /// <returns></returns>
+
         public virtual IQueryable<T> GetManyQ(Func<T, bool> where)
         {
             return dbset.Where(where).AsQueryable();
-        }
-        /// <summary>
-        /// Returns tracked objects from database
-        /// </summary>
-        /// <param name="where"></param>
-        /// <returns></returns>
-        public virtual IQueryable<T> GetManyQ()
-        {
-            return dbset.AsQueryable();
-        }
-        public T Get(Func<T, bool> where)
-        {
-            return dbset.Where(where).FirstOrDefault<T>();
-        }
-        public T GetQ(Func<T, bool> where)
-        {
-            return dbset.AsQueryable().First<T>(where);
         }
     }
 }

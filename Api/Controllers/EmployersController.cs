@@ -25,7 +25,7 @@ namespace Machete.Api.Controllers
 
         // GET api/values
         // TODO Add real permissions
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Hirer })]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Employer })]
         public IHttpActionResult Get()
         {
             var vo = new viewOptions();
@@ -54,7 +54,7 @@ namespace Machete.Api.Controllers
             return Json(new { data = result });
         }
 
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Manager, CV.Phonedesk, CV.Hirer })]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Manager, CV.Phonedesk, CV.Employer })]
         [HttpGet]
         [Route("api/employer/profile")]
         public IHttpActionResult ProfileGet()
@@ -64,16 +64,17 @@ namespace Machete.Api.Controllers
         }
 
         // POST api/values
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
+        // This action method is for ANY employer
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Manager, CV.Phonedesk })]
         public void Post([FromBody]Employer employer)
         {
             var domain = map.Map<Employer, Domain.Employer>(employer);
             serv.Create(domain, User.Identity.Name);
         }
 
-
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Hirer })]
+        // For an employer creating his/her own record
         [HttpPost]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Employer })]
         [Route("api/employer/profile")]
         public void ProfilePost([FromBody]Employer employer)
         {
@@ -82,8 +83,8 @@ namespace Machete.Api.Controllers
             serv.Create(domain, User.Identity.Name);
         }
 
-        // PUT api/values/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
+        // For editing any employer record
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Manager, CV.Phonedesk })]
         public void Put(int id, [FromBody]Employer employer)
         {
             var domain = serv.Get(employer.id);
@@ -91,8 +92,9 @@ namespace Machete.Api.Controllers
             serv.Save(domain, User.Identity.Name);
         }
 
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Hirer })]
+        // for an employer editing his/her own employer record
         [HttpPut]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Employer })]
         [Route("api/employer/profile")]
         public void ProfilePut([FromBody]Employer employer)
         {
@@ -105,6 +107,7 @@ namespace Machete.Api.Controllers
         [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
         public void Delete(int id)
         {
+            // TODO: Make a soft delete; never really delete record
         }
     }
 }

@@ -10,9 +10,9 @@ class WebApiConfig
         //configuration.Formatters.JsonFormatter.SupportedMediaTypes
         //        .Add(new MediaTypeHeaderValue("text/html"));
         //configuration.Routes.MapHttpRoute("2", "api/{controller}/{id}/{action}");
-        configuration.Routes.MapHttpRoute("API Default", "api/{controller}/{id}",
-            new { id = RouteParameter.Optional });
-        configuration.MapHttpAttributeRoutes();
+        //configuration.Routes.MapHttpRoute("API Default", "api/{controller}/{id}",
+        //    new { id = RouteParameter.Optional });
+        //configuration.MapHttpAttributeRoutes();
     }
 
 }

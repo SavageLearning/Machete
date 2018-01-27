@@ -47,18 +47,11 @@ namespace Machete.Service
     /// </summary>
     public class ActivitySigninService : SigninServiceBase<ActivitySignin>, IActivitySigninService
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="repo"></param>
-        /// <param name="wRepo"></param>
-        /// <param name="pRepo"></param>
-        /// <param name="iRepo"></param>
-        /// <param name="wrRepo"></param>
-        /// <param name="uow"></param>
+
         private readonly IPersonService pServ;
+        private readonly IActivitySigninRepository asiRepo;
         public ActivitySigninService(
-            IActivitySigninRepository repo,
+            IActivitySigninRepository asiRepo,
             IWorkerService wServ,
             IPersonService pServ,
             IImageService iServ,
@@ -66,10 +59,11 @@ namespace Machete.Service
             IUnitOfWork uow,
             IMapper map, 
             IConfigService cfg)
-            : base(repo, wServ, iServ, wrServ, uow, map, cfg)
+            : base(asiRepo, wServ, iServ, wrServ, uow, map, cfg)
         {
             this.logPrefix = "ActivitySignin";
             this.pServ = pServ;
+            this.asiRepo = asiRepo;
         }
         /// <summary>
         /// 
@@ -135,7 +129,7 @@ namespace Machete.Service
             {
                 //
                 //TODO: GENERALIZE away from 5 digit dwccardnum
-                w = wServ.GetWorkerByNum(s.dwccardnum);
+                w = wServ.GetByMemberID(s.dwccardnum);
                 if (w == null) throw new NullReferenceException("card ID doesn't match a worker");
                 p = w.Person;
                 
@@ -164,7 +158,7 @@ namespace Machete.Service
 
         public ActivitySignin GetByPersonID(int actID, int perID)
         {
-            return repo.Get(az => az.activityID == actID && az.personID == perID);
+            return asiRepo.GetByPersonID(actID,perID);
         }
     }
 }
