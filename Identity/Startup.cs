@@ -5,6 +5,7 @@ using IdentityServer3.Core.Services;
 using Machete.Data;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Google;
+using Owin.Security.Providers.PayPal;
 using Owin.Security.Providers.Yahoo;
 using Microsoft.Owin.Security.Facebook;
 using Microsoft.Owin.Security.Twitter;
@@ -104,28 +105,47 @@ namespace Machete.Identity
                             new System.Security.Claims.Claim(
                                 "urn:facebook:access_token",
                                 context.AccessToken, ClaimValueTypes.String, "Facebook"));
-                        //context.Identity.AddClaim(
 
-                        //    new System.Security.Claims.Claim(
-                        //        "urn:facebook:email",
-                        //        context.Email, ClaimValueTypes.String, "Facebook"));
-            return Task.FromResult(0);
+                        return Task.FromResult(0);
                     }
                 }
             };
             fb.Scope.Add("email");
             app.UseFacebookAuthentication(fb);
 
-            var y = new YahooAuthenticationOptions()
-            {
-                AuthenticationType = "Yahoo",
-                Caption = "Sign-in with Yahoo",
-                SignInAsAuthenticationType = signInAsType,
+            //var y = new YahooAuthenticationOptions()
+            //{
+            //    AuthenticationType = "Yahoo",
+            //    Caption = "Sign-in with Yahoo",
+            //    SignInAsAuthenticationType = signInAsType,
+            //    Provider = new YahooAuthenticationProvider()
+            //    {
+            //        OnAuthenticated = (context) =>
+            //        {
+            //            context.Identity.AddClaim(
+            //                new Claim("AccessToken", context.AccessToken)
+            //                    );
+            //            return Task.FromResult(0);
+            //        }
+            //    },
+            //    ConsumerKey = ConfigurationManager.AppSettings["YahooConsumerKey"],
+            //    ConsumerSecret = ConfigurationManager.AppSettings["YahooConsumerSecret"]
+            //};
+            //app.UseYahooAuthentication(y);
 
-                ConsumerKey = ConfigurationManager.AppSettings["YahooConsumerKey"],
-                ConsumerSecret = ConfigurationManager.AppSettings["YahooConsumerSecret"]
-            };
-            app.UseYahooAuthentication(y);
+            //var pp = new PayPalAuthenticationOptions()
+            //{
+            //    AuthenticationType = "PayPal",
+            //    Caption = "Sign-in with PayPal",
+            //    SignInAsAuthenticationType = signInAsType,
+            //    Provider = new PayPalAuthenticationProvider()
+            //    {
+
+            //    },
+            //    ClientId = ConfigurationManager.AppSettings["PayPalClientId"],
+            //    ClientSecret = ConfigurationManager.AppSettings["PayPalClientSecret"]
+            //};
+            //app.UsePayPalAuthentication(pp);
         }
     }
 }
