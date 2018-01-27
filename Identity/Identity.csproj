@@ -141,6 +141,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <Content Include="packages.config" />
+    <None Include="Properties\PublishProfiles\test-identity.pubxml" />
+    <None Include="Properties\PublishProfiles\identity.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

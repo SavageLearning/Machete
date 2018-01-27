@@ -191,7 +191,8 @@
   <ItemGroup>
     <Content Include="App_Start\Elmah.txt" />
     <Content Include="packages.config" />
-    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\test-api.pubxml" />
+    <None Include="Properties\PublishProfiles\api.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
