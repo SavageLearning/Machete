@@ -390,4 +390,13 @@
   <data name="workOrderNumber" xml:space="preserve">
     <value>El número de su orden es:</value>
   </data>
+  <data name="ppFee" xml:space="preserve">
+    <value>Paypal payment</value>
+  </data>
+  <data name="ppPaymentID" xml:space="preserve">
+    <value>Paypal payment ID</value>
+  </data>
+  <data name="ppState" xml:space="preserve">
+    <value>Paypal payment state</value>
+  </data>
 </root>
