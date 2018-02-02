@@ -56,19 +56,18 @@
     </div>
     <div class="tb-row">
         @Html.mUITableLabelAndTextBoxFor(model => model.zipcode, new { tabindex = "8", id = idPrefix + "zipcode" })
-        @Html.mUITableLabelAndTextBoxFor(model => model.transportFeeExtra, new { tabindex = "18", @class = "money-field", id = idPrefix + "transportFeeExtra" })
+        @Html.mUITableLabelAndTextBoxFor(model => model.ppFee, new { tabindex = "18", @class = "money-field", id = idPrefix + "ppFee", @readonly = "readonly" })
     </div>
     <div class="tb-row">
         @Html.mUITableLabelAndTextBoxFor(model => model.phone, new { tabindex = "9", id = idPrefix + "phone" })
-        @Html.mUITableLabelFor(model => model.transportTransactType)
-        @Html.mUIDropDownListFor(model => model.transportTransactType,
-                        Model.def.getSelectList(Machete.Domain.LCategory.transportTransactType),
-                        new { tabindex = "19", id = idPrefix + "transportTransactType" })
+        @Html.mUITableLabelAndTextBoxFor(model => model.ppState, new { tabindex = "18", @class = "money-field", id = idPrefix + "ppState", @readonly = "readonly" })
+
+
     </div>
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.onlineSource)
         @Html.mUIDropDownYesNoFor(model => model.onlineSource, Model.def.yesnoSelectList(), new { tabindex = "10", id = idPrefix + "onlineSource" })
-        @Html.mUITableLabelAndTextBoxFor(model => model.transportTransactID, new { tabindex = "20", id = idPrefix + "transportTransactID" })
+        @Html.mUITableLabelAndTextBoxFor(model => model.ppPaymentID, new { tabindex = "20", id = idPrefix + "ppPaymentID", @readonly = "readonly" })
     </div>
 </div><!--tb-table main workorder table-->
 

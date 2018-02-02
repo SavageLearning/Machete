@@ -31,13 +31,14 @@ namespace Machete.Api.ViewModel
         public int? pseudoID { get; set; }
         public int qualityOfWork { get; set; }
         public int reliability { get; set; }
-        public string skillEN { get; set; }
-        public string skillES { get; set; }
+        public string skill { get; set; }
+        //public string skillEN { get; set; }
+        //public string skillES { get; set; }
         public int skillID { get; set; }
         public double surcharge { get; set; }
         public double transportCost { get; set; }
         //public int transportProgram { get; set; }
-        public bool? weightLifted { get; set; }
+        public bool? requiresHeavyLifting { get; set; }
         // public Worker workerAssigned { get; set; }
         public int? workerAssignedID { get; set; }
         public int? workerRating { get; set; }

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using IdentityModel;
+using Facebook;
 
 namespace Machete.Identity
 {
@@ -185,11 +186,24 @@ namespace Machete.Identity
             }
             return claims;
         }
+        protected static JsonObject GetAdditionalFacebookClaims(Claim accessToken)
+        {
+            var fb = new FacebookClient(accessToken.Value);
+            return fb.Get("me", new { fields = new[] { "email", "first_name", "last_name" } }) as JsonObject;
+        }
 
         public override async Task AuthenticateExternalAsync(ExternalAuthenticationContext ctx)
         {
             var externalUser = ctx.ExternalIdentity;
             var message = ctx.SignInMessage;
+            var claimsList = ctx.ExternalIdentity.Claims.ToList();
+            if (externalUser.Provider == "Facebook")
+            {
+                var extraClaims = GetAdditionalFacebookClaims(externalUser.Claims.First(claim => claim.Type == "urn:facebook:access_token"));
+                claimsList.Add(new Claim("email", extraClaims.First(k => k.Key == "email").Value.ToString()));
+                claimsList.Add(new Claim("given_name", extraClaims.First(k => k.Key == "first_name").Value.ToString()));
+                claimsList.Add(new Claim("family_name", extraClaims.First(k => k.Key == "last_name").Value.ToString()));
+            }
 
             if (externalUser == null)
             {
@@ -199,11 +213,11 @@ namespace Machete.Identity
             var user = await userManager.FindAsync(new Microsoft.AspNet.Identity.UserLoginInfo(externalUser.Provider, externalUser.ProviderId));
             if (user == null)
             {
-                ctx.AuthenticateResult = await ProcessNewExternalAccountAsync(externalUser.Provider, externalUser.ProviderId, externalUser.Claims);
+                ctx.AuthenticateResult = await ProcessNewExternalAccountAsync(externalUser.Provider, externalUser.ProviderId, claimsList);
             }
             else
             {
-                ctx.AuthenticateResult = await ProcessExistingExternalAccountAsync(user.Id, externalUser.Provider, externalUser.ProviderId, externalUser.Claims);
+                ctx.AuthenticateResult = await ProcessExistingExternalAccountAsync(user.Id, externalUser.Provider, externalUser.ProviderId, claimsList);
             }
         }
 

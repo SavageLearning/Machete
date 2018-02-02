@@ -29,6 +29,7 @@ using Machete.Domain;
 using Machete.Data;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
+using System.Globalization;
 
 namespace Machete.Test 
 {
@@ -230,9 +231,9 @@ namespace Machete.Test
             //transportFeeExtra = 0,
             englishRequiredNote = "",
             description = "description string",
-            dateTimeofWork = DateTime.Today.ToUniversalTime().Subtract(epoch).TotalMilliseconds,
-            datecreated = DateTime.Now.ToUniversalTime().Subtract(epoch).TotalMilliseconds,
-            dateupdated = DateTime.Now.ToUniversalTime().Subtract(epoch).TotalMilliseconds,       
+            dateTimeofWork = DateTime.Today.ToString("o", CultureInfo.InvariantCulture),
+            datecreated = DateTime.Now.ToString("o", CultureInfo.InvariantCulture),
+            dateupdated = DateTime.Now.ToString("o", CultureInfo.InvariantCulture),       
             createdby = "initialization script",
             updatedby = "initialization script",
             //transportTransactType = 256,

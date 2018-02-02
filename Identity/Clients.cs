@@ -102,6 +102,34 @@ namespace Machete.Identity
                 AllowAccessToAllScopes = true,
                 AccessTokenLifetime = 3600
             },
+                        new Client
+            {
+                Enabled = true,
+                ClientName = "Machete casa UI",
+                ClientId = "machete-casa-prod",
+                Flow = Flows.Implicit,
+                RequireConsent = false,
+                RedirectUris = new List<string>
+                {
+                    "https://casa.machetessl.org/V2/auth.html",
+                    "https://casa.machetessl.org/V2/authorize",
+                    "https://casa.machetessl.org/V2/silent-renewal.html",
+                    "https://casa.machetessl.org/V2/silent-renewal"
+
+                },
+                // Valid URLs after logging out
+                PostLogoutRedirectUris = new List<string>
+                {
+                    "https://casa.machetessl.org/V2/logout"
+                },
+                AllowedCorsOrigins = new List<string>
+                {
+                    "https://casa.machetessl.org/V2"
+                },
+
+                AllowAccessToAllScopes = true,
+                AccessTokenLifetime = 3600
+            },
             new Client
             {
                 Enabled = true,
