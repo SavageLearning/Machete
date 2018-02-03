@@ -15,6 +15,7 @@ using System.Security.Claims;
 using System.Threading;
 using System.Web.Http;
 using System.Web.Http.Controllers;
+using PayPal.Api;
 
 namespace Machete.Api.Controllers
 {
@@ -168,11 +169,12 @@ namespace Machete.Api.Controllers
             }
 
             var result = postExecute(data);
-
+            var payment = JsonConvert.DeserializeObject<PayPal.Api.Payment>(result);
             order.ppResponse = result;
-            order.ppState = "approved";
+            order.ppState = payment.state;
+            order.ppFee = Double.Parse(payment.transactions.Single().amount.total);
             woServ.Save(order, User.Identity.Name);
-            return Json(JsonConvert.DeserializeObject(result));
+            return Json(payment);
         }
 
         [NonAction]
