@@ -11,10 +11,28 @@ namespace Machete.Web
     {
         public static void RegisterRoutes(RouteCollection routes)
         {
+
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-            routes.IgnoreRoute("elmah.axd");
+            //routes.IgnoreRoute("elmah.axd");
             routes.IgnoreRoute("{*favicon}", new { favicon = @"(.*/)?favicon.ico(/.*)?" });
 
+            // Anything going to the old hirer system, send to Angular
+            routes.MapRoute(
+                name: "HirerAccount",
+                url: "HirerAccount/{*url}",
+                defaults: new { controller = "V2", action = "Index" }
+                );
+            routes.MapRoute(
+                name: "HirerWorkOrder",
+                url: "HirerWorkOrder/{*url}",
+                defaults: new { controller = "V2", action = "Index" }
+                );
+            routes.MapRoute(
+                name: "V2",
+                url: "V2/{*url}",
+                defaults: new { controller = "V2", action = "Index" }
+                );
+            // MVC controller/action routes
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
@@ -23,12 +41,14 @@ namespace Machete.Web
                 {
                     serverRoute = new ServerRouteConstraint(url =>
                     {
-                        return !url.PathAndQuery.StartsWith("/V2",
-                            StringComparison.InvariantCultureIgnoreCase);
+                        return (
+                            !url.PathAndQuery.StartsWith("/V2", StringComparison.InvariantCultureIgnoreCase) //||
+                           // !url.PathAndQuery.StartsWith("/HirerAccount", StringComparison.InvariantCultureIgnoreCase) 
+                         );
                     })
                 }
             );
-            routes.MapRoute("angular", "{*url}", new { controller = "V2", action = "index" });
+            routes.MapRoute("404", "{*url}", new { controller = "Home", action = "NotFound" });
         }
     }
     public class ServerRouteConstraint : IRouteConstraint

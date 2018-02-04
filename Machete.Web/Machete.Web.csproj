@@ -1340,7 +1340,6 @@
     <Content Include="Views\Reports\Employers.cshtml" />
     <Content Include="Views\Activity\CreateMany.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ActivityCreateMany.cshtml" />
-    <Content Include="Views\Home\Changes.cshtml" />
     <Content Include="Views\Account\_ChangePasswordPartial.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\_RemoveAccountPartial.cshtml" />
@@ -1352,6 +1351,7 @@
     </Content>
     <Content Include="Views\Shared\_angularLayout.cshtml" />
     <Content Include="Views\V2\Index.cshtml" />
+    <Content Include="Views\Home\NotFound.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

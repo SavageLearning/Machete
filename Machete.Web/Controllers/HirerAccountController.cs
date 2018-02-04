@@ -9,7 +9,7 @@ namespace Machete.Web.Controllers
     public class HirerAccountController : Controller
     {
         // GET: HirerAccount
-        public void Login()
+        public void Index()
         {
             Response.RedirectPermanent("/V2/welcome");
         }

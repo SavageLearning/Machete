@@ -41,7 +41,7 @@ namespace Machete.Data.Infrastructure
     public class DatabaseFactory : Disposable, IDatabaseFactory
     {
         string connString;
-        private MacheteContext dataContext;
+        private MacheteContext macheteContext;
         private BindingFlags bindFlags = BindingFlags.Instance |
              BindingFlags.Public |
              BindingFlags.NonPublic |
@@ -60,27 +60,28 @@ namespace Machete.Data.Infrastructure
 
         public MacheteContext Get()
         {
-            if (dataContext == null) 
+            if (macheteContext == null) 
             {
                 if (connString == null)
                 {
-                    dataContext = new MacheteContext();
+                    macheteContext = new MacheteContext();
                 }
                 else
                 {
-                    dataContext = new MacheteContext(connString);
+                    macheteContext = new MacheteContext(connString);
                 }
             }
-            log_connection_count();
-            return dataContext;
+            log_connection_count("DatabaseFactory.Get");
+            return macheteContext;
         }
 
-        private void log_connection_count()
+        private void log_connection_count(string prefix)
         {
             var sb = new StringBuilder();
-            var conn1 = (dataContext as System.Data.Entity.DbContext).Database.Connection;
+            var conn1 = (macheteContext as System.Data.Entity.DbContext).Database.Connection;
             var objid1 = field.GetValue(conn1);
-            sb.AppendFormat("-----------DatabaseFactory SqlConnection # [{0}], Conn: {1}",
+            sb.AppendFormat("-----------{0} # [{1}], Conn: {2}",
+                prefix,
                 objid1.ToString(),
                 connString);
             Debug.WriteLine(sb.ToString());
@@ -91,10 +92,12 @@ namespace Machete.Data.Infrastructure
         //}
         protected override void DisposeCore()
         {
-            if (dataContext != null)
+            if (macheteContext != null)
             {
-                dataContext.Dispose();
-                dataContext = null;
+
+                log_connection_count("DatabaseFactory.DisposeCore");
+                macheteContext.Dispose();
+                macheteContext = null;
             }
         }
     }
