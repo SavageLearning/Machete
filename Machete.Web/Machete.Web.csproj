@@ -764,6 +764,9 @@
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="robots.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\console-log.js" />
     <Content Include="Scripts\jqplot.cursor.js" />
     <Content Include="Scripts\jqplot.dateAxisRenderer.js" />

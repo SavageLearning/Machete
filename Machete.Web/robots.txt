@@ -1,0 +1,16 @@
+﻿User-agent: *
+Disallow: /Employer/
+Disallow: /Account/
+Disallow: /WorkOrder/
+Disallow: /WorkAssignment/
+Disallow: /Person/
+Disallow: /Worker/
+Disallow: /WorkerSignin/
+Disallow: /Activity/
+Disallow: /ActivitySignin/
+Disallow: /Event/
+Disallow: /Config/
+Disallow: /Email/
+Disallow: /Image/
+Disallow: /Reports/
+Disallow: /ReportsV2/
