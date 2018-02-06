@@ -8,7 +8,7 @@ namespace Machete.Api.ViewModel
 {
     public class WorkOrder : Record
     {
-        public string additionalNotes { get; set; }
+        //public string additionalNotes { get; set; }
         public string city { get; set; }
         public string contactName { get; set; }
         public string dateTimeofWork { get; set; }
