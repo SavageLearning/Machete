@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Machete.Api.ViewModel;
 using Machete.Service;
+using System;
 using System.Linq;
 using System.Web.Http;
 using DTO = Machete.Service.DTO;
@@ -50,7 +51,8 @@ namespace Machete.Api.Controllers
         [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Manager, CV.Phonedesk})]
         public IHttpActionResult Get(string sub)
         {
-            var result = map.Map<Domain.Employer, Employer>(serv.Get(sub));
+            throw new ArgumentException();
+            var result = map.Map<Domain.Employer, Employer>(serv.Get(""));
             return Json(new { data = result });
         }
 
@@ -59,6 +61,8 @@ namespace Machete.Api.Controllers
         [Route("api/employer/profile")]
         public IHttpActionResult ProfileGet()
         {
+            throw new ArgumentException();
+
             var result = map.Map<Domain.Employer, Employer>(serv.Get(userSubject));
             return Json(new { data = result });
         }

@@ -257,11 +257,11 @@ namespace Machete.Identity
             string username;
 
             if (email != null)
-                username = email.Value;
-            else if (name != null)
-                username = name.Value;
-            else
-                username = "unknown user";
+            {
+                throw new ArgumentException("Email claim must be present to create a new user");
+            }
+
+            username = email.Value;
 
             var user = new MacheteUser()
             {

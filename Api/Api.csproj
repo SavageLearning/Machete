@@ -209,6 +209,7 @@
   <ItemGroup>
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\DependencyResolver.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="ClaimsAuthorizationAttribute.cs" />
     <Compile Include="ClaimsAuthorizationTypes.cs" />
     <Compile Include="Controllers\ConfigsController.cs" />
