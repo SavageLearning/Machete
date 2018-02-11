@@ -3,7 +3,11 @@ using Machete.Api.ViewModel;
 using Machete.Service;
 using System;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Results;
 using DTO = Machete.Service.DTO;
 
 namespace Machete.Api.Controllers
@@ -41,31 +45,50 @@ namespace Machete.Api.Controllers
         }
 
         // GET api/values/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Manager, CV.Phonedesk })]
         public IHttpActionResult Get(int id)
         {
             var result = map.Map<Domain.Employer, Employer>(serv.Get(id));
-            return Json(new { data = result });
-        }
+            if (result == null) return NotFound();
 
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Manager, CV.Phonedesk})]
-        public IHttpActionResult Get(string sub)
-        {
-            throw new ArgumentException();
-            var result = map.Map<Domain.Employer, Employer>(serv.Get(""));
             return Json(new { data = result });
         }
 
         [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Manager, CV.Phonedesk, CV.Employer })]
-        [HttpGet]
-        [Route("api/employer/profile")]
+        [HttpGet, Route("api/employer/profile")]
         public IHttpActionResult ProfileGet()
         {
-            throw new ArgumentException();
+            Domain.Employer e;
+            try
+            {
+                e = getEmployer();
+            }
+            catch
+            {
+                return InternalServerError();
+            }
 
-            var result = map.Map<Domain.Employer, Employer>(serv.Get(userSubject));
+            if (e == null) return NotFound();
+            // Ensure link between email, onlineSigninID, and employer account are correct
+            if (e.email != userEmail) e.email = userEmail;
+            if (e.onlineSigninID != userSubject) e.onlineSigninID = userSubject;
+
+            var result = map.Map<Domain.Employer, Employer>(e);
             return Json(new { data = result });
         }
+
+        [NonAction]
+        public Domain.Employer getEmployer()
+        {
+            Domain.Employer e = null;
+            e = serv.Get(userSubject);
+            if (e == null)
+            {
+                e = serv.GetMany(em => em.email == userEmail).SingleOrDefault();
+            }
+            return e;
+        }
+
 
         // POST api/values
         // This action method is for ANY employer
@@ -80,11 +103,26 @@ namespace Machete.Api.Controllers
         [HttpPost]
         [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Employer })]
         [Route("api/employer/profile")]
-        public void ProfilePost([FromBody]Employer employer)
+        public IHttpActionResult ProfilePost([FromBody]Employer employer)
         {
+            Domain.Employer e = null;
+            e = getEmployer();
+            // If 
+            if (e != null) return Conflict();
+
             var domain = map.Map<Employer, Domain.Employer>(employer);
             domain.onlineSigninID = userSubject;
-            serv.Create(domain, User.Identity.Name);
+            domain.email = userEmail;
+            try
+            {
+                serv.Create(domain, User.Identity.Name);
+
+            }
+            catch
+            {
+                return InternalServerError();
+            }
+            return Ok();
         }
 
         // For editing any employer record
@@ -100,11 +138,32 @@ namespace Machete.Api.Controllers
         [HttpPut]
         [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Employer })]
         [Route("api/employer/profile")]
-        public void ProfilePut([FromBody]Employer employer)
+        public IHttpActionResult ProfilePut([FromBody]Employer employer)
         {
-            var domain = serv.Get(userSubject);
-            map.Map<Employer, Domain.Employer>(employer, domain);
-            serv.Save(domain, User.Identity.Name);
+            bool newEmployer = false;
+            Domain.Employer e = null;
+            e = getEmployer();
+            if (e == null)
+            {
+                e = new Domain.Employer();
+                newEmployer = true;
+            }
+            e.onlineSigninID = userSubject;
+            e.email = userEmail;
+            map.Map<Employer, Domain.Employer>(employer, e);
+
+            Domain.Employer result;
+            if (newEmployer)
+            {
+                result = serv.Create(e, User.Identity.Name);
+            }
+            else
+            {
+                serv.Save(e, User.Identity.Name);
+                result = serv.Get(e.ID);
+            }
+            return Json(new { data = result });
+
         }
 
         // DELETE api/values/5
