@@ -125,10 +125,10 @@ namespace Machete.Data
 
         public Employer GetBySubject(string subject)
         {
-            var q = from o in dbset.AsQueryable()
-                    where o.onlineSigninID.Equals(subject)
-                    select o;
-            return q.FirstOrDefault();
+            var q = from e in dbset.AsQueryable()
+                    where e.onlineSigninID.Equals(subject)
+                    select e;
+            return q.SingleOrDefault();
         }
     }
     /// <summary>

@@ -56,12 +56,9 @@ namespace Machete.Api.Controllers
             employer = eServ.Get(guid: userSubject);
             if (employer == null)
             {
-                var res = new HttpResponseMessage(HttpStatusCode.NotFound)
-                {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotFound) {
                     Content = new StringContent(string.Format("No employer record associated with claim {0}", userSubject)),
-                    ReasonPhrase = "Not found: employer record"
-                };
-                throw new HttpResponseException(res);
+                    ReasonPhrase = "Not found: employer record"});
             }
             paypalId = cServ.getConfig(Cfg.PaypalId);
             paypalSecret = cServ.getConfig(Cfg.PaypalSecret);
