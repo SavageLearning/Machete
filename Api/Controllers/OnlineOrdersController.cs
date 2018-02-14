@@ -249,7 +249,10 @@ namespace Machete.Api.Controllers
             var result = client.Execute(request);
             if (result.StatusCode != HttpStatusCode.OK)
             {
-                throw result.ErrorException;
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    ReasonPhrase = "Payment execute failed"
+                });
             }
 
             return result.Content;

@@ -162,7 +162,8 @@ namespace Machete.Api.Controllers
                 serv.Save(e, User.Identity.Name);
                 result = serv.Get(e.ID);
             }
-            return Json(new { data = result });
+            var mapped = map.Map<Domain.Employer, Employer>(result);
+            return Json(new { data = mapped });
 
         }
 
