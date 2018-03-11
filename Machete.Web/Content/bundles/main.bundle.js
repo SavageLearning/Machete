@@ -4146,7 +4146,7 @@ function schedulingValidator(rules) {
         var reqDaysSinceEpoch = Math.floor(requestTime.valueOf() / 3.6e6);
         var leadInHours = (reqDaysSinceEpoch - daysSinceEpoch);
         if (leadInHours < rule.leadHours) {
-            return { 'scheduling': "Lead time of " + (rule.leadHours / 24) + " days required." };
+            return { 'scheduling': "Lead time of " + ((rule.leadHours / 24) - 1) + " days required." };
         }
         if (requestTime.getHours() < (rule.minStartMin / 60)) {
             return { 'scheduling': 'Start time cannot be before ' + String(rule.minStartMin / 60) + ':00 hours' };
