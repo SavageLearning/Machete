@@ -258,7 +258,7 @@ namespace Machete.Identity
             var name = claims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.Name);
             string username;
 
-            if (email != null)
+            if (email == null)
             {
                 throw new ArgumentException("Email claim must be present to create a new user");
             }
