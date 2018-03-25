@@ -55,6 +55,8 @@ namespace Machete.Data.Infrastructure
         public void Commit()
         {
             DataContext.Commit();
+            databaseFactory.Dispose();
+            dataContext = null;
         } 
     }
 }

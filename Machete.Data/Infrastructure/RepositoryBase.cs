@@ -59,23 +59,42 @@ namespace Machete.Data.Infrastructure
         //             decorates a method, specifies its accessibility
         //             Access limited to this class
         protected MacheteContext dataContext;
-        protected readonly IDbSet<T> dbset;
+        private IDbSet<T> _dbset;
         // protected -- [ method-modifier ]
         //                  Access limited to this class or classes derived from this class
         protected RepositoryBase(IDatabaseFactory databaseFactory)
         {
-            db = databaseFactory;
-            dbset = DataContext.Set<T>();
+            dbFactory = databaseFactory;
+            _dbset = DataContext.Set<T>();
         }
 
-        protected IDatabaseFactory db
+        protected IDatabaseFactory dbFactory
         {
             get; private set;
         }
 
         protected MacheteContext DataContext
         {
-            get { return dataContext ?? (dataContext = db.Get()); }
+            get
+            {
+                if (dataContext == null || dataContext.IsDead)
+                {
+                    dataContext = dbFactory.Get();
+                }
+                return dataContext;
+            }
+        }
+
+        protected IDbSet<T> dbset
+        {
+            get
+            {
+                if (dataContext.IsDead)
+                {
+                    _dbset = DataContext.Set<T>();
+                }
+                return _dbset;
+            }
         }
         // virtual -- [ method-modifier ] 
         //              runtime type of the instance determines implementation to invoke

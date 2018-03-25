@@ -419,7 +419,7 @@ namespace Machete.Service
             record.minEarnings = (record.days * record.surcharge) + (record.hourlyWage * record.hours * record.days);
             record.maxEarnings = record.hourRange == null ? 0 : (record.days * record.surcharge) + (record.hourlyWage * (int)record.hourRange * record.days);
             record.fullWAID = System.String.Format("{0,5:D5}-{1,2:D2}",
-                                                    (int)record.workOrder.paperOrderNum,
+                                                    (int)(record.workOrder.paperOrderNum ?? 0),
                                                     (int)record.pseudoID);
 
 
