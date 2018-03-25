@@ -69,6 +69,7 @@ namespace Machete.Api.Controllers
         }
 
         // POST api/values
+        [HttpPost]
         [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
         public IHttpActionResult Post(string query)
         {
