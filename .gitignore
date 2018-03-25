@@ -91,5 +91,9 @@ Machete.Test/BeanShell Sampler.jmx
 .vscode/
 
 
-
 Identity/appsettings\.config
+
+
+Api/Properties/PublishProfiles/*-api.pubxml
+Identity/Properties/PublishProfiles/*-identity.pubxml
+Machete.Web/Properties/PublishProfiles/*.pubxml
