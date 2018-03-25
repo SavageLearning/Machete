@@ -117,7 +117,7 @@ var AppRoutingModule = /** @class */ (function () {
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"layout-wrapper\" [ngClass]=\"{'layout-compact':layoutCompact}\">\r\n\r\n    <div #layoutContainer class=\"layout-container\" \r\n            [ngClass]=\"{'menu-layout-static': !isOverlay(),\r\n            'menu-layout-overlay': isOverlay(),\r\n            'layout-menu-overlay-active': overlayMenuActive,\r\n            'menu-layout-horizontal': isHorizontal(),\r\n            'layout-menu-static-inactive': staticMenuDesktopInactive,\r\n            'layout-menu-static-active': staticMenuMobileActive}\">\r\n\r\n        <app-topbar></app-topbar>\r\n\r\n        <div class=\"layout-menu\" [ngClass]=\"{'layout-menu-dark':darkMenu}\" (click)=\"onMenuClick($event)\">\r\n            <div #layoutMenuScroller class=\"nano\">\r\n                <div class=\"nano-content menu-scroll-content\">\r\n                    <inline-profile *ngIf=\"profileMode=='inline'&&!isHorizontal()\"></inline-profile>\r\n                    <app-menu [reset]=\"resetMenu\"></app-menu>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        \r\n        <div class=\"layout-main\">\r\n            <router-outlet></router-outlet>\r\n            \r\n            <app-footer></app-footer>\r\n        </div>\r\n        \r\n        <div class=\"layout-mask\"></div>\r\n    </div>\r\n\r\n</div>"
+module.exports = "<p-growl [(value)]=\"msgs\" [sticky]=\"true\"></p-growl>\r\n<div class=\"layout-wrapper\" [ngClass]=\"{'layout-compact':layoutCompact}\">\r\n\r\n    <div #layoutContainer class=\"layout-container\" \r\n            [ngClass]=\"{'menu-layout-static': !isOverlay(),\r\n            'menu-layout-overlay': isOverlay(),\r\n            'layout-menu-overlay-active': overlayMenuActive,\r\n            'menu-layout-horizontal': isHorizontal(),\r\n            'layout-menu-static-inactive': staticMenuDesktopInactive,\r\n            'layout-menu-static-active': staticMenuMobileActive}\">\r\n\r\n        <app-topbar></app-topbar>\r\n\r\n        <div class=\"layout-menu\" [ngClass]=\"{'layout-menu-dark':darkMenu}\" (click)=\"onMenuClick($event)\">\r\n            <div #layoutMenuScroller class=\"nano\">\r\n                <div class=\"nano-content menu-scroll-content\">\r\n                    <inline-profile *ngIf=\"profileMode=='inline'&&!isHorizontal()\"></inline-profile>\r\n                    <app-menu [reset]=\"resetMenu\"></app-menu>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        \r\n        <div class=\"layout-main\">\r\n            <router-outlet></router-outlet>\r\n            \r\n            <app-footer></app-footer>\r\n        </div>\r\n        \r\n        <div class=\"layout-mask\"></div>\r\n    </div>\r\n\r\n</div>"
 
 /***/ }),
 
@@ -149,6 +149,8 @@ module.exports = module.exports.toString();
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__configs_configs_service__ = __webpack_require__("../../../../../src/app/configs/configs.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lookups_lookups_service__ = __webpack_require__("../../../../../src/app/lookups/lookups.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_router__ = __webpack_require__("../../../router/esm5/router.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_primeng_components_common_messageservice__ = __webpack_require__("../../../../primeng/components/common/messageservice.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_primeng_components_common_messageservice___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_primeng_components_common_messageservice__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -163,6 +165,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 console.log('environment.name:', __WEBPACK_IMPORTED_MODULE_1__environments_environment__["a" /* environment */].name);
 var MenuOrientation;
 (function (MenuOrientation) {
@@ -172,13 +175,15 @@ var MenuOrientation;
 })(MenuOrientation || (MenuOrientation = {}));
 ;
 var AppComponent = /** @class */ (function () {
-    function AppComponent(renderer, router) {
+    function AppComponent(renderer, router, msgService) {
         this.renderer = renderer;
         this.router = router;
+        this.msgService = msgService;
         this.layoutCompact = false;
         this.layoutMode = MenuOrientation.STATIC;
         this.darkMenu = true;
         this.profileMode = 'inline';
+        this.msgs = [];
     }
     AppComponent.prototype.ngOnInit = function () {
         this.router.events.subscribe(function (evt) {
@@ -296,7 +301,9 @@ var AppComponent = /** @class */ (function () {
             styles: [__webpack_require__("../../../../../src/app/app.component.scss")],
             providers: [__WEBPACK_IMPORTED_MODULE_3__lookups_lookups_service__["a" /* LookupsService */], __WEBPACK_IMPORTED_MODULE_2__configs_configs_service__["a" /* ConfigsService */]]
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_0__angular_core__["Renderer"], __WEBPACK_IMPORTED_MODULE_4__angular_router__["Router"]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_0__angular_core__["Renderer"],
+            __WEBPACK_IMPORTED_MODULE_4__angular_router__["Router"],
+            __WEBPACK_IMPORTED_MODULE_5_primeng_components_common_messageservice__["MessageService"]])
     ], AppComponent);
     return AppComponent;
 }());
@@ -353,17 +360,20 @@ var AppFooter = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__menu_app_profile_component__ = __webpack_require__("../../../../../src/app/menu/app.profile.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__not_found_component__ = __webpack_require__("../../../../../src/app/not-found.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__angular_router__ = __webpack_require__("../../../router/esm5/router.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__shared_services_auth_service__ = __webpack_require__("../../../../../src/app/shared/services/auth.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__auth_authorize_authorize_component__ = __webpack_require__("../../../../../src/app/auth/authorize/authorize.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__shared_services_token_interceptor__ = __webpack_require__("../../../../../src/app/shared/services/token.interceptor.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__online_orders_online_orders_module__ = __webpack_require__("../../../../../src/app/online-orders/online-orders.module.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__reports_reports_module__ = __webpack_require__("../../../../../src/app/reports/reports.module.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__exports_exports_module__ = __webpack_require__("../../../../../src/app/exports/exports.module.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__my_work_orders_my_work_orders_module__ = __webpack_require__("../../../../../src/app/my-work-orders/my-work-orders.module.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__employers_employers_module__ = __webpack_require__("../../../../../src/app/employers/employers.module.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23_oidc_client__ = __webpack_require__("../../../../oidc-client/lib/oidc-client.min.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23_oidc_client___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_23_oidc_client__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__shared_services_auth_service__ = __webpack_require__("../../../../../src/app/shared/services/auth.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__auth_authorize_authorize_component__ = __webpack_require__("../../../../../src/app/auth/authorize/authorize.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__shared_services_token_interceptor__ = __webpack_require__("../../../../../src/app/shared/services/token.interceptor.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__online_orders_online_orders_module__ = __webpack_require__("../../../../../src/app/online-orders/online-orders.module.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__reports_reports_module__ = __webpack_require__("../../../../../src/app/reports/reports.module.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__exports_exports_module__ = __webpack_require__("../../../../../src/app/exports/exports.module.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__my_work_orders_my_work_orders_module__ = __webpack_require__("../../../../../src/app/my-work-orders/my-work-orders.module.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__employers_employers_module__ = __webpack_require__("../../../../../src/app/employers/employers.module.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__shared_global_error_handler__ = __webpack_require__("../../../../../src/app/shared/global-error-handler.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__shared_services_logging_service__ = __webpack_require__("../../../../../src/app/shared/services/logging.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24_primeng_components_common_messageservice__ = __webpack_require__("../../../../primeng/components/common/messageservice.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24_primeng_components_common_messageservice___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_24_primeng_components_common_messageservice__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_25_primeng_primeng__ = __webpack_require__("../../../../primeng/primeng.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_25_primeng_primeng___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_25_primeng_primeng__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -397,13 +407,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
+
 var AppModule = /** @class */ (function () {
     // Diagnostic only: inspect router configuration
     function AppModule(router) {
-        if (!__WEBPACK_IMPORTED_MODULE_14__environments_environment__["a" /* environment */].production) {
-            __WEBPACK_IMPORTED_MODULE_23_oidc_client__["Log"].level = __WEBPACK_IMPORTED_MODULE_23_oidc_client__["Log"].INFO;
-            __WEBPACK_IMPORTED_MODULE_23_oidc_client__["Log"].logger = console;
-        }
         console.log('.ctor');
     }
     AppModule = __decorate([
@@ -416,7 +424,7 @@ var AppModule = /** @class */ (function () {
                 __WEBPACK_IMPORTED_MODULE_10__app_footer_component__["a" /* AppFooter */],
                 __WEBPACK_IMPORTED_MODULE_11__menu_app_profile_component__["a" /* InlineProfileComponent */],
                 __WEBPACK_IMPORTED_MODULE_12__not_found_component__["a" /* PageNotFoundComponent */],
-                __WEBPACK_IMPORTED_MODULE_16__auth_authorize_authorize_component__["a" /* AuthorizeComponent */]
+                __WEBPACK_IMPORTED_MODULE_15__auth_authorize_authorize_component__["a" /* AuthorizeComponent */]
             ],
             imports: [
                 __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["BrowserModule"],
@@ -424,19 +432,26 @@ var AppModule = /** @class */ (function () {
                 __WEBPACK_IMPORTED_MODULE_4__angular_forms__["FormsModule"],
                 __WEBPACK_IMPORTED_MODULE_6__angular_http__["c" /* HttpModule */],
                 __WEBPACK_IMPORTED_MODULE_5__angular_common_http__["c" /* HttpClientModule */],
-                __WEBPACK_IMPORTED_MODULE_19__reports_reports_module__["a" /* ReportsModule */],
-                __WEBPACK_IMPORTED_MODULE_18__online_orders_online_orders_module__["a" /* OnlineOrdersModule */],
-                __WEBPACK_IMPORTED_MODULE_20__exports_exports_module__["a" /* ExportsModule */],
-                __WEBPACK_IMPORTED_MODULE_21__my_work_orders_my_work_orders_module__["a" /* MyWorkOrdersModule */],
-                __WEBPACK_IMPORTED_MODULE_22__employers_employers_module__["a" /* EmployersModule */],
-                __WEBPACK_IMPORTED_MODULE_2__app_routing_module__["a" /* AppRoutingModule */]
+                __WEBPACK_IMPORTED_MODULE_18__reports_reports_module__["a" /* ReportsModule */],
+                __WEBPACK_IMPORTED_MODULE_17__online_orders_online_orders_module__["a" /* OnlineOrdersModule */],
+                __WEBPACK_IMPORTED_MODULE_19__exports_exports_module__["a" /* ExportsModule */],
+                __WEBPACK_IMPORTED_MODULE_20__my_work_orders_my_work_orders_module__["a" /* MyWorkOrdersModule */],
+                __WEBPACK_IMPORTED_MODULE_21__employers_employers_module__["a" /* EmployersModule */],
+                __WEBPACK_IMPORTED_MODULE_2__app_routing_module__["a" /* AppRoutingModule */],
+                __WEBPACK_IMPORTED_MODULE_25_primeng_primeng__["GrowlModule"]
             ],
             providers: [
-                __WEBPACK_IMPORTED_MODULE_15__shared_services_auth_service__["a" /* AuthService */],
+                __WEBPACK_IMPORTED_MODULE_14__shared_services_auth_service__["a" /* AuthService */],
+                __WEBPACK_IMPORTED_MODULE_23__shared_services_logging_service__["a" /* LoggingService */],
+                __WEBPACK_IMPORTED_MODULE_24_primeng_components_common_messageservice__["MessageService"],
                 {
                     provide: __WEBPACK_IMPORTED_MODULE_5__angular_common_http__["a" /* HTTP_INTERCEPTORS */],
-                    useClass: __WEBPACK_IMPORTED_MODULE_17__shared_services_token_interceptor__["a" /* TokenInterceptor */],
+                    useClass: __WEBPACK_IMPORTED_MODULE_16__shared_services_token_interceptor__["a" /* TokenInterceptor */],
                     multi: true
+                },
+                {
+                    provide: __WEBPACK_IMPORTED_MODULE_3__angular_core__["ErrorHandler"],
+                    useClass: __WEBPACK_IMPORTED_MODULE_22__shared_global_error_handler__["a" /* GlobalErrorHandler */]
                 }
             ],
             bootstrap: [__WEBPACK_IMPORTED_MODULE_7__app_component__["a" /* AppComponent */]]
@@ -912,7 +927,6 @@ var WelcomeComponent = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__ = __webpack_require__("../../../../rxjs/_esm5/Observable.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_handle_error__ = __webpack_require__("../../../../../src/app/shared/handle-error.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -922,7 +936,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-
 
 
 
@@ -954,19 +967,16 @@ var ConfigsService = /** @class */ (function () {
             _this.configs = res['data'];
             _this.configsAge = Date.now();
             return res['data'];
-        })
-            .catch(__WEBPACK_IMPORTED_MODULE_4__shared_handle_error__["a" /* HandleError */].error);
+        });
     };
     ConfigsService.prototype.getConfigs = function (category) {
         return this.getAllConfigs()
-            .map(function (res) { return res.filter(function (l) { return l.category == category; }); })
-            .catch(__WEBPACK_IMPORTED_MODULE_4__shared_handle_error__["a" /* HandleError */].error);
+            .map(function (res) { return res.filter(function (l) { return l.category == category; }); });
     };
     ConfigsService.prototype.getConfig = function (key) {
         return this.getAllConfigs()
             .mergeMap(function (a) { return a.filter(function (ll) { return ll.key == key; }); })
-            .first()
-            .catch(__WEBPACK_IMPORTED_MODULE_4__shared_handle_error__["a" /* HandleError */].error);
+            .first();
     };
     ConfigsService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
@@ -1268,10 +1278,9 @@ var EmployersModule = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__ = __webpack_require__("../../../../rxjs/_esm5/Observable.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_handle_error__ = __webpack_require__("../../../../../src/app/shared/handle-error.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__shared_index__ = __webpack_require__("../../../../../src/app/shared/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs__ = __webpack_require__("../../../../rxjs/Rx.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_index__ = __webpack_require__("../../../../../src/app/shared/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs__ = __webpack_require__("../../../../rxjs/Rx.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1288,13 +1297,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var EmployersService = /** @class */ (function () {
     function EmployersService(http, auth) {
         this.http = http;
         this.auth = auth;
         console.log('.ctor');
-        this.employerSource = new __WEBPACK_IMPORTED_MODULE_6_rxjs__["BehaviorSubject"](null);
+        this.employerSource = new __WEBPACK_IMPORTED_MODULE_5_rxjs__["BehaviorSubject"](null);
         this.fetchEmployer();
     }
     EmployersService.prototype.fetchEmployer = function () {
@@ -1306,38 +1314,32 @@ var EmployersService = /** @class */ (function () {
             return data['data'];
         })
             .catch(function (error) {
-            console.log(error);
             _this.setEmployer(null);
-            return Promise.reject(error.message || error);
+            return __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__["a" /* Observable */].throw(error);
         });
     };
     EmployersService.prototype.getEmployer = function () {
-        //console.log('get---');
         return this.employerSource.asObservable();
     };
     EmployersService.prototype.setEmployer = function (employer) {
-        //console.log('set===', employer);
         this.employerSource.next(employer);
     };
     EmployersService.prototype.save = function (employer) {
         var _this = this;
         var uri = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].dataUrl + '/api/employer/profile';
         var method;
-        //uri = uri + '/' + employer.id;
         console.log('save:', uri, employer);
         // create or update 
         return this.http.put(uri, JSON.stringify(employer), {
-            headers: new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["d" /* HttpHeaders */]().set('Content-Type', 'application/json')
+            headers: new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["e" /* HttpHeaders */]().set('Content-Type', 'application/json')
         }).map(function (data) {
-            //console.log('employer from PUT:', data['data']);
             _this.setEmployer(data['data']);
-            return __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__["a" /* Observable */].of(data['data']);
-        })
-            .catch(__WEBPACK_IMPORTED_MODULE_4__shared_handle_error__["a" /* HandleError */].error);
+            return data['data'];
+        });
     };
     EmployersService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_common_http__["b" /* HttpClient */], __WEBPACK_IMPORTED_MODULE_5__shared_index__["b" /* AuthService */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_common_http__["b" /* HttpClient */], __WEBPACK_IMPORTED_MODULE_4__shared_index__["b" /* AuthService */]])
     ], EmployersService);
     return EmployersService;
 }());
@@ -1663,11 +1665,9 @@ var ExportsModule = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_toPromise__ = __webpack_require__("../../../../rxjs/_esm5/add/operator/toPromise.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_toPromise__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/_esm5/add/operator/map.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_catch__ = __webpack_require__("../../../../rxjs/_esm5/add/operator/catch.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_http__ = __webpack_require__("../../../http/esm5/http.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_Observable__ = __webpack_require__("../../../../rxjs/_esm5/Observable.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_http__ = __webpack_require__("../../../http/esm5/http.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1683,31 +1683,27 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
-
 var ExportsService = /** @class */ (function () {
     function ExportsService(http) {
         this.http = http;
-        this.uriBase = __WEBPACK_IMPORTED_MODULE_6__environments_environment__["a" /* environment */].dataUrl + '/api/exports';
+        this.uriBase = __WEBPACK_IMPORTED_MODULE_4__environments_environment__["a" /* environment */].dataUrl + '/api/exports';
     }
     ExportsService.prototype.getExportsList = function () {
         console.log('getExportList: ', this.uriBase);
         return this.http.get(this.uriBase)
-            .map(function (res) { return res['data']; })
-            .catch(this.handleError);
+            .map(function (res) { return res['data']; });
     };
     ExportsService.prototype.getColumns = function (tableName) {
         var uri = this.uriBase + '/' + tableName.toLowerCase();
         console.log('getColumns ', uri);
         return this.http.get(uri)
-            .map(function (res) { return res['data']; })
-            .catch(this.handleError);
+            .map(function (res) { return res['data']; });
     };
     ExportsService.prototype.getExport = function (tableName, o) {
-        var headers = new __WEBPACK_IMPORTED_MODULE_4__angular_http__["a" /* Headers */]({ 'Content-Type': 'application/text' });
-        var options = new __WEBPACK_IMPORTED_MODULE_4__angular_http__["e" /* RequestOptions */]({
+        var headers = new __WEBPACK_IMPORTED_MODULE_3__angular_http__["a" /* Headers */]({ 'Content-Type': 'application/text' });
+        var options = new __WEBPACK_IMPORTED_MODULE_3__angular_http__["e" /* RequestOptions */]({
             headers: headers,
-            responseType: __WEBPACK_IMPORTED_MODULE_4__angular_http__["f" /* ResponseContentType */].Blob
+            responseType: __WEBPACK_IMPORTED_MODULE_3__angular_http__["f" /* ResponseContentType */].Blob
         });
         var params = this.encodeData(o);
         console.log('getExport: ', params);
@@ -1718,10 +1714,6 @@ var ExportsService = /** @class */ (function () {
             return res;
         });
     };
-    ExportsService.prototype.handleError = function (error) {
-        console.error('exports.service.handleError:', JSON.stringify(error));
-        return __WEBPACK_IMPORTED_MODULE_5_rxjs_Observable__["a" /* Observable */].of(error);
-    };
     ExportsService.prototype.encodeData = function (data) {
         return Object.keys(data).map(function (key) {
             return [key, data[key]].map(encodeURIComponent).join('=');
@@ -1729,7 +1721,7 @@ var ExportsService = /** @class */ (function () {
     };
     ExportsService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_7__angular_common_http__["b" /* HttpClient */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_5__angular_common_http__["b" /* HttpClient */]])
     ], ExportsService);
     return ExportsService;
 }());
@@ -1745,11 +1737,10 @@ var ExportsService = /** @class */ (function () {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LookupsService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/esm5/core.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_Observable__ = __webpack_require__("../../../../rxjs/_esm5/Observable.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__shared_handle_error__ = __webpack_require__("../../../../../src/app/shared/handle-error.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs__ = __webpack_require__("../../../../rxjs/Rx.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs__ = __webpack_require__("../../../../rxjs/Rx.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1764,15 +1755,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var LookupsService = /** @class */ (function () {
     function LookupsService(http) {
         this.http = http;
-        this.uriBase = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].dataUrl + '/api/lookups';
+        this.uriBase = __WEBPACK_IMPORTED_MODULE_2__environments_environment__["a" /* environment */].dataUrl + '/api/lookups';
         this.lookups = new Array();
         // need BehaviorSubject because we're caching the response and 
         // need to be able serve the cache and not call API every time
-        this.lookupsSource = new __WEBPACK_IMPORTED_MODULE_5_rxjs__["BehaviorSubject"](new Array());
+        this.lookupsSource = new __WEBPACK_IMPORTED_MODULE_4_rxjs__["BehaviorSubject"](new Array());
         this.lookups$ = this.lookupsSource.asObservable();
         this.lookupsAge = 0;
         this.storageKey = 'machete.lookups';
@@ -1823,18 +1813,16 @@ var LookupsService = /** @class */ (function () {
             .map(function (res) {
             console.log('getlookups', res);
             return res.filter(function (l) { return l.category == category; });
-        })
-            .catch(__WEBPACK_IMPORTED_MODULE_2__shared_handle_error__["a" /* HandleError */].error);
+        });
     };
     LookupsService.prototype.getLookup = function (id) {
         return this.lookups$
             .mergeMap(function (a) { return a.filter(function (ll) { return ll.id == id; }); })
-            .first()
-            .catch(__WEBPACK_IMPORTED_MODULE_2__shared_handle_error__["a" /* HandleError */].error);
+            .first();
     };
     LookupsService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_4__angular_common_http__["b" /* HttpClient */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_3__angular_common_http__["b" /* HttpClient */]])
     ], LookupsService);
     return LookupsService;
 }());
@@ -2458,7 +2446,6 @@ var MyWorkOrdersModule = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/esm5/core.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_handle_error__ = __webpack_require__("../../../../../src/app/shared/handle-error.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -2472,7 +2459,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var MyWorkOrdersService = /** @class */ (function () {
     function MyWorkOrdersService(http) {
         this.http = http;
@@ -2480,12 +2466,11 @@ var MyWorkOrdersService = /** @class */ (function () {
     MyWorkOrdersService.prototype.getOrders = function () {
         var uri = __WEBPACK_IMPORTED_MODULE_2__environments_environment__["a" /* environment */].dataUrl + '/api/onlineorders';
         return this.http.get(uri)
-            .map(function (o) { return o['data']; })
-            .catch(__WEBPACK_IMPORTED_MODULE_3__shared_handle_error__["a" /* HandleError */].error);
+            .map(function (o) { return o['data']; });
     };
     MyWorkOrdersService.prototype.getOrder = function (id) {
         var url = __WEBPACK_IMPORTED_MODULE_2__environments_environment__["a" /* environment */].dataUrl + '/api/onlineorders/' + id;
-        var postHeaders = new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["d" /* HttpHeaders */]().set('Content-Type', 'application/json');
+        var postHeaders = new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["e" /* HttpHeaders */]().set('Content-Type', 'application/json');
         return this.http.get(url, {
             headers: postHeaders
         }).map(function (data) {
@@ -2499,7 +2484,7 @@ var MyWorkOrdersService = /** @class */ (function () {
     };
     MyWorkOrdersService.prototype.executePaypal = function (orderID, payerID, paymentID, token) {
         var url = __WEBPACK_IMPORTED_MODULE_2__environments_environment__["a" /* environment */].dataUrl + '/api/onlineorders/' + orderID + '/paypalexecute';
-        var postHeaders = new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["d" /* HttpHeaders */]().set('Content-Type', 'application/json');
+        var postHeaders = new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["e" /* HttpHeaders */]().set('Content-Type', 'application/json');
         return this.http.post(url, JSON.stringify({
             payerID: payerID,
             paymentID: paymentID,
@@ -3566,18 +3551,11 @@ var OnlineOrdersService = /** @class */ (function () {
     };
     OnlineOrdersService.prototype.createOrder = function (order) {
         var url = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].dataUrl + '/api/onlineorders';
-        var postHeaders = new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["d" /* HttpHeaders */]().set('Content-Type', 'application/json');
+        var postHeaders = new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["e" /* HttpHeaders */]().set('Content-Type', 'application/json');
         return this.http.post(url, JSON.stringify(order), {
             headers: postHeaders
         }).map(function (data) {
             return data['data'];
-        }, function (err) {
-            if (err.error instanceof Error) {
-                console.error('Client-side error occured.', err.error);
-            }
-            else {
-                console.error('online-orders.service.POST: ' + err.message);
-            }
         });
     };
     OnlineOrdersService = __decorate([
@@ -3698,8 +3676,6 @@ var OrderConfirmComponent = /** @class */ (function () {
             _this.ordersService.clearState();
             _this.assignmentService.clearState();
             _this.router.navigate(['/my-work-orders/' + data.id]);
-        }, function (err) {
-            console.error('POST error', err);
         });
     };
     OrderConfirmComponent = __decorate([
@@ -3791,7 +3767,6 @@ var OrderNotFoundComponent = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__ = __webpack_require__("../../../../rxjs/_esm5/Observable.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_handle_error__ = __webpack_require__("../../../../../src/app/shared/handle-error.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -3801,7 +3776,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-
 
 
 
@@ -3833,8 +3807,7 @@ var ScheduleRulesService = /** @class */ (function () {
             _this.rules = res['data'];
             _this.rulesAge = Date.now();
             return res['data'];
-        })
-            .catch(__WEBPACK_IMPORTED_MODULE_4__shared_handle_error__["a" /* HandleError */].error);
+        });
     };
     ScheduleRulesService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
@@ -4201,7 +4174,6 @@ function zipcodeValidator(rules) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__ = __webpack_require__("../../../../rxjs/_esm5/Observable.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_handle_error__ = __webpack_require__("../../../../../src/app/shared/handle-error.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -4211,7 +4183,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-
 
 
 
@@ -4244,8 +4215,7 @@ var TransportRulesService = /** @class */ (function () {
             _this.rules = res['data'];
             _this.rulesAge = Date.now();
             return res['data'];
-        })
-            .catch(__WEBPACK_IMPORTED_MODULE_4__shared_handle_error__["a" /* HandleError */].error);
+        });
     };
     TransportRulesService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
@@ -4513,7 +4483,6 @@ var WorkAssignmentsComponent = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__lookups_models_lookup__ = __webpack_require__("../../../../../src/app/lookups/models/lookup.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__lookups_lookups_service__ = __webpack_require__("../../../../../src/app/lookups/lookups.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__transport_rules_service__ = __webpack_require__("../../../../../src/app/online-orders/transport-rules.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__shared_handle_error__ = __webpack_require__("../../../../../src/app/shared/handle-error.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -4523,7 +4492,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-
 
 
 
@@ -4556,7 +4524,7 @@ var WorkAssignmentsService = /** @class */ (function () {
             _this.transportRules = rules;
             _this.transports = transports;
             _this.compactRequests();
-        }, function (error) { return __WEBPACK_IMPORTED_MODULE_8__shared_handle_error__["a" /* HandleError */].error(error); }, function () { return console.log('combined subscription closed'); });
+        });
     }
     WorkAssignmentsService.prototype.getStream = function () {
         return __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__["a" /* Observable */].of(this.requests);
@@ -5196,7 +5164,6 @@ var ReportsComponent = /** @class */ (function () {
             return;
         }
         this.selectedReport = this.reportList.filter(function (x) { return x.name === _this.selectedReportID; })[0];
-        // TODO catch exception if not found
         this.description = this.selectedReport.description;
         this.title = this.selectedReport.title || this.selectedReport.commonName;
         this.name = this.selectedReport.name;
@@ -5317,10 +5284,8 @@ var ReportsModule = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_toPromise__ = __webpack_require__("../../../../rxjs/_esm5/add/operator/toPromise.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_toPromise__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/_esm5/add/operator/map.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_catch__ = __webpack_require__("../../../../rxjs/_esm5/add/operator/catch.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_Observable__ = __webpack_require__("../../../../rxjs/_esm5/Observable.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -5335,8 +5300,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
-
 var ReportsService = /** @class */ (function () {
     function ReportsService(http) {
         this.http = http;
@@ -5344,7 +5307,7 @@ var ReportsService = /** @class */ (function () {
     ReportsService.prototype.getReportData = function (reportName, o) {
         // TODO throw exception if report is not populated
         var params = this.encodeData(o);
-        var uri = __WEBPACK_IMPORTED_MODULE_5__environments_environment__["a" /* environment */].dataUrl + '/api/reports';
+        var uri = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].dataUrl + '/api/reports';
         if (reportName) {
             uri = uri + '/' + reportName;
         }
@@ -5353,19 +5316,13 @@ var ReportsService = /** @class */ (function () {
         }
         console.log('getReportData: ' + uri);
         return this.http.get(uri)
-            .map(function (res) { return res['data']; })
-            .catch(this.handleError);
+            .map(function (res) { return res['data']; });
     };
     ReportsService.prototype.getReportList = function () {
-        var uri = __WEBPACK_IMPORTED_MODULE_5__environments_environment__["a" /* environment */].dataUrl + '/api/reports';
+        var uri = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].dataUrl + '/api/reports';
         console.log('getReportList: ', uri);
         return this.http.get(uri)
-            .map(function (o) { return o['data']; })
-            .catch(this.handleError);
-    };
-    ReportsService.prototype.handleError = function (error) {
-        console.error('handleError:', error);
-        return __WEBPACK_IMPORTED_MODULE_4_rxjs_Observable__["a" /* Observable */].of(error);
+            .map(function (o) { return o['data']; });
     };
     ReportsService.prototype.encodeData = function (data) {
         return Object.keys(data).map(function (key) {
@@ -5374,7 +5331,7 @@ var ReportsService = /** @class */ (function () {
     };
     ReportsService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_6__angular_common_http__["b" /* HttpClient */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_4__angular_common_http__["b" /* HttpClient */]])
     ], ReportsService);
     return ReportsService;
 }());
@@ -5559,22 +5516,63 @@ var WorkOrdersModule = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "../../../../../src/app/shared/handle-error.ts":
+/***/ "../../../../../src/app/shared/global-error-handler.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HandleError; });
-/**
- * Created by jcii on 6/2/17.
- */
-var HandleError = /** @class */ (function () {
-    function HandleError() {
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return GlobalErrorHandler; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common__ = __webpack_require__("../../../common/esm5/common.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__index__ = __webpack_require__("../../../../../src/app/shared/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_primeng_components_common_messageservice__ = __webpack_require__("../../../../primeng/components/common/messageservice.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_primeng_components_common_messageservice___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_primeng_components_common_messageservice__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+// https://medium.com/@amcdnl/global-error-handling-with-angular2-6b992bdfb59c
+var GlobalErrorHandler = /** @class */ (function () {
+    function GlobalErrorHandler(injector) {
+        this.injector = injector;
     }
-    HandleError.error = function (error) {
-        console.error(error);
-        return Promise.reject(error.message || error);
+    GlobalErrorHandler.prototype.handleError = function (error) {
+        var loggingService = this.injector.get(__WEBPACK_IMPORTED_MODULE_2__index__["c" /* LoggingService */]);
+        var msgService = this.injector.get(__WEBPACK_IMPORTED_MODULE_3_primeng_components_common_messageservice__["MessageService"]);
+        var location = this.injector.get(__WEBPACK_IMPORTED_MODULE_1__angular_common__["LocationStrategy"]);
+        var message = error.message ? error.message : error.toString();
+        var url = location instanceof __WEBPACK_IMPORTED_MODULE_1__angular_common__["PathLocationStrategy"]
+            ? location.path() : '';
+        var shortMsg = 'unknown error: ' + error.toString();
+        ;
+        if (error instanceof __WEBPACK_IMPORTED_MODULE_4__angular_common_http__["d" /* HttpErrorResponse */]) {
+            shortMsg = error.status + " " + error.statusText;
+        }
+        // I think this is a bluebird promise error, but i dunno
+        if (error.rejection && error.rejection instanceof __WEBPACK_IMPORTED_MODULE_4__angular_common_http__["d" /* HttpErrorResponse */]) {
+            shortMsg = (error.rejection.status && error.rejection.statusText) ?
+                error.rejection.status + " " + error.rejection.statusText : 'Unknown error';
+        }
+        // log on the server
+        msgService.add({ severity: 'error', summary: shortMsg });
+        loggingService.log(message, location);
+        throw error;
     };
-    return HandleError;
+    GlobalErrorHandler = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injector"]])
+    ], GlobalErrorHandler);
+    return GlobalErrorHandler;
 }());
 
 
@@ -5589,6 +5587,9 @@ var HandleError = /** @class */ (function () {
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__services_auth_guard_service__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_auth_service__ = __webpack_require__("../../../../../src/app/shared/services/auth.service.ts");
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_1__services_auth_service__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_logging_service__ = __webpack_require__("../../../../../src/app/shared/services/logging.service.ts");
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_2__services_logging_service__["a"]; });
+
 
 
 
@@ -5851,8 +5852,6 @@ var AuthService = /** @class */ (function () {
     AuthService.prototype.clearState = function () {
         this.mgr.clearStaleState().then(function () {
             console.log('auth.service.clearStateState success');
-        }).catch(function (e) {
-            console.error('auth.service.clearStateState error', e.message);
         });
     };
     AuthService.prototype.getUser$ = function () {
@@ -5888,8 +5887,6 @@ var AuthService = /** @class */ (function () {
             _this.currentUser = user;
             //console.log('auth.service.getUser returned: ' + JSON.stringify(user));
             _this.getUserEmitter().emit(user);
-        }).catch(function (err) {
-            console.error('getUser: ', err);
         });
     };
     AuthService.prototype.removeUser = function () {
@@ -5897,15 +5894,11 @@ var AuthService = /** @class */ (function () {
         this.mgr.removeUser().then(function () {
             _this.getUserEmitter().emit(null);
             console.log('auth.service.removeUser: user removed');
-        }).catch(function (err) {
-            console.error('auth.service.removeUser returned: ' + JSON.stringify(err));
         });
     };
     AuthService.prototype.startSigninMainWindow = function () {
         this.mgr.signinRedirect({ data: this.redirectUrl }).then(function () {
             console.log('signinRedirect done');
-        }).catch(function (err) {
-            console.error('auth.service.startSigninMainWindow returned: ' + JSON.stringify(err));
         });
     };
     AuthService.prototype.endSigninMainWindow = function (url) {
@@ -5916,11 +5909,6 @@ var AuthService = /** @class */ (function () {
         this.mgr.getUser().then(function (user) {
             return _this.mgr.signoutRedirect({ id_token_hint: user.id_token }).then(function (resp) {
                 console.log('signed out', resp);
-                setTimeout(5000, function () {
-                    console.log('testing to see if fired...');
-                });
-            }).catch(function (err) {
-                console.error('auth.service.startSignoutMainWindow returned: ' + JSON.stringify(err));
             });
         });
     };
@@ -5928,8 +5916,6 @@ var AuthService = /** @class */ (function () {
     AuthService.prototype.endSignoutMainWindow = function () {
         this.mgr.signoutRedirectCallback().then(function (resp) {
             console.log('signed out', resp);
-        }).catch(function (err) {
-            console.error('auth.service.endSignoutMainWindow returned: ' + JSON.stringify(err));
         });
     };
     ;
@@ -5938,6 +5924,39 @@ var AuthService = /** @class */ (function () {
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */], __WEBPACK_IMPORTED_MODULE_5__angular_router__["Router"]])
     ], AuthService);
     return AuthService;
+}());
+
+
+
+/***/ }),
+
+/***/ "../../../../../src/app/shared/services/logging.service.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoggingService; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/esm5/core.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var LoggingService = /** @class */ (function () {
+    function LoggingService() {
+    }
+    LoggingService.prototype.log = function (message, url, stack) {
+        console.log(message);
+    };
+    LoggingService = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
+        __metadata("design:paramtypes", [])
+    ], LoggingService);
+    return LoggingService;
 }());
 
 
@@ -5974,7 +5993,6 @@ var TokenInterceptor = /** @class */ (function () {
         var url = this.route.url;
         return this.auth.getUser$()
             .mergeMap(function (user) {
-            //console.log('currentUser: ', user);
             if (user === null || user === undefined) {
                 _this.auth.redirectUrl = url;
                 _this.route.navigate(['/welcome']);
