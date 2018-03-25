@@ -35,10 +35,12 @@ namespace Machete.Identity
 
             if (userManager.SupportsUserEmail)
             {
-                var email = await userManager.GetEmailAsync(user.Id);
-                if (!String.IsNullOrWhiteSpace(email))
+                // GetEmailAsync is returning null; perhaps an overriden property in the base object
+                // not sure, don't care.
+                //var email = await userManager.GetEmailAsync(user.Id);
+                if (!String.IsNullOrWhiteSpace(user.Email))
                 {
-                    claims.Add(new Claim(Constants.ClaimTypes.Email, email));
+                    claims.Add(new Claim(Constants.ClaimTypes.Email, user.Email));
                     var verified = await userManager.IsEmailConfirmedAsync(user.Id);
                     claims.Add(new Claim(Constants.ClaimTypes.EmailVerified, verified ? "true" : "false"));
                 }

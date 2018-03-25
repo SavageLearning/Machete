@@ -117,7 +117,7 @@ var AppRoutingModule = /** @class */ (function () {
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"layout-wrapper\" [ngClass]=\"{'layout-compact':layoutCompact}\">\r\n\r\n    <div #layoutContainer class=\"layout-container\" \r\n            [ngClass]=\"{'menu-layout-static': !isOverlay(),\r\n            'menu-layout-overlay': isOverlay(),\r\n            'layout-menu-overlay-active': overlayMenuActive,\r\n            'menu-layout-horizontal': isHorizontal(),\r\n            'layout-menu-static-inactive': staticMenuDesktopInactive,\r\n            'layout-menu-static-active': staticMenuMobileActive}\">\r\n\r\n        <app-topbar></app-topbar>\r\n\r\n        <div class=\"layout-menu\" [ngClass]=\"{'layout-menu-dark':darkMenu}\" (click)=\"onMenuClick($event)\">\r\n            <div #layoutMenuScroller class=\"nano\">\r\n                <div class=\"nano-content menu-scroll-content\">\r\n                    <inline-profile *ngIf=\"profileMode=='inline'&&!isHorizontal()\"></inline-profile>\r\n                    <app-menu [reset]=\"resetMenu\"></app-menu>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        \r\n        <div class=\"layout-main\">\r\n            <router-outlet></router-outlet>\r\n            \r\n            <app-footer></app-footer>\r\n        </div>\r\n        \r\n        <div class=\"layout-mask\"></div>\r\n    </div>\r\n\r\n</div>"
+module.exports = "<p-growl [(value)]=\"msgs\" [sticky]=\"true\"></p-growl>\r\n<div class=\"layout-wrapper\" [ngClass]=\"{'layout-compact':layoutCompact}\">\r\n\r\n    <div #layoutContainer class=\"layout-container\" \r\n            [ngClass]=\"{'menu-layout-static': !isOverlay(),\r\n            'menu-layout-overlay': isOverlay(),\r\n            'layout-menu-overlay-active': overlayMenuActive,\r\n            'menu-layout-horizontal': isHorizontal(),\r\n            'layout-menu-static-inactive': staticMenuDesktopInactive,\r\n            'layout-menu-static-active': staticMenuMobileActive}\">\r\n\r\n        <app-topbar></app-topbar>\r\n\r\n        <div class=\"layout-menu\" [ngClass]=\"{'layout-menu-dark':darkMenu}\" (click)=\"onMenuClick($event)\">\r\n            <div #layoutMenuScroller class=\"nano\">\r\n                <div class=\"nano-content menu-scroll-content\">\r\n                    <inline-profile *ngIf=\"profileMode=='inline'&&!isHorizontal()\"></inline-profile>\r\n                    <app-menu [reset]=\"resetMenu\"></app-menu>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        \r\n        <div class=\"layout-main\">\r\n            <router-outlet></router-outlet>\r\n            \r\n            <app-footer></app-footer>\r\n        </div>\r\n        \r\n        <div class=\"layout-mask\"></div>\r\n    </div>\r\n\r\n</div>"
 
 /***/ }),
 
@@ -149,6 +149,8 @@ module.exports = module.exports.toString();
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__configs_configs_service__ = __webpack_require__("../../../../../src/app/configs/configs.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lookups_lookups_service__ = __webpack_require__("../../../../../src/app/lookups/lookups.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_router__ = __webpack_require__("../../../router/esm5/router.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_primeng_components_common_messageservice__ = __webpack_require__("../../../../primeng/components/common/messageservice.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_primeng_components_common_messageservice___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_primeng_components_common_messageservice__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -163,6 +165,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 console.log('environment.name:', __WEBPACK_IMPORTED_MODULE_1__environments_environment__["a" /* environment */].name);
 var MenuOrientation;
 (function (MenuOrientation) {
@@ -172,13 +175,15 @@ var MenuOrientation;
 })(MenuOrientation || (MenuOrientation = {}));
 ;
 var AppComponent = /** @class */ (function () {
-    function AppComponent(renderer, router) {
+    function AppComponent(renderer, router, msgService) {
         this.renderer = renderer;
         this.router = router;
+        this.msgService = msgService;
         this.layoutCompact = false;
         this.layoutMode = MenuOrientation.STATIC;
         this.darkMenu = true;
         this.profileMode = 'inline';
+        this.msgs = [];
     }
     AppComponent.prototype.ngOnInit = function () {
         this.router.events.subscribe(function (evt) {
@@ -296,7 +301,9 @@ var AppComponent = /** @class */ (function () {
             styles: [__webpack_require__("../../../../../src/app/app.component.scss")],
             providers: [__WEBPACK_IMPORTED_MODULE_3__lookups_lookups_service__["a" /* LookupsService */], __WEBPACK_IMPORTED_MODULE_2__configs_configs_service__["a" /* ConfigsService */]]
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_0__angular_core__["Renderer"], __WEBPACK_IMPORTED_MODULE_4__angular_router__["Router"]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_0__angular_core__["Renderer"],
+            __WEBPACK_IMPORTED_MODULE_4__angular_router__["Router"],
+            __WEBPACK_IMPORTED_MODULE_5_primeng_components_common_messageservice__["MessageService"]])
     ], AppComponent);
     return AppComponent;
 }());
@@ -353,17 +360,20 @@ var AppFooter = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__menu_app_profile_component__ = __webpack_require__("../../../../../src/app/menu/app.profile.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__not_found_component__ = __webpack_require__("../../../../../src/app/not-found.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__angular_router__ = __webpack_require__("../../../router/esm5/router.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__shared_services_auth_service__ = __webpack_require__("../../../../../src/app/shared/services/auth.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__auth_authorize_authorize_component__ = __webpack_require__("../../../../../src/app/auth/authorize/authorize.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__shared_services_token_interceptor__ = __webpack_require__("../../../../../src/app/shared/services/token.interceptor.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__online_orders_online_orders_module__ = __webpack_require__("../../../../../src/app/online-orders/online-orders.module.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__reports_reports_module__ = __webpack_require__("../../../../../src/app/reports/reports.module.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__exports_exports_module__ = __webpack_require__("../../../../../src/app/exports/exports.module.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__my_work_orders_my_work_orders_module__ = __webpack_require__("../../../../../src/app/my-work-orders/my-work-orders.module.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__employers_employers_module__ = __webpack_require__("../../../../../src/app/employers/employers.module.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23_oidc_client__ = __webpack_require__("../../../../oidc-client/lib/oidc-client.min.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23_oidc_client___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_23_oidc_client__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__shared_services_auth_service__ = __webpack_require__("../../../../../src/app/shared/services/auth.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__auth_authorize_authorize_component__ = __webpack_require__("../../../../../src/app/auth/authorize/authorize.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__shared_services_token_interceptor__ = __webpack_require__("../../../../../src/app/shared/services/token.interceptor.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__online_orders_online_orders_module__ = __webpack_require__("../../../../../src/app/online-orders/online-orders.module.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__reports_reports_module__ = __webpack_require__("../../../../../src/app/reports/reports.module.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__exports_exports_module__ = __webpack_require__("../../../../../src/app/exports/exports.module.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__my_work_orders_my_work_orders_module__ = __webpack_require__("../../../../../src/app/my-work-orders/my-work-orders.module.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__employers_employers_module__ = __webpack_require__("../../../../../src/app/employers/employers.module.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__shared_global_error_handler__ = __webpack_require__("../../../../../src/app/shared/global-error-handler.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__shared_services_logging_service__ = __webpack_require__("../../../../../src/app/shared/services/logging.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24_primeng_components_common_messageservice__ = __webpack_require__("../../../../primeng/components/common/messageservice.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24_primeng_components_common_messageservice___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_24_primeng_components_common_messageservice__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_25_primeng_primeng__ = __webpack_require__("../../../../primeng/primeng.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_25_primeng_primeng___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_25_primeng_primeng__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -397,13 +407,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
+
 var AppModule = /** @class */ (function () {
     // Diagnostic only: inspect router configuration
     function AppModule(router) {
-        if (!__WEBPACK_IMPORTED_MODULE_14__environments_environment__["a" /* environment */].production) {
-            __WEBPACK_IMPORTED_MODULE_23_oidc_client__["Log"].level = __WEBPACK_IMPORTED_MODULE_23_oidc_client__["Log"].INFO;
-            __WEBPACK_IMPORTED_MODULE_23_oidc_client__["Log"].logger = console;
-        }
         console.log('.ctor');
     }
     AppModule = __decorate([
@@ -416,7 +424,7 @@ var AppModule = /** @class */ (function () {
                 __WEBPACK_IMPORTED_MODULE_10__app_footer_component__["a" /* AppFooter */],
                 __WEBPACK_IMPORTED_MODULE_11__menu_app_profile_component__["a" /* InlineProfileComponent */],
                 __WEBPACK_IMPORTED_MODULE_12__not_found_component__["a" /* PageNotFoundComponent */],
-                __WEBPACK_IMPORTED_MODULE_16__auth_authorize_authorize_component__["a" /* AuthorizeComponent */]
+                __WEBPACK_IMPORTED_MODULE_15__auth_authorize_authorize_component__["a" /* AuthorizeComponent */]
             ],
             imports: [
                 __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["BrowserModule"],
@@ -424,19 +432,26 @@ var AppModule = /** @class */ (function () {
                 __WEBPACK_IMPORTED_MODULE_4__angular_forms__["FormsModule"],
                 __WEBPACK_IMPORTED_MODULE_6__angular_http__["c" /* HttpModule */],
                 __WEBPACK_IMPORTED_MODULE_5__angular_common_http__["c" /* HttpClientModule */],
-                __WEBPACK_IMPORTED_MODULE_19__reports_reports_module__["a" /* ReportsModule */],
-                __WEBPACK_IMPORTED_MODULE_18__online_orders_online_orders_module__["a" /* OnlineOrdersModule */],
-                __WEBPACK_IMPORTED_MODULE_20__exports_exports_module__["a" /* ExportsModule */],
-                __WEBPACK_IMPORTED_MODULE_21__my_work_orders_my_work_orders_module__["a" /* MyWorkOrdersModule */],
-                __WEBPACK_IMPORTED_MODULE_22__employers_employers_module__["a" /* EmployersModule */],
-                __WEBPACK_IMPORTED_MODULE_2__app_routing_module__["a" /* AppRoutingModule */]
+                __WEBPACK_IMPORTED_MODULE_18__reports_reports_module__["a" /* ReportsModule */],
+                __WEBPACK_IMPORTED_MODULE_17__online_orders_online_orders_module__["a" /* OnlineOrdersModule */],
+                __WEBPACK_IMPORTED_MODULE_19__exports_exports_module__["a" /* ExportsModule */],
+                __WEBPACK_IMPORTED_MODULE_20__my_work_orders_my_work_orders_module__["a" /* MyWorkOrdersModule */],
+                __WEBPACK_IMPORTED_MODULE_21__employers_employers_module__["a" /* EmployersModule */],
+                __WEBPACK_IMPORTED_MODULE_2__app_routing_module__["a" /* AppRoutingModule */],
+                __WEBPACK_IMPORTED_MODULE_25_primeng_primeng__["GrowlModule"]
             ],
             providers: [
-                __WEBPACK_IMPORTED_MODULE_15__shared_services_auth_service__["a" /* AuthService */],
+                __WEBPACK_IMPORTED_MODULE_14__shared_services_auth_service__["a" /* AuthService */],
+                __WEBPACK_IMPORTED_MODULE_23__shared_services_logging_service__["a" /* LoggingService */],
+                __WEBPACK_IMPORTED_MODULE_24_primeng_components_common_messageservice__["MessageService"],
                 {
                     provide: __WEBPACK_IMPORTED_MODULE_5__angular_common_http__["a" /* HTTP_INTERCEPTORS */],
-                    useClass: __WEBPACK_IMPORTED_MODULE_17__shared_services_token_interceptor__["a" /* TokenInterceptor */],
+                    useClass: __WEBPACK_IMPORTED_MODULE_16__shared_services_token_interceptor__["a" /* TokenInterceptor */],
                     multi: true
+                },
+                {
+                    provide: __WEBPACK_IMPORTED_MODULE_3__angular_core__["ErrorHandler"],
+                    useClass: __WEBPACK_IMPORTED_MODULE_22__shared_global_error_handler__["a" /* GlobalErrorHandler */]
                 }
             ],
             bootstrap: [__WEBPACK_IMPORTED_MODULE_7__app_component__["a" /* AppComponent */]]
@@ -912,7 +927,6 @@ var WelcomeComponent = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__ = __webpack_require__("../../../../rxjs/_esm5/Observable.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_handle_error__ = __webpack_require__("../../../../../src/app/shared/handle-error.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -922,7 +936,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-
 
 
 
@@ -954,19 +967,16 @@ var ConfigsService = /** @class */ (function () {
             _this.configs = res['data'];
             _this.configsAge = Date.now();
             return res['data'];
-        })
-            .catch(__WEBPACK_IMPORTED_MODULE_4__shared_handle_error__["a" /* HandleError */].error);
+        });
     };
     ConfigsService.prototype.getConfigs = function (category) {
         return this.getAllConfigs()
-            .map(function (res) { return res.filter(function (l) { return l.category == category; }); })
-            .catch(__WEBPACK_IMPORTED_MODULE_4__shared_handle_error__["a" /* HandleError */].error);
+            .map(function (res) { return res.filter(function (l) { return l.category == category; }); });
     };
     ConfigsService.prototype.getConfig = function (key) {
         return this.getAllConfigs()
             .mergeMap(function (a) { return a.filter(function (ll) { return ll.key == key; }); })
-            .first()
-            .catch(__WEBPACK_IMPORTED_MODULE_4__shared_handle_error__["a" /* HandleError */].error);
+            .first();
     };
     ConfigsService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
@@ -1048,7 +1058,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/employers/employers.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h1>\r\n  Employer profile\r\n</h1>\r\n<div class=\"card\">\r\n  This is your employer profile. If you're a new employer, you must create a profile before you can place an order.\r\n  This profile information will pre-populate new orders to save you time.\r\n</div>\r\n<div class=\"ui-fluid\">\r\n  <div class=\"card\">\r\n    <form [formGroup]=\"employerForm\" (ngSubmit)=\"saveEmployer()\" class=\"ui-g form-group\">\r\n      <div class=\"ui-g-12 ui-md-6\">\r\n\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n            <label for=\"name\">Name</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n                <input class=\"ui-inputtext ng-dirty ng-invalid\" \r\n                      formControlName=\"name\" \r\n                      id=\"name\"\r\n                      type=\"text\" pInputText/>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!employerForm.valid && showErrors\">\r\n                {{formErrors.name}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n            <label for=\"phone\">Phone number</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n                <input class=\"ui-inputtext ng-dirty ng-invalid\" \r\n                      formControlName=\"phone\" \r\n                      id=\"phone\"\r\n                      type=\"text\" pInputText/>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!employerForm.valid && showErrors\">\r\n                {{formErrors.phone}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n            <label for=\"cellphone\">Cell phone</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n                <input class=\"ui-inputtext ng-dirty ng-invalid\" \r\n                      formControlName=\"cellphone\" \r\n                      id=\"cellphone\"\r\n                      type=\"text\" pInputText/>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!employerForm.valid && showErrors\">\r\n                {{formErrors.cellphone}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n        \r\n\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n            <label for=\"email\">Email</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n                <input class=\"ui-inputtext ng-dirty ng-invalid\" \r\n                      formControlName=\"email\" \r\n                      id=\"email\"\r\n                      type=\"text\" pInputText/>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!employerForm.valid && showErrors\">\r\n                {{formErrors.email}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n        \r\n\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n            <label for=\"referredBy\">Referred by?</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n                <input class=\"ui-inputtext ng-dirty ng-invalid\" \r\n                      formControlName=\"referredBy\" \r\n                      id=\"referredBy\"\r\n                      type=\"text\" pInputText/>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!employerForm.valid && showErrors\">\r\n                {{formErrors.referredBy}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n        \r\n\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n            <label for=\"referredByOther\">Referred by notes</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n                <input class=\"ui-inputtext ng-dirty ng-invalid\" \r\n                      formControlName=\"referredByOther\" \r\n                      id=\"referredByOther\"\r\n                      type=\"text\" pInputText/>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!employerForm.valid && showErrors\">\r\n                {{formErrors.referredByOther}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n        \r\n        \r\n      </div>\r\n      <!-- -------------------------vertical divide---------------------------- -->\r\n      <div class=\"ui-g-12  ui-md-6\">\r\n        <div class=\"ui-g-12\"> \r\n          <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n            <label for=\"business\">Is a business?</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n              <p-dropdown id=\"business\" [options]=\"yesNoDropDown\" formControlName=\"business\"\r\n                [autoWidth]=\"false\"></p-dropdown>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!employerForm.valid && showErrors\">\r\n                {{formErrors.business}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n            <label for=\"address1\">Address (1)</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n                <input class=\"ui-inputtext ng-dirty ng-invalid\" \r\n                      formControlName=\"address1\" \r\n                      id=\"address1\"\r\n                      type=\"text\" pInputText/>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!employerForm.valid && showErrors\">\r\n                {{formErrors.address1}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n            <label for=\"address2\">Address (2)</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n                <input class=\"ui-inputtext ng-dirty ng-invalid\" \r\n                      formControlName=\"address2\" \r\n                      id=\"address2\"\r\n                      type=\"text\" pInputText/>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!employerForm.valid && showErrors\">\r\n                {{formErrors.address2}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n            <label for=\"city\">City</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n                <input class=\"ui-inputtext ng-dirty ng-invalid\" \r\n                      formControlName=\"city\" \r\n                      id=\"city\"\r\n                      type=\"text\" pInputText/>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!employerForm.valid && showErrors\">\r\n                {{formErrors.city}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n            <label for=\"state\">State</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n                <input class=\"ui-inputtext ng-dirty ng-invalid\" \r\n                      formControlName=\"state\" \r\n                      id=\"state\"\r\n                      type=\"text\" pInputText/>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!employerForm.valid && showErrors\">\r\n                {{formErrors.state}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n\r\n\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n            <label for=\"zipcode\">Zipcode</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n                <input class=\"ui-inputtext ng-dirty ng-invalid\" \r\n                      formControlName=\"zipcode\" \r\n                      id=\"zipcode\"\r\n                      type=\"text\" pInputText/>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!employerForm.valid && showErrors\">\r\n                {{formErrors.zipcode}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n\r\n        \r\n      </div>\r\n      <div class=\"ui-g-12\">\r\n        <button pButton type=\"submit\" label=\"Save\"></button>\r\n      </div>\r\n    </form>\r\n  </div>\r\n</div>        "
+module.exports = "<h1>\r\n  Employer profile\r\n</h1>\r\n<div class=\"card\">\r\n  This is your employer profile. If you're a new employer, you must create a profile before you can place an order.\r\n  This profile information will pre-populate new orders to save you time.\r\n</div>\r\n<div class=\"ui-fluid\">\r\n  <div class=\"card\">\r\n    <form [formGroup]=\"employerForm\" (ngSubmit)=\"saveEmployer()\" class=\"ui-g form-group\">\r\n      <div class=\"ui-g-12 ui-md-6\">\r\n\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n            <label for=\"name\">Name</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n                <input class=\"ui-inputtext ng-dirty ng-invalid\" \r\n                      formControlName=\"name\" \r\n                      id=\"name\"\r\n                      type=\"text\" pInputText/>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!employerForm.valid && showErrors\">\r\n                {{formErrors.name}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n            <label for=\"phone\">Phone number</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n                <input class=\"ui-inputtext ng-dirty ng-invalid\" \r\n                      formControlName=\"phone\" \r\n                      id=\"phone\"\r\n                      type=\"text\" \r\n                      placeholder=\"123-456-7890\"\r\n                      pInputText/>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!employerForm.valid && showErrors\">\r\n                {{formErrors.phone}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n            <label for=\"cellphone\">Cell phone</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n                <input class=\"ui-inputtext ng-dirty ng-invalid\" \r\n                      formControlName=\"cellphone\" \r\n                      id=\"cellphone\"\r\n                      type=\"text\" pInputText/>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!employerForm.valid && showErrors\">\r\n                {{formErrors.cellphone}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n        \r\n\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n            <label for=\"email\">Email</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n                <input class=\"ui-inputtext ng-dirty ng-invalid\" \r\n                      formControlName=\"email\" \r\n                      id=\"email\"\r\n                      type=\"text\" pInputText/>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!employerForm.valid && showErrors\">\r\n                {{formErrors.email}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n        \r\n\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n            <label for=\"referredBy\">Referred by?</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n                <input class=\"ui-inputtext ng-dirty ng-invalid\" \r\n                      formControlName=\"referredBy\" \r\n                      id=\"referredBy\"\r\n                      type=\"text\" pInputText/>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!employerForm.valid && showErrors\">\r\n                {{formErrors.referredBy}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n        \r\n\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n            <label for=\"referredByOther\">Referred by notes</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n                <input class=\"ui-inputtext ng-dirty ng-invalid\" \r\n                      formControlName=\"referredByOther\" \r\n                      id=\"referredByOther\"\r\n                      type=\"text\" pInputText/>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!employerForm.valid && showErrors\">\r\n                {{formErrors.referredByOther}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n        \r\n        \r\n      </div>\r\n      <!-- -------------------------vertical divide---------------------------- -->\r\n      <div class=\"ui-g-12  ui-md-6\">\r\n        <div class=\"ui-g-12\"> \r\n          <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n            <label for=\"business\">Is a business?</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n              <p-dropdown id=\"business\" [options]=\"yesNoDropDown\" formControlName=\"business\"\r\n                [autoWidth]=\"false\"></p-dropdown>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!employerForm.valid && showErrors\">\r\n                {{formErrors.business}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n            <label for=\"address1\">Address (1)</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n                <input class=\"ui-inputtext ng-dirty ng-invalid\" \r\n                      formControlName=\"address1\" \r\n                      id=\"address1\"\r\n                      type=\"text\" pInputText/>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!employerForm.valid && showErrors\">\r\n                {{formErrors.address1}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n            <label for=\"address2\">Address (2)</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n                <input class=\"ui-inputtext ng-dirty ng-invalid\" \r\n                      formControlName=\"address2\" \r\n                      id=\"address2\"\r\n                      type=\"text\" pInputText/>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!employerForm.valid && showErrors\">\r\n                {{formErrors.address2}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n            <label for=\"city\">City</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n                <input class=\"ui-inputtext ng-dirty ng-invalid\" \r\n                      formControlName=\"city\" \r\n                      id=\"city\"\r\n                      type=\"text\" pInputText/>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!employerForm.valid && showErrors\">\r\n                {{formErrors.city}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n            <label for=\"state\">State</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n                <input class=\"ui-inputtext ng-dirty ng-invalid\" \r\n                      formControlName=\"state\" \r\n                      id=\"state\"\r\n                      type=\"text\" pInputText/>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!employerForm.valid && showErrors\">\r\n                {{formErrors.state}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n\r\n\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n            <label for=\"zipcode\">Zipcode</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n                <input class=\"ui-inputtext ng-dirty ng-invalid\" \r\n                      formControlName=\"zipcode\" \r\n                      id=\"zipcode\"\r\n                      type=\"text\" pInputText/>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!employerForm.valid && showErrors\">\r\n                {{formErrors.zipcode}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n\r\n        \r\n      </div>\r\n      <div class=\"ui-g-12\">\r\n        <button pButton type=\"submit\" label=\"Save\"></button>\r\n      </div>\r\n    </form>\r\n  </div>\r\n</div>        "
 
 /***/ }),
 
@@ -1064,6 +1074,8 @@ module.exports = "<h1>\r\n  Employer profile\r\n</h1>\r\n<div class=\"card\">\r\
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__lookups_lookups_service__ = __webpack_require__("../../../../../src/app/lookups/lookups.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__shared_models_my_select_item__ = __webpack_require__("../../../../../src/app/shared/models/my-select-item.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__angular_router__ = __webpack_require__("../../../router/esm5/router.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__online_orders_shared_index__ = __webpack_require__("../../../../../src/app/online-orders/shared/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__shared_validators_phone__ = __webpack_require__("../../../../../src/app/shared/validators/phone.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1078,6 +1090,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
+
+//import { phoneValidator } from '../shared/validators/phone';
 
 
 var EmployersComponent = /** @class */ (function () {
@@ -1107,52 +1122,35 @@ var EmployersComponent = /** @class */ (function () {
             'state': '',
             'zipcode': ''
         };
-        this.validationMessages = {
-            'address1': { 'required': 'Address is required' },
-            'address2': {},
-            'blogparticipate': {},
-            'business': {},
-            'businessname': {},
-            'cellphone': {},
-            'city': { 'required': 'City is required' },
-            'email': { 'required': 'Email is required' },
-            'fax': { 'required': '' },
-            'name': { 'required': 'Name is required' },
-            'phone': { 'required': 'Phonr is required' },
-            'referredBy': {},
-            'referredByOther': {},
-            'state': { 'required': 'State is required' },
-            'zipcode': { 'required': 'zipcode is required' }
-        };
     }
     EmployersComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.buildForm();
         this.employersService.getEmployer()
             .subscribe(function (data) {
             _this.employer = data || new __WEBPACK_IMPORTED_MODULE_2__shared_models_employer__["a" /* Employer */]();
             _this.buildForm();
         });
-        this.buildForm();
     };
     EmployersComponent.prototype.buildForm = function () {
         var _this = this;
         this.employerForm = this.fb.group({
-            'id': [this.employer.id],
-            'address1': [this.employer.address1, __WEBPACK_IMPORTED_MODULE_3__angular_forms__["Validators"].required],
+            //'id': [this.employer.id],
+            'address1': [this.employer.address1, Object(__WEBPACK_IMPORTED_MODULE_7__online_orders_shared_index__["a" /* requiredValidator */])('Address is required')],
             'address2': [this.employer.address2],
             'blogparticipate': [this.employer.blogparticipate],
             'business': [this.employer.business],
             'businessname': [this.employer.businessname],
             'cellphone': [this.employer.cellphone],
-            'city': [this.employer.city, __WEBPACK_IMPORTED_MODULE_3__angular_forms__["Validators"].required],
-            'email': [this.employer.email, __WEBPACK_IMPORTED_MODULE_3__angular_forms__["Validators"].required],
+            'city': [this.employer.city, Object(__WEBPACK_IMPORTED_MODULE_7__online_orders_shared_index__["a" /* requiredValidator */])('City is required')],
+            'email': [this.employer.email, Object(__WEBPACK_IMPORTED_MODULE_7__online_orders_shared_index__["a" /* requiredValidator */])('Email is required')],
             'fax': [this.employer.fax],
-            'name': [this.employer.name, __WEBPACK_IMPORTED_MODULE_3__angular_forms__["Validators"].required],
-            'phone': [this.employer.phone, __WEBPACK_IMPORTED_MODULE_3__angular_forms__["Validators"].required],
+            'name': [this.employer.name, Object(__WEBPACK_IMPORTED_MODULE_7__online_orders_shared_index__["a" /* requiredValidator */])('Name is required')],
+            'phone': [this.employer.phone, Object(__WEBPACK_IMPORTED_MODULE_8__shared_validators_phone__["a" /* phoneValidator */])('Phone is required in ###-###-#### format')],
             'referredBy': [this.employer.referredBy],
             'referredByOther': [this.employer.referredByOther],
-            'state': [this.employer.state, __WEBPACK_IMPORTED_MODULE_3__angular_forms__["Validators"].required],
-            'zipcode': [this.employer.zipcode, __WEBPACK_IMPORTED_MODULE_3__angular_forms__["Validators"].required]
+            'state': [this.employer.state, Object(__WEBPACK_IMPORTED_MODULE_7__online_orders_shared_index__["a" /* requiredValidator */])('State is required')],
+            'zipcode': [this.employer.zipcode, Object(__WEBPACK_IMPORTED_MODULE_7__online_orders_shared_index__["a" /* requiredValidator */])('zipcode is required')]
         });
         this.employerForm.valueChanges
             .subscribe(function (data) { return _this.onValueChanged(data); });
@@ -1165,9 +1163,11 @@ var EmployersComponent = /** @class */ (function () {
             this.formErrors[field] = '';
             var control = form.get(field);
             if (control && !control.valid) {
-                var messages = this.validationMessages[field];
                 for (var key in control.errors) {
-                    this.formErrors[field] += messages[key] + ' ';
+                    if (this.showErrors == true) {
+                        console.log('onValueChanged.error:' + field + ': ' + control.errors[key]);
+                    }
+                    this.formErrors[field] += control.errors[key] + ' ';
                 }
             }
         }
@@ -1255,7 +1255,8 @@ var EmployersModule = /** @class */ (function () {
                 __WEBPACK_IMPORTED_MODULE_5_primeng_primeng__["InputTextModule"],
                 __WEBPACK_IMPORTED_MODULE_5_primeng_primeng__["ButtonModule"],
                 __WEBPACK_IMPORTED_MODULE_5_primeng_primeng__["DropdownModule"],
-                __WEBPACK_IMPORTED_MODULE_3__employers_routing_module__["a" /* EmployersRoutingModule */]
+                __WEBPACK_IMPORTED_MODULE_3__employers_routing_module__["a" /* EmployersRoutingModule */],
+                __WEBPACK_IMPORTED_MODULE_5_primeng_primeng__["KeyFilterModule"]
             ],
             declarations: [__WEBPACK_IMPORTED_MODULE_2__employers_component__["a" /* EmployersComponent */]]
         }),
@@ -1277,10 +1278,9 @@ var EmployersModule = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__ = __webpack_require__("../../../../rxjs/_esm5/Observable.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_handle_error__ = __webpack_require__("../../../../../src/app/shared/handle-error.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__shared_index__ = __webpack_require__("../../../../../src/app/shared/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs__ = __webpack_require__("../../../../rxjs/Rx.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_index__ = __webpack_require__("../../../../../src/app/shared/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs__ = __webpack_require__("../../../../rxjs/Rx.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1297,56 +1297,49 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var EmployersService = /** @class */ (function () {
     function EmployersService(http, auth) {
         this.http = http;
         this.auth = auth;
         console.log('.ctor');
-        this.employerSource = new __WEBPACK_IMPORTED_MODULE_6_rxjs__["BehaviorSubject"](null);
+        this.employerSource = new __WEBPACK_IMPORTED_MODULE_5_rxjs__["BehaviorSubject"](null);
         this.fetchEmployer();
     }
     EmployersService.prototype.fetchEmployer = function () {
         var _this = this;
         var uri = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].dataUrl + '/api/employer/profile';
-        this.http.get(uri)
-            .subscribe(function (data) {
+        return this.http.get(uri)
+            .map(function (data) {
             _this.setEmployer(data['data']);
-        }, function (error) {
-            console.log(error);
+            return data['data'];
+        })
+            .catch(function (error) {
             _this.setEmployer(null);
-            if (error.status != 404) {
-                __WEBPACK_IMPORTED_MODULE_4__shared_handle_error__["a" /* HandleError */].error(error);
-            }
+            return __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__["a" /* Observable */].throw(error);
         });
     };
     EmployersService.prototype.getEmployer = function () {
-        //console.log('get---');
         return this.employerSource.asObservable();
     };
     EmployersService.prototype.setEmployer = function (employer) {
-        //console.log('set===', employer);
         this.employerSource.next(employer);
     };
     EmployersService.prototype.save = function (employer) {
         var _this = this;
         var uri = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].dataUrl + '/api/employer/profile';
         var method;
-        //uri = uri + '/' + employer.id;
         console.log('save:', uri, employer);
         // create or update 
         return this.http.put(uri, JSON.stringify(employer), {
-            headers: new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["d" /* HttpHeaders */]().set('Content-Type', 'application/json')
+            headers: new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["e" /* HttpHeaders */]().set('Content-Type', 'application/json')
         }).map(function (data) {
-            //console.log('employer from PUT:', data['data']);
             _this.setEmployer(data['data']);
-            return __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__["a" /* Observable */].of(data['data']);
-        })
-            .catch(__WEBPACK_IMPORTED_MODULE_4__shared_handle_error__["a" /* HandleError */].error);
+            return data['data'];
+        });
     };
     EmployersService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_common_http__["b" /* HttpClient */], __WEBPACK_IMPORTED_MODULE_5__shared_index__["b" /* AuthService */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_common_http__["b" /* HttpClient */], __WEBPACK_IMPORTED_MODULE_4__shared_index__["b" /* AuthService */]])
     ], EmployersService);
     return EmployersService;
 }());
@@ -1672,11 +1665,9 @@ var ExportsModule = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_toPromise__ = __webpack_require__("../../../../rxjs/_esm5/add/operator/toPromise.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_toPromise__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/_esm5/add/operator/map.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_catch__ = __webpack_require__("../../../../rxjs/_esm5/add/operator/catch.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_http__ = __webpack_require__("../../../http/esm5/http.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_Observable__ = __webpack_require__("../../../../rxjs/_esm5/Observable.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_http__ = __webpack_require__("../../../http/esm5/http.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1692,31 +1683,27 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
-
 var ExportsService = /** @class */ (function () {
     function ExportsService(http) {
         this.http = http;
-        this.uriBase = __WEBPACK_IMPORTED_MODULE_6__environments_environment__["a" /* environment */].dataUrl + '/api/exports';
+        this.uriBase = __WEBPACK_IMPORTED_MODULE_4__environments_environment__["a" /* environment */].dataUrl + '/api/exports';
     }
     ExportsService.prototype.getExportsList = function () {
         console.log('getExportList: ', this.uriBase);
         return this.http.get(this.uriBase)
-            .map(function (res) { return res['data']; })
-            .catch(this.handleError);
+            .map(function (res) { return res['data']; });
     };
     ExportsService.prototype.getColumns = function (tableName) {
         var uri = this.uriBase + '/' + tableName.toLowerCase();
         console.log('getColumns ', uri);
         return this.http.get(uri)
-            .map(function (res) { return res['data']; })
-            .catch(this.handleError);
+            .map(function (res) { return res['data']; });
     };
     ExportsService.prototype.getExport = function (tableName, o) {
-        var headers = new __WEBPACK_IMPORTED_MODULE_4__angular_http__["a" /* Headers */]({ 'Content-Type': 'application/text' });
-        var options = new __WEBPACK_IMPORTED_MODULE_4__angular_http__["e" /* RequestOptions */]({
+        var headers = new __WEBPACK_IMPORTED_MODULE_3__angular_http__["a" /* Headers */]({ 'Content-Type': 'application/text' });
+        var options = new __WEBPACK_IMPORTED_MODULE_3__angular_http__["e" /* RequestOptions */]({
             headers: headers,
-            responseType: __WEBPACK_IMPORTED_MODULE_4__angular_http__["f" /* ResponseContentType */].Blob
+            responseType: __WEBPACK_IMPORTED_MODULE_3__angular_http__["f" /* ResponseContentType */].Blob
         });
         var params = this.encodeData(o);
         console.log('getExport: ', params);
@@ -1727,10 +1714,6 @@ var ExportsService = /** @class */ (function () {
             return res;
         });
     };
-    ExportsService.prototype.handleError = function (error) {
-        console.error('exports.service.handleError:', JSON.stringify(error));
-        return __WEBPACK_IMPORTED_MODULE_5_rxjs_Observable__["a" /* Observable */].of(error);
-    };
     ExportsService.prototype.encodeData = function (data) {
         return Object.keys(data).map(function (key) {
             return [key, data[key]].map(encodeURIComponent).join('=');
@@ -1738,7 +1721,7 @@ var ExportsService = /** @class */ (function () {
     };
     ExportsService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_7__angular_common_http__["b" /* HttpClient */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_5__angular_common_http__["b" /* HttpClient */]])
     ], ExportsService);
     return ExportsService;
 }());
@@ -1754,11 +1737,10 @@ var ExportsService = /** @class */ (function () {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LookupsService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/esm5/core.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_Observable__ = __webpack_require__("../../../../rxjs/_esm5/Observable.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__shared_handle_error__ = __webpack_require__("../../../../../src/app/shared/handle-error.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs__ = __webpack_require__("../../../../rxjs/Rx.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs__ = __webpack_require__("../../../../rxjs/Rx.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1773,13 +1755,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var LookupsService = /** @class */ (function () {
     function LookupsService(http) {
         this.http = http;
-        this.uriBase = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].dataUrl + '/api/lookups';
+        this.uriBase = __WEBPACK_IMPORTED_MODULE_2__environments_environment__["a" /* environment */].dataUrl + '/api/lookups';
         this.lookups = new Array();
-        this.lookupsSource = new __WEBPACK_IMPORTED_MODULE_5_rxjs__["BehaviorSubject"](null);
+        // need BehaviorSubject because we're caching the response and 
+        // need to be able serve the cache and not call API every time
+        this.lookupsSource = new __WEBPACK_IMPORTED_MODULE_4_rxjs__["BehaviorSubject"](new Array());
         this.lookups$ = this.lookupsSource.asObservable();
         this.lookupsAge = 0;
         this.storageKey = 'machete.lookups';
@@ -1787,8 +1770,8 @@ var LookupsService = /** @class */ (function () {
         var data = sessionStorage.getItem(this.storageKey);
         this.lookupsAge = Number(sessionStorage.getItem(this.storageKey + '.age'));
         if (data && this.isNotStale) {
-            console.log('.ctor using sessionStorage');
             this.lookups = JSON.parse(data);
+            console.log('.ctor using sessionStorage', this.lookups);
             this.lookupsSource.next(this.lookups);
         }
         else {
@@ -1827,18 +1810,19 @@ var LookupsService = /** @class */ (function () {
     };
     LookupsService.prototype.getLookups = function (category) {
         return this.lookups$
-            .map(function (res) { return res.filter(function (l) { return l.category == category; }); })
-            .catch(__WEBPACK_IMPORTED_MODULE_2__shared_handle_error__["a" /* HandleError */].error);
+            .map(function (res) {
+            console.log('getlookups', res);
+            return res.filter(function (l) { return l.category == category; });
+        });
     };
     LookupsService.prototype.getLookup = function (id) {
         return this.lookups$
             .mergeMap(function (a) { return a.filter(function (ll) { return ll.id == id; }); })
-            .first()
-            .catch(__WEBPACK_IMPORTED_MODULE_2__shared_handle_error__["a" /* HandleError */].error);
+            .first();
     };
     LookupsService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_4__angular_common_http__["b" /* HttpClient */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_3__angular_common_http__["b" /* HttpClient */]])
     ], LookupsService);
     return LookupsService;
 }());
@@ -2462,7 +2446,6 @@ var MyWorkOrdersModule = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/esm5/core.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_handle_error__ = __webpack_require__("../../../../../src/app/shared/handle-error.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -2476,7 +2459,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var MyWorkOrdersService = /** @class */ (function () {
     function MyWorkOrdersService(http) {
         this.http = http;
@@ -2484,12 +2466,11 @@ var MyWorkOrdersService = /** @class */ (function () {
     MyWorkOrdersService.prototype.getOrders = function () {
         var uri = __WEBPACK_IMPORTED_MODULE_2__environments_environment__["a" /* environment */].dataUrl + '/api/onlineorders';
         return this.http.get(uri)
-            .map(function (o) { return o['data']; })
-            .catch(__WEBPACK_IMPORTED_MODULE_3__shared_handle_error__["a" /* HandleError */].error);
+            .map(function (o) { return o['data']; });
     };
     MyWorkOrdersService.prototype.getOrder = function (id) {
         var url = __WEBPACK_IMPORTED_MODULE_2__environments_environment__["a" /* environment */].dataUrl + '/api/onlineorders/' + id;
-        var postHeaders = new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["d" /* HttpHeaders */]().set('Content-Type', 'application/json');
+        var postHeaders = new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["e" /* HttpHeaders */]().set('Content-Type', 'application/json');
         return this.http.get(url, {
             headers: postHeaders
         }).map(function (data) {
@@ -2503,7 +2484,7 @@ var MyWorkOrdersService = /** @class */ (function () {
     };
     MyWorkOrdersService.prototype.executePaypal = function (orderID, payerID, paymentID, token) {
         var url = __WEBPACK_IMPORTED_MODULE_2__environments_environment__["a" /* environment */].dataUrl + '/api/onlineorders/' + orderID + '/paypalexecute';
-        var postHeaders = new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["d" /* HttpHeaders */]().set('Content-Type', 'application/json');
+        var postHeaders = new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["e" /* HttpHeaders */]().set('Content-Type', 'application/json');
         return this.http.post(url, JSON.stringify({
             payerID: payerID,
             paymentID: paymentID,
@@ -2877,7 +2858,7 @@ var ProfileGuard = /** @class */ (function () {
     }
     ProfileGuard.prototype.canActivate = function () {
         var _this = this;
-        return this.employersService.getEmployer()
+        return this.employersService.fetchEmployer()
             .map(function (em) {
             console.log('canActivate->getEmployer:', em);
             var exists = em ? true : false;
@@ -3570,18 +3551,11 @@ var OnlineOrdersService = /** @class */ (function () {
     };
     OnlineOrdersService.prototype.createOrder = function (order) {
         var url = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].dataUrl + '/api/onlineorders';
-        var postHeaders = new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["d" /* HttpHeaders */]().set('Content-Type', 'application/json');
+        var postHeaders = new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["e" /* HttpHeaders */]().set('Content-Type', 'application/json');
         return this.http.post(url, JSON.stringify(order), {
             headers: postHeaders
         }).map(function (data) {
             return data['data'];
-        }, function (err) {
-            if (err.error instanceof Error) {
-                console.error('Client-side error occured.', err.error);
-            }
-            else {
-                console.error('online-orders.service.POST: ' + err.message);
-            }
         });
     };
     OnlineOrdersService = __decorate([
@@ -3702,8 +3676,6 @@ var OrderConfirmComponent = /** @class */ (function () {
             _this.ordersService.clearState();
             _this.assignmentService.clearState();
             _this.router.navigate(['/my-work-orders/' + data.id]);
-        }, function (err) {
-            console.error('POST error', err);
         });
     };
     OrderConfirmComponent = __decorate([
@@ -3746,7 +3718,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/online-orders/order-not-found/order-not-found.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  order-not-found works!\n</p>\n"
+module.exports = "<p>\r\n  order-not-found works!\r\n</p>\r\n"
 
 /***/ }),
 
@@ -3795,7 +3767,6 @@ var OrderNotFoundComponent = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__ = __webpack_require__("../../../../rxjs/_esm5/Observable.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_handle_error__ = __webpack_require__("../../../../../src/app/shared/handle-error.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -3805,7 +3776,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-
 
 
 
@@ -3837,8 +3807,7 @@ var ScheduleRulesService = /** @class */ (function () {
             _this.rules = res['data'];
             _this.rulesAge = Date.now();
             return res['data'];
-        })
-            .catch(__WEBPACK_IMPORTED_MODULE_4__shared_handle_error__["a" /* HandleError */].error);
+        });
     };
     ScheduleRulesService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
@@ -3859,15 +3828,12 @@ var ScheduleRulesService = /** @class */ (function () {
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__validators_required__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__validators_scheduling__ = __webpack_require__("../../../../../src/app/online-orders/shared/validators/scheduling.ts");
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_1__validators_scheduling__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__validators_transport__ = __webpack_require__("../../../../../src/app/online-orders/shared/validators/transport.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_schedule_rule__ = __webpack_require__("../../../../../src/app/online-orders/shared/models/schedule-rule.ts");
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_schedule_rule__ = __webpack_require__("../../../../../src/app/online-orders/shared/models/schedule-rule.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_transport_rule__ = __webpack_require__("../../../../../src/app/online-orders/shared/models/transport-rule.ts");
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_transport_rule__ = __webpack_require__("../../../../../src/app/online-orders/shared/models/transport-rule.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_record__ = __webpack_require__("../../../../../src/app/online-orders/shared/models/record.ts");
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__models_record__ = __webpack_require__("../../../../../src/app/online-orders/shared/models/record.ts");
-/* unused harmony namespace reexport */
-
 
 
 
@@ -4038,19 +4004,34 @@ function loadConfirms() {
     return [
         new __WEBPACK_IMPORTED_MODULE_0__models_confirm__["a" /* Confirm */]({
             name: 'completion',
-            description: "This order is not complete until you receive a confirmation email from Casa Latina.\n      If you do not hear from us or if you need a worker with 48 hours please call 206.956.0779 x3 during our business hours",
+            description: "This order is not complete until I receive a confirmation email from Casa Latina.  \n      If you do not hear from us or if you need a worker with 48 hours please call 206.956.0779 x3 \n      during our business hours.",
             confirmed: false
         }),
         new __WEBPACK_IMPORTED_MODULE_0__models_confirm__["a" /* Confirm */]({
             name: 'arrival_time',
-            description: "Please allow a one hour window for worker(s) to arrive. This will account for transportation\n      routes with multiple stops and for traffic. There is no transportation fee to hire a Casa Latina\n      worker when you pick them up from our office. To have your worker(s) arrive at your door,\n      there is a small fee payable through this form.",
+            description: " Please allow a one hour window for workers to arrive.This will account for \n      transportation routes with multiple stops and for traffic. There is no transportation fee to \n      hire a Casa Latina worker when you pick them up from our office. To have your worker(s) arrive \n      at your door, there is a small fee payable through this form.",
             confirmed: false
         }),
         new __WEBPACK_IMPORTED_MODULE_0__models_confirm__["a" /* Confirm */]({
             name: 'employer_agency',
-            description: "Casa Latina workers are not contractors. You will need to provide all tools, materials, and\n      safety equipment necessary for the job you wish to have done.",
+            description: "Casa Latina workers are not contractors. You will need to provide all tools, \n      materials, and safety equipment (link to http://casa-latina.org/information-for-employers) \n      necessary for the job(s) I wish to have done. ",
             confirmed: false
-        })
+        }),
+        new __WEBPACK_IMPORTED_MODULE_0__models_confirm__["a" /* Confirm */]({
+            name: 'screening',
+            description: "I understand that as a condition of participation in our referral program, all \n      workers have been screened through the national and local sex offender registries.  However, \n      they have not gone through any other type of background checks.",
+            confirmed: false
+        }),
+        new __WEBPACK_IMPORTED_MODULE_0__models_confirm__["a" /* Confirm */]({
+            name: 'in-house_training',
+            description: "Casa Latina does not employ the workers that it refers.  When I make the decision \n      to hire, I am their employer and they are my employees. All workers referred through Casa Latina \n      have completed at least 10 hours of in-house training and Casa Latina does its best to only \n      refer workers who are skilled and dependable, but it cannot and does not guarantee that worker \n      performance will always meet my expectations. Casa Latina is not responsible for any failure \n      in worker performance or for any damage or injuries that could conceivably occur during the \n      performance of the work I have hired these workers to perform.",
+            confirmed: false
+        }),
+        new __WEBPACK_IMPORTED_MODULE_0__models_confirm__["a" /* Confirm */]({
+            name: 'satisfaction',
+            description: "If I am dissatisfied with work performance, I may ask that the worker stop \n      working and just pay them for the hours worked.  I am not obligated to continue to work with \n      her or him.",
+            confirmed: false
+        }),
     ];
 }
 
@@ -4070,10 +4051,10 @@ function hoursValidator(rules, lookups, skillIdKey, hoursKey) {
         var skillIdControl = control.parent.get(skillIdKey);
         var hoursControl = control;
         if (!hoursControl.value) {
-            return null;
+            return { 'hours': 'Please choose the hours of work you need.' };
         }
         if (!skillIdControl.value) {
-            return null;
+            return null; // should be handled in work-assignment.component reactive forms
         }
         // https://gist.github.com/slavafomin/17ded0e723a7d3216fb3d8bf845c2f30
         var hours = Number(hoursControl.value);
@@ -4126,20 +4107,25 @@ function schedulingValidator(rules) {
         if (control.value == null) {
             return null;
         }
-        var date = control.value;
-        var diffdate = date.valueOf() - Date.now();
-        var rule = rules.find(function (s) { return s.day === date.getDay(); });
-        if (diffdate < 0) {
+        var requestTime = new Date(control.value);
+        var orderTime = new Date();
+        var today = new Date(orderTime.toDateString());
+        var leadInSecs = requestTime.valueOf() - orderTime.valueOf();
+        var rule = rules.find(function (s) { return s.day === requestTime.getDay(); });
+        if (leadInSecs < 0) {
             return { 'scheduling': 'Date cannot be in the past.' };
         }
-        if (diffdate < (rule.leadHours * 3600)) {
-            return { 'scheduling': 'Lead time less than ' + String(rule.leadHours) + ' hours.' };
+        var daysSinceEpoch = Math.floor(today.valueOf() / 3.6e6);
+        var reqDaysSinceEpoch = Math.floor(requestTime.valueOf() / 3.6e6);
+        var leadInHours = (reqDaysSinceEpoch - daysSinceEpoch);
+        if (leadInHours < rule.leadHours) {
+            return { 'scheduling': "Lead time of " + ((rule.leadHours / 24) - 1) + " days required." };
         }
-        if (date.getHours() < (rule.minStartMin / 60)) {
-            return { 'scheduling': 'Start time is before minimum time of ' + String(rule.minStartMin / 60) + 'hours' };
+        if (requestTime.getHours() < (rule.minStartMin / 60)) {
+            return { 'scheduling': 'Start time cannot be before ' + String(rule.minStartMin / 60) + ':00 hours' };
         }
-        if (date.getHours() > (rule.maxEndMin / 60)) {
-            return { 'scheduling': 'End time is after maximum time of ' + String(rule.minStartMin / 60) + 'hours' };
+        if (requestTime.getHours() > (rule.maxEndMin / 60)) {
+            return { 'scheduling': 'Start time cannot be after ' + String(rule.maxEndMin / 60) + ':00 hours' };
         }
         return null;
     };
@@ -4154,20 +4140,6 @@ function schedulingValidator(rules) {
 //     return schedulingValidator(this.rules)(control);
 //   }
 // }
-
-
-/***/ }),
-
-/***/ "../../../../../src/app/online-orders/shared/validators/transport.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export transportValidator */
-function transportValidator(rules) {
-    return function (control) {
-        return null;
-    };
-}
 
 
 /***/ }),
@@ -4202,7 +4174,6 @@ function zipcodeValidator(rules) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__ = __webpack_require__("../../../../rxjs/_esm5/Observable.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_handle_error__ = __webpack_require__("../../../../../src/app/shared/handle-error.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -4212,7 +4183,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-
 
 
 
@@ -4245,8 +4215,7 @@ var TransportRulesService = /** @class */ (function () {
             _this.rules = res['data'];
             _this.rulesAge = Date.now();
             return res['data'];
-        })
-            .catch(__WEBPACK_IMPORTED_MODULE_4__shared_handle_error__["a" /* HandleError */].error);
+        });
     };
     TransportRulesService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
@@ -4514,7 +4483,6 @@ var WorkAssignmentsComponent = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__lookups_models_lookup__ = __webpack_require__("../../../../../src/app/lookups/models/lookup.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__lookups_lookups_service__ = __webpack_require__("../../../../../src/app/lookups/lookups.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__transport_rules_service__ = __webpack_require__("../../../../../src/app/online-orders/transport-rules.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__shared_handle_error__ = __webpack_require__("../../../../../src/app/shared/handle-error.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -4524,7 +4492,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-
 
 
 
@@ -4557,7 +4524,7 @@ var WorkAssignmentsService = /** @class */ (function () {
             _this.transportRules = rules;
             _this.transports = transports;
             _this.compactRequests();
-        }, function (error) { return __WEBPACK_IMPORTED_MODULE_8__shared_handle_error__["a" /* HandleError */].error(error); }, function () { return console.log('combined subscription closed'); });
+        });
     }
     WorkAssignmentsService.prototype.getStream = function () {
         return __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__["a" /* Observable */].of(this.requests);
@@ -4700,7 +4667,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/online-orders/work-order/work-order.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"ui-fluid\">\r\n  <div class=\"card ui-g-nopad\">\r\n    <form [formGroup]=\"orderForm\" (ngSubmit)=\"save()\" class=\"ui-g form-group\">\r\n      <div class=\"ui-g-12 ui-md-6 ui-g-nopad\">\r\n        <div class=\"ui-g-12 ui-g-nopad\">\r\n          <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n            <label for=\"dateTimeofWork\">Time needed</label>\r\n          </div>\r\n          <div class=\"ui-g-12 ui-md-8  ui-g-nopad\">\r\n                <span class=\"md-inputfield\">\r\n                <p-calendar id=\"dateTimeofWork\"\r\n                            showTime=\"true\"\r\n                            stepMinute=\"15\"\r\n                            defaultDate=\"\"\r\n                            formControlName=\"dateTimeofWork\">\r\n                </p-calendar>\r\n                <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!orderForm.valid && showErrors\">\r\n                  {{formErrors.dateTimeofWork}}\r\n                </div>\r\n                </span>\r\n          </div>\r\n        </div>\r\n        <div class=\"ui-g-12 ui-g-nopad\">\r\n          <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n            <label for=\"contactName\">Contact name</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n                <span class=\"md-inputfield\">\r\n                  <input class=\"ui-inputtext ng-dirty ng-invalid\" formControlName=\"contactName\" id=\"contactName\"\r\n                         type=\"text\" pInputText/>\r\n                  <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!orderForm.valid && showErrors\">\r\n                    {{formErrors.contactName}}\r\n                  </div>\r\n                </span>\r\n          </div>\r\n        </div>\r\n        <div class=\"ui-g-12 ui-g-nopad\">\r\n          <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n            <label for=\"worksiteAddress1\">Address (1)</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n                <span class=\"md-inputfield\">\r\n                  <input class=\"ui-inputtext\" formControlName=\"worksiteAddress1\" id=\"worksiteAddress1\" type=\"text\"\r\n                         pInputText/>\r\n                  <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!orderForm.valid && showErrors\">\r\n                    {{formErrors.worksiteAddress1}}\r\n                  </div>\r\n                </span>\r\n          </div>\r\n        </div>\r\n        <div class=\"ui-g-12 ui-g-nopad\">\r\n          <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n            <label for=\"worksiteAddress2\">Address (2)</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n            <input class=\"ui-inputtext\" formControlName=\"worksiteAddress2\" id=\"worksiteAddress2\" type=\"text\"\r\n                   pInputText/>\r\n          </div>\r\n        </div>\r\n        <div class=\"ui-g-12 ui-g-nopad\">\r\n          <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n            <label for=\"city\">City</label>\r\n          </div>\r\n          <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n              <input class=\"ui-inputtext\" formControlName=\"city\" id=\"city\" type=\"text\" pInputText/>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!orderForm.valid && showErrors\">\r\n                  {{formErrors.city}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n            <label for=\"state\">State</label>\r\n          </div>\r\n          <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n              <input class=\"ui-inputtext\" formControlName=\"state\" id=\"state\" type=\"text\" pInputText/>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!orderForm.valid && showErrors\">\r\n                  {{formErrors.state}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n            <label for=\"zipcode\">Zipcode</label>\r\n          </div>\r\n          <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n              <input class=\"ui-inputtext\" formControlName=\"zipcode\" id=\"zipcode\" type=\"text\" pInputText/>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!orderForm.valid && showErrors\">\r\n                  {{formErrors.zipcode}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n            <label for=\"phone\">Phone</label>\r\n          </div>\r\n          <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n              <input class=\"ui-inputtext\" formControlName=\"phone\" id=\"phone\" type=\"text\" pInputText/>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!orderForm.valid && showErrors\">\r\n                  {{formErrors.phone}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n      </div>\r\n      <div class=\"ui-g-12 ui-md-6\">\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n            <label for=\"description\">Work Description</label>\r\n          </div>\r\n          <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n              <textarea rows=\"5\" pInputTextarea autoResize=\"autoResize\" class=\"ui-inputtextarea\"\r\n                        formControlName=\"description\" id=\"description\" type=\"text\"></textarea>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!orderForm.valid && showErrors\">\r\n                  {{formErrors.description}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n\r\n        <div class=\"ui-g-12\">\r\n            <div class=\"ui-g-8 ui-md-10 ui-g-nopad\">\r\n              <label for=\"englishRequired\">Do you need an English-speaking worker?</label>\r\n            </div>\r\n            <div class=\"ui-g-4 ui-md-2 ui-g-nopad\">\r\n              <p-toggleButton [(ngModel)]=\"engReqToggle\" id=\"englishRequired\" formControlName=\"englishRequired\"></p-toggleButton>\r\n            </div>\r\n          </div>\r\n\r\n\r\n        <div class=\"ui-g-12\" *ngIf=\"engReqToggle\">\r\n          <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n            <label for=\"englishRequiredNote\">Please describe English requirement</label>\r\n          </div>\r\n          <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n              <span class=\"md-inputfield\">\r\n                  <textarea rows=\"5\" pInputTextarea autoResize=\"autoResize\" class=\"ui-inputtextarea\"\r\n                            formControlName=\"englishRequiredNote\" id=\"englishRequiredNote\" type=\"text\"></textarea>\r\n                  <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!orderForm.valid && showErrors\">\r\n                      {{formErrors.englishRequiredNote}}\r\n                  </div>\r\n                </span>\r\n          </div>\r\n        </div>\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n            <label for=\"transportMethodID\">Transport method</label>\r\n          </div>\r\n          <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n              <p-dropdown id=\"transportMethodID\" [options]=\"transportMethodsDropDown\" formControlName=\"transportMethodID\"\r\n                          [autoWidth]=\"false\"></p-dropdown>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!orderForm.valid && showErrors\">\r\n                  {{formErrors.transportMethodID}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n        <div class=\"ui-g-12\">\r\n          <!-- <button type=\"button\" (click)=\"showDialog()\" pButton icon=\"fa-external-link-square\" label=\"Show transport rates\" *ngIf=\"false\"></button> -->\r\n          <a href=\"http://casa-latina.org/get-involved/hire-worker#Do I have to pick up the worker?\" target=\"_blank\">\r\n            For transportation pricing, click here.\r\n          </a>\r\n        </div>\r\n      </div>\r\n      <div class=\"ui-g-12\">\r\n        <button pButton type=\"submit\" label=\"Save\"></button>\r\n      </div>\r\n    </form>\r\n  </div>\r\n</div>\r\n\r\n<div>\r\n  <p-dialog header=\"Title\" [(visible)]=\"displayTransportCosts\">\r\n      Content\r\n  </p-dialog>\r\n  <p-dialog header=\"User's guide\" [(visible)]=\"displayUserGuide\" modal=\"modal\" width=\"300\" [responsive]=\"true\">\r\n    Enter the basic information about the work, like the location\r\n    of the worksite and the method of transport for the workers. \r\n    <p>\r\n    You may pick up the workers, or Casa Latina offers a transport program \r\n    (fees apply), or you can pay for workers to use public transport.    \r\n    <p-footer>\r\n        <button type=\"button\" pButton icon=\"fa-check\" (click)=\"ackUserGuide()\" label=\"Ok\"></button>\r\n    </p-footer>\r\n  </p-dialog>\r\n</div>\r\n"
+module.exports = "<div class=\"ui-fluid\">\r\n  <div class=\"card ui-g-nopad\">\r\n    <form [formGroup]=\"orderForm\" (ngSubmit)=\"save()\" class=\"ui-g form-group\">\r\n      <div class=\"ui-g-12 ui-md-6 ui-g-nopad\">\r\n        <div class=\"ui-g-12 ui-g-nopad\">\r\n          <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n            <label for=\"dateTimeofWork\">Time needed</label>\r\n          </div>\r\n          <div class=\"ui-g-12 ui-md-8  ui-g-nopad\">\r\n                <span class=\"md-inputfield\">\r\n                <p-calendar id=\"dateTimeofWork\"\r\n                            showTime=\"true\"\r\n                            formControlName=\"dateTimeofWork\">\r\n                </p-calendar>\r\n                <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!orderForm.valid && showErrors\">\r\n                  {{formErrors.dateTimeofWork}}\r\n                </div>\r\n                </span>\r\n          </div>\r\n        </div>\r\n        <div class=\"ui-g-12 ui-g-nopad\">\r\n          <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n            <label for=\"contactName\">Contact name</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n                <span class=\"md-inputfield\">\r\n                  <input class=\"ui-inputtext ng-dirty ng-invalid\" formControlName=\"contactName\" id=\"contactName\"\r\n                         type=\"text\" pInputText/>\r\n                  <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!orderForm.valid && showErrors\">\r\n                    {{formErrors.contactName}}\r\n                  </div>\r\n                </span>\r\n          </div>\r\n        </div>\r\n        <div class=\"ui-g-12 ui-g-nopad\">\r\n          <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n            <label for=\"worksiteAddress1\">Address (1)</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n                <span class=\"md-inputfield\">\r\n                  <input class=\"ui-inputtext\" formControlName=\"worksiteAddress1\" id=\"worksiteAddress1\" type=\"text\"\r\n                         pInputText/>\r\n                  <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!orderForm.valid && showErrors\">\r\n                    {{formErrors.worksiteAddress1}}\r\n                  </div>\r\n                </span>\r\n          </div>\r\n        </div>\r\n        <div class=\"ui-g-12 ui-g-nopad\">\r\n          <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n            <label for=\"worksiteAddress2\">Address (2)</label>\r\n          </div>\r\n          <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n            <input class=\"ui-inputtext\" formControlName=\"worksiteAddress2\" id=\"worksiteAddress2\" type=\"text\"\r\n                   pInputText/>\r\n          </div>\r\n        </div>\r\n        <div class=\"ui-g-12 ui-g-nopad\">\r\n          <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n            <label for=\"city\">City</label>\r\n          </div>\r\n          <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n              <input class=\"ui-inputtext\" formControlName=\"city\" id=\"city\" type=\"text\" pInputText/>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!orderForm.valid && showErrors\">\r\n                  {{formErrors.city}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n            <label for=\"state\">State</label>\r\n          </div>\r\n          <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n              <input class=\"ui-inputtext\" formControlName=\"state\" id=\"state\" type=\"text\" pInputText/>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!orderForm.valid && showErrors\">\r\n                  {{formErrors.state}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n            <label for=\"zipcode\">Zipcode</label>\r\n          </div>\r\n          <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n              <input class=\"ui-inputtext\" formControlName=\"zipcode\" id=\"zipcode\" type=\"text\" pInputText/>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!orderForm.valid && showErrors\">\r\n                  {{formErrors.zipcode}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n            <label for=\"phone\">Phone</label>\r\n          </div>\r\n          <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n              <input class=\"ui-inputtext\" \r\n                formControlName=\"phone\" \r\n                id=\"phone\" \r\n                type=\"text\" \r\n                placeholder=\"123-456-7890\"\r\n                pInputText />\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!orderForm.valid && showErrors\">\r\n                  {{formErrors.phone}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n      </div>\r\n      <div class=\"ui-g-12 ui-md-6\">\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n            <label for=\"description\">Work Description</label>\r\n          </div>\r\n          <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n              <textarea rows=\"5\" pInputTextarea autoResize=\"autoResize\" class=\"ui-inputtextarea\"\r\n                        formControlName=\"description\" id=\"description\" type=\"text\"></textarea>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!orderForm.valid && showErrors\">\r\n                  {{formErrors.description}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n\r\n        <div class=\"ui-g-12\">\r\n            <div class=\"ui-g-8 ui-md-10 ui-g-nopad\">\r\n              <label for=\"englishRequired\">Do you need an English-speaking worker?</label>\r\n            </div>\r\n            <div class=\"ui-g-4 ui-md-2 ui-g-nopad\">\r\n              <p-toggleButton [(ngModel)]=\"engReqToggle\" id=\"englishRequired\" formControlName=\"englishRequired\"></p-toggleButton>\r\n            </div>\r\n          </div>\r\n\r\n\r\n        <div class=\"ui-g-12\" *ngIf=\"engReqToggle\">\r\n          <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n            <label for=\"englishRequiredNote\">Please describe English requirement</label>\r\n          </div>\r\n          <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n              <span class=\"md-inputfield\">\r\n                  <textarea rows=\"5\" pInputTextarea autoResize=\"autoResize\" class=\"ui-inputtextarea\"\r\n                            formControlName=\"englishRequiredNote\" id=\"englishRequiredNote\" type=\"text\"></textarea>\r\n                  <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!orderForm.valid && showErrors\">\r\n                      {{formErrors.englishRequiredNote}}\r\n                  </div>\r\n                </span>\r\n          </div>\r\n        </div>\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n            <label for=\"transportMethodID\">Transport method</label>\r\n          </div>\r\n          <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n            <span class=\"md-inputfield\">\r\n              <p-dropdown id=\"transportMethodID\" [(ngModel)]=\"selectedTransport\" [options]=\"transportMethodsDropDown\" formControlName=\"transportMethodID\"\r\n                          [autoWidth]=\"false\"></p-dropdown>\r\n              <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!orderForm.valid && showErrors\">\r\n                  {{formErrors.transportMethodID}}\r\n              </div>\r\n            </span>\r\n          </div>\r\n        </div>\r\n        <div class=\"ui-g-12\">\r\n          <!-- <button type=\"button\" (click)=\"showDialog()\" pButton icon=\"fa-external-link-square\" label=\"Show transport rates\" *ngIf=\"false\"></button> -->\r\n          <a href=\"http://casa-latina.org/get-involved/hire-worker#Do I have to pick up the worker?\" target=\"_blank\">\r\n            For transportation pricing, click here.\r\n          </a>\r\n        </div>\r\n        <div class=\"ui-g-12\" *ngIf=\"selectedTransport==32\">\r\n          Before picking a Casa Latina Van drop off time, please check for available times using the following calendar<br/>\r\n          <a href=\"https://calendar.google.com/calendar/embed?src=voluntarios.casa.latina@gmail.com&ctz=America/Los_Angeles\" target=\"_blank\">\r\n            For Van transport, select an available time slot.\r\n          </a> <br/>\r\n          Arrival times are estimates and can be adjusted by CL dispatchers due to traffic, or high demand, etc.\r\n        </div>\r\n      </div>\r\n      <div class=\"ui-g-12\">\r\n        <button pButton type=\"submit\" label=\"Save\"></button>\r\n      </div>\r\n    </form>\r\n  </div>\r\n</div>\r\n\r\n<div>\r\n  <p-dialog header=\"Title\" [(visible)]=\"displayTransportCosts\">\r\n      Content\r\n  </p-dialog>\r\n  <p-dialog header=\"User's guide\" [(visible)]=\"displayUserGuide\" modal=\"modal\" width=\"300\" [responsive]=\"true\">\r\n    Enter the basic information about the work, like the location\r\n    of the worksite and the method of transport for the workers. \r\n    <p>\r\n    You may pick up the workers, or Casa Latina offers a transport program \r\n    (fees apply), or you can pay for workers to use public transport.    \r\n    <p-footer>\r\n        <button type=\"button\" pButton icon=\"fa-check\" (click)=\"ackUserGuide()\" label=\"Ok\"></button>\r\n    </p-footer>\r\n  </p-dialog>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -4724,6 +4691,7 @@ module.exports = "<div class=\"ui-fluid\">\r\n  <div class=\"card ui-g-nopad\">\
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__schedule_rules_service__ = __webpack_require__("../../../../../src/app/online-orders/schedule-rules.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__shared_validators_zipcode__ = __webpack_require__("../../../../../src/app/online-orders/shared/validators/zipcode.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__transport_rules_service__ = __webpack_require__("../../../../../src/app/online-orders/transport-rules.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__shared_validators_phone__ = __webpack_require__("../../../../../src/app/shared/validators/phone.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -4733,6 +4701,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
 
 
 
@@ -4764,6 +4733,7 @@ var WorkOrderComponent = /** @class */ (function () {
         this.displayTransportCosts = false;
         this.displayUserGuide = true;
         this.engReqToggle = false;
+        this.selectedTransport = 0;
         this.storageKey = 'machete.work-order.component';
         this.formErrors = {
             'dateTimeofWork': '',
@@ -4816,13 +4786,14 @@ var WorkOrderComponent = /** @class */ (function () {
     };
     WorkOrderComponent.prototype.buildForm = function () {
         var _this = this;
+        this.selectedTransport = this.order.transportMethodID;
         this.orderForm = this.fb.group({
             'dateTimeofWork': [this.order.dateTimeofWork, [
                     Object(__WEBPACK_IMPORTED_MODULE_7__shared__["a" /* requiredValidator */])('Date & time is required.'),
                     Object(__WEBPACK_IMPORTED_MODULE_7__shared__["b" /* schedulingValidator */])(this.schedulingRules)
                 ]],
-            'contactName': [this.order.contactName, Object(__WEBPACK_IMPORTED_MODULE_7__shared__["a" /* requiredValidator */])('Contact name is required.')],
-            'worksiteAddress1': [this.order.worksiteAddress1, Object(__WEBPACK_IMPORTED_MODULE_7__shared__["a" /* requiredValidator */])('Address is required.')],
+            'contactName': [this.order.contactName, Object(__WEBPACK_IMPORTED_MODULE_7__shared__["a" /* requiredValidator */])('Contact name is required')],
+            'worksiteAddress1': [this.order.worksiteAddress1, Object(__WEBPACK_IMPORTED_MODULE_7__shared__["a" /* requiredValidator */])('Address is required')],
             'worksiteAddress2': [this.order.worksiteAddress2],
             'city': [this.order.city, Object(__WEBPACK_IMPORTED_MODULE_7__shared__["a" /* requiredValidator */])('City is required.')],
             'state': [this.order.state, Object(__WEBPACK_IMPORTED_MODULE_7__shared__["a" /* requiredValidator */])('State is required.')],
@@ -4830,11 +4801,11 @@ var WorkOrderComponent = /** @class */ (function () {
                     Object(__WEBPACK_IMPORTED_MODULE_7__shared__["a" /* requiredValidator */])('Zipcode is required.'),
                     Object(__WEBPACK_IMPORTED_MODULE_13__shared_validators_zipcode__["a" /* zipcodeValidator */])(this.transportRules)
                 ]],
-            'phone': [this.order.phone, Object(__WEBPACK_IMPORTED_MODULE_7__shared__["a" /* requiredValidator */])('Phone is required.')],
-            'description': [this.order.description, Object(__WEBPACK_IMPORTED_MODULE_7__shared__["a" /* requiredValidator */])('Description is required.')],
+            'phone': [this.order.phone, Object(__WEBPACK_IMPORTED_MODULE_15__shared_validators_phone__["a" /* phoneValidator */])('Phone is required in ###-###-#### format')],
+            'description': [this.order.description, Object(__WEBPACK_IMPORTED_MODULE_7__shared__["a" /* requiredValidator */])('Description is required')],
             'englishRequired': [this.order.englishRequired],
             'englishRequiredNote': [this.order.englishRequiredNote],
-            'transportMethodID': [this.order.transportMethodID, Object(__WEBPACK_IMPORTED_MODULE_7__shared__["a" /* requiredValidator */])('A transport method is required.')]
+            'transportMethodID': [this.order.transportMethodID, Object(__WEBPACK_IMPORTED_MODULE_7__shared__["a" /* requiredValidator */])('A transport method is required')]
         });
         this.orderForm.valueChanges
             .subscribe(function (data) { return _this.onValueChanged(data); });
@@ -4855,8 +4826,6 @@ var WorkOrderComponent = /** @class */ (function () {
                 }
             }
         }
-    };
-    WorkOrderComponent.prototype.load = function () {
     };
     WorkOrderComponent.prototype.save = function () {
         this.onValueChanged();
@@ -4891,8 +4860,6 @@ var WorkOrderComponent = /** @class */ (function () {
             transportMethodID: formModel.transportMethodID
         });
         return order;
-    };
-    WorkOrderComponent.prototype.clearOrder = function () {
     };
     WorkOrderComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
@@ -5197,7 +5164,6 @@ var ReportsComponent = /** @class */ (function () {
             return;
         }
         this.selectedReport = this.reportList.filter(function (x) { return x.name === _this.selectedReportID; })[0];
-        // TODO catch exception if not found
         this.description = this.selectedReport.description;
         this.title = this.selectedReport.title || this.selectedReport.commonName;
         this.name = this.selectedReport.name;
@@ -5318,10 +5284,8 @@ var ReportsModule = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_toPromise__ = __webpack_require__("../../../../rxjs/_esm5/add/operator/toPromise.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_toPromise__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/_esm5/add/operator/map.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_catch__ = __webpack_require__("../../../../rxjs/_esm5/add/operator/catch.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_Observable__ = __webpack_require__("../../../../rxjs/_esm5/Observable.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -5336,8 +5300,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
-
 var ReportsService = /** @class */ (function () {
     function ReportsService(http) {
         this.http = http;
@@ -5345,7 +5307,7 @@ var ReportsService = /** @class */ (function () {
     ReportsService.prototype.getReportData = function (reportName, o) {
         // TODO throw exception if report is not populated
         var params = this.encodeData(o);
-        var uri = __WEBPACK_IMPORTED_MODULE_5__environments_environment__["a" /* environment */].dataUrl + '/api/reports';
+        var uri = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].dataUrl + '/api/reports';
         if (reportName) {
             uri = uri + '/' + reportName;
         }
@@ -5354,19 +5316,13 @@ var ReportsService = /** @class */ (function () {
         }
         console.log('getReportData: ' + uri);
         return this.http.get(uri)
-            .map(function (res) { return res['data']; })
-            .catch(this.handleError);
+            .map(function (res) { return res['data']; });
     };
     ReportsService.prototype.getReportList = function () {
-        var uri = __WEBPACK_IMPORTED_MODULE_5__environments_environment__["a" /* environment */].dataUrl + '/api/reports';
+        var uri = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].dataUrl + '/api/reports';
         console.log('getReportList: ', uri);
         return this.http.get(uri)
-            .map(function (o) { return o['data']; })
-            .catch(this.handleError);
-    };
-    ReportsService.prototype.handleError = function (error) {
-        console.error('handleError:', error);
-        return __WEBPACK_IMPORTED_MODULE_4_rxjs_Observable__["a" /* Observable */].of(error);
+            .map(function (o) { return o['data']; });
     };
     ReportsService.prototype.encodeData = function (data) {
         return Object.keys(data).map(function (key) {
@@ -5375,7 +5331,7 @@ var ReportsService = /** @class */ (function () {
     };
     ReportsService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_6__angular_common_http__["b" /* HttpClient */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_4__angular_common_http__["b" /* HttpClient */]])
     ], ReportsService);
     return ReportsService;
 }());
@@ -5448,7 +5404,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/shared/components/work-orders/full-order-view/full-order-view.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"ui-g-12 ui-md-6 ui-g-nopad\">\r\n  <div class=\"ui-g-12\">\r\n    <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n      <label for=\"dateTimeofWork\">Time requested</label>\r\n    </div>\r\n    <div class=\"ui-g-12 ui-md-8  ui-g-nopad\">\r\n      {{order.dateTimeofWork |date:'short'}}\r\n    </div>\r\n  </div>\r\n  <div class=\"ui-g-12\">\r\n    <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n      <label for=\"contactName\">Contact & site information</label>\r\n    </div>\r\n    <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n      <div>{{order.contactName}}</div>\r\n      <div>{{order.worksiteAddress1}}</div>\r\n      <div>{{order.worksiteAddress2}}</div>\r\n      <div>{{order.city}}, \r\n      {{order.state}}\r\n      {{order.zipcode}}</div>\r\n      <div>{{order.phone}}</div>\r\n    </div>\r\n  </div>\r\n</div>\r\n<div class=\"ui-g-12 ui-md-6 ui-g-nopad\">\r\n  <div class=\"ui-g-12\" *ngIf=\"order.id\">\r\n      <div class=\"ui-g-6 ui-md-4 ui-g-nopad\">\r\n        <label for=\"description\">Order #</label>\r\n      </div>\r\n      <div class=\"ui-g-6 ui-md-8 ui-g-nopad\">\r\n        {{order.id }}\r\n      </div>\r\n  </div>\r\n  <div class=\"ui-g-12\">\r\n    <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n      <label for=\"description\">Work Description</label>\r\n    </div>\r\n    <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n      {{order.description}}\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"ui-g-12\">\r\n    <div class=\"ui-g-8 ui-md-4 ui-g-nopad\">\r\n      <label for=\"englishRequired\">English required?</label>\r\n    </div>\r\n    <div class=\"ui-g-4 ui-md-8 ui-g-nopad\">\r\n      {{order.englishRequired ? 'Yes' : 'No'}}\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"ui-g-12\" *ngIf=\"order.englishRequiredNote\">\r\n    <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n      <label for=\"englishRequiredNote\">English requirements</label>\r\n    </div>\r\n    <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n      {{order.englishRequiredNote}}\r\n    </div>\r\n  </div>\r\n  <div class=\"ui-g-12\">\r\n    <div class=\"ui-g-6 ui-md-4 ui-g-nopad\">\r\n      <label for=\"transportLabel\">Transport method</label>\r\n    </div>\r\n    <div class=\"ui-g-6 ui-md-8 ui-g-nopad\">\r\n      {{transportLabel}}\r\n    </div>\r\n  </div>\r\n  <div class=\"ui-g-12\">\r\n    <div class=\"ui-g-6 ui-md-4 ui-g-nopad\">\r\n      <label for=\"workerCount\">Worker count</label>\r\n    </div>\r\n    <div class=\"ui-g-6 ui-md-8 ui-g-nopad\">\r\n      {{workerCount}}\r\n    </div>\r\n  </div>\r\n  <div class=\"ui-g-12\">\r\n    <div class=\"ui-g-6 ui-md-4 ui-g-nopad\">\r\n      <label for=\"transportCost\">transport fees</label>\r\n    </div>\r\n    <div class=\"ui-g-6 ui-md-8 ui-g-nopad\">\r\n      {{transportCost | currency:'USD':'true'}}\r\n    </div>\r\n    <div class=\"ui-g-12\" *ngIf=\"showPayPal && transportCost > 0 && order.ppState != 'approved'\">        \r\n        Due now and payable with\r\n        <div id=\"paypal-button\" ></div>\r\n    </div>    \r\n  </div>\r\n  <div class=\"ui-g-12\" *ngIf=\"order.ppPaymentID != null\">\r\n    <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n      <label for=\"ppPaymentID\">Paypal Payment #</label>\r\n    </div>\r\n    <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n      {{order.ppPaymentID}}\r\n    </div>\r\n  </div>   \r\n  <div class=\"ui-g-12\" *ngIf=\"order.ppState != null\">\r\n    <div class=\"ui-g-6 ui-md-4 ui-g-nopad\">\r\n      <label for=\"ppState\">Payment State</label>\r\n    </div>\r\n    <div class=\"ui-g-6 ui-md-8 ui-g-nopad\">\r\n      {{order.ppState}}\r\n    </div>\r\n  </div>   \r\n  <div class=\"ui-g-12 thin-border\">\r\n    <div class=\"ui-g-6 ui-md-4 ui-g-nopad\">\r\n      <label for=\"laborCost\">labor cost</label>\r\n    </div>\r\n    <div class=\"ui-g-6 ui-md-8 ui-g-nopad\">\r\n      {{laborCost | currency:'USD':'true'}}\r\n    </div>\r\n    <div class=\"ui-g-12\">\r\n        To be paid directly to workers in cash at the end of the work day\r\n    </div>     \r\n  </div>\r\n</div>  \r\n\r\n<div>\r\n    <p-dataTable [value]=\"order.workAssignments\" \r\n      [responsive]=\"true\">\r\n      <p-column field=\"skill\" header=\"Skill needed\" [style]=\"{'padding':'.1em .875em'}\"></p-column>\r\n      <p-column field=\"requiresHeavyLifting\" header=\"Heavy lifting?\" [style]=\"{'padding':'.1em .875em'}\">\r\n        <ng-template let-col let-wa=\"rowData\" let-ri=\"rowIndex\" pTemplate=\"body\">\r\n          <span>{{wa[col.field] ? 'Yes' : 'No'}}</span>\r\n        </ng-template>  \r\n      </p-column>\r\n      <p-column field=\"transportCost\" header=\"Transport cost\" [style]=\"{'padding':'.1em .875em'}\">\r\n          <ng-template pTemplate=\"header\">\r\n              <span>{{ header }}</span>\r\n         </ng-template>\r\n        <ng-template let-col let-wa=\"rowData\" let-ri=\"rowIndex\" pTemplate=\"body\">\r\n          <span>{{wa[col.field]| currency:'USD':'true'}}</span>\r\n        </ng-template>\r\n      </p-column>\r\n      <p-column field=\"hours\" header=\"hours requested\"[style]=\"{'padding':'.1em .875em'}\"></p-column>\r\n      <p-column field=\"hourlyWage\" header=\"Hourly wage\" [style]=\"{'padding':'.1em .875em'}\">\r\n        <ng-template let-col let-wa=\"rowData\" let-ri=\"rowIndex\" pTemplate=\"body\">\r\n          <span>{{wa[col.field]| currency:'USD':'true'}}</span>\r\n      </ng-template>\r\n      </p-column>\r\n      <p-column header=\"Wage subtotal\" [style]=\"{'padding':'.1em .875em'}\">\r\n        <ng-template let-col let-wa=\"rowData\" let-ri=\"rowIndex\" pTemplate=\"body\">\r\n          <span>{{wa['hours'] * wa['hourlyWage'] | currency:'USD':'true'}}</span>\r\n        </ng-template>\r\n      </p-column>\r\n    </p-dataTable>\r\n</div>\r\n"
+module.exports = "<div class=\"ui-g-12 ui-md-6 ui-g-nopad\">\r\n  <div class=\"ui-g-12\">\r\n    <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n      <label for=\"dateTimeofWork\">Time requested</label>\r\n    </div>\r\n    <div class=\"ui-g-12 ui-md-8  ui-g-nopad\">\r\n      {{order.dateTimeofWork |date:'short'}}\r\n    </div>\r\n  </div>\r\n  <div class=\"ui-g-12\">\r\n    <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n      <label for=\"contactName\">Contact & site information</label>\r\n    </div>\r\n    <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n      <div>{{order.contactName}}</div>\r\n      <div>{{order.worksiteAddress1}}</div>\r\n      <div>{{order.worksiteAddress2}}</div>\r\n      <div>{{order.city}}, \r\n      {{order.state}}\r\n      {{order.zipcode}}</div>\r\n      <div>{{order.phone}}</div>\r\n    </div>\r\n  </div>\r\n</div>\r\n<div class=\"ui-g-12 ui-md-6 ui-g-nopad\">\r\n  <div class=\"ui-g-12\" *ngIf=\"order.id\">\r\n      <div class=\"ui-g-6 ui-md-4 ui-g-nopad\">\r\n        <label for=\"description\">Order #</label>\r\n      </div>\r\n      <div class=\"ui-g-6 ui-md-8 ui-g-nopad\">\r\n        {{order.id }}\r\n      </div>\r\n  </div>\r\n  <div class=\"ui-g-12\">\r\n    <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n      <label for=\"description\">Work Description</label>\r\n    </div>\r\n    <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n      {{order.description}}\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"ui-g-12\">\r\n    <div class=\"ui-g-8 ui-md-4 ui-g-nopad\">\r\n      <label for=\"englishRequired\">English required?</label>\r\n    </div>\r\n    <div class=\"ui-g-4 ui-md-8 ui-g-nopad\">\r\n      {{order.englishRequired ? 'Yes' : 'No'}}\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"ui-g-12\" *ngIf=\"order.englishRequiredNote\">\r\n    <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n      <label for=\"englishRequiredNote\">English requirements</label>\r\n    </div>\r\n    <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n      {{order.englishRequiredNote}}\r\n    </div>\r\n  </div>\r\n  <div class=\"ui-g-12\">\r\n    <div class=\"ui-g-6 ui-md-4 ui-g-nopad\">\r\n      <label for=\"transportLabel\">Transport method</label>\r\n    </div>\r\n    <div class=\"ui-g-6 ui-md-8 ui-g-nopad\">\r\n      {{transportLabel}}\r\n    </div>\r\n  </div>\r\n  <div class=\"ui-g-12\">\r\n    <div class=\"ui-g-6 ui-md-4 ui-g-nopad\">\r\n      <label for=\"workerCount\">Worker count</label>\r\n    </div>\r\n    <div class=\"ui-g-6 ui-md-8 ui-g-nopad\">\r\n      {{workerCount}}\r\n    </div>\r\n  </div>\r\n  <div class=\"ui-g-12\">\r\n    <div class=\"ui-g-6 ui-md-4 ui-g-nopad\">\r\n      <label for=\"transportCost\">transport fees</label>\r\n    </div>\r\n    <div class=\"ui-g-6 ui-md-8 ui-g-nopad\">\r\n      {{transportCost | currency:'USD':'true'}}\r\n    </div>\r\n    <div class=\"ui-g-12\">\r\n      Due now and payable with Paypal\r\n    </div>  \r\n    <div class=\"ui-g-12\" *ngIf=\"showPayPal && transportCost > 0 && order.ppState != 'approved'\">        \r\n        <div id=\"paypal-button\" ></div>\r\n    </div>    \r\n  </div>\r\n  <div class=\"ui-g-12\" *ngIf=\"order.ppPaymentID != null\">\r\n    <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n      <label for=\"ppPaymentID\">Paypal Payment #</label>\r\n    </div>\r\n    <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n      {{order.ppPaymentID}}\r\n    </div>\r\n  </div>   \r\n  <div class=\"ui-g-12\" *ngIf=\"order.ppState != null\">\r\n    <div class=\"ui-g-6 ui-md-4 ui-g-nopad\">\r\n      <label for=\"ppState\">Payment State</label>\r\n    </div>\r\n    <div class=\"ui-g-6 ui-md-8 ui-g-nopad\">\r\n      {{order.ppState}}\r\n    </div>\r\n  </div>   \r\n  <div class=\"ui-g-12 thin-border\">\r\n    <div class=\"ui-g-6 ui-md-4 ui-g-nopad\">\r\n      <label for=\"laborCost\">labor cost</label>\r\n    </div>\r\n    <div class=\"ui-g-6 ui-md-8 ui-g-nopad\">\r\n      {{laborCost | currency:'USD':'true'}}\r\n    </div>\r\n    <div class=\"ui-g-12\">\r\n        To be paid directly to workers in cash at the end of the work day\r\n    </div>     \r\n  </div>\r\n</div>  \r\n\r\n<div>\r\n    <p-dataTable [value]=\"order.workAssignments\" \r\n      [responsive]=\"true\">\r\n      <p-column field=\"skill\" header=\"Skill needed\" [style]=\"{'padding':'.1em .875em'}\"></p-column>\r\n      <p-column field=\"requiresHeavyLifting\" header=\"Heavy lifting?\" [style]=\"{'padding':'.1em .875em'}\">\r\n        <ng-template let-col let-wa=\"rowData\" let-ri=\"rowIndex\" pTemplate=\"body\">\r\n          <span>{{wa[col.field] ? 'Yes' : 'No'}}</span>\r\n        </ng-template>  \r\n      </p-column>\r\n      <p-column field=\"transportCost\" header=\"Transport cost\" [style]=\"{'padding':'.1em .875em'}\">\r\n\r\n        <ng-template let-col let-wa=\"rowData\" let-ri=\"rowIndex\" pTemplate=\"body\">\r\n          <span>{{wa[col.field]| currency:'USD':'true'}}</span>\r\n        </ng-template>\r\n      </p-column>\r\n      <p-column field=\"hours\" header=\"hours requested\"[style]=\"{'padding':'.1em .875em'}\"></p-column>\r\n      <p-column field=\"hourlyWage\" header=\"Hourly wage\" [style]=\"{'padding':'.1em .875em'}\">\r\n        <ng-template let-col let-wa=\"rowData\" let-ri=\"rowIndex\" pTemplate=\"body\">\r\n          <span>{{wa[col.field]| currency:'USD':'true'}}</span>\r\n      </ng-template>\r\n      </p-column>\r\n      <p-column header=\"Wage subtotal\" [style]=\"{'padding':'.1em .875em'}\">\r\n        <ng-template let-col let-wa=\"rowData\" let-ri=\"rowIndex\" pTemplate=\"body\">\r\n          <span>{{wa['hours'] * wa['hourlyWage'] | currency:'USD':'true'}}</span>\r\n        </ng-template>\r\n      </p-column>\r\n    </p-dataTable>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -5560,22 +5516,63 @@ var WorkOrdersModule = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "../../../../../src/app/shared/handle-error.ts":
+/***/ "../../../../../src/app/shared/global-error-handler.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HandleError; });
-/**
- * Created by jcii on 6/2/17.
- */
-var HandleError = /** @class */ (function () {
-    function HandleError() {
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return GlobalErrorHandler; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common__ = __webpack_require__("../../../common/esm5/common.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__index__ = __webpack_require__("../../../../../src/app/shared/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_primeng_components_common_messageservice__ = __webpack_require__("../../../../primeng/components/common/messageservice.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_primeng_components_common_messageservice___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_primeng_components_common_messageservice__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+// https://medium.com/@amcdnl/global-error-handling-with-angular2-6b992bdfb59c
+var GlobalErrorHandler = /** @class */ (function () {
+    function GlobalErrorHandler(injector) {
+        this.injector = injector;
     }
-    HandleError.error = function (error) {
-        console.error(error);
-        return Promise.reject(error.message || error);
+    GlobalErrorHandler.prototype.handleError = function (error) {
+        var loggingService = this.injector.get(__WEBPACK_IMPORTED_MODULE_2__index__["c" /* LoggingService */]);
+        var msgService = this.injector.get(__WEBPACK_IMPORTED_MODULE_3_primeng_components_common_messageservice__["MessageService"]);
+        var location = this.injector.get(__WEBPACK_IMPORTED_MODULE_1__angular_common__["LocationStrategy"]);
+        var message = error.message ? error.message : error.toString();
+        var url = location instanceof __WEBPACK_IMPORTED_MODULE_1__angular_common__["PathLocationStrategy"]
+            ? location.path() : '';
+        var shortMsg = 'unknown error: ' + error.toString();
+        ;
+        if (error instanceof __WEBPACK_IMPORTED_MODULE_4__angular_common_http__["d" /* HttpErrorResponse */]) {
+            shortMsg = error.status + " " + error.statusText;
+        }
+        // I think this is a bluebird promise error, but i dunno
+        if (error.rejection && error.rejection instanceof __WEBPACK_IMPORTED_MODULE_4__angular_common_http__["d" /* HttpErrorResponse */]) {
+            shortMsg = (error.rejection.status && error.rejection.statusText) ?
+                error.rejection.status + " " + error.rejection.statusText : 'Unknown error';
+        }
+        // log on the server
+        msgService.add({ severity: 'error', summary: shortMsg });
+        loggingService.log(message, location);
+        throw error;
     };
-    return HandleError;
+    GlobalErrorHandler = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injector"]])
+    ], GlobalErrorHandler);
+    return GlobalErrorHandler;
 }());
 
 
@@ -5590,6 +5587,9 @@ var HandleError = /** @class */ (function () {
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__services_auth_guard_service__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_auth_service__ = __webpack_require__("../../../../../src/app/shared/services/auth.service.ts");
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_1__services_auth_service__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_logging_service__ = __webpack_require__("../../../../../src/app/shared/services/logging.service.ts");
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_2__services_logging_service__["a"]; });
+
 
 
 
@@ -5852,8 +5852,6 @@ var AuthService = /** @class */ (function () {
     AuthService.prototype.clearState = function () {
         this.mgr.clearStaleState().then(function () {
             console.log('auth.service.clearStateState success');
-        }).catch(function (e) {
-            console.error('auth.service.clearStateState error', e.message);
         });
     };
     AuthService.prototype.getUser$ = function () {
@@ -5889,8 +5887,6 @@ var AuthService = /** @class */ (function () {
             _this.currentUser = user;
             //console.log('auth.service.getUser returned: ' + JSON.stringify(user));
             _this.getUserEmitter().emit(user);
-        }).catch(function (err) {
-            console.error('getUser: ', err);
         });
     };
     AuthService.prototype.removeUser = function () {
@@ -5898,15 +5894,11 @@ var AuthService = /** @class */ (function () {
         this.mgr.removeUser().then(function () {
             _this.getUserEmitter().emit(null);
             console.log('auth.service.removeUser: user removed');
-        }).catch(function (err) {
-            console.error('auth.service.removeUser returned: ' + JSON.stringify(err));
         });
     };
     AuthService.prototype.startSigninMainWindow = function () {
         this.mgr.signinRedirect({ data: this.redirectUrl }).then(function () {
             console.log('signinRedirect done');
-        }).catch(function (err) {
-            console.error('auth.service.startSigninMainWindow returned: ' + JSON.stringify(err));
         });
     };
     AuthService.prototype.endSigninMainWindow = function (url) {
@@ -5917,11 +5909,6 @@ var AuthService = /** @class */ (function () {
         this.mgr.getUser().then(function (user) {
             return _this.mgr.signoutRedirect({ id_token_hint: user.id_token }).then(function (resp) {
                 console.log('signed out', resp);
-                setTimeout(5000, function () {
-                    console.log('testing to see if fired...');
-                });
-            }).catch(function (err) {
-                console.error('auth.service.startSignoutMainWindow returned: ' + JSON.stringify(err));
             });
         });
     };
@@ -5929,8 +5916,6 @@ var AuthService = /** @class */ (function () {
     AuthService.prototype.endSignoutMainWindow = function () {
         this.mgr.signoutRedirectCallback().then(function (resp) {
             console.log('signed out', resp);
-        }).catch(function (err) {
-            console.error('auth.service.endSignoutMainWindow returned: ' + JSON.stringify(err));
         });
     };
     ;
@@ -5939,6 +5924,39 @@ var AuthService = /** @class */ (function () {
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */], __WEBPACK_IMPORTED_MODULE_5__angular_router__["Router"]])
     ], AuthService);
     return AuthService;
+}());
+
+
+
+/***/ }),
+
+/***/ "../../../../../src/app/shared/services/logging.service.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoggingService; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/esm5/core.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var LoggingService = /** @class */ (function () {
+    function LoggingService() {
+    }
+    LoggingService.prototype.log = function (message, url, stack) {
+        console.log(message);
+    };
+    LoggingService = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
+        __metadata("design:paramtypes", [])
+    ], LoggingService);
+    return LoggingService;
 }());
 
 
@@ -5975,7 +5993,6 @@ var TokenInterceptor = /** @class */ (function () {
         var url = this.route.url;
         return this.auth.getUser$()
             .mergeMap(function (user) {
-            //console.log('currentUser: ', user);
             if (user === null || user === undefined) {
                 _this.auth.redirectUrl = url;
                 _this.route.navigate(['/welcome']);
@@ -6004,6 +6021,24 @@ var TokenInterceptor = /** @class */ (function () {
     return TokenInterceptor;
 }());
 
+
+
+/***/ }),
+
+/***/ "../../../../../src/app/shared/validators/phone.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = phoneValidator;
+function phoneValidator(message) {
+    return function (control) {
+        var phoneNumRx = new RegExp(/^[\d]{3,3}-[\d]{3,3}-[\d]{4,4}$/);
+        if (phoneNumRx.test(control.value)) {
+            return null;
+        }
+        return { 'phone': message };
+    };
+}
 
 
 /***/ }),

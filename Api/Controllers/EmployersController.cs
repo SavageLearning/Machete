@@ -71,8 +71,13 @@ namespace Machete.Api.Controllers
             if (e == null) return NotFound();
             // Ensure link between email, onlineSigninID, and employer account are correct
             if (e.email != userEmail) e.email = userEmail;
-            if (e.onlineSigninID != userSubject) e.onlineSigninID = userSubject;
-
+            if (e.onlineSigninID == null)
+            {
+                e.onlineSigninID = userSubject;
+                // aggressive linking of asp.net identity and employer record
+                serv.Save(e, userEmail);
+            }
+            if (e.onlineSigninID != userSubject) return Conflict();
             var result = map.Map<Domain.Employer, Employer>(e);
             return Json(new { data = result });
         }

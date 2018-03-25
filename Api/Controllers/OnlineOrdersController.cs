@@ -114,6 +114,7 @@ namespace Machete.Api.Controllers
 
             var domain = map.Map<WorkOrder, Domain.WorkOrder>(order);
             domain.EmployerID = employer.ID;
+            domain.onlineSource = true;
             Domain.WorkOrder newOrder = null;
             try {
                 newOrder = serv.Create(domain, employer.email ?? employer.name);
