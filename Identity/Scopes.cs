@@ -29,7 +29,8 @@ namespace Machete.Identity
                     new Secret("api-secret".Sha256())
                 },
                 Claims = new List <ScopeClaim>{
-                    new ScopeClaim(Constants.ClaimTypes.Role, alwaysInclude: true)
+                    new ScopeClaim(Constants.ClaimTypes.Role, alwaysInclude: true),
+                    new ScopeClaim(Constants.ClaimTypes.Email, alwaysInclude: true)
                 },
                 Type = ScopeType.Resource
             }

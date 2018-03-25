@@ -89,7 +89,7 @@ Machete.Test/randomized_names.csv
 Machete.Test/randomized_nums.csv
 Machete.Test/BeanShell Sampler.jmx
 .vscode/
-
+*/node_modules/*
 
 Identity/appsettings\.config
 

@@ -26,30 +26,19 @@ namespace Machete.Api
                 // For access to the introspection endpoint
                 ClientId = ConfigurationManager.AppSettings["IdentityClientId"],
                 ClientSecret = ConfigurationManager.AppSettings["IdentityClientSecret"],
-
-                RequiredScopes = new[] { "api" }
+                
+                RequiredScopes = new[] { "api", "profile", "email" }
             });
 
             // Wire Web API
             var config = new HttpConfiguration();
-            // https://docs.microsoft.com/en-us/aspnet/web-api/overview/web-api-routing-and-actions/attribute-routing-in-web-api-2
-            config.MapHttpAttributeRoutes();
-            // catch all route mapped to ErrorController so 404 errors
-            // can be logged in elmah
-            config.Routes.MapHttpRoute("API Default", "api/{controller}/{id}",
-                new { id = RouteParameter.Optional });
-            config.Routes.MapHttpRoute(
-                name: "NotFound",
-                routeTemplate: "{*path}",
-                defaults: new { controller = "Error", action = "NotFound" }
-            );
+
             config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             config.DependencyResolver = new UnityResolver(UnityConfig.Get());
-            //UnityConfig.ConfigureUnity(config);
             //config.Filters.Add(new AuthorizeAttribute());
-            config.Services.Add(typeof(IExceptionLogger), new ElmahExceptionLogger());
             //config.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling
             //            = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            WebApiConfig.Register(config);
             app.UseWebApi(config);
             var lserv = (LookupService)config.DependencyResolver.GetService(typeof(ILookupService));
             lserv.populateStaticIds();

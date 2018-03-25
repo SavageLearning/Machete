@@ -646,6 +646,33 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Paypal payment.
+        /// </summary>
+        public static string ppFee {
+            get {
+                return ResourceManager.GetString("ppFee", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paypal payment ID.
+        /// </summary>
+        public static string ppPaymentID {
+            get {
+                return ResourceManager.GetString("ppPaymentID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paypal payment state.
+        /// </summary>
+        public static string ppState {
+            get {
+                return ResourceManager.GetString("ppState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Print active orders.
         /// </summary>
         public static string printactive {

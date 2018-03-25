@@ -402,4 +402,13 @@
   <data name="workOrderNumber" xml:space="preserve">
     <value>The Work Order Number is:</value>
   </data>
+  <data name="ppFee" xml:space="preserve">
+    <value>Paypal payment</value>
+  </data>
+  <data name="ppPaymentID" xml:space="preserve">
+    <value>Paypal payment ID</value>
+  </data>
+  <data name="ppState" xml:space="preserve">
+    <value>Paypal payment state</value>
+  </data>
 </root>

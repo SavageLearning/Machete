@@ -104,7 +104,39 @@ namespace Machete.Web
             GlobalConfiguration.Configuration.EnsureInitialized();
         }
 
-        private IUnityContainer GetUnityContainer()
+        protected void Application_Error(object sender, EventArgs e)
+        {
+            Exception exception = Server.GetLastError();
+            Response.Clear();
+
+            HttpException httpException = exception as HttpException;
+
+            if (httpException != null)
+            {
+                //string action;
+
+                //switch (httpException.GetHttpCode())
+                //{
+                //    case 404:
+                //        // page not found
+                //        action = "NotFound";
+                //        break;
+                //    case 500:
+                //        // server error
+                //        action = "HttpError500";
+                //        break;
+                //    default:
+                //        action = "General";
+                //        break;
+                //}
+
+                // clear error on server
+                Server.ClearError();
+
+                Response.Redirect(System.String.Format("~/Home/NotFound/?message={0}", exception.Message));
+            }
+        }
+            private IUnityContainer GetUnityContainer()
         {
             //Create UnityContainer          
             IUnityContainer container = new UnityContainer()

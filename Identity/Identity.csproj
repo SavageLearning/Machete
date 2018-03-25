@@ -141,6 +141,9 @@
     <EmbeddedResource Include="idsrv3test.pfx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <Content Include="favicon.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="packages.config" />
     <None Include="Properties\PublishProfiles\test-identity.pubxml" />
     <None Include="Properties\PublishProfiles\identity.pubxml" />

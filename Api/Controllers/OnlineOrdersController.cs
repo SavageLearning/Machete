@@ -15,6 +15,7 @@ using System.Security.Claims;
 using System.Threading;
 using System.Web.Http;
 using System.Web.Http.Controllers;
+using PayPal.Api;
 
 namespace Machete.Api.Controllers
 {
@@ -55,12 +56,9 @@ namespace Machete.Api.Controllers
             employer = eServ.Get(guid: userSubject);
             if (employer == null)
             {
-                var res = new HttpResponseMessage(HttpStatusCode.NotFound)
-                {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotFound) {
                     Content = new StringContent(string.Format("No employer record associated with claim {0}", userSubject)),
-                    ReasonPhrase = "Not found: employer record"
-                };
-                throw new HttpResponseException(res);
+                    ReasonPhrase = "Not found: employer record"});
             }
             paypalId = cServ.getConfig(Cfg.PaypalId);
             paypalSecret = cServ.getConfig(Cfg.PaypalSecret);
@@ -116,6 +114,7 @@ namespace Machete.Api.Controllers
 
             var domain = map.Map<WorkOrder, Domain.WorkOrder>(order);
             domain.EmployerID = employer.ID;
+            domain.onlineSource = true;
             Domain.WorkOrder newOrder = null;
             try {
                 newOrder = serv.Create(domain, employer.email ?? employer.name);
@@ -168,11 +167,12 @@ namespace Machete.Api.Controllers
             }
 
             var result = postExecute(data);
-
+            var payment = JsonConvert.DeserializeObject<PayPal.Api.Payment>(result);
             order.ppResponse = result;
-            order.ppState = "approved";
+            order.ppState = payment.state;
+            order.ppFee = Double.Parse(payment.transactions.Single().amount.total);
             woServ.Save(order, User.Identity.Name);
-            return Json(JsonConvert.DeserializeObject(result));
+            return Json(payment);
         }
 
         [NonAction]
@@ -250,7 +250,10 @@ namespace Machete.Api.Controllers
             var result = client.Execute(request);
             if (result.StatusCode != HttpStatusCode.OK)
             {
-                throw result.ErrorException;
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    ReasonPhrase = "Payment execute failed"
+                });
             }
 
             return result.Content;

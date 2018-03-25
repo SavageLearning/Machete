@@ -241,6 +241,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\HirerAccountController.cs" />
     <Compile Include="Controllers\ReportsV2Controller.cs" />
     <Compile Include="Controllers\V2Controller.cs" />
     <Compile Include="Maps\ActivityProfile.cs" />
@@ -763,6 +764,9 @@
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="robots.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\console-log.js" />
     <Content Include="Scripts\jqplot.cursor.js" />
     <Content Include="Scripts\jqplot.dateAxisRenderer.js" />
@@ -942,6 +946,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\PublishProfiles\" />
+    <Folder Include="Views\HirerAccount\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
@@ -1335,7 +1340,6 @@
     <Content Include="Views\Reports\Employers.cshtml" />
     <Content Include="Views\Activity\CreateMany.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ActivityCreateMany.cshtml" />
-    <Content Include="Views\Home\Changes.cshtml" />
     <Content Include="Views\Account\_ChangePasswordPartial.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\_RemoveAccountPartial.cshtml" />
@@ -1347,6 +1351,7 @@
     </Content>
     <Content Include="Views\Shared\_angularLayout.cshtml" />
     <Content Include="Views\V2\Index.cshtml" />
+    <Content Include="Views\Home\NotFound.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
