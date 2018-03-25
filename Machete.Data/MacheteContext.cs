@@ -89,7 +89,14 @@ namespace Machete.Data
                 throw new Exception(details.ToString());
             }
         }
-        
+
+        public bool IsDead { get; set; }
+        protected override void Dispose(bool disposing)
+        {
+            IsDead = true;
+            base.Dispose(disposing);
+        }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder); //This calls the other builders (below)
