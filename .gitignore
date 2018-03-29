@@ -93,3 +93,5 @@ Machete.Test/BeanShell Sampler.jmx
 
 
 Identity/appsettings\.config
+
+Machete.Web/Content/bundles/*
