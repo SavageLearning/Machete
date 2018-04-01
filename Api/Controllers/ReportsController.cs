@@ -71,7 +71,7 @@ namespace Machete.Api.Controllers
         // POST api/values
         [HttpPost]
         [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
-        public IHttpActionResult Post(string query)
+        public IHttpActionResult Post([FromBody]string query)
         {
             try {
                 var validationMessages = serv.validateQuery(query);
