@@ -38,20 +38,17 @@ namespace Machete.Web.Controllers
     [ElmahHandleError]
     public class PersonController : MacheteController
     { 
-        private readonly IPersonService personService;
-        private readonly ILookupCache lcache;
+        private readonly IPersonService serv;
         private readonly IMapper map;
         private readonly IDefaults def;
         CultureInfo CI;
 
         public PersonController(
-            IPersonService personService, 
-            ILookupCache _lcache,
+            IPersonService pServ, 
             IDefaults def,
             IMapper map)
         {
-            this.personService = personService;
-            this.lcache = _lcache;
+            this.serv = pServ;
             this.map = map;
             this.def = def;
         }
@@ -76,11 +73,10 @@ namespace Machete.Web.Controllers
             //Get all the records            
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI = CI;
-            dataTableResult<DTO.PersonList> list = personService.GetIndexView(vo);
+            dataTableResult<DTO.PersonList> list = serv.GetIndexView(vo);
             var result = list.query
-                .Select(
-                    e => map.Map<DTO.PersonList, ViewModel.PersonList>(e)
-                ).AsEnumerable();
+                .Select(e => map.Map<DTO.PersonList, ViewModel.PersonList>(e))
+                .AsEnumerable();
             return Json(new
             {
                 sEcho = param.sEcho,
@@ -117,7 +113,7 @@ namespace Machete.Web.Controllers
         public ActionResult Create(Person person, string userName)
         {
             UpdateModel(person);
-            var newperson = personService.Create(person, userName);
+            var newperson = serv.Create(person, userName);
             var result = map.Map<Domain.Person, ViewModel.Person>(newperson);
             return Json(new
             {
@@ -135,7 +131,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Teacher, PhoneDesk")] 
         public ActionResult Edit(int id)
         {
-            var p = personService.Get(id);
+            var p = serv.Get(id);
             var m = map.Map<Domain.Person, ViewModel.Person>(p);
             m.def = def;
             return PartialView("Edit", m);
@@ -150,9 +146,9 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Teacher, PhoneDesk")] 
         public ActionResult Edit(int id, string userName)
         {
-            Person person = personService.Get(id);          
+            Person person = serv.Get(id);          
             UpdateModel(person);
-            personService.Save(person, userName);
+            serv.Save(person, userName);
             return Json(new
             {
                 status = "OK"
@@ -167,7 +163,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Teacher, PhoneDesk")]
         public ActionResult View(int id)
         {
-            Person person = personService.Get(id);
+            Person person = serv.Get(id);
             return View(person);
         }
         /// <summary>
@@ -180,7 +176,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator")] 
         public ActionResult Delete(int id, string user)
         {
-            personService.Delete(id, user);
+            serv.Delete(id, user);
 
             return Json(new
             {
@@ -195,7 +191,7 @@ namespace Machete.Web.Controllers
         private List<Dictionary<string, string>> DuplicatePersons(string firstname, string lastname, string phone)
         {
             //Get all the records            
-            IEnumerable<Person> list = personService.GetAll();
+            IEnumerable<Person> list = serv.GetAll();
             var peopleFound = new List<Dictionary<string, string>>();
             firstname = firstname.Replace(" ", "");
             lastname = lastname.Replace(" ", "");

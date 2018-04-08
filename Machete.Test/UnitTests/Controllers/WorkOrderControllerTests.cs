@@ -86,7 +86,7 @@ namespace Machete.Test.Unit.Controller
             workerRequest = new List<WorkerRequest> { };
             lcache = new Mock<ILookupCache>();
             dbfactory = new Mock<IDatabaseFactory>();
-            _ctrlr = new WorkOrderController(serv.Object, waServ.Object, empServ.Object, reqServ.Object, wrServ.Object, lcache.Object, def.Object, map.Object);
+            _ctrlr = new WorkOrderController(serv.Object, reqServ.Object, wrServ.Object, def.Object, map.Object);
             _ctrlr.SetFakeControllerContext();
             // TODO: Include Lookups in Dependency Injection, remove initialize statements
         }
@@ -197,7 +197,7 @@ namespace Machete.Test.Unit.Controller
             list.Add(new WorkerRequest { WorkerID = 30311 });
             list.Add(new WorkerRequest { WorkerID = 30420 });
             list.Add(new WorkerRequest { WorkerID = 30421 });
-            var result = _ctrlr.Edit(testid, fakeform, "UnitTest", list) as JsonResult;
+            var result = _ctrlr.Edit(testid, "UnitTest", list) as JsonResult;
             //Assert
             //Assert.AreEqual("Index", result.RouteValues["action"]);
             Assert.AreEqual(fakeworkOrder, savedworkOrder);
@@ -260,7 +260,7 @@ namespace Machete.Test.Unit.Controller
             list.Add(new WorkerRequest { WorkerID = 30421 });
             //Act
 
-            var result = _ctrlr.Edit(testid, fakeform, "UnitTest", list) as JsonResult;
+            var result = _ctrlr.Edit(testid, "UnitTest", list) as JsonResult;
             //Assert
             //Assert.AreEqual("Index", result.RouteValues["action"]);
             Assert.AreEqual(fakeworkOrder, savedworkOrder);
@@ -296,7 +296,7 @@ namespace Machete.Test.Unit.Controller
             //
             //Act
             List<WorkerRequest> list = new List<WorkerRequest>();
-            _ctrlr.Edit(testid, fakeform, "UnitTest", list);
+            _ctrlr.Edit(testid, "UnitTest", list);
             //Assert
 
         }

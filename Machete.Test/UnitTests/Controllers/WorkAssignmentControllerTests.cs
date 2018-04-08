@@ -70,7 +70,7 @@ namespace Machete.Test.Unit.Controller
             map = new Mock<IMapper>();
             lcache = new Mock<ILookupCache>();
             dbfactory = new Mock<IDatabaseFactory>();
-            _ctrlr = new WorkAssignmentController(waServ.Object, wkrServ.Object, woServ.Object, wsiServ.Object, lcache.Object, def.Object, map.Object);
+            _ctrlr = new WorkAssignmentController(waServ.Object, woServ.Object, wsiServ.Object, def.Object, map.Object);
             _view = new WorkAssignmentIndex();
             _ctrlr.SetFakeControllerContext();
             fakeform = new FormCollection();
