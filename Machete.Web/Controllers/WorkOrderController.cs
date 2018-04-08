@@ -41,10 +41,8 @@ namespace Machete.Web.Controllers
     public class WorkOrderController : MacheteController
     {
         private readonly IWorkOrderService woServ;
-        private readonly IEmployerService eServ;
         private readonly IWorkerService wServ;
         private readonly IWorkerRequestService wrServ;
-        private readonly IWorkAssignmentService waServ;
         private readonly IMapper map;
         private readonly IDefaults def;
         CultureInfo CI;
@@ -53,23 +51,16 @@ namespace Machete.Web.Controllers
         /// Constructor
         /// </summary>
         /// <param name="woServ">Work Order service</param>
-        /// <param name="waServ">Work Assignment service</param>
-        /// <param name="eServ">Employer service</param>
         /// <param name="wServ">Worker service</param>
         /// <param name="wrServ">Worker request service</param>
-        /// <param name="lcache">Lookup cache</param>
         public WorkOrderController(IWorkOrderService woServ,
-            IWorkAssignmentService waServ,
-            IEmployerService eServ,
             IWorkerService wServ,
             IWorkerRequestService wrServ,
             IDefaults def,
             IMapper map)
         {
             this.woServ = woServ;
-            this.eServ = eServ;
             this.wServ = wServ;
-            this.waServ = waServ;
             this.wrServ = wrServ;
             this.map = map;
             this.def = def;

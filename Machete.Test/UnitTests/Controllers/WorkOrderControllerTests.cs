@@ -195,7 +195,7 @@ namespace Machete.Test.Unit.Controller
             list.Add(new WorkerRequest { WorkerID = 30311 });
             list.Add(new WorkerRequest { WorkerID = 30420 });
             list.Add(new WorkerRequest { WorkerID = 30421 });
-            var result = _ctrlr.Edit(testid, fakeform, "UnitTest", list) as JsonResult;
+            var result = _ctrlr.Edit(testid, "UnitTest", list) as JsonResult;
             //Assert
             //Assert.AreEqual("Index", result.RouteValues["action"]);
             Assert.AreEqual(fakeworkOrder, savedworkOrder);
@@ -258,7 +258,7 @@ namespace Machete.Test.Unit.Controller
             list.Add(new WorkerRequest { WorkerID = 30421 });
             //Act
 
-            var result = _ctrlr.Edit(testid, fakeform, "UnitTest", list) as JsonResult;
+            var result = _ctrlr.Edit(testid, "UnitTest", list) as JsonResult;
             //Assert
             //Assert.AreEqual("Index", result.RouteValues["action"]);
             Assert.AreEqual(fakeworkOrder, savedworkOrder);
@@ -294,7 +294,7 @@ namespace Machete.Test.Unit.Controller
             //
             //Act
             List<WorkerRequest> list = new List<WorkerRequest>();
-            _ctrlr.Edit(testid, fakeform, "UnitTest", list);
+            _ctrlr.Edit(testid, "UnitTest", list);
             //Assert
 
         }

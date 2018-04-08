@@ -38,7 +38,7 @@ namespace Machete.Web.Controllers
     [ElmahHandleError]
     public class EventController : MacheteController
     {
-        private readonly IEventService _serv;
+        private readonly IEventService serv;
         private readonly IImageService iServ;
         private readonly IMapper map;
         private readonly IDefaults def;
@@ -50,7 +50,7 @@ namespace Machete.Web.Controllers
             IDefaults def,
             IMapper map)
         {
-            this._serv = eventService;
+            this.serv = eventService;
             this.iServ = imageServ;
             this.map = map;
             this.def = def;
@@ -69,12 +69,11 @@ namespace Machete.Web.Controllers
             //Get all the records
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI = CI;
-            dataTableResult<DTO.EventList> list = _serv.GetIndexView(vo);
+            dataTableResult<DTO.EventList> list = serv.GetIndexView(vo);
             //return what's left to datatables
             var result = list.query
-                .Select(
-                    e => map.Map<DTO.EventList, ViewModel.EventList>(e)
-                ).AsEnumerable();
+                .Select(e => map.Map<DTO.EventList, ViewModel.EventList>(e))
+                .AsEnumerable();
             return Json(new
             {
                 sEcho = param.sEcho,
@@ -107,7 +106,7 @@ namespace Machete.Web.Controllers
         public ActionResult Create(Event evnt, string userName)
         {
             UpdateModel(evnt);
-            Event newEvent = _serv.Create(evnt, userName);
+            Event newEvent = serv.Create(evnt, userName);
             var result = map.Map<Domain.Event, ViewModel.Event>(newEvent);
             return Json(new
             {
@@ -124,7 +123,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Edit(int id)
         {
-            var m = map.Map<Domain.Event, ViewModel.Event>(_serv.Get(id));
+            var m = map.Map<Domain.Event, ViewModel.Event>(serv.Get(id));
             m.def = def;
             return PartialView("Edit", m);
         }
@@ -136,9 +135,9 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Edit(int id, string user)
         {
-            Event evnt = _serv.Get(id);
+            Event evnt = serv.Get(id);
             UpdateModel(evnt);
-            _serv.Save(evnt, user);
+            serv.Save(evnt, user);
   
             return Json(new { status = "OK" }, JsonRequestBehavior.AllowGet);
         }
@@ -150,7 +149,7 @@ namespace Machete.Web.Controllers
         {
             if (imagefile == null) throw new MacheteNullObjectException("AddImage called with null imagefile");
             JoinEventImage joiner = new JoinEventImage();
-            Event evnt = _serv.Get(id);
+            Event evnt = serv.Get(id);
             // TODO:The following code should be in the Service layer
             Image image = new Image();
             image.ImageMimeType = imagefile.ContentType;
@@ -171,8 +170,8 @@ namespace Machete.Web.Controllers
             // TODO: This tightly couples the MVC straight down to EF. 
             // breaks layering. Should be abstracted.
             evnt.JoinEventImages.Add(joiner);
-            _serv.Save(evnt, user);
-            var foo = iServ.Get(newImage.ID).ImageData;
+            serv.Save(evnt, user);
+            //var foo = iServ.Get(newImage.ID).ImageData;
             
             return Json(new
             {
@@ -186,7 +185,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Delete(int id, string user)
         {   
-            _serv.Delete(id, user);
+            serv.Delete(id, user);
             return Json(new
             {
                 status = "OK",
@@ -200,7 +199,7 @@ namespace Machete.Web.Controllers
         public ActionResult DeleteImage(int evntID, int jeviID, string user)
         {
             int deletedJEVI = 0;
-            Event evnt = _serv.Get(evntID);
+            Event evnt = serv.Get(evntID);
             JoinEventImage jevi = evnt.JoinEventImages.Single(e => e.ID == jeviID);
             deletedJEVI = jevi.ID;
             iServ.Delete(jevi.ImageID, user);

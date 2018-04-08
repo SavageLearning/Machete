@@ -63,7 +63,7 @@ namespace Machete.Test.Unit.Controller
             map = new MapperConfig().getMapper();
            
 
-            ctrlr = new EmployerController(serv.Object, woServ.Object, def.Object, map);
+            ctrlr = new EmployerController(serv.Object, def.Object, map);
             ctrlr.SetFakeControllerContext();
             form = new FormCollection
                        {
@@ -129,7 +129,7 @@ namespace Machete.Test.Unit.Controller
             serv = new Mock<IEmployerService>();
             serv.Setup(p => p.Create(employer, "UnitTest")).Returns(employer);
             woServ = new Mock<IWorkOrderService>();
-            ctrlr = new EmployerController(serv.Object, woServ.Object, def.Object, map);
+            ctrlr = new EmployerController(serv.Object, def.Object, map);
             ctrlr.SetFakeControllerContext();
             ctrlr.ValueProvider = form.ToValueProvider();
             JsonResult result = ctrlr.Create(employer, "UnitTest");
@@ -149,7 +149,7 @@ namespace Machete.Test.Unit.Controller
             var fakeemployer = new Domain.Employer();
             serv.Setup(p => p.Get(Testid)).Returns(fakeemployer);
             woServ = new Mock<IWorkOrderService>();
-            ctrlr = new EmployerController(serv.Object, woServ.Object, def.Object, map);
+            ctrlr = new EmployerController(serv.Object, def.Object, map);
             //Act
             var result = ctrlr.Edit(Testid) as PartialViewResult;
             //Assert
@@ -216,7 +216,7 @@ namespace Machete.Test.Unit.Controller
             serv = new Mock<IEmployerService>();
             var fakeform = new FormCollection();
             woServ = new Mock<IWorkOrderService>();
-            ctrlr = new EmployerController(serv.Object, woServ.Object, def.Object, map);
+            ctrlr = new EmployerController(serv.Object, def.Object, map);
             ctrlr.SetFakeControllerContext();
             ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act

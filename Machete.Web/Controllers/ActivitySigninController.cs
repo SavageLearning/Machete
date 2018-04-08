@@ -37,19 +37,16 @@ namespace Machete.Web.Controllers
     public class ActivitySigninController : MacheteController
     {
         private readonly IActivitySigninService serv;
-        private readonly IWorkerService wServ;
         private readonly IMapper map;
         private readonly IDefaults def;
         private System.Globalization.CultureInfo CI;
 
         public ActivitySigninController(
             IActivitySigninService serv, 
-            IWorkerService wServ,
             IDefaults def,
             IMapper map)
         {
             this.serv = serv;
-            this.wServ = wServ;
             this.map = map;
             this.def = def;
         }

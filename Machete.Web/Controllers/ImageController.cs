@@ -34,12 +34,12 @@ namespace Machete.Web.Controllers
     [ElmahHandleError]
     public class ImageController : MacheteController
     {
-        private readonly IImageService _serv;
+        private readonly IImageService serv;
         //
         // GET: /Image/
         public ImageController(IImageService imageService)
         {
-            this._serv = imageService;
+            this.serv = imageService;
         }
         protected override void Initialize(RequestContext requestContext)
         {
@@ -57,7 +57,7 @@ namespace Machete.Web.Controllers
         {
             if (ID != 0)
             {
-                Image image = _serv.Get(ID);
+                Image image = serv.Get(ID);
                 return File(image.ImageData, image.ImageMimeType, image.filename);
             }
             else
