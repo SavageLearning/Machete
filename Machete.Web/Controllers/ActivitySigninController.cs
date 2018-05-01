@@ -82,9 +82,9 @@ namespace Machete.Web.Controllers
             _asi.dwccardnum = dwccardnum;            
             //
             //
+            string imageRef = serv.getImageRef(dwccardnum);
             Worker w = serv.CreateSignin(_asi, this.User.Identity.Name);
             //Get picture from checkin, show with next view
-            string imageRef = serv.getImageRef(dwccardnum);
 
             return Json(new
             {
