@@ -101,7 +101,7 @@ namespace Machete.Api.Controllers
         public void Post([FromBody]Employer employer)
         {
             var domain = map.Map<Employer, Domain.Employer>(employer);
-            serv.Create(domain, User.Identity.Name);
+            serv.Create(domain, userEmail);
         }
 
         // For an employer creating his/her own record
@@ -120,7 +120,7 @@ namespace Machete.Api.Controllers
             domain.email = userEmail;
             try
             {
-                serv.Create(domain, User.Identity.Name);
+                serv.Create(domain, userEmail);
 
             }
             catch
@@ -136,7 +136,7 @@ namespace Machete.Api.Controllers
         {
             var domain = serv.Get(employer.id);
             map.Map<Employer, Domain.Employer>(employer, domain);
-            serv.Save(domain, User.Identity.Name);
+            serv.Save(domain, userEmail);
         }
 
         // for an employer editing his/her own employer record
@@ -160,11 +160,11 @@ namespace Machete.Api.Controllers
             Domain.Employer result;
             if (newEmployer)
             {
-                result = serv.Create(e, User.Identity.Name);
+                result = serv.Create(e, userEmail);
             }
             else
             {
-                serv.Save(e, User.Identity.Name);
+                serv.Save(e, userEmail);
                 result = serv.Get(e.ID);
             }
             var mapped = map.Map<Domain.Employer, Employer>(result);
