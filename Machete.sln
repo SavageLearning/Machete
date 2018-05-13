@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Machete.Service", "Machete.Service\Machete.Service.csproj", "{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}"
 EndProject
@@ -29,6 +29,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "Api\Api.csproj", "{C
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Chaim|Any CPU = Chaim|Any CPU
+		Chaim|Mixed Platforms = Chaim|Mixed Platforms
+		Chaim|x86 = Chaim|x86
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
 		Debug|x86 = Debug|x86
@@ -43,6 +46,12 @@ Global
 		UAT-test|x86 = UAT-test|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Chaim|Any CPU.ActiveCfg = Chaim|Any CPU
+		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Chaim|Any CPU.Build.0 = Chaim|Any CPU
+		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Chaim|Mixed Platforms.ActiveCfg = Chaim|Any CPU
+		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Chaim|Mixed Platforms.Build.0 = Chaim|Any CPU
+		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Chaim|x86.ActiveCfg = Chaim|Any CPU
+		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Chaim|x86.Build.0 = Chaim|Any CPU
 		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -66,6 +75,12 @@ Global
 		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.UAT-test|Mixed Platforms.Build.0 = UAT-test|Any CPU
 		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.UAT-test|x86.ActiveCfg = UAT-test|Any CPU
 		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.UAT-test|x86.Build.0 = UAT-test|Any CPU
+		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.Chaim|Any CPU.ActiveCfg = Chaim|Any CPU
+		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.Chaim|Any CPU.Build.0 = Chaim|Any CPU
+		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.Chaim|Mixed Platforms.ActiveCfg = Chaim|Any CPU
+		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.Chaim|Mixed Platforms.Build.0 = Chaim|Any CPU
+		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.Chaim|x86.ActiveCfg = Chaim|Any CPU
+		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.Chaim|x86.Build.0 = Chaim|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -89,6 +104,10 @@ Global
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.UAT-test|Mixed Platforms.Build.0 = UAT-test|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.UAT-test|x86.ActiveCfg = UAT-test|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.UAT-test|x86.Build.0 = UAT-test|Any CPU
+		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.Chaim|Any CPU.ActiveCfg = Chaim|x86
+		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.Chaim|Mixed Platforms.ActiveCfg = Chaim|x86
+		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.Chaim|Mixed Platforms.Build.0 = Chaim|x86
+		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.Chaim|x86.ActiveCfg = Chaim|x86
 		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.Debug|Mixed Platforms.Build.0 = Debug|x86
@@ -106,6 +125,12 @@ Global
 		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.UAT-test|Mixed Platforms.ActiveCfg = UAT-test|x86
 		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.UAT-test|Mixed Platforms.Build.0 = UAT-test|x86
 		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.UAT-test|x86.ActiveCfg = UAT-test|x86
+		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Chaim|Any CPU.ActiveCfg = Chaim|Any CPU
+		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Chaim|Any CPU.Build.0 = Chaim|Any CPU
+		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Chaim|Mixed Platforms.ActiveCfg = Chaim|Any CPU
+		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Chaim|Mixed Platforms.Build.0 = Chaim|Any CPU
+		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Chaim|x86.ActiveCfg = Chaim|Any CPU
+		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Chaim|x86.Build.0 = Chaim|Any CPU
 		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -129,6 +154,12 @@ Global
 		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.UAT-test|Mixed Platforms.Build.0 = UAT-test|Any CPU
 		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.UAT-test|x86.ActiveCfg = UAT-test|Any CPU
 		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.UAT-test|x86.Build.0 = UAT-test|Any CPU
+		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Chaim|Any CPU.ActiveCfg = Chaim|Any CPU
+		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Chaim|Any CPU.Build.0 = Chaim|Any CPU
+		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Chaim|Mixed Platforms.ActiveCfg = Chaim|Any CPU
+		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Chaim|Mixed Platforms.Build.0 = Chaim|Any CPU
+		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Chaim|x86.ActiveCfg = Chaim|Any CPU
+		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Chaim|x86.Build.0 = Chaim|Any CPU
 		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -152,6 +183,12 @@ Global
 		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.UAT-test|Mixed Platforms.Build.0 = UAT-test|Any CPU
 		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.UAT-test|x86.ActiveCfg = UAT-test|Any CPU
 		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.UAT-test|x86.Build.0 = UAT-test|Any CPU
+		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.Chaim|Any CPU.ActiveCfg = Chaim|Any CPU
+		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.Chaim|Any CPU.Build.0 = Chaim|Any CPU
+		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.Chaim|Mixed Platforms.ActiveCfg = Chaim|Any CPU
+		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.Chaim|Mixed Platforms.Build.0 = Chaim|Any CPU
+		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.Chaim|x86.ActiveCfg = Chaim|Any CPU
+		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.Chaim|x86.Build.0 = Chaim|Any CPU
 		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -175,6 +212,12 @@ Global
 		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.UAT-test|Mixed Platforms.Build.0 = UAT-test|Any CPU
 		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.UAT-test|x86.ActiveCfg = UAT-test|Any CPU
 		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.UAT-test|x86.Build.0 = UAT-test|Any CPU
+		{97C1F2FF-768A-4F2E-B7AB-0F91FC3711D2}.Chaim|Any CPU.ActiveCfg = Chaim|Any CPU
+		{97C1F2FF-768A-4F2E-B7AB-0F91FC3711D2}.Chaim|Any CPU.Build.0 = Chaim|Any CPU
+		{97C1F2FF-768A-4F2E-B7AB-0F91FC3711D2}.Chaim|Mixed Platforms.ActiveCfg = Chaim|Any CPU
+		{97C1F2FF-768A-4F2E-B7AB-0F91FC3711D2}.Chaim|Mixed Platforms.Build.0 = Chaim|Any CPU
+		{97C1F2FF-768A-4F2E-B7AB-0F91FC3711D2}.Chaim|x86.ActiveCfg = Chaim|Any CPU
+		{97C1F2FF-768A-4F2E-B7AB-0F91FC3711D2}.Chaim|x86.Build.0 = Chaim|Any CPU
 		{97C1F2FF-768A-4F2E-B7AB-0F91FC3711D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{97C1F2FF-768A-4F2E-B7AB-0F91FC3711D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97C1F2FF-768A-4F2E-B7AB-0F91FC3711D2}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -199,6 +242,12 @@ Global
 		{97C1F2FF-768A-4F2E-B7AB-0F91FC3711D2}.UAT-test|Mixed Platforms.Build.0 = UAT-test|Any CPU
 		{97C1F2FF-768A-4F2E-B7AB-0F91FC3711D2}.UAT-test|x86.ActiveCfg = UAT-test|Any CPU
 		{97C1F2FF-768A-4F2E-B7AB-0F91FC3711D2}.UAT-test|x86.Build.0 = UAT-test|Any CPU
+		{C0D0505F-A72A-4570-8E62-1D54101D2046}.Chaim|Any CPU.ActiveCfg = Chaim|Any CPU
+		{C0D0505F-A72A-4570-8E62-1D54101D2046}.Chaim|Any CPU.Build.0 = Chaim|Any CPU
+		{C0D0505F-A72A-4570-8E62-1D54101D2046}.Chaim|Mixed Platforms.ActiveCfg = Chaim|Any CPU
+		{C0D0505F-A72A-4570-8E62-1D54101D2046}.Chaim|Mixed Platforms.Build.0 = Chaim|Any CPU
+		{C0D0505F-A72A-4570-8E62-1D54101D2046}.Chaim|x86.ActiveCfg = Chaim|Any CPU
+		{C0D0505F-A72A-4570-8E62-1D54101D2046}.Chaim|x86.Build.0 = Chaim|Any CPU
 		{C0D0505F-A72A-4570-8E62-1D54101D2046}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C0D0505F-A72A-4570-8E62-1D54101D2046}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0D0505F-A72A-4570-8E62-1D54101D2046}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -228,6 +277,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9076EFD5-A3BE-487D-B80A-1A4F7E5980E2}
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35;packages\Unity.Interception.2.1.505.0\lib\NET35;;packages\EnterpriseLibrary.Common.5.0.505.0\lib\NET35;packages\EnterpriseLibrary.Caching.5.0.505.0\lib\NET35;packages\Unity.2.1.505.2\lib\NET35
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
