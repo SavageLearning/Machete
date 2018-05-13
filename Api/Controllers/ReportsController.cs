@@ -3,6 +3,7 @@ using Machete.Service;
 using System;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Web.Http;
 
 namespace Machete.Api.Controllers
@@ -85,7 +86,10 @@ namespace Machete.Api.Controllers
             } catch (Exception ex) {
                 // SQL errors are expected but they will be returned as strings (200).
                 // in this case, something happened that we were not expecting; return 500.
-                return StatusCode(HttpStatusCode.InternalServerError);
+                var message = ex.Message;
+                var statusCode = HttpStatusCode.InternalServerError;
+                var error = Request.CreateErrorResponse(statusCode, message);
+                return ResponseMessage(error);
             }
         }
 
