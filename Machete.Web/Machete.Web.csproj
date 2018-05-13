@@ -1175,7 +1175,6 @@
     <Content Include="Views\Account\_RemoveAccountPartial.cshtml" />
     <Content Include="Views\Account\_SetPasswordPartial.cshtml" />
     <Content Include="Views\Shared\WorkerWAIndex.cshtml" />
-    <Content Include="Views\Shared\HirerWorkOrderEdit.cshtml" />
     <Content Include="Views\ReportsV2\Index.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
