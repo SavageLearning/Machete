@@ -40,19 +40,22 @@ namespace Machete.Domain
         [StringLength(30)]
         [Column("Updatedby")] // the legacy of 2011 inconsistency
         public string updatedby { get; set; }
-
+        private static int byLength = 30;
         public Record() {}
 
         public void updatedByUser(string user)
-        {            
+        {
+            var short_user = user.Length <= byLength ? user : user.Substring(0, byLength);
+
             dateupdated = DateTime.Now;  
-            updatedby = user;
+            updatedby = short_user;
         }
         public void createdByUser(string user)
         {
+            var short_user = user.Length <= byLength ? user : user.Substring(0, byLength);
             datecreated = DateTime.Now;
-            createdby = user;
-            updatedByUser(user);
+            createdby = short_user;
+            updatedByUser(short_user);
         }
         public object Clone()
         {

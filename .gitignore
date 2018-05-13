@@ -93,7 +93,8 @@ Machete.Test/BeanShell Sampler.jmx
 
 Identity/appsettings\.config
 
-
 Api/Properties/PublishProfiles/*-api.pubxml
 Identity/Properties/PublishProfiles/*-identity.pubxml
 Machete.Web/Properties/PublishProfiles/*.pubxml
+
+Machete.Web/Content/bundles/*

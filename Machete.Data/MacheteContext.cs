@@ -30,6 +30,8 @@ using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration;
 using System.Data.Entity.Validation;
 using System.Diagnostics;
+using System.Text;
+
 namespace Machete.Data
 
 {
@@ -68,14 +70,21 @@ namespace Machete.Data
 
             catch (DbEntityValidationException dbEx)
             {
+                var details = new StringBuilder();
+                var preface = String.Format("DbEntityValidation Error: ");
+                Trace.TraceInformation(preface);
+                details.AppendLine(preface);
                 foreach (var validationErrors in dbEx.EntityValidationErrors)
                 {
                     foreach (var validationError in validationErrors.ValidationErrors)
                     {
-                        Trace.TraceInformation("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage);
+                        var tempstr = String.Format("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage);
+                        details.AppendLine(tempstr);
+                        Trace.TraceInformation(tempstr);
                     }
                 }
-                throw new Exception("Entity Valdiation errors: See debug log");
+                
+                throw new Exception(details.ToString());
             }
         }
         
