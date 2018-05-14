@@ -22,7 +22,7 @@ namespace Machete.Api.Controllers
         }
 
         // GET: api/TransportRule
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Employer })]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Any })]
         public IHttpActionResult Get()
         {
 
