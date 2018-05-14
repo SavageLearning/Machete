@@ -86,7 +86,7 @@ namespace Machete.Api.Controllers
             } catch (Exception ex) {
                 // SQL errors are expected but they will be returned as strings (200).
                 // in this case, something happened that we were not expecting; return 500.
-                var message = ex.Message;
+                var message = ex.Message; 
                 var statusCode = HttpStatusCode.InternalServerError;
                 var error = Request.CreateErrorResponse(statusCode, message);
                 return ResponseMessage(error);
