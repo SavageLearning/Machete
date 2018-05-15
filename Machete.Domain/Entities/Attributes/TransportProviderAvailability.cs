@@ -4,6 +4,8 @@ namespace Machete.Domain
 {
     public class TransportProviderAvailability : Record
     {
+        public virtual TransportProvider Provider { get; set; }
+        public int transportProviderID { get; set; }
         [StringLength(50)]
         public string key { get; set; }
         [StringLength(50)]

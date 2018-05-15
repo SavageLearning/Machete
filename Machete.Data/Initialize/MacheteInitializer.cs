@@ -82,10 +82,18 @@ namespace Machete.Data
 
         {
 
-            if (DB.Lookups.Count() == 0) MacheteLookup.Initialize(DB);
-
+            if (DB.Lookups.Count() == 0)
+            {
+                MacheteLookup.Initialize(DB);
+                DB.Database.ExecuteSqlCommand(@"insert into dbo.TransportProviders
+                    ( [key], text_EN, text_ES, defaultAttribute, sortorder, active, datecreated, dateupdated, Createdby, Updatedby )
+                        select [key], text_EN, text_ES, selected, sortorder, active, datecreated, dateupdated, Createdby, Updatedby
+                        from dbo.Lookups
+                        where category = 'transportmethod'");
+            }
             if (DB.Users.Count() == 0)   MacheteUsers.Initialize(DB);
 
+            // MacheteCOnfigs.Initialize assumes Configs table has been populated by script
             if (DB.Configs.Count() == 0) MacheteConfigs.Initialize(DB);
 
             if (DB.TransportRules.Count() == 0) MacheteRules.Initialize(DB);
