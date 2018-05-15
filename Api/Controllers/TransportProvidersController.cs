@@ -25,11 +25,11 @@ namespace Machete.Api.Controllers
         [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Any })]
         public IHttpActionResult Get()
         {
-
             try
             {
                 var result = serv.GetAll()
-                    .Select(e => map.Map<Domain.TransportProvider, TransportProvider>(e))
+                    .Select(e => 
+                    map.Map<Domain.TransportProvider, TransportProvider>(e))
                     .AsEnumerable();
                 return Json(new { data = result });
             }
@@ -39,25 +39,59 @@ namespace Machete.Api.Controllers
             }
         }
 
-        // GET: api/TransportRule/5
-        public string Get(int id)
+        // GET: api/TransportProvider/5
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Any })]
+        public IHttpActionResult Get(int id)
         {
-            return "value";
+            var result = map.Map<Domain.TransportProvider, TransportProvider>(serv.Get(id));
+            if (result == null) return NotFound();
+
+            return Json(new { data = result });
         }
 
-        // POST: api/TransportRule
-        public void Post([FromBody]string value)
+        // POST: api/TransportProvider
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Manager })]
+        public void Post([FromBody]TransportProvider value)
         {
+            var domain = map.Map<TransportProvider, Domain.TransportProvider>(value);
+            serv.Save(domain, userEmail);
         }
 
-        // PUT: api/TransportRule/5
-        public void Put(int id, [FromBody]string value)
+        // PUT: api/TransportProvider/5
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Manager })]
+        public void Put(int id, [FromBody]TransportProvider value)
         {
+            var domain = serv.Get(value.id);
+            // TODO employers must only be able to edit their record
+            map.Map<TransportProvider, Domain.TransportProvider>(value, domain);
+            serv.Save(domain, userEmail);
         }
 
-        // DELETE: api/TransportRule/5
+        // DELETE: api/TransportProvider/5
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
         public void Delete(int id)
         {
+        }
+
+        //
+        // TransportProvider Availabilities
+
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Any })]
+        [Route("api/transportproviders/{tpid}/availabilities")]
+        public IHttpActionResult GetAvailabilities(int tpid)
+        {
+            try
+            {
+                var result = serv.Get(tpid).AvailabilityRules
+                    .Select(e =>
+                    map.Map<Domain.TransportProviderAvailability, TransportProviderAvailability>(e))
+                    .AsEnumerable();
+                return Json(new { data = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(ex);
+            }
         }
     }
 }

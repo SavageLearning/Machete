@@ -15,4 +15,13 @@ namespace Machete.Api.Maps
             CreateMap<Domain.TransportCostRule, TransportCostRule>();
         }
     }
+    public class TransportProvidersMap : MacheteProfile
+    {
+        public TransportProvidersMap()
+        {
+            CreateMap<Domain.TransportProvider, TransportProvider>()
+                .ForMember(v => v.id, opt => opt.MapFrom(d => d.ID));
+            CreateMap<Domain.TransportProviderAvailability, TransportProvider>();
+        }
+    }
 }
