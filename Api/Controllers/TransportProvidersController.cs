@@ -78,7 +78,8 @@ namespace Machete.Api.Controllers
 
         [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Any })]
         [Route("api/transportproviders/{tpid}/availabilities")]
-        public IHttpActionResult GetAvailabilities(int tpid)
+        [HttpGet]
+        public IHttpActionResult ARGet(int tpid)
         {
             try
             {
@@ -91,6 +92,31 @@ namespace Machete.Api.Controllers
             catch (Exception ex)
             {
                 return Json(ex);
+            }
+        }
+
+        // POST: api/TransportProvider/{tpid}/AvailabilityRules
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
+        [Route("api/transportproviders/{tpid}/availabilities")]
+        [HttpPost]
+        public IHttpActionResult ARPost(int tpid, [FromBody]TransportProviderAvailability value)
+        {
+            var domain = map.Map<TransportProviderAvailability, Domain.TransportProviderAvailability>(value);
+
+            try
+            {
+                var entity = serv.CreateAvailability(tpid, domain, userEmail);
+                var result = map.Map<Domain.TransportProviderAvailability, TransportProviderAvailability>(entity);
+                return Json(new { data = result });
+
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(
+                    new HttpResponseMessage(HttpStatusCode.InternalServerError) {
+                        Content = new StringContent(e.Message),
+                        ReasonPhrase = "Create new availability failed"
+                    });
             }
         }
     }

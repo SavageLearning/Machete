@@ -21,7 +21,8 @@ namespace Machete.Api.Maps
         {
             CreateMap<Domain.TransportProvider, TransportProvider>()
                 .ForMember(v => v.id, opt => opt.MapFrom(d => d.ID));
-            CreateMap<Domain.TransportProviderAvailability, TransportProvider>();
+            CreateMap<Domain.TransportProviderAvailability, TransportProviderAvailability>();
+            CreateMap<TransportProviderAvailability, Domain.TransportProviderAvailability>();
         }
     }
 }
