@@ -163,7 +163,7 @@ namespace Machete.Api.Controllers
                 order.ppPaymentID = data.paymentID;
                 order.ppPaymentToken = data.paymentToken;
                 order.ppState = "created";
-                woServ.Save(order, User.Identity.Name);
+                woServ.Save(order, userEmail);
             }
 
             var result = postExecute(data);
@@ -171,7 +171,7 @@ namespace Machete.Api.Controllers
             order.ppResponse = result;
             order.ppState = payment.state;
             order.ppFee = Double.Parse(payment.transactions.Single().amount.total);
-            woServ.Save(order, User.Identity.Name);
+            woServ.Save(order, userEmail);
             return Json(payment);
         }
 
