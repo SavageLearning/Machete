@@ -54,7 +54,7 @@ namespace Machete.Api.Controllers
         public void Post([FromBody]WorkOrder order)
         {
             var domain = map.Map<WorkOrder, Domain.WorkOrder>(order);
-            serv.Save(domain, User.Identity.Name);
+            serv.Save(domain, userEmail);
         }
 
         // PUT api/values/5
@@ -64,7 +64,7 @@ namespace Machete.Api.Controllers
             var domain = serv.Get(order.id);
             // TODO employers must only be able to edit their record
             map.Map<WorkOrder, Domain.WorkOrder>(order, domain);
-            serv.Save(domain, User.Identity.Name);
+            serv.Save(domain,userEmail);
         }
 
         // DELETE api/values/5
