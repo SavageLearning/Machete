@@ -85,11 +85,11 @@ namespace Machete.Data
             if (DB.Lookups.Count() == 0)
             {
                 MacheteLookup.Initialize(DB);
-                DB.Database.ExecuteSqlCommand(@"insert into dbo.TransportProviders
-                    ( [key], text_EN, text_ES, defaultAttribute, sortorder, active, datecreated, dateupdated, Createdby, Updatedby )
-                        select [key], text_EN, text_ES, selected, sortorder, active, datecreated, dateupdated, Createdby, Updatedby
-                        from dbo.Lookups
-                        where category = 'transportmethod'");
+            }
+
+            if (DB.TransportProviders.Count() == 0 || DB.TransportProvidersAvailability.Count() == 0)
+            {
+                MacheteTransports.Initialize(DB);
             }
             if (DB.Users.Count() == 0)   MacheteUsers.Initialize(DB);
 

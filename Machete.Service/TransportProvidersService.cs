@@ -37,7 +37,6 @@ namespace Machete.Service
                 tpa.transportProviderID = provider.ID;
                 entity = tpaServ.Create(tpa, user);
                 return entity;
-
             }
             throw new MacheteValidationException("Availability record already exists");
         }
