@@ -11,6 +11,7 @@ namespace Api.ViewModels
         public string lookupKey { get; set; }
         public int day { get; set; }
         public bool available { get; set; }
+        public string text { get; set; }
 
     }
 }
