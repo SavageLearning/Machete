@@ -26,6 +26,7 @@ using AutoMapper.QueryableExtensions;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -123,9 +124,9 @@ namespace Machete.Service
             {
                 return lrepo.GetByKey(category, key);
             }
-            catch
+            catch(Exception e)
             {
-                throw new MacheteIntegrityException("Unable to Lookup Category: " + category + ", text: " + key);
+                throw new MacheteIntegrityException("Unable to Lookup Category: " + category + ", text: " + key + "Exception:" + e.ToString());
             }
         }
     }

@@ -34,7 +34,7 @@ namespace Machete.Service
             {
                 config = GetAll().ToList();
             }
-            return config.Where(c => c.key == key).Single().value;
+            return config.Where(c => c.key == key).SingleOrDefault().value;
         }
     }
 }

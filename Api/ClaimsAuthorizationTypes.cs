@@ -15,6 +15,7 @@ namespace Machete.Api
 
     public struct CV
     {
+        public const string Any = "Any";
         public const string Admin = "Administrator";
         public const string Employer = "Hirer";
         public const string User = "User";

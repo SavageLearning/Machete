@@ -61,7 +61,7 @@ namespace Machete.Api.Controllers
             Domain.Employer e;
             try
             {
-                e = getEmployer();
+                e = findEmployerBy();
             }
             catch
             {
@@ -83,15 +83,23 @@ namespace Machete.Api.Controllers
         }
 
         [NonAction]
-        public Domain.Employer getEmployer()
+        public Domain.Employer findEmployerBy()
         {
             Domain.Employer e = null;
             e = serv.Get(userSubject);
-            if (e == null)
+            if (e != null) return e;
+            
+            // legacy accounts wont have an email; comes from a claim
+            if (userEmail != null)
             {
                 e = serv.GetMany(em => em.email == userEmail).SingleOrDefault();
+                return e;
             }
             return e;
+            // if we haven't found by userSubject, and userEmail is null, assume it's a 
+            // legacy account. Legacy accounts have self-attested emails for userNames
+
+
         }
 
 
@@ -111,13 +119,14 @@ namespace Machete.Api.Controllers
         public IHttpActionResult ProfilePost([FromBody]Employer employer)
         {
             Domain.Employer e = null;
-            e = getEmployer();
+            e = findEmployerBy();
             // If 
             if (e != null) return Conflict();
 
             var domain = map.Map<Employer, Domain.Employer>(employer);
             domain.onlineSigninID = userSubject;
-            domain.email = userEmail;
+            if (userEmail != null)
+                domain.email = userEmail;
             try
             {
                 serv.Create(domain, userEmail);
@@ -147,7 +156,7 @@ namespace Machete.Api.Controllers
         {
             bool newEmployer = false;
             Domain.Employer e = null;
-            e = getEmployer();
+            e = findEmployerBy();
             if (e == null)
             {
                 e = new Domain.Employer();
