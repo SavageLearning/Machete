@@ -1,5 +1,7 @@
 ﻿using Machete.Data.Infrastructure;
 using Machete.Domain;
+using System.Data.Entity;
+using System.Linq;
 
 namespace Machete.Data
 {
@@ -11,6 +13,12 @@ namespace Machete.Data
 
         public TransportProvidersRepository(IDatabaseFactory dbFactory) : base(dbFactory)
         { }
+
+        override public IQueryable<TransportProvider> GetAllQ()
+        {
+            return dbset.Include(a => a.AvailabilityRules).AsNoTracking().AsQueryable();
+        }
+    
 
     }
 }
