@@ -9,6 +9,5 @@ namespace Api.ViewModels
     {
         public int day { get; set; }
         public bool available { get; set; }
-
     }
 }
