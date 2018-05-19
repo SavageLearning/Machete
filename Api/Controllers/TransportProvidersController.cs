@@ -27,7 +27,7 @@ namespace Machete.Api.Controllers
         {
             try
             {
-                var result = serv.GetAll()
+                var result = serv.GetMany(w => w.active == true)
                     .Select(e => 
                     map.Map<Domain.TransportProvider, TransportProvider>(e))
                     .AsEnumerable();
