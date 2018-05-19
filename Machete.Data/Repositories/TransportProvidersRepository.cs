@@ -1,7 +1,9 @@
 ﻿using Machete.Data.Infrastructure;
 using Machete.Domain;
+using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Machete.Data
 {
@@ -18,7 +20,10 @@ namespace Machete.Data
         {
             return dbset.Include(a => a.AvailabilityRules).AsNoTracking().AsQueryable();
         }
-    
 
+        override public IQueryable<TransportProvider> GetManyQ(Func<TransportProvider, bool> where)
+        {
+            return dbset.Include(a => a.AvailabilityRules).AsNoTracking().AsQueryable();
+        }
     }
 }
