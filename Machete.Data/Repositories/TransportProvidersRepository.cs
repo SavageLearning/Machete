@@ -23,7 +23,7 @@ namespace Machete.Data
 
         override public IQueryable<TransportProvider> GetManyQ(Func<TransportProvider, bool> where)
         {
-            return dbset.Include(a => a.AvailabilityRules).AsNoTracking().AsQueryable();
+            return dbset.Include(a => a.AvailabilityRules).AsNoTracking().Where(where).AsQueryable();
         }
     }
 }
