@@ -16,6 +16,7 @@ using System.Threading;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using PayPal.Api;
+using Machete.Domain;
 
 namespace Machete.Api.Controllers
 {
@@ -76,7 +77,7 @@ namespace Machete.Api.Controllers
             dataTableResult<Service.DTO.WorkOrdersList> list = woServ.GetIndexView(vo);
             var result = list.query
                 .Select(
-                    e => map.Map<Service.DTO.WorkOrdersList, WorkOrder>(e)
+                    e => map.Map<Service.DTO.WorkOrdersList, ViewModel.WorkOrder>(e)
                 ).AsEnumerable();
             return Json(new { data = result });
         }
@@ -102,17 +103,17 @@ namespace Machete.Api.Controllers
 
             // TODO: Not mapping to view object throws JsonSerializationException, good to test error
             // handling with...(delay in error)
-            var result = map.Map<Domain.WorkOrder, WorkOrder>(order);
+            var result = map.Map<Domain.WorkOrder, ViewModel.WorkOrder>(order);
             return Json(new { data = result });
         }
 
         // POST: api/OnlineOrders
         [HttpPost]
         [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Employer })]
-        public IHttpActionResult Post([FromBody]WorkOrder order)
+        public IHttpActionResult Post([FromBody]ViewModel.WorkOrder order)
         {
 
-            var domain = map.Map<WorkOrder, Domain.WorkOrder>(order);
+            var domain = map.Map<ViewModel.WorkOrder, Domain.WorkOrder>(order);
             domain.EmployerID = employer.ID;
             domain.onlineSource = true;
             Domain.WorkOrder newOrder = null;
@@ -136,7 +137,7 @@ namespace Machete.Api.Controllers
                 };
                 throw new HttpResponseException(res);
             }
-            var result = map.Map<Domain.WorkOrder, WorkOrder>(newOrder);
+            var result = map.Map<Domain.WorkOrder, ViewModel.WorkOrder>(newOrder);
             return Json(new { data = result });
         }
 

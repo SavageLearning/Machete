@@ -1,5 +1,5 @@
-﻿using Api.ViewModels;
-using AutoMapper;
+﻿using AutoMapper;
+using Machete.Domain;
 using Machete.Service;
 using System;
 using System.Collections.Generic;
@@ -43,7 +43,7 @@ namespace Machete.Api.Controllers
         [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Any })]
         public IHttpActionResult Get(int id)
         {
-            var result = map.Map<Domain.TransportProvider, TransportProvider>(serv.Get(id));
+            var result = map.Map<Domain.TransportProvider, ViewModel.TransportProvider>(serv.Get(id));
             if (result == null) return NotFound();
 
             return Json(new { data = result });
@@ -51,19 +51,19 @@ namespace Machete.Api.Controllers
 
         // POST: api/TransportProvider
         [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Manager })]
-        public void Post([FromBody]TransportProvider value)
+        public void Post([FromBody]ViewModel.TransportProvider value)
         {
-            var domain = map.Map<TransportProvider, Domain.TransportProvider>(value);
+            var domain = map.Map<ViewModel.TransportProvider, Domain.TransportProvider>(value);
             serv.Save(domain, userEmail);
         }
 
         // PUT: api/TransportProvider/5
         [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Manager })]
-        public void Put(int id, [FromBody]TransportProvider value)
+        public void Put(int id, [FromBody]ViewModel.TransportProvider value)
         {
             var domain = serv.Get(value.id);
             // TODO employers must only be able to edit their record
-            map.Map<TransportProvider, Domain.TransportProvider>(value, domain);
+            map.Map<ViewModel.TransportProvider, Domain.TransportProvider>(value, domain);
             serv.Save(domain, userEmail);
         }
 
