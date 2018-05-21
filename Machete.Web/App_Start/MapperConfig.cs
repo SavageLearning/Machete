@@ -37,21 +37,6 @@ namespace Machete.Web
                     .ForMember(vo => vo.displayLength, opt => opt.MapFrom(dt => dt.iDisplayLength))
                     .ForMember(vo => vo.orderDescending, opt => opt.MapFrom(dt => dt.sSortDir_0 == "asc" ? false : true));
 
-                #region WoCombined
-                // Splitting Combined into parts
-                c.CreateMap<EmployerWoCombined, Domain.Employer>();
-                // Splitting Combined into parts
-                c.CreateMap<EmployerWoCombined, Domain.WorkOrder>();
-                // re-combineing to view model object
-                c.CreateMap<Domain.Employer, EmployerWoCombined>();
-                // re-combineing to view model object
-                c.CreateMap<Domain.WorkOrder, EmployerWoCombined>()
-                    .ForMember(wo => wo.wo_city, opt => opt.MapFrom(e => e.city))
-                    .ForMember(wo => wo.wo_state, opt => opt.MapFrom(e => e.state))
-                    .ForMember(wo => wo.wo_phone, opt => opt.MapFrom(e => e.phone))
-                    .ForMember(wo => wo.wo_zipcode, opt => opt.MapFrom(e => e.zipcode));
-                #endregion
-
                 c.AddProfile<EmailProfile>();
                 c.AddProfile<EmployerProfile>();
                 c.AddProfile<WorkOrderProfile>();

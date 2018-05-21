@@ -120,24 +120,6 @@ namespace Machete.Test.Unit.Controller
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
-        public void createcombined_valid_post_returns_json()
-        {
-            //Arrange
-            var combined = new EmployerWoCombined { name = "unit test" };
-            var employer = new Domain.Employer { ID = 4242 };
-            var wo = new Domain.WorkOrder { ID= 4243, EmployerID = 4242 };
-            serv.Setup(p => p.Create(It.IsAny<Domain.Employer>(), "UnitTest")).Returns(employer);
-            woServ.Setup(p => p.Create(It.IsAny<Domain.WorkOrder>(), "UnitTest")).Returns(wo);
-            ctrlr.ValueProvider = form.ToValueProvider();
-            //Act
-            var result = ctrlr.CreateCombined(combined, "UnitTest");
-            //Assert
-            Assert.IsInstanceOfType(result, typeof(JsonResult));
-            //Assert.IsInstanceOfType(result.Data["EmployerWoConbined"], typeof(EmployerWoCombined));
-            Assert.AreEqual("{ iEmployerID = 4242, iWorkOrderID = 4243, jobSuccess = True }", result.Data.ToString());
-        }
-
-        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
         [ExpectedException(typeof(InvalidOperationException),
             "An invalid UpdateModel was inappropriately allowed.")]
         public void create_post_invalid_throws_exception()
