@@ -137,38 +137,6 @@ namespace Machete.Web.Controllers
             JsonRequestBehavior.AllowGet);
         }
 
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public ActionResult CreateCombined()
-        {
-            var model = new EmployerWoCombined();
-            return PartialView(model);
-        }
-
-        [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public JsonResult CreateCombined(EmployerWoCombined combined, string userName)
-        {
-            //UpdateModel(combined);
-            //split the combined model into domain models
-            Domain.Employer mappedEmployer = map.Map<EmployerWoCombined, Domain.Employer>(combined);
-            Domain.WorkOrder mappedWO = map.Map<EmployerWoCombined, Domain.WorkOrder>(combined);
-            mappedEmployer.onlineSource = true;
-            mappedWO.onlineSource = true;
-            //update domain
-            Domain.Employer newEmployer = serv.Create(mappedEmployer, userName);
-            mappedWO.EmployerID = newEmployer.ID;
-            mappedWO.statusID = Domain.WorkOrder.iPending;
-            Domain.WorkOrder newWO = woServ.Create(mappedWO, userName);
-            // return 
-            return Json(new
-            {
-                iEmployerID = newEmployer.ID,
-                iWorkOrderID = newWO.ID,
-                jobSuccess = true
-            },
-            JsonRequestBehavior.AllowGet);
-        }
-
         /// <summary>
         /// GET: /Employer/Edit/5
         /// </summary>

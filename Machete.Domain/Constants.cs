@@ -94,4 +94,29 @@ namespace Machete.Domain
         public const string Assembly = "Assembly";
         public const string OrgMtg = "Organizing Meeting";
     }
+
+    public struct CV
+    {
+        public const string Any = "Any";
+        public const string Admin = "Administrator";
+        public const string Employer = "Hirer";
+        public const string User = "User";
+        public const string Phonedesk = "Phonedesk";
+        public const string Manager = "Manager";
+        public const string Checkin = "Check-in";
+        public const string Teacher = "Teacher";
+    }
+
+    public struct Cfg
+    {
+        public const string PaypalId = "PayPalClientID";
+        public const string PaypalSecret = "PayPalClientSecret";
+        public const string PaypalUrl = "PayPalUrl";
+        public const string EmailServerHostName = "EmailServerHostName";
+        public const string EmailServerPort = "EmailServerPort";
+        public const string EmailEnableSSL = "EmailEnableSSL";
+        public const string SmtpUser = "SmtpUser";
+        public const string SmtpPassword = "SmtpPassword";
+        public const string EmailFromAddress = "EmailFromAddress";
+    }
 }

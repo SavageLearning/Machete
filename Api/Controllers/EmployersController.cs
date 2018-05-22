@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Machete.Api.ViewModel;
+using Machete.Domain;
 using Machete.Service;
 using System;
 using System.Linq;
@@ -39,7 +40,7 @@ namespace Machete.Api.Controllers
             dataTableResult<DTO.EmployersList> list = serv.GetIndexView(vo);
             var result = list.query
                 .Select(
-                    e => map.Map<DTO.EmployersList, Employer>(e)
+                    e => map.Map<DTO.EmployersList, ViewModel.Employer>(e)
                 ).AsEnumerable();
             return Json(new { data =  result });
         }
@@ -48,7 +49,7 @@ namespace Machete.Api.Controllers
         [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Manager, CV.Phonedesk })]
         public IHttpActionResult Get(int id)
         {
-            var result = map.Map<Domain.Employer, Employer>(serv.Get(id));
+            var result = map.Map<Domain.Employer, ViewModel.Employer>(serv.Get(id));
             if (result == null) return NotFound();
 
             return Json(new { data = result });
@@ -78,7 +79,7 @@ namespace Machete.Api.Controllers
                 serv.Save(e, userEmail);
             }
             if (e.onlineSigninID != userSubject) return Conflict();
-            var result = map.Map<Domain.Employer, Employer>(e);
+            var result = map.Map<Domain.Employer, ViewModel.Employer>(e);
             return Json(new { data = result });
         }
 
@@ -106,9 +107,9 @@ namespace Machete.Api.Controllers
         // POST api/values
         // This action method is for ANY employer
         [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Manager, CV.Phonedesk })]
-        public void Post([FromBody]Employer employer)
+        public void Post([FromBody]ViewModel.Employer employer)
         {
-            var domain = map.Map<Employer, Domain.Employer>(employer);
+            var domain = map.Map<ViewModel.Employer, Domain.Employer>(employer);
             serv.Create(domain, userEmail);
         }
 
@@ -116,14 +117,14 @@ namespace Machete.Api.Controllers
         [HttpPost]
         [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Employer })]
         [Route("api/employer/profile")]
-        public IHttpActionResult ProfilePost([FromBody]Employer employer)
+        public IHttpActionResult ProfilePost([FromBody]ViewModel.Employer employer)
         {
             Domain.Employer e = null;
             e = findEmployerBy();
             // If 
             if (e != null) return Conflict();
 
-            var domain = map.Map<Employer, Domain.Employer>(employer);
+            var domain = map.Map<ViewModel.Employer, Domain.Employer>(employer);
             domain.onlineSigninID = userSubject;
             if (userEmail != null)
                 domain.email = userEmail;
@@ -141,10 +142,10 @@ namespace Machete.Api.Controllers
 
         // For editing any employer record
         [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Manager, CV.Phonedesk })]
-        public void Put(int id, [FromBody]Employer employer)
+        public void Put(int id, [FromBody]ViewModel.Employer employer)
         {
             var domain = serv.Get(employer.id);
-            map.Map<Employer, Domain.Employer>(employer, domain);
+            map.Map<ViewModel.Employer, Domain.Employer>(employer, domain);
             serv.Save(domain, userEmail);
         }
 
@@ -152,7 +153,7 @@ namespace Machete.Api.Controllers
         [HttpPut]
         [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Employer })]
         [Route("api/employer/profile")]
-        public IHttpActionResult ProfilePut([FromBody]Employer employer)
+        public IHttpActionResult ProfilePut([FromBody]ViewModel.Employer employer)
         {
             bool newEmployer = false;
             Domain.Employer e = null;
@@ -164,7 +165,7 @@ namespace Machete.Api.Controllers
             }
             e.onlineSigninID = userSubject;
             e.email = userEmail;
-            map.Map<Employer, Domain.Employer>(employer, e);
+            map.Map<ViewModel.Employer, Domain.Employer>(employer, e);
 
             Domain.Employer result;
             if (newEmployer)
@@ -176,7 +177,7 @@ namespace Machete.Api.Controllers
                 serv.Save(e, userEmail);
                 result = serv.Get(e.ID);
             }
-            var mapped = map.Map<Domain.Employer, Employer>(result);
+            var mapped = map.Map<Domain.Employer, ViewModel.Employer>(result);
             return Json(new { data = mapped });
 
         }
