@@ -109,14 +109,20 @@ namespace Machete.Domain
 
     public struct Cfg
     {
+        public const string OrganizationName = "OrganizationName";
+        public const string OrganizationAddress = "OrganizationAddress"; // used on printed order form
         public const string PaypalId = "PayPalClientID";
         public const string PaypalSecret = "PayPalClientSecret";
         public const string PaypalUrl = "PayPalUrl";
+        public const string PaypalEnvironment = "PayPalEnvironment";
         public const string EmailServerHostName = "EmailServerHostName";
         public const string EmailServerPort = "EmailServerPort";
         public const string EmailEnableSSL = "EmailEnableSSL";
         public const string SmtpUser = "SmtpUser";
         public const string SmtpPassword = "SmtpPassword";
         public const string EmailFromAddress = "EmailFromAddress";
+        public const string EmailEnableSimple = "true";
+        public const string TimeZoneDifferenceFromPacific = "TimeZoneDifferenceFromPacific";
+        public const string WorkCenterDescription = "WorkCenterDescription_EN";
     }
 }

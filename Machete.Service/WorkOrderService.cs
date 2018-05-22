@@ -201,7 +201,7 @@ namespace Machete.Service
         public override WorkOrder Create(WorkOrder workOrder, string user)
         {
             WorkOrder wo;
-            workOrder.timeZoneOffset = Convert.ToDouble(cfg.getConfig("TimeZoneDifferenceFromPacific"));
+            workOrder.timeZoneOffset = Convert.ToDouble(cfg.getConfig(Cfg.TimeZoneDifferenceFromPacific));
             updateComputedValues(ref workOrder);
             workOrder.createdByUser(user);
             wo = repo.Add(workOrder);
