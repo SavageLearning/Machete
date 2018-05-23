@@ -19,18 +19,18 @@ namespace Machete.Service
     public class OnlineOrdersService : IOnlineOrdersService
     {
         private readonly IMapper map;
-        //private readonly IEmployerService eserv;
         private readonly IWorkOrderService woserv;
         private readonly IWorkAssignmentService waserv;
         private readonly ITransportRuleService trServ;
+        private readonly ITransportProvidersService tpServ;
         private readonly ILookupService lServ;
 
 
         public OnlineOrdersService(
-            //IEmployerService eServ,
             IWorkOrderService woServ,
             IWorkAssignmentService waServ,
             ITransportRuleService trServ,
+            ITransportProvidersService tpServ,
             ILookupService lServ,
             IMapper map)
         {
@@ -39,6 +39,7 @@ namespace Machete.Service
             this.woserv = woServ;
             this.waserv = waServ;
             this.trServ = trServ;
+            this.tpServ = tpServ;
             this.lServ = lServ;
         }
 
@@ -78,10 +79,10 @@ namespace Machete.Service
             if (order.workAssignments.Count() == 0)
                 throw new MacheteValidationException("WorkAssignments can't be empty");
 
-            if (order.transportMethodID == 0)
-                throw new MacheteValidationException("TransportMethod can't be 0");
+            if (order.transportProviderID == 0)
+                throw new MacheteValidationException("Transport pROVIDER can't be 0");
 
-            var transMethod = lServ.Get(order.transportMethodID);
+            var transMethod = tpServ.Get(order.transportProviderID);
             if (transMethod == null)
                 throw new MacheteValidationException("Transport method lookup returned null");
 
