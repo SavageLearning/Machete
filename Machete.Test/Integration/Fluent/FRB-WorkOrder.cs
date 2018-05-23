@@ -39,7 +39,8 @@ namespace Machete.Test.Integration
             if (_uow == null) AddUOW();
             if (_webMap == null) AddMapper();
             if (_servC == null) AddServConfig();
-            _servWO = new WorkOrderService(_repoWO, _servWA, _repoL, _uow, _webMap, _servC);
+            if (_servTP == null) AddServTransportProvider();
+            _servWO = new WorkOrderService(_repoWO, _servWA, _servTP, _repoL, _uow, _webMap, _servC);
             return this;
         }
 

@@ -411,7 +411,6 @@ namespace Machete.Test.Selenium.View
             //ReplaceElementText(By.Id(prefix + "lunchSupplied"), _wo.lunchSupplied);
             ReplaceElementText(By.Id(prefix + "city"), _wo.city);
             ReplaceElementText(By.Id(prefix + "state"), _wo.state);
-            //ReplaceElementText(By.Id(prefix + "transportMethodID"), _wo.transportMethodID);
             ReplaceElementText(By.Id(prefix + "zipcode"), _wo.zipcode);
             //ReplaceElementText(By.Id(prefix + "transportFee"), _wo.transportFee);
             //ReplaceElementText(By.Id(prefix + "transportFeeExtra"), _wo.transportFeeExtra);
@@ -420,7 +419,7 @@ namespace Machete.Test.Selenium.View
             ReplaceElementText(By.Id(prefix + "transportTransactID"), _wo.transportTransactID);
 
            // SelectOption(By.Id(prefix + "status"), MacheteLookup.cache.First(c => c.category == "orderstatus" && c.ID == _wo.status).text_EN);
-            SelectOptionByIndex(By.Id(prefix + "transportMethodID"), _wo.transportMethodID);
+            SelectOptionByIndex(By.Id(prefix + "transportMethodID"), _wo.transportProviderID);
             //SelectOptionByIndex(By.Id(prefix + "transportTransactType"), _wo.transportTransactType);
             SelectOptionByIndex(By.Id(prefix + "timeFlexible"), _wo.timeFlexible ? 2 : 1);
             SelectOptionByIndex(By.Id(prefix + "permanentPlacement"), _wo.permanentPlacement ? 2 : 1);
@@ -497,7 +496,7 @@ namespace Machete.Test.Selenium.View
             WaitForElement(By.Id(prefix + "lunchSupplied"));
             Assert.AreEqual(_wo.lunchSupplied ? 2 : 1, GetOptionIndex(By.Id(prefix + "lunchSupplied")));
             WaitForElement(By.Id(prefix + "transportMethodID"));
-            Assert.AreEqual(_wo.transportMethodID, GetOptionIndex(By.Id(prefix + "transportMethodID")));
+            Assert.AreEqual(_wo.transportProviderID, GetOptionIndex(By.Id(prefix + "transportMethodID")));
             //WaitForElement(By.Id(prefix + "transportTransactType"));
             //Assert.AreEqual(_wo.transportTransactType, GetOptionIndex(By.Id(prefix + "transportTransactType")));
             WaitForElement(By.Id("workerRequests2_WO-" + _wo.ID.ToString()));
