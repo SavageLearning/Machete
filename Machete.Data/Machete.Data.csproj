@@ -390,6 +390,10 @@
     <Compile Include="Migrations\201805140450212_v1_13_3-Transport_Provider_Availability.Designer.cs">
       <DependentUpon>201805140450212_v1_13_3-Transport_Provider_Availability.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201805230611375_v1_13_5-add_transportProvidersID_and_migrate.cs" />
+    <Compile Include="Migrations\201805230611375_v1_13_5-add_transportProvidersID_and_migrate.Designer.cs">
+      <DependentUpon>201805230611375_v1_13_5-add_transportProvidersID_and_migrate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AllRepositories.cs" />
     <Compile Include="Repositories\TransportProvidersRepository.cs" />
@@ -480,6 +484,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201805140450212_v1_13_3-Transport_Provider_Availability.resx">
       <DependentUpon>201805140450212_v1_13_3-Transport_Provider_Availability.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805230611375_v1_13_5-add_transportProvidersID_and_migrate.resx">
+      <DependentUpon>201805230611375_v1_13_5-add_transportProvidersID_and_migrate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

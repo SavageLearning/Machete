@@ -29,7 +29,7 @@ namespace Machete.Api.Controllers
             {
                 var result = serv.GetMany(w => w.active == true)
                     .Select(e => 
-                    map.Map<Domain.TransportProvider, TransportProvider>(e))
+                    map.Map<Domain.TransportProvider, ViewModel.TransportProvider>(e))
                     .AsEnumerable();
                 return Json(new { data = result });
             }
