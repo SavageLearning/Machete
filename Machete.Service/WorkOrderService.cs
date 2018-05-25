@@ -223,7 +223,7 @@ namespace Machete.Service
         {
             record.statusES = lRepo.GetById(record.statusID).text_ES;
             record.statusEN = lRepo.GetById(record.statusID).text_EN;
-            record.transportMethodEN = tpServ.Get(record.transportProviderID).text_EN;
+             record.transportMethodEN = tpServ.Get(record.transportProviderID).text_EN;
             record.transportMethodES = tpServ.Get(record.transportProviderID).text_ES;
         }
         public override void Save(WorkOrder workOrder, string user)
