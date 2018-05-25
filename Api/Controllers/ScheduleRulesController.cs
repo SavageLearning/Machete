@@ -1,5 +1,5 @@
-﻿using Api.ViewModels;
-using AutoMapper;
+﻿using AutoMapper;
+using Machete.Domain;
 using Machete.Service;
 using System;
 using System.Collections.Generic;
@@ -29,7 +29,7 @@ namespace Machete.Api.Controllers
             try
             {
                 var result = serv.GetAll()
-                    .Select(e => map.Map<Domain.ScheduleRule, ScheduleRule>(e))
+                    .Select(e => map.Map<Domain.ScheduleRule, ViewModel.ScheduleRule>(e))
                     .AsEnumerable();
                 return Json(new { data = result });
             }

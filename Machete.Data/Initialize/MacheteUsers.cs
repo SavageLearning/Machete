@@ -26,7 +26,7 @@ namespace Machete.Data
             {
                 UserName = "jadmin",
                 IsApproved = true,
-                Email = "here@there.org"
+                Email = "jciispam@gmail.com"
             };
             var user = new MacheteUser()
             {

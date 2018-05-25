@@ -83,13 +83,15 @@ namespace Machete.Web.Helpers
         private List<SelectListItem> yesnoES { get; set; }
         private ILookupCache lcache;
         private IConfigService cfgServ;
+        private ITransportProvidersService tpServ;
         //
         // Initialize once to prevent re-querying DB
         //
-        public Defaults(ILookupCache lc, IConfigService cfg)
+        public Defaults(ILookupCache lc, IConfigService cfg, ITransportProvidersService tpServ)
         {
             cfgServ = cfg;
             lcache = lc;
+            this.tpServ = tpServ;
             hoursNum = new SelectList(new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16" }
                 .Select(x => new LookupNumber { Value = x, Text = x }),
                 "Value", "Text", "7"
@@ -284,10 +286,11 @@ namespace Machete.Web.Helpers
             if (locale == "ES") field = "text_ES";
             else field = "text_EN";
             // NOTE: transportation methods hard-coded to support Casa Latina
-            list = new SelectList(lcache.getCache().Where(s => s.category == "transportmethod" && s.active == true),
+            var defaultTP = tpServ.GetMany(a => a.defaultAttribute == true).FirstOrDefault().ID;
+            list = new SelectList(tpServ.GetMany(a => a.active == true),
                                     "ID",
                                     field,
-                                    getDefaultID("transportmethod"));
+                                    defaultTP);
             if (list == null) throw new ArgumentNullException("Get returned no lookups");
             return list;
         }

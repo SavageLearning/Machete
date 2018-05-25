@@ -145,7 +145,7 @@ namespace Machete.Service
                                               q.personID == p.ID);
             if (count == 0)
             {
-                s.timeZoneOffset = Convert.ToDouble(cfg.getConfig("TimeZoneDifferenceFromPacific"));
+                s.timeZoneOffset = Convert.ToDouble(cfg.getConfig(Cfg.TimeZoneDifferenceFromPacific));
                 Create(s, user);
             }
             return w;

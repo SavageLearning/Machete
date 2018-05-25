@@ -58,6 +58,8 @@ namespace Machete.Data
         public DbSet<ActivitySignin> ActivitySignins { get; set; }
         public DbSet<Config> Configs { get; set; }
         public DbSet<ReportDefinition> ReportDefinitions { get; set; }
+        public DbSet<TransportProvider> TransportProviders { get; set; }
+        public DbSet<TransportProviderAvailability> TransportProvidersAvailability { get; set; }
         public DbSet<TransportRule> TransportRules { get; set; }
         public DbSet<TransportCostRule> TransportCostRules { get; set; }
         public DbSet<ScheduleRule> ScheduleRules { get; set; }
@@ -100,6 +102,8 @@ namespace Machete.Data
             modelBuilder.Configurations.Add(new ActivitySigninBuilder());
             modelBuilder.Configurations.Add(new ActivityBuilder());
             modelBuilder.Configurations.Add(new EmailBuilder());
+            modelBuilder.Configurations.Add(new TransportProviderBuilder());
+            modelBuilder.Configurations.Add(new TransportProvidersAvailabilityBuilder());
             modelBuilder.Configurations.Add(new TransportRuleBuilder());
             modelBuilder.Configurations.Add(new TransportCostRuleBuilder());
             modelBuilder.Configurations.Add(new ScheduleRuleBuilder());
@@ -262,6 +266,29 @@ namespace Machete.Data
         }
     }
 
+    public class TransportProviderBuilder : EntityTypeConfiguration<TransportProvider>
+    {
+        public TransportProviderBuilder()
+        {
+            HasKey(k => k.ID);
+            HasMany(e => e.AvailabilityRules)          //define the parent
+            .WithRequired(w => w.Provider)      //Virtual property definition
+            .HasForeignKey(w => w.transportProviderID)   //DB foreign key definition
+            .WillCascadeOnDelete();
+        }
+    }
+
+    public class TransportProvidersAvailabilityBuilder : EntityTypeConfiguration<TransportProviderAvailability>
+    {
+        public TransportProvidersAvailabilityBuilder()
+        {
+            HasKey(k => k.ID);
+            HasRequired(p => p.Provider)
+            .WithMany(e => e.AvailabilityRules)
+            .HasForeignKey(e => e.transportProviderID);
+        }
+    }
+
     public class TransportRuleBuilder : EntityTypeConfiguration<TransportRule>
     {
         public TransportRuleBuilder()
@@ -273,7 +300,6 @@ namespace Machete.Data
                 .WillCascadeOnDelete();
         }
     }
-
     public class TransportCostRuleBuilder : EntityTypeConfiguration<TransportCostRule>
     {
         public TransportCostRuleBuilder()

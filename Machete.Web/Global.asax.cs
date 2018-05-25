@@ -164,6 +164,9 @@ namespace Machete.Web
             .RegisterType<IActivityRepository, ActivityRepository>(new PerResolveLifetimeManager())
             .RegisterType<IConfigRepository, ConfigRepository>(new PerResolveLifetimeManager())
             .RegisterType<IActivitySigninRepository, ActivitySigninRepository>(new PerResolveLifetimeManager())
+            .RegisterType<ITransportProvidersRepository, TransportProvidersRepository>(new HierarchicalLifetimeManager())
+            .RegisterType<ITransportProvidersAvailabilityRepository, TransportProvidersAvailabilityRepository>(new HierarchicalLifetimeManager())
+
 
             // 
             .RegisterType<IConfigService, ConfigService>(new PerResolveLifetimeManager())
@@ -182,6 +185,9 @@ namespace Machete.Web
             .RegisterType<IImageService, ImageService>(new PerResolveLifetimeManager())
             .RegisterType<IReportService, ReportService>(new PerResolveLifetimeManager())
             .RegisterType<IReportsV2Service, ReportsV2Service>(new PerResolveLifetimeManager())
+            .RegisterType<ITransportProvidersService, TransportProvidersService>(new HierarchicalLifetimeManager())
+            .RegisterType<ITransportProvidersAvailabilityService, TransportProvidersAvailabilityService>(new HierarchicalLifetimeManager())
+
             // 
             .RegisterType<ILookupCache, LookupCache>(new ContainerControlledLifetimeManager())
             .RegisterType<IDefaults, Defaults>(new ContainerControlledLifetimeManager());

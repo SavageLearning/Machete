@@ -281,6 +281,9 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Entities\Activity.cs" />
+    <Compile Include="Entities\Attributes\Attribute.cs" />
+    <Compile Include="Entities\Attributes\TransportProvider.cs" />
+    <Compile Include="Entities\Attributes\TransportProviderAvailability.cs" />
     <Compile Include="Entities\ClientLogging.cs" />
     <Compile Include="Entities\Config.cs" />
     <Compile Include="Entities\Email.cs" />

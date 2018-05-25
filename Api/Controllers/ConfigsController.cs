@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Machete.Domain;
 using Machete.Service;
 using System;
 using System.Collections.Generic;

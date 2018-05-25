@@ -7,6 +7,7 @@ using System.Web.Http;
 using Newtonsoft.Json;
 using Machete.Api.ViewModel;
 using System.Security.Claims;
+using Machete.Domain;
 
 namespace Machete.Api.Controllers
 {
@@ -36,7 +37,7 @@ namespace Machete.Api.Controllers
             dataTableResult<DTO.WorkOrdersList> list = serv.GetIndexView(vo);
             var result = list.query
                 .Select(
-                    e => map.Map<DTO.WorkOrdersList, WorkOrder>(e)
+                    e => map.Map<DTO.WorkOrdersList, ViewModel.WorkOrder>(e)
                 ).AsEnumerable();            
             return Json(new { data =  result });
         }
@@ -45,26 +46,26 @@ namespace Machete.Api.Controllers
         [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
         public IHttpActionResult Get(int id)
         {
-            var result = map.Map<Domain.WorkOrder, WorkOrder>(serv.Get(id));
+            var result = map.Map<Domain.WorkOrder, ViewModel.WorkOrder>(serv.Get(id));
             return Json(new { data = result });
         }
 
         // POST api/values
         [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
-        public void Post([FromBody]WorkOrder order)
+        public void Post([FromBody]ViewModel.WorkOrder order)
         {
-            var domain = map.Map<WorkOrder, Domain.WorkOrder>(order);
-            serv.Save(domain, User.Identity.Name);
+            var domain = map.Map<ViewModel.WorkOrder, Domain.WorkOrder>(order);
+            serv.Save(domain, userEmail);
         }
 
         // PUT api/values/5
         [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
-        public void Put(int id, [FromBody]WorkOrder order)
+        public void Put(int id, [FromBody]ViewModel.WorkOrder order)
         {
             var domain = serv.Get(order.id);
             // TODO employers must only be able to edit their record
-            map.Map<WorkOrder, Domain.WorkOrder>(order, domain);
-            serv.Save(domain, User.Identity.Name);
+            map.Map<ViewModel.WorkOrder, Domain.WorkOrder>(order, domain);
+            serv.Save(domain,userEmail);
         }
 
         // DELETE api/values/5

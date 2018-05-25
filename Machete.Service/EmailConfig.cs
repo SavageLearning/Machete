@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Machete.Domain;
+using System;
 using System.Configuration;
 using System.Text;
 
@@ -30,13 +31,13 @@ namespace Machete.Service
             port = 0;
             enableSSL = false;
             enableSimpleEmail = false;
-            host = cfg.getConfig("EmailServerHostName");
-            port = Convert.ToInt16(cfg.getConfig("EmailServerPort"));
-            enableSSL = Convert.ToBoolean(cfg.getConfig("EmailEnableSSL"));
-            userName = cfg.getConfig("SmtpUser");
-            password = cfg.getConfig("SmtpPassword");
+            host = cfg.getConfig(Cfg.EmailServerHostName);
+            port = Convert.ToInt16(cfg.getConfig(Cfg.EmailServerPort));
+            enableSSL = Convert.ToBoolean(cfg.getConfig(Cfg.EmailEnableSSL));
+            userName = cfg.getConfig(Cfg.SmtpUser);
+            password = cfg.getConfig(Cfg.SmtpPassword);
             //enableSimpleEmail = Convert.ToBoolean(ConfigurationManager.AppSettings[""]);
-            fromAddress = cfg.getConfig("EmailFromAddress");
+            fromAddress = cfg.getConfig(Cfg.EmailFromAddress);
         }
 
         public bool IsComplete

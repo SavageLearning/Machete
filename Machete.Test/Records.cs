@@ -199,6 +199,7 @@ namespace Machete.Test
             lunchSupplied = false,
             permanentPlacement = false,
             transportMethodID = 1,
+            transportProviderID = 1,
             transportFee = 20.75,
             transportFeeExtra = 0,
             englishRequiredNote = "",
@@ -226,7 +227,7 @@ namespace Machete.Test
             englishRequired = false,
            // lunchSupplied = false,
            // permanentPlacement = false,
-            transportMethodID = 1,
+            transportProviderID = 1,
             transportFee = 20.75,
             //transportFeeExtra = 0,
             englishRequiredNote = "",
@@ -307,6 +308,21 @@ namespace Machete.Test
         };
 
         public static TransportRule transportRule = new TransportRule
+        {
+            datecreated = DateTime.Now,             //datetime
+            dateupdated = DateTime.Now,              //datetime
+            createdby = "TestInitializer",
+            updatedby = "TestInitializer"
+        };
+
+        public static TransportProvider transportProvider = new TransportProvider
+        {
+            datecreated = DateTime.Now,             //datetime
+            dateupdated = DateTime.Now,              //datetime
+            createdby = "TestInitializer",
+            updatedby = "TestInitializer"
+        };
+        public static TransportProviderAvailability transportProviderAvailability = new TransportProviderAvailability
         {
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime

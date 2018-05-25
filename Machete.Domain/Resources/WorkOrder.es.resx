@@ -288,4 +288,7 @@
   <data name="paypalToken" xml:space="preserve">
     <value>PayPal Token</value>
   </data>
+  <data name="transportProviderID" xml:space="preserve">
+    <value>Proveedor de transporte</value>
+  </data>
 </root>

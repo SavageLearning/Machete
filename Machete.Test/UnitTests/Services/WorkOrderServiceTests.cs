@@ -48,6 +48,7 @@ namespace Machete.Test.Unit.Service
         Mock<IUnitOfWork> _uow;
         Mock<IMapper> _map;
         Mock<IConfigService> _cfg;
+        Mock<ITransportProvidersService> _tpServ;
         WorkOrderService _serv;
 
         public WorkOrderTests()
@@ -102,7 +103,8 @@ namespace Machete.Test.Unit.Service
             _map = new Mock<IMapper>();
             _lRepo = new Mock<ILookupRepository>();
             _cfg = new Mock<IConfigService>();
-            _serv = new WorkOrderService(_repo.Object, _waServ.Object, _lRepo.Object, _uow.Object, _map.Object, _cfg.Object );
+            _tpServ = new Mock<ITransportProvidersService>();
+            _serv = new WorkOrderService(_repo.Object, _waServ.Object, _tpServ.Object, _lRepo.Object, _uow.Object, _map.Object, _cfg.Object );
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
         public void GetWorkOrders_returns_Enumerable()
@@ -138,16 +140,19 @@ namespace Machete.Test.Unit.Service
             _uow = new Mock<IUnitOfWork>();
             _lRepo = new Mock<ILookupRepository>();
             _cfg = new Mock<IConfigService>();
+            _tpServ = new Mock<ITransportProvidersService>();
 
             var _wo = (WorkOrder)Records.order.Clone();
             var _l = (Lookup)Records.lookup.Clone();
+            var _tp = (TransportProvider)Records.transportProvider.Clone();
             string user = "UnitTest";
             _wo.datecreated = DateTime.MinValue;
             _wo.dateupdated = DateTime.MinValue;
             _repo.Setup(r => r.Add(_wo)).Returns(_wo);
             _lRepo.Setup(r => r.GetById(It.IsAny<int>())).Returns(_l);
+            _tpServ.Setup(r => r.Get(It.IsAny<int>())).Returns(_tp);
             _waServ = new Mock<IWorkAssignmentService>();
-            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _lRepo.Object, _uow.Object, _map.Object, _cfg.Object);
+            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _tpServ.Object, _lRepo.Object, _uow.Object, _map.Object, _cfg.Object);
             //
             //Act
             var result = _serv.Create(_wo, user);
@@ -176,7 +181,7 @@ namespace Machete.Test.Unit.Service
             _repo.Setup(r => r.Delete(It.IsAny<WorkOrder>())).Callback((WorkOrder p) => { dp = p; });
             _repo.Setup(r => r.GetById(id)).Returns(_wo);
             _waServ = new Mock<IWorkAssignmentService>();
-            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _lRepo.Object, _uow.Object, _map.Object, _cfg.Object);
+            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _tpServ.Object, _lRepo.Object, _uow.Object, _map.Object, _cfg.Object);
             //
             //Act
             _serv.Delete(id, user);
@@ -201,7 +206,10 @@ namespace Machete.Test.Unit.Service
             _wo.datecreated = DateTime.MinValue;
             _wo.dateupdated = DateTime.MinValue;
             _waServ = new Mock<IWorkAssignmentService>();
-            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _lRepo.Object, _uow.Object, _map.Object, _cfg.Object);
+            _tpServ = new Mock<ITransportProvidersService>();
+            var _tp = (TransportProvider)Records.transportProvider.Clone();
+            _tpServ.Setup(r => r.Get(It.IsAny<int>())).Returns(_tp);
+            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _tpServ.Object, _lRepo.Object, _uow.Object, _map.Object, _cfg.Object);
             //
             //Act
             _serv.Save(_wo, user);
