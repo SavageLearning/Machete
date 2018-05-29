@@ -16,6 +16,7 @@ namespace Machete.Service.DTO
         public string statusEN { get; set; }
         public string statusES { get; set; }
         public int transportMethodID { get; set; }
+        public int transportProviderID { get; set; }
         public string transportMethodEN { get; set; }
         public string transportMethodES { get; set; }
         public string contactName { get; set; }

@@ -420,7 +420,6 @@
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModel\EmailView.cs" />
     <Compile Include="ViewModel\Employer.cs" />
-    <Compile Include="ViewModel\EmployerWoCombined.cs" />
     <Compile Include="ViewModel\Person.cs" />
     <Compile Include="ViewModel\ReportPrintView.cs" />
     <Compile Include="ViewModel\PeopleIndex.cs" />
@@ -949,9 +948,6 @@
     <Content Include="Views\Employer\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Employer\CreateCombined.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Employer\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -1175,7 +1171,6 @@
     <Content Include="Views\Account\_RemoveAccountPartial.cshtml" />
     <Content Include="Views\Account\_SetPasswordPartial.cshtml" />
     <Content Include="Views\Shared\WorkerWAIndex.cshtml" />
-    <Content Include="Views\Shared\HirerWorkOrderEdit.cshtml" />
     <Content Include="Views\ReportsV2\Index.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

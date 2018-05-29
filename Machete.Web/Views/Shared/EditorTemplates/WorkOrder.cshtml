@@ -46,8 +46,8 @@
     <div class="tb-row">
         @Html.mUITableLabelAndTextBoxFor(model => model.city, new { tabindex = "6", id = idPrefix + "city" })
         @Html.mUITableLabelFor(model => model.transportMethodID)
-        @Html.mUIDropDownListFor(model => model.transportMethodID,
-                        Model.def.getSelectList(Machete.Domain.LCategory.transportmethod),
+        @Html.mUIDropDownListFor(model => model.transportProviderID,
+                        Model.def.getTransportationMethodList(),
                         new { tabindex = "16", id = idPrefix + "transportMethodID" })
     </div>
     <div class="tb-row">

@@ -54,8 +54,9 @@ namespace Machete.Service
     {
         private readonly IWorkAssignmentService waServ;
         private readonly IMapper map;
-        private readonly ILookupRepository lc;
+        private readonly ILookupRepository lRepo;
         private readonly IConfigService cfg;
+        private readonly ITransportProvidersService tpServ;
         /// <summary>
         /// Constructor
         /// </summary>
@@ -64,15 +65,17 @@ namespace Machete.Service
         /// <param name="uow">Unit of Work</param>
         public WorkOrderService(IWorkOrderRepository repo, 
                                 IWorkAssignmentService waServ,
-                                ILookupRepository lc,
+                                ITransportProvidersService tpServ,
+                                ILookupRepository lRepo,
                                 IUnitOfWork uow,
                                 IMapper map,
                                 IConfigService cfg) : base(repo, uow)
         {
             this.waServ = waServ;
             this.map = map;
-            this.lc = lc;
+            this.lRepo = lRepo;
             this.cfg = cfg;
+            this.tpServ = tpServ;
             this.logPrefix = "WorkOrder";
         }
 
@@ -201,7 +204,7 @@ namespace Machete.Service
         public override WorkOrder Create(WorkOrder workOrder, string user)
         {
             WorkOrder wo;
-            workOrder.timeZoneOffset = Convert.ToDouble(cfg.getConfig("TimeZoneDifferenceFromPacific"));
+            workOrder.timeZoneOffset = Convert.ToDouble(cfg.getConfig(Cfg.TimeZoneDifferenceFromPacific));
             updateComputedValues(ref workOrder);
             workOrder.createdByUser(user);
             wo = repo.Add(workOrder);
@@ -218,10 +221,10 @@ namespace Machete.Service
         }
         private void updateComputedValues(ref WorkOrder record)
         {
-            record.statusES = lc.GetById(record.statusID).text_ES;
-            record.statusEN = lc.GetById(record.statusID).text_EN;
-            record.transportMethodEN = lc.GetById(record.transportMethodID).text_EN;
-            record.transportMethodES = lc.GetById(record.transportMethodID).text_ES;
+            record.statusES = lRepo.GetById(record.statusID).text_ES;
+            record.statusEN = lRepo.GetById(record.statusID).text_EN;
+             record.transportMethodEN = tpServ.Get(record.transportProviderID).text_EN;
+            record.transportMethodES = tpServ.Get(record.transportProviderID).text_ES;
         }
         public override void Save(WorkOrder workOrder, string user)
         {

@@ -221,6 +221,8 @@
     <Compile Include="Controllers\OnlineOrdersController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\ScheduleRulesController.cs" />
+    <Compile Include="Controllers\TransportProvidersController.cs" />
+    <Compile Include="Controllers\TransportProvidersAvailabilityController.cs" />
     <Compile Include="Controllers\TransportRulesController.cs" />
     <Compile Include="Controllers\WorkOrdersController.cs" />
     <Compile Include="Maps\EmployersMap.cs" />
@@ -239,6 +241,8 @@
     <Compile Include="ViewModels\Lookup.cs" />
     <Compile Include="ViewModels\Record.cs" />
     <Compile Include="ViewModels\ReportDefinition.cs" />
+    <Compile Include="ViewModels\TransportProvider.cs" />
+    <Compile Include="ViewModels\TransportProviderAvailability.cs" />
     <Compile Include="ViewModels\ScheduleRule.cs" />
     <Compile Include="ViewModels\TransportRule.cs" />
     <Compile Include="ViewModels\WorkAssignment.cs" />

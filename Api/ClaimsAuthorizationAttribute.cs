@@ -18,17 +18,14 @@ public class ClaimsAuthorizationAttribute : AuthorizationFilterAttribute
 
         var principal = actionContext.RequestContext.Principal as ClaimsPrincipal;
 
-        if (!principal.Identity.IsAuthenticated)
+        if (principal.Identity.IsAuthenticated)
         {
-            actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
-            return Task.FromResult<object>(null);
-        }
-        
-        foreach (var cv in ClaimValue)
-        {
-            if (principal.HasClaim(x => x.Type == ClaimType && x.Value ==cv))
+            foreach (var cv in ClaimValue)
             {
-                return Task.FromResult<object>(null);
+                if (cv == "Any" || principal.HasClaim(x => x.Type == ClaimType && x.Value == cv))
+                {
+                    return Task.FromResult<object>(null);
+                }
             }
         }
 

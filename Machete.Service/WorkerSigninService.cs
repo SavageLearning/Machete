@@ -217,7 +217,7 @@ namespace Machete.Service
             signin.memberStatusID = wfound.memberStatusID;
             signin.lottery_sequence = GetNextLotterySequence(dateforsignin);
             signin.lottery_timestamp = DateTime.Now;
-            signin.timeZoneOffset = Convert.ToDouble(cfg.getConfig("TimeZoneDifferenceFromPacific"));
+            signin.timeZoneOffset = Convert.ToDouble(cfg.getConfig(Cfg.TimeZoneDifferenceFromPacific));
             return Create(signin, user);
         }
 
