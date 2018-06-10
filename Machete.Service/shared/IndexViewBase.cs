@@ -403,7 +403,7 @@ namespace Machete.Service
             {
                 //case "WOID": orderedWO = orderDescending ? q.OrderByDescending(p => p.dateTimeofWork) : q.OrderBy(p => p.dateTimeofWork); break;
                 case "status": q = descending ? q.OrderByDescending(p => p.statusID) : q.OrderBy(p => p.statusID); break;
-                case "transportProvider": q = descending ? q.OrderByDescending(p => p.transportProviderID) : q.OrderBy(p => p.transportProviderID); break;
+                case "transportMethod": q = descending ? q.OrderByDescending(p => p.transportProviderID) : q.OrderBy(p => p.transportProviderID); break;
                 case "WAcount": q = descending ? q.OrderByDescending(p => p.workAssignments.Count) : q.OrderBy(p => p.workAssignments.Count); break;
                 case "contactName": q = descending ? q.OrderByDescending(p => p.contactName) : q.OrderBy(p => p.contactName); break;
                 case "workSiteAddress1": q = descending ? q.OrderByDescending(p => p.workSiteAddress1) : q.OrderBy(p => p.workSiteAddress1); break;
