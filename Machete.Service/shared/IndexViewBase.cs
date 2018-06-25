@@ -397,14 +397,24 @@ namespace Machete.Service
             }
             return query;
         }
-        public static void sortOnColName(string name, bool descending, ref IQueryable<WorkOrder> q)
+        public static void sortOnColName(string name, bool descending, string language, ref IQueryable<WorkOrder> q)
         {
             switch (name)
             {
                 //case "WOID": orderedWO = orderDescending ? q.OrderByDescending(p => p.dateTimeofWork) : q.OrderBy(p => p.dateTimeofWork); break;
                 case "status": q = descending ? q.OrderByDescending(p => p.statusID) : q.OrderBy(p => p.statusID); break;
-                case "transportProvider": q = descending ? q.OrderByDescending(p => p.transportProviderID) : q.OrderBy(p => p.transportProviderID); break;
-                case "WAcount": q = descending ? q.OrderByDescending(p => p.workAssignments.Count) : q.OrderBy(p => p.workAssignments.Count); break;
+                case "transportMethod":
+                    if (language == "en")
+                    {
+                        q = descending ? q.OrderByDescending(p => p.transportMethodEN) : q.OrderBy(p => p.transportMethodEN);
+                        break;
+                    }
+                    else
+                    {
+                        q = descending ? q.OrderByDescending(p => p.transportMethodES) : q.OrderBy(p => p.transportMethodES);
+                        break;
+                    }
+                case "WAcount": q = descending ? q.OrderByDescending(p => p.workAssignments.Count) : q.OrderBy(p => p.workAssignments.Count); break;         
                 case "contactName": q = descending ? q.OrderByDescending(p => p.contactName) : q.OrderBy(p => p.contactName); break;
                 case "workSiteAddress1": q = descending ? q.OrderByDescending(p => p.workSiteAddress1) : q.OrderBy(p => p.workSiteAddress1); break;
                 case "updatedby": q = descending ? q.OrderByDescending(p => p.updatedby) : q.OrderBy(p => p.updatedby); break;
