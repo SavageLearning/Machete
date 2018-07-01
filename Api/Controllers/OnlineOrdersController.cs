@@ -17,6 +17,7 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using PayPal.Api;
 using Machete.Domain;
+using System.Globalization;
 
 namespace Machete.Api.Controllers
 {
@@ -74,6 +75,7 @@ namespace Machete.Api.Controllers
             vo.displayLength = 500; // TODO dumping on the client; will address Angular using search later
             vo.displayStart = 0;
             vo.employerGuid = userSubject;
+            vo.CI = Thread.CurrentThread.CurrentCulture;
             dataTableResult<Service.DTO.WorkOrdersList> list = woServ.GetIndexView(vo);
             var result = list.query
                 .Select(
