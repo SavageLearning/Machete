@@ -33,6 +33,8 @@ using System.Data.Entity;
 using Machete.Domain;
 using System.IO;
 using AutoMapper;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace Machete.Test.Integration
 {
@@ -50,6 +52,7 @@ namespace Machete.Test.Integration
         private EmailRepository _repoEM;
         private EventRepository _repoEV;
         private DatabaseFactory _dbFactory;
+        private ReadOnlyContext _dbReadOnly;
         private LookupCache _lcache;
         private WorkerService _servW;
         private ImageService _servI;
@@ -102,6 +105,38 @@ namespace Machete.Test.Integration
 
             AddLookupCache();
             return this;
+        }
+
+        private void AddDBReadonly(string connStringName = "readonlyConnection")
+        {
+            if (_dbFactory == null) throw new InvalidOperationException("You must first initialize the database.");
+            var db = _dbFactory.Get();
+            var connection = (db as DbContext).Database.Connection;
+
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = "sp_executesql";
+                command.CommandType = CommandType.StoredProcedure;
+                var param = command.CreateParameter();
+                param.ParameterName = "@statement";
+                param.Value = @"
+CREATE LOGIN readonlyLogin WITH PASSWORD='@testPassword1'
+CREATE USER readonlyUser FROM LOGIN readonlyLogin
+EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
+                    ";
+                command.Parameters.Add(param);
+                connection.Open();
+                try
+                {
+                    command.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {                               // user already exists
+                    if (ex.Errors[0].Number.Equals(15025)) { } else throw ex;
+                }
+            }
+
+            _dbReadOnly = new ReadOnlyContext(connStringName);
         }
 
         public void Dispose()
@@ -590,8 +625,9 @@ namespace Machete.Test.Integration
         public FluentRecordBase AddRepoReports()
         {
             if (_dbFactory == null) AddDBFactory();
+            if (_dbReadOnly == null) AddDBReadonly();
 
-            _repoR = new ReportsRepository(_dbFactory);
+            _repoR = new ReportsRepository(_dbFactory, _dbReadOnly);
             return this;
         }
 

@@ -2,6 +2,8 @@
 using Machete.Service;
 using System;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Web.Http;
 
 namespace Machete.Api.Controllers
@@ -68,9 +70,27 @@ namespace Machete.Api.Controllers
         }
 
         // POST api/values
+        [HttpPost]
         [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
-        public void Post([FromBody]string value)
+        public IHttpActionResult Post([FromBody]string query)
         {
+            try {
+                var validationMessages = serv.validateQuery(query);
+                if (validationMessages.Count == 0) {
+                    // "no modification needed"; http speak good human
+                    return StatusCode(HttpStatusCode.NotModified);
+                } else {
+                    // 200; we wanted validation messages, and got them.
+                    return Json(new { data = validationMessages });
+                }
+            } catch (Exception ex) {
+                // SQL errors are expected but they will be returned as strings (200).
+                // in this case, something happened that we were not expecting; return 500.
+                var message = ex.Message;
+                var statusCode = HttpStatusCode.InternalServerError;
+                var error = Request.CreateErrorResponse(statusCode, message);
+                return ResponseMessage(error);
+            }
         }
 
         // PUT api/values/5
