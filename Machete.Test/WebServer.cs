@@ -22,16 +22,18 @@
 // 
 #endregion
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
+
 namespace Machete.Test
 {
     public static class WebServer
     {
+        
         private static Process _iisProcess;
         public static void StartIis()
         {
@@ -43,6 +45,8 @@ namespace Machete.Test
         }
         private static void StartIisExpress()
         {
+            var applicationPath = GetApplicationPath("Machete.Web");
+
             var startInfo = new ProcessStartInfo
             {
                 WindowStyle = ProcessWindowStyle.Normal,
@@ -50,7 +54,7 @@ namespace Machete.Test
                 LoadUserProfile = true,
                 CreateNoWindow = false,
                 UseShellExecute = false,
-                Arguments = string.Format("/path:\"{0}\" /port:{1}", @"C:\Users\j\Source\Repos\Machete\Machete.Web\obj\publish", "4213")
+                Arguments = string.Format("/path:\"{0}\" /port:{1}", applicationPath, "4213")
             };
 
             var programfiles = string.IsNullOrEmpty(startInfo.EnvironmentVariables["programfiles"])
@@ -65,7 +69,7 @@ namespace Machete.Test
             }
             catch
             {
-                _iisProcess.CloseMainWindow();
+                //_iisProcess.CloseMainWindow();
                 _iisProcess.Dispose();
             }
         }
@@ -75,6 +79,11 @@ namespace Machete.Test
             {
                 _iisProcess.CloseMainWindow(); _iisProcess.Dispose();
             }
+        }
+        public static string GetApplicationPath(string applicationName)
+        {
+            var solutionFolder = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory)));
+            return Path.Combine(solutionFolder, applicationName);
         }
     }
 }
