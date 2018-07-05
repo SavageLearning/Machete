@@ -110,8 +110,9 @@ namespace Machete.Test.Selenium.View
             ui.employerCreate(_emp);
             ui.WaitThenClickElement(By.Id("workOrderCreateTab_" + _emp.ID));
             ui.WaitThenClickElement(By.Id("WO0-copyEmployerInfo"));
+            ui.SelectOptionByIndex(By.Id("WO0-transportMethodID"), 1);
             ui.WaitThenClickElement(By.Id("WO0-SaveBtn"));
-            _wo.ID = ui.getSelectedTabRecordID("WO");
+            //_wo.ID = ui.getSelectedTabRecordID("WO");
             _wo.contactName = _emp.name;
             _wo.workSiteAddress1 = _emp.address1;
             _wo.workSiteAddress2 = _emp.address2;
@@ -121,7 +122,7 @@ namespace Machete.Test.Selenium.View
             _wo.phone = _emp.phone;
             _wo.description = "";
             _wo.statusID = frb.ToLookupCache().getByKeys(LCategory.orderstatus, LOrderStatus.Pending);
-
+            _wo.ID += 1;
             //Assert
             ui.workOrderValidate(_wo);
         }
