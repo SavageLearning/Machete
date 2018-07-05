@@ -56,7 +56,7 @@ namespace Machete.Test.Selenium.View
         }
 
         [ClassCleanup]
-        public static void ClassCleanup() { }
+        public static void ClassCleanup() { WebServer.StopIis(); }
 
         // BRIAN TODO
         // -------------------------------------------------------------------------logout
