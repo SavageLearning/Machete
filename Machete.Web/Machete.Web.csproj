@@ -752,6 +752,23 @@
     <Content Include="Content\bundles\scripts.bundle.js.map" />
     <Content Include="Content\bundles\styles.bundle.js.map" />
     <Content Include="Content\bundles\vendor.bundle.js.map" />
+    <Content Include="connections.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="Properties\PublishProfiles\casa.machetessl.org.pubxml" />
+    <None Include="Properties\PublishProfiles\donbosco.machetessl.org.pubxml" />
+    <None Include="Properties\PublishProfiles\elcentro.machetessl.org.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\graton.machetessl.org.pubxml" />
+    <None Include="Properties\PublishProfiles\pasadena.machetessl.org.pubxml" />
+    <None Include="Properties\PublishProfiles\pomona.machetessl.org.pubxml" />
+    <None Include="Properties\PublishProfiles\southside.machetessl.org.pubxml" />
+    <None Include="Properties\PublishProfiles\test-casa.machetessl.org.pubxml" />
+    <None Include="Properties\PublishProfiles\test-graton.machetessl.org.pubxml" />
+    <None Include="Properties\PublishProfiles\test-mountainview.machetessl.org.pubxml" />
+    <None Include="Properties\PublishProfiles\test-voz.machetessl.org.pubxml" />
+    <None Include="Properties\PublishProfiles\test.machetessl.org.pubxml" />
+    <None Include="Properties\PublishProfiles\voz.machetessl.org.pubxml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -774,7 +791,6 @@
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="Views\HirerAccount\" />
   </ItemGroup>
   <ItemGroup>
