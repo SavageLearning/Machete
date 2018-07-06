@@ -242,6 +242,7 @@
     <Compile Include="ViewModels\Lookup.cs" />
     <Compile Include="ViewModels\Record.cs" />
     <Compile Include="ViewModels\ReportDefinition.cs" />
+    <Compile Include="ViewModels\ReportQuery.cs" />
     <Compile Include="ViewModels\TransportProvider.cs" />
     <Compile Include="ViewModels\TransportProviderAvailability.cs" />
     <Compile Include="ViewModels\ScheduleRule.cs" />

@@ -1,5 +1,7 @@
-﻿using AutoMapper;
+﻿using Api.ViewModels;
+using AutoMapper;
 using Machete.Service;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Net;
@@ -72,8 +74,16 @@ namespace Machete.Api.Controllers
         // POST api/values
         [HttpPost]
         [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
-        public IHttpActionResult Post([FromBody]string query)
+        public IHttpActionResult Post(ReportQuery data)
         {
+            string query = data.query;
+            if (string.IsNullOrEmpty(query)) {
+                if (query == string.Empty) { // query is blank
+                    return StatusCode(HttpStatusCode.NoContent);
+                } else { // query is null; query cannot be null
+                    return StatusCode(HttpStatusCode.BadRequest);
+                }
+            }
             try {
                 var validationMessages = serv.validateQuery(query);
                 if (validationMessages.Count == 0) {

@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using FluentAssertions;
 using Moq.Language.Flow;
 using System;
+using Api.ViewModels;
 
 namespace Machete.Test.UnitTests.Controllers
 {
@@ -100,7 +101,7 @@ namespace Machete.Test.UnitTests.Controllers
         {
             // Arrange
             // Act
-            var result = controller.Post("goodQuery").AsHttpResponseMessage();
+            var result = controller.Post("goodQuery".AsReportQuery()).AsHttpResponseMessage();
             // Assert
             result.StatusCode.ShouldBeEquivalentTo(System.Net.HttpStatusCode.NotModified);
         }
@@ -111,7 +112,7 @@ namespace Machete.Test.UnitTests.Controllers
             // Arrange
             var expectedResult = ReportsControllerTestHelpers.FakeSqlErrors();
             // Act
-            var result = controller.Post("badQuery").AsCSharpObject<List<string>>();
+            var result = controller.Post("badQuery".AsReportQuery()).AsCSharpObject<List<string>>();
             // Assert
             result.ShouldBeEquivalentTo(expectedResult, x => x.ExcludingMissingMembers());
         }
@@ -120,13 +121,18 @@ namespace Machete.Test.UnitTests.Controllers
         public void Post_Returns500WhenExceptionIsThrown() {
             // Arrange
             // Act
-            var result = controller.Post("throwPlease").AsHttpResponseMessage();
+            var result = controller.Post("throwPlease".AsReportQuery()).AsHttpResponseMessage();
             // Assert
             result.StatusCode.ShouldBeEquivalentTo(System.Net.HttpStatusCode.InternalServerError);
         }
     }
     public static class ReportsControllerTestHelpers
     {
+        public static ReportQuery AsReportQuery(this string operation)
+        {
+            return new ReportQuery { query = operation };
+        }
+
         public static T AsCSharpObject<T>(this IHttpActionResult result)
         {
             var response = result.AsHttpResponseMessage();
