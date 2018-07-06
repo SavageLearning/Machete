@@ -454,7 +454,7 @@ namespace Machete.Test.Selenium.View
 
         public int getSelectedTabRecordID(string cssClass)
         {
-            var selectedTab = WaitForElement(By.CssSelector("li.ui-state-default.ui-corner-top.ui-tabs-selected.ui-state-active"));
+            var selectedTab = WaitForElement(By.CssSelector("li." + cssClass + ".ui-tabs-selected"));
             Assert.IsNotNull(selectedTab, "Failed to find " + cssClass + " selected tab element");
             IWebElement tabAnchor = selectedTab.FindElement(By.CssSelector("a"));
             Assert.IsNotNull(tabAnchor, "Failed to find " + cssClass + " selected tab element anchor");
