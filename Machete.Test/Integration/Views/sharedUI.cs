@@ -416,7 +416,6 @@ namespace Machete.Test.Selenium.View
             //ReplaceElementText(By.Id(prefix + "transportFeeExtra"), _wo.transportFeeExtra);
             //ReplaceElementText(By.Id(prefix + "englishRequiredNote"), _wo.englishRequiredNote);
             ReplaceElementText(By.Id(prefix + "description"), _wo.description);
-            ReplaceElementText(By.Id(prefix + "transportTransactID"), _wo.transportTransactID);
 
            // SelectOption(By.Id(prefix + "status"), MacheteLookup.cache.First(c => c.category == "orderstatus" && c.ID == _wo.status).text_EN);
             SelectOptionByIndex(By.Id(prefix + "transportMethodID"), _wo.transportProviderID);
@@ -455,7 +454,7 @@ namespace Machete.Test.Selenium.View
 
         public int getSelectedTabRecordID(string cssClass)
         {
-            var selectedTab = WaitForElement(By.CssSelector("li." + cssClass + ".ui-tabs-selected"));
+            var selectedTab = WaitForElement(By.CssSelector("li.ui-state-default.ui-corner-top.ui-tabs-selected.ui-state-active"));
             Assert.IsNotNull(selectedTab, "Failed to find " + cssClass + " selected tab element");
             IWebElement tabAnchor = selectedTab.FindElement(By.CssSelector("a"));
             Assert.IsNotNull(tabAnchor, "Failed to find " + cssClass + " selected tab element anchor");
@@ -473,7 +472,7 @@ namespace Machete.Test.Selenium.View
                 return true;
             });
             getAttributeAssertEqual(_wo.contactName, "contactName");
-            Assert.IsTrue(WaitForElement(By.Id(prefix + "paperOrderNum")).GetAttribute("value") != "", "paper order number is empty");
+            //Assert.IsTrue(WaitForElement(By.Id(prefix + "paperOrderNum")).GetAttribute("value") != "", "paper order number is empty");
             //getAttributeAssertEqual(_wo.paperOrderNum.ToString(), "paperOrderNum");
             getAttributeAssertEqual(_wo.workSiteAddress1, "workSiteAddress1");
             getAttributeAssertEqual(_wo.workSiteAddress2, "workSiteAddress2");
