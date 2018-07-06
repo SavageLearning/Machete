@@ -1304,7 +1304,6 @@
   </Target>
   <Target Name="BeforeBuild">
     <Exec Condition="$(Configuration) == 'UAT-test'" Command="npm run build-cloud-test" WorkingDirectory="../UI" />
-    <Exec Condition="$(Configuration) == 'Debug'" Command="npm run build-mvc-embedded" WorkingDirectory="../UI" />
     <Exec Condition="$(Configuration) == 'Release'" Command="npm run build-prod" WorkingDirectory="../UI" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -267,30 +267,12 @@ namespace Machete.Web.Controllers
         //[Bind(Exclude = "workerRequests")]
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public ActionResult Edit(int id, FormCollection collection, string userName, List<Domain.WorkerRequest> workerRequestList)
+        public ActionResult Edit(int id, string userName, List<Domain.WorkerRequest> workerRequestList)
         {
             Domain.WorkOrder workOrder = woServ.Get(id);
             UpdateModel(workOrder);
 
-            // Stale requests to remove
-            foreach (var rem in workOrder.workerRequests.Except<Domain.WorkerRequest>(workerRequestList, new WorkerRequestComparer()).ToArray())
-            {
-                var request = wrServ.GetByWorkerID(workOrder.ID, rem.WorkerID);
-                wrServ.Delete(request.ID, userName);
-                workOrder.workerRequests.Remove(rem);
-            }
-
-            // New requests to add
-            foreach (var add in workerRequestList.Except<Domain.WorkerRequest>(workOrder.workerRequests, new WorkerRequestComparer()))
-            {
-                add.workOrder = workOrder;
-                add.workerRequested = wServ.Get(add.WorkerID);
-                add.updatedByUser(userName);
-                add.createdByUser(userName);
-                workOrder.workerRequests.Add(add);
-            }
-
-            woServ.Save(workOrder, userName);
+            woServ.Save(workOrder, workerRequestList, userName);
             return Json(new
             {
                 status = "OK",

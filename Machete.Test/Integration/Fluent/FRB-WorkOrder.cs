@@ -35,12 +35,14 @@ namespace Machete.Test.Integration
             // DEPENDENCIES
             if (_repoWO == null) AddRepoWorkOrder();
             if (_servWA == null) AddServWorkAssignment();
+            if (_servW == null) AddServWorker();
+            if (_servWR == null) AddServWorkerRequest();
             if (_repoL == null) AddRepoLookup();
             if (_uow == null) AddUOW();
             if (_webMap == null) AddMapper();
             if (_servC == null) AddServConfig();
             if (_servTP == null) AddServTransportProvider();
-            _servWO = new WorkOrderService(_repoWO, _servWA, _servTP, _repoL, _uow, _webMap, _servC);
+            _servWO = new WorkOrderService(_repoWO,_servWA, _servTP, _servWR, _servW, _repoL, _uow, _webMap, _servC);
             return this;
         }
 

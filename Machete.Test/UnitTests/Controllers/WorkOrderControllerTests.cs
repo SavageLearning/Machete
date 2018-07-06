@@ -177,13 +177,16 @@ namespace Machete.Test.Unit.Controller
             WorkOrder fakeworkOrder = new WorkOrder();
             fakeworkOrder.workerRequests = workerRequest;
             WorkOrder savedworkOrder = new WorkOrder();
+            List<WorkerRequest> savedList;
             string user = "";
             serv.Setup(p => p.Get(testid)).Returns(fakeworkOrder);
             serv.Setup(x => x.Save(It.IsAny<WorkOrder>(),
+                                          It.IsAny<List<WorkerRequest>>(),
                                           It.IsAny<string>())
-                                         ).Callback((WorkOrder p, string str) =>
+                                         ).Callback((WorkOrder p, List<WorkerRequest> wr, string str) =>
                                          {
                                              savedworkOrder = p;
+                                             savedList = wr;
                                              user = str;
                                          });
             _ctrlr.SetFakeControllerContext();
@@ -237,13 +240,16 @@ namespace Machete.Test.Unit.Controller
             workerRequest.Add(foo1);
             workerRequest.Add(foo2);
             WorkOrder savedworkOrder = new WorkOrder();
+            List<WorkerRequest> savedList;
             string user = "";
             serv.Setup(p => p.Get(testid)).Returns(fakeworkOrder);
             serv.Setup(x => x.Save(It.IsAny<WorkOrder>(),
+                                          It.IsAny<List<WorkerRequest>>(),
                                           It.IsAny<string>())
-                                         ).Callback((WorkOrder p, string str) =>
+                                         ).Callback((WorkOrder p, List<WorkerRequest> wr, string str) =>
                                          {
                                              savedworkOrder = p;
+                                             savedList = wr;
                                              user = str;
                                          });
             wrServ.Setup(x => x.GetByWorkerID(testid, 1)).Returns(foo1);
@@ -263,7 +269,7 @@ namespace Machete.Test.Unit.Controller
             //Assert.AreEqual("Index", result.RouteValues["action"]);
             Assert.AreEqual(fakeworkOrder, savedworkOrder);
 
-            Assert.AreEqual(savedworkOrder.workerRequests.Count(), 5);
+            Assert.AreEqual(5, savedworkOrder.workerRequests.Count());
             Assert.AreEqual(savedworkOrder.workerRequests.Count(a => a.WorkerID == 12345), 1);
             Assert.AreEqual(savedworkOrder.workerRequests.Count(a => a.WorkerID == 30002), 1);
             Assert.AreEqual(savedworkOrder.workerRequests.Count(a => a.WorkerID == 30311), 1);
