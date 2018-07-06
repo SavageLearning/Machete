@@ -752,9 +752,6 @@
     <Content Include="Content\bundles\scripts.bundle.js.map" />
     <Content Include="Content\bundles\styles.bundle.js.map" />
     <Content Include="Content\bundles\vendor.bundle.js.map" />
-    <Content Include="connections.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Include="Properties\PublishProfiles\casa.machetessl.org.pubxml" />
     <None Include="Properties\PublishProfiles\donbosco.machetessl.org.pubxml" />
     <None Include="Properties\PublishProfiles\elcentro.machetessl.org.pubxml" />
