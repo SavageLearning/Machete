@@ -210,16 +210,10 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Edit(int id, int? workerAssignedID, string userName)
         {
-            Domain.WorkAssignment asmt = waServ.Get(id);
-            //check if workerAssigned changed; if so, Unassign
-            int? origWorker = asmt.workerAssignedID;
-            if (workerAssignedID != origWorker)
-                waServ.Unassign(asmt.ID, asmt.workerSigninID, userName);     
+            Domain.WorkAssignment asmt = waServ.Get(id);    
             //Update from HTML attributes
             UpdateModel(asmt);
-            //Save will link workerAssigned to Assignment record
-            // if changed from orphan assignment
-            waServ.Save(asmt, userName);
+            waServ.Save(asmt, workerAssignedID, userName);
                 
             return Json(new { jobSuccess = true }, JsonRequestBehavior.AllowGet);
         }

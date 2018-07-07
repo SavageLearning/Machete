@@ -102,6 +102,9 @@ namespace Machete.Web
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
             GlobalConfiguration.Configuration.DependencyResolver = new Unity.WebApi.UnityDependencyResolver(container);
             GlobalConfiguration.Configuration.EnsureInitialized();
+            var workerService = container.Resolve<IWorkerService>();
+            workerService.ExpireMembers();
+            workerService.ReactivateMembers();
         }
 
         protected void Application_Error(object sender, EventArgs e)
