@@ -47,6 +47,7 @@ namespace Machete.Service
             int displayLength);
         dataTableResult<DTO.WorkOrdersList> GetIndexView(viewOptions opt);
         void Save(WorkOrder workOrder, List<WorkerRequest> wrList, string user);
+        WorkOrder Create(WorkOrder wo, List<WorkerRequest> wrList, string userName);
     }
 
     // Business logic for WorkOrder record management
@@ -208,15 +209,26 @@ namespace Machete.Service
         /// <param name="workOrder">Work order to create</param>
         /// <param name="user">User performing action</param>
         /// <returns>Work Order object</returns>
-        public override WorkOrder Create(WorkOrder workOrder, string user)
+        public WorkOrder Create(WorkOrder workOrder, List<WorkerRequest> wrList,  string user)
         {
             WorkOrder wo;
             workOrder.timeZoneOffset = Convert.ToDouble(cfg.getConfig(Cfg.TimeZoneDifferenceFromPacific));
             updateComputedValues(ref workOrder);
             workOrder.createdByUser(user);
             wo = repo.Add(workOrder);
-            // TODO: investigate why worker requests collection is added to wo - there is a similar collection of wa added to wo
             wo.workerRequests = new Collection<WorkerRequest>();
+            if (wrList != null)
+            {
+                // New Worker Requests to add
+                foreach (var workerRequest in wrList)
+                {
+                    workerRequest.workOrder = wo;
+                    workerRequest.workerRequested = wServ.Get(workerRequest.WorkerID);
+                    workerRequest.updatedByUser(user);
+                    workerRequest.createdByUser(user);
+                    wo.workerRequests.Add(workerRequest);
+                }
+            }
             uow.Save(); 
             if (wo.paperOrderNum == null || wo.paperOrderNum == 0)
             {
@@ -226,6 +238,11 @@ namespace Machete.Service
 
             _log(workOrder.ID, user, "WorkOrder created");
             return wo;
+        }
+
+        public override WorkOrder Create(WorkOrder wo, string user)
+        {
+            return Create(wo, null, user);
         }
 
         private void updateComputedValues(ref WorkOrder record)
