@@ -216,69 +216,6 @@ namespace Machete.Test.Unit.Controller
             //Assert.AreEqual(savedworkOrder.workerRequests.Count(), 5);
 
         }
-        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WorkOrders)]
-        public void edit_post_workerRequests_finds_duplicates()
-        {
-            //Arrange
-            int testid = 4242;
-            WorkOrder fakeworkOrder = new WorkOrder();
-            fakeworkOrder.workerRequests = workerRequest;
-            WorkerRequest foo1 = new WorkerRequest
-            {
-                ID = 111,
-                WorkerID = 1,
-                WorkOrderID = testid,
-                workerRequested = new Worker { ID = 1, dwccardnum = 12345 }
-
-            };
-            
-            WorkerRequest foo2 = new WorkerRequest 
-            {
-                ID = 222,
-                WorkerID = 2,
-                WorkOrderID = testid,
-                workerRequested = new Worker { ID = 2, dwccardnum = 12346 } 
-            };
-            workerRequest.Add(foo1);
-            workerRequest.Add(foo2);
-            WorkOrder savedworkOrder = new WorkOrder();
-            List<WorkerRequest> savedList;
-            string user = "";
-            serv.Setup(p => p.Get(testid)).Returns(fakeworkOrder);
-            serv.Setup(x => x.Save(It.IsAny<WorkOrder>(),
-                                          It.IsAny<List<WorkerRequest>>(),
-                                          It.IsAny<string>())
-                                         ).Callback((WorkOrder p, List<WorkerRequest> wr, string str) =>
-                                         {
-                                             savedworkOrder = p;
-                                             savedList = wr;
-                                             user = str;
-                                         });
-            wrServ.Setup(x => x.GetByWorkerID(testid, 1)).Returns(foo1);
-            wrServ.Setup(x => x.GetByWorkerID(testid, 2)).Returns(foo2);
-            _ctrlr.SetFakeControllerContext();
-            _ctrlr.ValueProvider = fakeform.ToValueProvider();
-            List<WorkerRequest> list = new List<WorkerRequest>();
-            list.Add(new WorkerRequest { WorkerID = 12345 });
-            list.Add(new WorkerRequest { WorkerID = 30002 });
-            list.Add(new WorkerRequest { WorkerID = 30311 });
-            list.Add(new WorkerRequest { WorkerID = 30420 });
-            list.Add(new WorkerRequest { WorkerID = 30421 });
-            //Act
-
-            var result = _ctrlr.Edit(testid, "UnitTest", list) as JsonResult;
-            //Assert
-            //Assert.AreEqual("Index", result.RouteValues["action"]);
-            Assert.AreEqual(fakeworkOrder, savedworkOrder);
-
-            Assert.AreEqual(5, savedworkOrder.workerRequests.Count());
-            Assert.AreEqual(savedworkOrder.workerRequests.Count(a => a.WorkerID == 12345), 1);
-            Assert.AreEqual(savedworkOrder.workerRequests.Count(a => a.WorkerID == 30002), 1);
-            Assert.AreEqual(savedworkOrder.workerRequests.Count(a => a.WorkerID == 30311), 1);
-            Assert.AreEqual(savedworkOrder.workerRequests.Count(a => a.WorkerID == 30420), 1);
-            Assert.AreEqual(savedworkOrder.workerRequests.Count(a => a.WorkerID == 30421), 1);
-            Assert.AreEqual(savedworkOrder.workerRequests.Count(a => a.WorkerID == 12346), 0);
-        }
 
         /// <summary>
         /// 
