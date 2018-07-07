@@ -205,18 +205,6 @@ namespace Machete.Web.Controllers
             UpdateModel(wo);
             Domain.WorkOrder neworder = woServ.Create(wo, userName);           
 
-            // New Worker Requests to add
-            foreach (var workerRequest in workerRequestList)
-            {
-                workerRequest.workOrder = neworder;
-                workerRequest.workerRequested = wServ.Get(workerRequest.WorkerID);
-                workerRequest.updatedByUser(userName);
-                workerRequest.createdByUser(userName);
-                neworder.workerRequests.Add(workerRequest);
-            }
-
-            woServ.Save(neworder, userName);
-
             // JSON object with new work order data
             var result = map.Map<Domain.WorkOrder, ViewModel.WorkOrder>(neworder);
             return Json(new 
