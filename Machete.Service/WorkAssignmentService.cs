@@ -39,6 +39,7 @@ namespace Machete.Service
         bool Assign(WorkAssignment assignment, WorkerSignin signin, string user);
         bool Unassign(int? wsiid, int? waid, string user);
         dataTableResult<DTO.WorkAssignmentsList> GetIndexView(viewOptions o);
+        void Save(WorkAssignment asmt, int? workerAssignedID, string user);
     }
 
     // Business logic for WorkAssignment record management
@@ -399,10 +400,15 @@ namespace Machete.Service
             return base.Create(record, user);
         }
 
-        public override void Save(WorkAssignment wa, string user)
+        public void Save(WorkAssignment wa, int? workerAssignedID, string user)
         {
-            //4.5.12-Moved down from Controller; solving WSI/WA integrity
-            if (wa.workerAssignedID != null)
+            //check if workerAssigned changed; if so, Unassign
+            int? origWorker = wa.workerAssignedID;
+            if (workerAssignedID != origWorker)
+                Unassign(wa.ID, wa.workerSigninID, user);
+            //Save will link workerAssigned to Assignment record
+            // if changed from orphan assignment
+            if (workerAssignedID != null)
             {
                 wa.workerAssigned = wRepo.GetById((int)wa.workerAssignedID);
             }
@@ -410,6 +416,11 @@ namespace Machete.Service
             updateComputedValues(ref wa);
             log(wa.ID, user, "WorkAssignment edited");
             unitOfWork.Commit();
+        }
+
+        public override void Save(WorkAssignment asmt, string user)
+        {
+            Save(asmt, null, user);
         }
 
         private void updateComputedValues(ref WorkAssignment record)
@@ -421,8 +432,6 @@ namespace Machete.Service
             record.fullWAID = System.String.Format("{0,5:D5}-{1,2:D2}",
                                                     (int)(record.workOrder.paperOrderNum ?? 0),
                                                     (int)record.pseudoID);
-
-
         }
     }
 }
