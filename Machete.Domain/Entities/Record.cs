@@ -32,10 +32,10 @@ namespace Machete.Domain
         public int ID { get; set; }
         public DateTime datecreated { get; set; }
         public DateTime dateupdated { get; set; }
-        [StringLength(30)]
+        [StringLength(254)]
         [Column("Createdby")] // the legacy of 2011 inconsistency
         public string createdby { get; set; }
-        [StringLength(30)]
+        [StringLength(254)]
         [Column("Updatedby")] // the legacy of 2011 inconsistency
         public string updatedby { get; set; }
         private static int byLength = 30;
