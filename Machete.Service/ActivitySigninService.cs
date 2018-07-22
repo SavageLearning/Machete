@@ -39,8 +39,6 @@ namespace Machete.Service
     {
         dataTableResult<DTO.ActivitySigninList> GetIndexView(viewOptions o);
         Worker CreateSignin(ActivitySignin signin, string user);
-        IQueryable<ActivitySignin> GetManyByPersonID(int actID, int perID);
-        ActivitySignin GetByPersonID(int actID, int perID);
     }
     /// <summary>
     /// 
@@ -150,16 +148,6 @@ namespace Machete.Service
                 Create(s, user);
             }
             return w;
-        }
-
-        public IQueryable<ActivitySignin> GetManyByPersonID(int actID, int perID)
-        {
-            return repo.GetManyQ(az => az.activityID == actID && az.personID == perID);
-        }
-
-        public ActivitySignin GetByPersonID(int actID, int perID)
-        {
-            return asiRepo.GetByPersonID(actID,perID);
         }
     }
 }

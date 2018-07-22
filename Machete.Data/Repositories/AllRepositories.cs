@@ -76,10 +76,7 @@ namespace Machete.Data
         IEnumerable<string> GetTeachers();
     }
     public interface IActivityRepository : IRepository<Activity> { }
-    public interface IActivitySigninRepository : IRepository<ActivitySignin>
-    {
-        ActivitySignin GetByPersonID(int actID, int personID);
-    }
+    public interface IActivitySigninRepository : IRepository<ActivitySignin> {}
     public class WorkerSigninRepository : RepositoryBase<WorkerSignin>, IWorkerSigninRepository
     {
         public WorkerSigninRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
@@ -97,13 +94,7 @@ namespace Machete.Data
             //return dbset.Include(a => a.worker).AsQueryable();
             return dbset.Include(a => a.Activity).AsNoTracking().AsQueryable();
         }
-        public ActivitySignin GetByPersonID(int actID, int personID)
-        {
-            var q = from o in dbset.AsQueryable()
-                    where (o.activityID.Equals(actID) && o.personID.Equals(personID))
-                    select o;
-            return q.FirstOrDefault();
-        }
+
     }
     /// <summary>
     /// 
@@ -111,11 +102,6 @@ namespace Machete.Data
     public class ActivityRepository : RepositoryBase<Activity>, IActivityRepository
     {
         public ActivityRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
-
-        override public IQueryable<Activity> GetAllQ()
-        {
-            return dbset.AsNoTracking().AsQueryable();
-        }
     }
     /// <summary>
     /// 

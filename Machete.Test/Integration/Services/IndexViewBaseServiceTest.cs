@@ -76,7 +76,7 @@ namespace Machete.Test.Integration.Service
             IQueryable<Activity> q = frb.ToRepoActivity().GetAllQ();
             var count = q.Count();
             //Act
-            IndexViewBase.getUnassociated(worker.ID, ref q, frb.ToRepoActivity(), frb.ToRepoActivitySignin());
+            IndexViewBase.getUnassociated(worker.ID, ref q, frb.ToFactory().Get());
             //Assert
             var result = q.ToList();
             Assert.AreEqual(count - 1, result.Count());

@@ -452,12 +452,10 @@ EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
         {
             //
             // DEPENDENCIES
-            if (_repoA == null) AddRepoActivity();
+            if (_dbFactory == null) AddDBFactory();
             if (_servAS == null) AddServActivitySignin();
-            if (_servL == null) AddServLookup();
-            if (_uow == null) AddUOW();
             if (_webMap == null) AddMapper();
-            _servA = new ActivityService(_repoA, _servAS, _servL, _uow, _webMap);
+            _servA = new ActivityService(_dbFactory, _servAS, _webMap);
             return this;
         }
 

@@ -44,7 +44,7 @@ namespace Machete.Service
         void Delete(int id, string user);
         void Save(T record, string user);
         int TotalCount();
-        IRepository<T> GetRepo();
+        //IRepository<T> GetRepo();
     }
     /// <summary>
     /// 
