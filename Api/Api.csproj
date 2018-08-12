@@ -195,6 +195,7 @@
   <ItemGroup>
     <Content Include="App_Start\Elmah.txt" />
     <Content Include="packages.config" />
+    <None Include="Properties\PublishProfiles\chaim-api.pubxml" />
     <None Include="Properties\PublishProfiles\test-api.pubxml" />
     <None Include="Properties\PublishProfiles\api.pubxml" />
     <None Include="Web.Debug.config">
