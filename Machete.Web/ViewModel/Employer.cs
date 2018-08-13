@@ -16,7 +16,7 @@ namespace Machete.Web.ViewModel
         public string tablabel { get; set; }
         public IDefaults def { get; set; }
         [LocalizedDisplayName("active", NameResourceType = typeof(Resources.Employer))]
-        public new string active { get; set; }
+        public new bool active { get; set; }
         [LocalizedDisplayName("onlineSource", NameResourceType = typeof(Resources.Employer))]
         public new string onlineSource { get; set; }
         [LocalizedDisplayName("isbusiness", NameResourceType = typeof(Resources.Employer))]

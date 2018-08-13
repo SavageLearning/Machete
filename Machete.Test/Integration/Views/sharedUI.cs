@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Machete.Data;
-using Machete.Domain;
-using Machete.Web;
+//using Machete.Domain;
+using Machete.Web.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
@@ -444,9 +444,8 @@ namespace Machete.Test.Selenium.View
 
             _wo.ID = getSelectedTabRecordID("WO");
             _wo.paperOrderNum = _wo.ID;
-            var v = map.Map<Domain.WorkOrder, Web.ViewModel.WorkOrder>(_wo);
             Assert.IsTrue(_d.FindElement(By.CssSelector("li.WO.ui-tabs-selected > a"))
-                                            .Text == v.tablabel, 
+                                            .Text == _wo.tablabel, 
                 "Work order anchor label doesn't match work order");
             
             return true;
@@ -546,15 +545,14 @@ namespace Machete.Test.Selenium.View
         /// <returns></returns>
         public bool workAssignmentActivate(Employer _emp, WorkOrder _wo, WorkAssignment _wa)
         {
-            var mapped = map.Map<Domain.WorkAssignment, Web.ViewModel.WorkAssignment>(_wa);
             // Verify we're on the WA ListTab we expected
             WaitForElement(By.Id("walt-" + _wo.ID));
             // Look for WA datatable to have a first row (at least one record)
             By walt = By.XPath("//table[@id='workAssignTable-wo-" + _wo.ID + "']/tbody/tr/td[1]");
             // The #####-## order number from the first column
             var waltText = "Assignment #: " + WaitForElement(walt).Text;
-            WaitForElementValue(walt, mapped.tablabel);
-            Assert.AreEqual(mapped.tablabel, waltText, "Unexpected PseudoID in assignment's list");
+            WaitForElementValue(walt, _wa.tablabel);
+            Assert.AreEqual(_wa.tablabel, waltText, "Unexpected PseudoID in assignment's list");
             Thread.Sleep(1000);
             WaitThenClickElement(By.Id("activateWorkOrderButton-" + _wo.ID));
             // todo: find a way to change this hard-coded value assignment

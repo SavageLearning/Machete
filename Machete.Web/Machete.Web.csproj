@@ -442,9 +442,11 @@
     <Compile Include="ViewModel\Record.cs" />
     <Compile Include="ViewModel\ReportPrintView.cs" />
     <Compile Include="ViewModel\PeopleIndex.cs" />
+    <Compile Include="ViewModel\Signin.cs" />
     <Compile Include="ViewModel\WorkAssignment.cs" />
     <Compile Include="ViewModel\WorkAssignmentIndex.cs" />
     <Compile Include="ViewModel\Worker.cs" />
+    <Compile Include="ViewModel\WorkerRequest.cs" />
     <Compile Include="ViewModel\WorkerSignin.cs" />
     <Compile Include="ViewModel\WorkOrder.cs" />
     <Compile Include="ViewModel\WorkOrderGroupPrintView.cs" />

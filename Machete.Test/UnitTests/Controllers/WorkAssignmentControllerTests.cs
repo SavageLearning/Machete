@@ -222,7 +222,7 @@ namespace Machete.Test.Unit.Controller
         public void Unit_WA_Controller_edit_post_invalid_throws_exception()
         {
             //Arrange
-            var asmt = new Web.ViewModel.WorkAssignment();
+            var asmt = new Domain.WorkAssignment();
             Domain.Worker wkr = new Domain.Worker();
             wkr.ID = 424;
             int testid = 4243;

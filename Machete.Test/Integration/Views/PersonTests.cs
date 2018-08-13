@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Machete.Data;
-using Machete.Domain;
+using Machete.Web.ViewModel;
 using Machete.Test.Integration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
