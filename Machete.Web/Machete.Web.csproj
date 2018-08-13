@@ -439,6 +439,7 @@
     <Compile Include="ViewModel\EmailView.cs" />
     <Compile Include="ViewModel\Employer.cs" />
     <Compile Include="ViewModel\Person.cs" />
+    <Compile Include="ViewModel\Record.cs" />
     <Compile Include="ViewModel\ReportPrintView.cs" />
     <Compile Include="ViewModel\PeopleIndex.cs" />
     <Compile Include="ViewModel\WorkAssignment.cs" />
