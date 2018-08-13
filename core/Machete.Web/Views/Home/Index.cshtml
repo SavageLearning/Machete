@@ -1,67 +1,34 @@
 ﻿@{
-
     ViewBag.Title = "Home Page";
-
 }
 
-
-
 <div id="homeTabs">
-
     <ul>
-
         <li><a href="#here">Home</a></li>
-
-        <li><a href="/Home/Issues" id="issueTab">@Machete.Web.Resources.Shared.issuetracker</a></li>
-
-        <li><a href="/Home/Wiki" id="wikiTab">@Machete.Web.Resources.Shared.wiki</a></li>
-
-        <li><a href="/Home/Docs" id="docsTab">@Machete.Web.Resources.Shared.docs</a></li>
-
-        <li><a href="/Home/About" id="aboutTab">@Machete.Web.Resources.Shared.about</a></li>
-
+        <li><a href="/Home/Issues" id="issueTab">Issue Tracker</a></li>
+        <li><a href="/Home/Wiki" id="wikiTab">Wiki</a></li>
+        <li><a href="/Home/Docs" id="docsTab">Documentation</a></li>
+        <li><a href="/Home/About" id="aboutTab">About</a></li>
     </ul>
 
-
-
     <div id="here" class="home-container">
-
         <h2 class="home-title-main">Welcome to Machete</h2>
-
         <p class="home-text-main">
-
             Machete is an open-source web database application for managing a worker center.
-
             If you are lost, help can be found by clicking the tabs above.
-
             If you find a bug and would like to report it, please make use of the <a href="https://github.com/SavageLearning/Machete">Issue Tracker</a> on GitHub.
-
             NDLON centers can contact the national office for support. For technical support, contact the system administrator.
 
-
-
             Enjoy Machete!
-
         </p>
-
         <img class="home-image-main" src="/Content/images/8-point-workflow.png" />
-
         <p class="home-version">v1.13.0</p>
-
     </div>
-
 </div>
 
 
-
-
-
 <script type="text/javascript">
-
     $(document).ready(function () {
-
         $('#homeTabs').tabs();
-
     });
-
 </script>

@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.1.2" />
+    <PackageReference Include="microsoft.entityframeworkcore" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Initialize\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Machete.Domain\Machete.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

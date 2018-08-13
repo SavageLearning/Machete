@@ -23,7 +23,7 @@
 
 #endregion
 using Machete.Domain;
-using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
