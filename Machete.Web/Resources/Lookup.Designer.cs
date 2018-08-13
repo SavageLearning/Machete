@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Machete.Domain.Resources {
+namespace Machete.Web.Resources {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Machete.Domain.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Machete.Domain.Resources.Lookup", typeof(Lookup).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Machete.Web.Resources.Lookup", typeof(Lookup).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
