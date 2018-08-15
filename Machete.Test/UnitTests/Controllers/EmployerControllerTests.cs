@@ -101,7 +101,7 @@ namespace Machete.Test.Unit.Controller
             //Act
             var result = (PartialViewResult)ctrlr.Create();
             //Assert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Domain.Employer));
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Web.ViewModel.Employer));
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
@@ -156,7 +156,7 @@ namespace Machete.Test.Unit.Controller
             var result = ctrlr.Edit(Testid) as PartialViewResult;
             //Assert
             Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Domain.Employer));
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Web.ViewModel.Employer));
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]

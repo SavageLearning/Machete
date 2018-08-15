@@ -173,7 +173,7 @@ namespace Machete.Test.Unit.Controller
             //Act
             PartialViewResult result = (PartialViewResult)_ctrlr.Edit(testid);
             //Assert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Domain.WorkAssignment));
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Web.ViewModel.WorkAssignment));
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WAs)]

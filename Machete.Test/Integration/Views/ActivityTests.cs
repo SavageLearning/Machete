@@ -217,7 +217,7 @@ namespace Machete.Test.Selenium.View
             int count = SeDB.ToServActivity().GetAll().Count();
             if (count < 20)
             {
-                Person _person = (Person)Records.person.Clone();
+                Domain.Person _person = (Domain.Person)Records.person.Clone();
                 SeDB.ToServPerson().Create(_person, "ME");
             }
 
@@ -240,7 +240,7 @@ namespace Machete.Test.Selenium.View
             int count = SeDB.ToServActivity().GetAll().Count();
             if (count < 20)
             {
-                Activity _activity = (Activity)Records.activity.Clone();
+                var _activity = (Domain.Activity)Records.activity.Clone();
                 SeDB.ToServActivity().Create(_activity, "ME");
             }
 
@@ -267,7 +267,7 @@ namespace Machete.Test.Selenium.View
             int count = frb.ToServActivity().GetAll().Count();
             while (count < 100)
             {
-                Activity _activity = (Activity)Records.activity.Clone();
+                var _activity = (Domain.Activity)Records.activity.Clone();
                 frb.ToServActivity().Create(_activity, "ME");
                 count = frb.ToServActivity().GetAll().Count();
             }
@@ -307,7 +307,7 @@ namespace Machete.Test.Selenium.View
             int count = frb.ToServActivity().GetAll().Count();
             if (count < 100)
             {
-                Activity _activity = (Activity)Records.activity.Clone();
+                var _activity = (Domain.Activity)Records.activity.Clone();
                 frb.ToServActivity().Create(_activity, "ME");
             }
 

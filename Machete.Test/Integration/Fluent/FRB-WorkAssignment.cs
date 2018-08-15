@@ -85,12 +85,18 @@ namespace Machete.Test.Integration
             return _wa;
         }
 
-        public WorkAssignment CloneWorkAssignment()
+        public Web.ViewModel.WorkAssignment CloneWorkAssignment()
         {
-            var wa = (WorkAssignment)Records.assignment.Clone();
+            var wa = (Web.ViewModel.WorkAssignment)Records.assignment.Clone();
             wa.description = RandomString(10);
             return wa;
         }
 
+        public Machete.Domain.WorkAssignment CloneDomainWorkAssignment()
+        {
+            var wa = (Machete.Domain.WorkAssignment)Records.assignment.Clone();
+            wa.description = RandomString(10);
+            return wa;
+        }
     }
 }

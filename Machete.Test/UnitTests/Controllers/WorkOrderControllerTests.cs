@@ -113,7 +113,7 @@ namespace Machete.Test.Unit.Controller
             // Act
             var result = (PartialViewResult)_ctrlr.Create(0);
             // ASsert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(WorkOrder));
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Web.ViewModel.WorkOrder));
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WorkOrders)]
@@ -168,7 +168,7 @@ namespace Machete.Test.Unit.Controller
             //Act
             var result = (PartialViewResult)_ctrlr.Edit(testid);
             //Assert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(WorkOrder));
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Web.ViewModel.WorkOrder));
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WorkOrders)]

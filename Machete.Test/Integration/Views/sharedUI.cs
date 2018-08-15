@@ -460,7 +460,7 @@ namespace Machete.Test.Selenium.View
             return Convert.ToInt32(tabAnchor.GetAttribute("recordid"));
         }
 
-        public bool workOrderValidate(WorkOrder _wo) 
+        public bool workOrderValidate(Web.ViewModel.WorkOrder _wo) 
         {
             string prefix = "WO" + _wo.ID.ToString() + "-";
             Func<string, string, bool> getAttributeAssertEqual = ((p, q) =>

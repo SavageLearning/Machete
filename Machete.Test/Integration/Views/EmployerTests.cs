@@ -67,8 +67,8 @@ namespace Machete.Test.Selenium.View
         public void SeEmployer_Create_Validate_Delete()
         {
             //Arrange
-            Employer _emp = frb.CloneEmployer();
-            Employer _emp1 = frb.CloneEmployer();
+            var _emp = frb.CloneEmployer();
+            var _emp1 = frb.CloneEmployer();
             //Act
             //starts with /Employer/Create
             ui.employerCreate(_emp1);
@@ -86,8 +86,8 @@ namespace Machete.Test.Selenium.View
         public void SeEmployer_Create_workorder()
         {
             //Arrange
-            Employer _emp = frb.CloneEmployer();
-            WorkOrder _wo = frb.CloneWorkOrder();
+            var _emp = frb.CloneEmployer();
+            var _wo = frb.CloneWorkOrder();
             _wo.statusID = frb.ToLookupCache().getByKeys(LCategory.orderstatus, LOrderStatus.Pending); // start work order off as pending
             //Act
             ui.employerCreate(_emp);
@@ -103,8 +103,8 @@ namespace Machete.Test.Selenium.View
         public void SeEmployer_Create_workorder_copyinfo()
         {
             //Arrange
-            Employer _emp = frb.ToEmployer();
-            WorkOrder _wo = frb.ToWorkOrder(); 
+            var _emp = (Web.ViewModel.Employer)frb.ToEmployer().Clone();
+            var _wo = (Web.ViewModel.WorkOrder)frb.ToWorkOrder().Clone(); 
 
             //Act
             ui.employerCreate(_emp);
@@ -130,9 +130,9 @@ namespace Machete.Test.Selenium.View
         public void SeEmployer_Create_and_Activate_WorkAssignment()
         {
             //Arrange
-            Employer _employer1 = frb.CloneEmployer();
-            WorkOrder _wo = frb.CloneWorkOrder();
-            WorkAssignment _wa1 = frb.CloneWorkAssignment();
+            var _employer1 = frb.CloneEmployer();
+            var _wo = frb.CloneWorkOrder();
+            var _wa1 = frb.CloneWorkAssignment();
             _wo.contactName = ui.RandomString(10);
             _wo.statusID = frb.ToLookupCache().getByKeys(LCategory.orderstatus, LOrderStatus.Pending); // status = pending
             //
@@ -159,9 +159,9 @@ namespace Machete.Test.Selenium.View
         [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Employers)]
         public void SeEmployer_Create_and_move_Workorder()
         {
-            Employer _emp1 = frb.CloneEmployer();
-            Employer _emp2 = frb.CloneEmployer();
-            WorkOrder _wo = frb.CloneWorkOrder();
+            var _emp1 = frb.CloneEmployer();
+            var _emp2 = frb.CloneEmployer();
+            var _wo = frb.CloneWorkOrder();
             _wo.contactName = ui.RandomString(10);
             // create first worker
             ui.employerCreate(_emp1);
