@@ -125,7 +125,7 @@ namespace Machete.Test.Integration.Service
         public void get_GroupView()
         {
             // Arrange            
-            frb.AddLookupCache();
+            frb.AddServLookup();
             frb.AddWorkOrder(status: WorkOrder.iActive, dateTimeOfWork: DateTime.Now).AddWorkAssignment();
             //
             //Act

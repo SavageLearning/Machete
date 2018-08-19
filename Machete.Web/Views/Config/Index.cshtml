@@ -11,7 +11,7 @@
 <div id="configTabs" class="ExclusiveTab">
     <ul>
         <li><a href="#configList" id="configListTab" class="ListTab">@Configs.listlink</a> </li>
-        <li><a href="/Config/Create" id="configCreateTab" class="CreateTab">@Configs.createlink</a></li>
+        <li><a href="/Lookup/Create" id="configCreateTab" class="CreateTab">@Configs.createlink</a></li>
     </ul>
     <div id="configList">
         @Html.Label("Category")
@@ -46,7 +46,7 @@
             "bInfo": true,
             "bAutoWidth": false,
             "bServerSide": true,
-            "sAjaxSource": "/Config/AjaxHandler", 
+            "sAjaxSource": "/Lookup/AjaxHandler", 
             "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
             "bProcessing": true,
             "aoColumns": [

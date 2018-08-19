@@ -60,7 +60,6 @@ namespace Machete.Test.Integration
         {
             //
             // DEPENDENCIES
-            if (_lcache == null) AddLookupCache();
             if (_emp == null) AddEmployer();
             if (_servWO == null) AddServWorkOrder();
 

@@ -73,6 +73,7 @@ namespace Machete.Data
     {
         void clearSelected(string category);
         Lookup GetByKey(string category, string key);
+        IEnumerable<string> GetTeachers();
     }
     public interface IActivityRepository : IRepository<Activity> { }
     public interface IActivitySigninRepository : IRepository<ActivitySignin>
@@ -260,6 +261,13 @@ namespace Machete.Data
                     select o;
             return q.FirstOrDefault();
         }
+
+        public IEnumerable<string> GetTeachers()
+        {
+            // TODO will break if Identity roles go away
+            var teacherID = db.Get().Roles.First(r => r.Name == "Teacher").Id;
+            return db.Get().Users.Where(u => u.Roles.Any(r => r.RoleId == teacherID))
+              .Select(x => x.UserName).Distinct().ToList();        }
     }
 
     public class ScheduleRuleRepository : RepositoryBase<ScheduleRule>, IScheduleRuleRepository

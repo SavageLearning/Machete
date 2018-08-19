@@ -248,7 +248,7 @@
     <Compile Include="Helpers\LocalizedDisplayNameAttribute.cs" />
     <Compile Include="Maps\ActivityProfile.cs" />
     <Compile Include="Maps\ActivitySigninProfile.cs" />
-    <Compile Include="Maps\ConfigProfile.cs" />
+    <Compile Include="Maps\LookupProfile.cs" />
     <Compile Include="Maps\EmailProfile.cs" />
     <Compile Include="Maps\EmployerProfile.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -320,7 +320,7 @@
     <Compile Include="ViewModel\ActivityIndex.cs" />
     <Compile Include="ViewModel\ActivitySchedule.cs" />
     <Compile Include="ViewModel\ActivitySignin.cs" />
-    <Compile Include="ViewModel\Config.cs" />
+    <Compile Include="ViewModel\Lookup.cs" />
     <Compile Include="ViewModel\Email.cs" />
     <Compile Include="ViewModel\Event.cs" />
     <Compile Include="ViewModel\IdentityModels.cs" />

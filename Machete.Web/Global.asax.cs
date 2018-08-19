@@ -188,7 +188,6 @@ namespace Machete.Web
             .RegisterType<ITransportProvidersAvailabilityService, TransportProvidersAvailabilityService>(new HierarchicalLifetimeManager())
 
             // 
-            .RegisterType<ILookupCache, LookupCache>(new ContainerControlledLifetimeManager())
             .RegisterType<IDefaults, Defaults>(new ContainerControlledLifetimeManager());
 
             return container;

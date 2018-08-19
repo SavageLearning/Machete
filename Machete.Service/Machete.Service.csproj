@@ -279,7 +279,7 @@
     <Compile Include="ConfigService.cs" />
     <Compile Include="DTO\ActivityList.cs" />
     <Compile Include="DTO\ActivitySigninList.cs" />
-    <Compile Include="DTO\ConfigList.cs" />
+    <Compile Include="DTO\LookupList.cs" />
     <Compile Include="DTO\EmailList.cs" />
     <Compile Include="DTO\EmployersList.cs" />
     <Compile Include="DTO\EventList.cs" />
@@ -304,7 +304,6 @@
     <Compile Include="shared\Exceptions.cs" />
     <Compile Include="ImageService.cs" />
     <Compile Include="shared\IndexViewBase.cs" />
-    <Compile Include="shared\LookupCache.cs" />
     <Compile Include="PersonService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="shared\ServiceBase.cs" />

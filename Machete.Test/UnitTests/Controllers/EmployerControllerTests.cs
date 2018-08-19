@@ -45,7 +45,6 @@ namespace Machete.Test.Unit.Controller
     {
         Mock<IEmployerService> serv;
         Mock<IWorkOrderService> woServ;
-        Mock<ILookupCache> lcache;
         Mock<IDatabaseFactory> dbfactory;
         IMapper map;
         Mock<IDefaults> def;
@@ -59,7 +58,6 @@ namespace Machete.Test.Unit.Controller
             Domain.WorkOrder.iPending = 123;
             serv = new Mock<IEmployerService>();
             woServ = new Mock<IWorkOrderService>();
-            lcache = new Mock<ILookupCache>();
             dbfactory = new Mock<IDatabaseFactory>();
             def = new Mock<IDefaults>();
             map = new MapperConfig().getMapper();

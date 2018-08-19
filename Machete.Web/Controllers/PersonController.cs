@@ -39,19 +39,16 @@ namespace Machete.Web.Controllers
     public class PersonController : MacheteController
     { 
         private readonly IPersonService personService;
-        private readonly ILookupCache lcache;
         private readonly IMapper map;
         private readonly IDefaults def;
         CultureInfo CI;
 
         public PersonController(
-            IPersonService personService, 
-            ILookupCache _lcache,
+            IPersonService personService,
             IDefaults def,
             IMapper map)
         {
             this.personService = personService;
-            this.lcache = _lcache;
             this.map = map;
             this.def = def;
         }

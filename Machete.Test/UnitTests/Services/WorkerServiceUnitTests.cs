@@ -120,7 +120,7 @@ namespace Machete.Test.Unit.Service
         {
             //
             //Arrange
-            Worker worker = (Worker)Records.worker.Clone();
+            Worker worker = (Worker)DomainRecords.worker.Clone();
             worker.ID = 3;
             int id = 3; //This matches Records._worker3 ID value
             _repo.Setup(r => r.GetById(id)).Returns(worker);
@@ -137,9 +137,9 @@ namespace Machete.Test.Unit.Service
             //
             //Arrange
             string user = "UnitTest";
-            Worker _w = (Worker)Records.worker.Clone();
-            Lookup _l = (Lookup)Records.lookup.Clone();
-            Person _p = (Person)Records.person.Clone();
+            Worker _w = (Worker)DomainRecords.worker.Clone();
+            Lookup _l = (Lookup)DomainRecords.lookup.Clone();
+            Person _p = (Person)DomainRecords.person.Clone();
             _w.Person = _p;
             _w.Person.datecreated = DateTime.MinValue;
             _w.Person.dateupdated = DateTime.MinValue;
@@ -175,14 +175,14 @@ namespace Machete.Test.Unit.Service
             int id = 1;
             Worker dp = new Worker();
             _repo.Setup(r => r.Delete(It.IsAny<Worker>())).Callback((Worker p) => { dp = p; });
-            _repo.Setup(r => r.GetById(id)).Returns(Records.worker);
+            _repo.Setup(r => r.GetById(id)).Returns(DomainRecords.worker);
             var _serv = new WorkerService(_repo.Object, _lRepo.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object, _map.Object);
             //
             //Act
             _serv.Delete(id, user);
             //
             //Assert
-            Assert.AreEqual(dp, Records.worker);
+            Assert.AreEqual(dp, DomainRecords.worker);
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Workers)]
@@ -194,9 +194,9 @@ namespace Machete.Test.Unit.Service
             _uow = new Mock<IUnitOfWork>();
             _map = new Mock<IMapper>();
             _lRepo = new Mock<ILookupRepository>();
-            Worker _w = (Worker)Records.worker.Clone();
-            Lookup _l = (Lookup)Records.lookup.Clone();
-            _w.Person = (Person)Records.person.Clone();
+            Worker _w = (Worker)DomainRecords.worker.Clone();
+            Lookup _l = (Lookup)DomainRecords.lookup.Clone();
+            _w.Person = (Person)DomainRecords.person.Clone();
             _w.Person.datecreated = DateTime.MinValue;
             _w.Person.dateupdated = DateTime.MinValue;
             _repo.Setup(r => r.Add(_w)).Returns(_w);

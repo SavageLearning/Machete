@@ -7,14 +7,14 @@ using System.Web;
 
 namespace Machete.Web.ViewModel
 {
-    public class Config : Record
+    public class Lookup : Record
     {
         public IDefaults def { get; set; }
         public string tabref { get; set; }
         public string tablabel { get; set; }
         public string recordid { get; set; }
 
-        public Config()
+        public Lookup()
         {
             idString = "lookup";
         }
@@ -92,7 +92,7 @@ namespace Machete.Web.ViewModel
         public bool active { get; set; }
     }
 
-    public class ConfigList
+    public class LookupList
     {
         public string tabref { get; set; }
         public string tablabel { get; set; }

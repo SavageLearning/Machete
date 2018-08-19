@@ -46,7 +46,6 @@ namespace Machete.Test.Unit.Controller
     {
         Mock<IWorkerService> _wserv;
         Mock<IPersonService> _pserv;
-        Mock<ILookupCache> lcache;
         Mock<IDatabaseFactory> dbfactory;
         Mock<IImageService> _iserv;
         Mock<IDefaults> def;
@@ -59,7 +58,6 @@ namespace Machete.Test.Unit.Controller
             _wserv = new Mock<IWorkerService>();
             _pserv = new Mock<IPersonService>();
             _iserv = new Mock<IImageService>();
-            lcache = new Mock<ILookupCache>();
             def = new Mock<IDefaults>();
             map = new Mock<IMapper>();
             dbfactory = new Mock<IDatabaseFactory>();

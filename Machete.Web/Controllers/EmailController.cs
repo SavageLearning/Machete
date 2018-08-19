@@ -17,20 +17,17 @@ namespace Machete.Web.Controllers
     public class EmailController : MacheteController
     {
         private readonly IEmailService serv;
-        private readonly ILookupCache lcache;
         private readonly IMapper map;
         private readonly IDefaults def;
         private CultureInfo CI;
 
         public EmailController(
             IEmailService eServ, 
-            ILookupCache lc,
             IDefaults def,
             IMapper map
             )
         {
             this.serv = eServ;
-            this.lcache = lc;
             this.map = map;
             this.def = def;
         }
@@ -75,7 +72,7 @@ namespace Machete.Web.Controllers
                              emailFrom = p.emailFrom,
                              emailTo = p.emailTo,
                              subject = p.subject,
-                             status = lcache.textByID(p.statusID, CI.TwoLetterISOLanguageName),
+                             status = def.byID(p.statusID),
                              transmitAttempts = p.transmitAttempts.ToString(),
                              lastAttempt = p.lastAttempt.ToString(),
                              dateupdated = Convert.ToString(p.dateupdated),

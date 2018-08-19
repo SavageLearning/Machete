@@ -47,7 +47,7 @@ namespace Machete.Web
                 c.AddProfile<ActivityProfile>();
                 c.AddProfile<ActivitySigninProfile>();
                 c.AddProfile<EventProfile>();
-                c.AddProfile<ConfigProfile>();
+                c.AddProfile<LookupProfile>();
                 c.AddProfile<Service.WorkOrderMap>();
                 c.AddProfile<Service.EmployersMap>();
 

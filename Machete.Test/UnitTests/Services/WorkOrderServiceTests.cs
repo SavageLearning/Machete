@@ -121,7 +121,7 @@ namespace Machete.Test.Unit.Service
         {
             //
             //Arrange
-            WorkOrder order = (WorkOrder)Records.order.Clone();
+            WorkOrder order = (WorkOrder)DomainRecords.order.Clone();
             order.ID = 3; //This matches Records._workOrder3 ID value
             _repo.Setup(r => r.GetById(3)).Returns(order);
             //Act
@@ -142,9 +142,9 @@ namespace Machete.Test.Unit.Service
             _cfg = new Mock<IConfigService>();
             _tpServ = new Mock<ITransportProvidersService>();
 
-            var _wo = (WorkOrder)Records.order.Clone();
-            var _l = (Lookup)Records.lookup.Clone();
-            var _tp = (TransportProvider)Records.transportProvider.Clone();
+            var _wo = (WorkOrder)DomainRecords.order.Clone();
+            var _l = (Lookup)DomainRecords.lookup.Clone();
+            var _tp = (TransportProvider)DomainRecords.transportProvider.Clone();
             string user = "UnitTest";
             _wo.datecreated = DateTime.MinValue;
             _wo.dateupdated = DateTime.MinValue;
@@ -174,7 +174,7 @@ namespace Machete.Test.Unit.Service
             _uow = new Mock<IUnitOfWork>();
             _cfg = new Mock<IConfigService>();
             _lRepo = new Mock<ILookupRepository>();
-            var _wo = (WorkOrder)Records.order.Clone();
+            var _wo = (WorkOrder)DomainRecords.order.Clone();
             string user = "UnitTest";
             int id = 1;
             WorkOrder dp = new WorkOrder();
@@ -199,15 +199,15 @@ namespace Machete.Test.Unit.Service
             _uow = new Mock<IUnitOfWork>();
             _lRepo = new Mock<ILookupRepository>();
             _cfg = new Mock<IConfigService>();
-            Lookup _l = (Lookup)Records.lookup.Clone();
+            Lookup _l = (Lookup)DomainRecords.lookup.Clone();
             _lRepo.Setup(r => r.GetById(It.IsAny<int>())).Returns(_l);
             string user = "UnitTest";
-            var _wo = (WorkOrder)Records.order.Clone();
+            var _wo = (WorkOrder)DomainRecords.order.Clone();
             _wo.datecreated = DateTime.MinValue;
             _wo.dateupdated = DateTime.MinValue;
             _waServ = new Mock<IWorkAssignmentService>();
             _tpServ = new Mock<ITransportProvidersService>();
-            var _tp = (TransportProvider)Records.transportProvider.Clone();
+            var _tp = (TransportProvider)DomainRecords.transportProvider.Clone();
             _tpServ.Setup(r => r.Get(It.IsAny<int>())).Returns(_tp);
             var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _tpServ.Object, _lRepo.Object, _uow.Object, _map.Object, _cfg.Object);
             //
