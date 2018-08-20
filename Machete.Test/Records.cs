@@ -25,7 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Machete.Domain;
+using Machete.Web.ViewModel;
 using Machete.Data;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
@@ -47,11 +47,6 @@ namespace Machete.Test
             else return next;
         }
 
-        public static Image image = new Image
-        {
-            createdby = "initialization script",
-            updatedby = "initialization script"
-        };
 
         public static Lookup lookup = new Lookup
         {
@@ -143,18 +138,7 @@ namespace Machete.Test
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime
             createdby = "TestInitializer",
-            updatedby = "TestInitializer"//,
-//            attachment = @"<!DOCTYPE html>
-//<html>
-//<body>
-//
-//<h1>My First Heading</h1>
-//
-//<p>My first paragraph.</p>
-//
-//</body>
-//</html>",
-////            attachmentContentType = System.Net.Mime.MediaTypeNames.Text.Html
+            updatedby = "TestInitializer"
         };
 //
         public static Employer employer = new Employer
@@ -267,8 +251,8 @@ namespace Machete.Test
 
         public static Activity activity = new Activity
         {
-            typeID = MacheteLookup.cache.First(x => x.category == LCategory.activityType && x.text_EN == LActType.Class).ID,
-            nameID = MacheteLookup.cache.First(x => x.category == LCategory.activityName && x.text_EN == "Basic English").ID,
+            typeID = MacheteLookup.cache.First(x => x.category == Domain.LCategory.activityType && x.text_EN == Domain.LActType.Class).ID,
+            nameID = MacheteLookup.cache.First(x => x.category == Domain.LCategory.activityName && x.text_EN == "Basic English").ID,
             teacher = "jadmin",
             notes = "foo too",
             dateStart = DateTime.Now,
@@ -300,37 +284,6 @@ namespace Machete.Test
         };
 
         public static WorkerRequest request = new WorkerRequest
-        {
-            datecreated = DateTime.Now,             //datetime
-            dateupdated = DateTime.Now,              //datetime
-            createdby = "TestInitializer",
-            updatedby = "TestInitializer"
-        };
-
-        public static TransportRule transportRule = new TransportRule
-        {
-            datecreated = DateTime.Now,             //datetime
-            dateupdated = DateTime.Now,              //datetime
-            createdby = "TestInitializer",
-            updatedby = "TestInitializer"
-        };
-
-        public static TransportProvider transportProvider = new TransportProvider
-        {
-            datecreated = DateTime.Now,             //datetime
-            dateupdated = DateTime.Now,              //datetime
-            createdby = "TestInitializer",
-            updatedby = "TestInitializer"
-        };
-        public static TransportProviderAvailability transportProviderAvailability = new TransportProviderAvailability
-        {
-            datecreated = DateTime.Now,             //datetime
-            dateupdated = DateTime.Now,              //datetime
-            createdby = "TestInitializer",
-            updatedby = "TestInitializer"
-        };
-
-        public static ScheduleRule scheduleRule = new ScheduleRule
         {
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime

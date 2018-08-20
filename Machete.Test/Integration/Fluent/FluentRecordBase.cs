@@ -180,7 +180,7 @@ namespace Machete.Test.Integration
             if (_servW == null) AddServWorker();
             //
             // ARRANGE
-            _w = (Worker)Records.worker.Clone();
+            _w = (Worker)DomainRecords.worker.Clone();
             _w.Person = _p;
             _w.ID = _p.ID; // mimics MVC UI behavior. the POST to create worker includes the person record's ID
             if (skill1 != null) _w.skill1 = skill1;
@@ -193,7 +193,7 @@ namespace Machete.Test.Integration
             if (memberReactivateDate != null) _w.memberReactivateDate = (DateTime)memberReactivateDate;
             if (testID != null) _w.Person.firstname2 = testID;
             // kludge
-            _w.dwccardnum = Records.GetNextMemberID(_dbFactory.Get().Workers);
+            _w.dwccardnum = DomainRecords.GetNextMemberID(_dbFactory.Get().Workers);
             //
             // ACT
             _servW.Create(_w, _user);
@@ -203,7 +203,7 @@ namespace Machete.Test.Integration
         public int GetNextMemberID()
         {
             if (_dbFactory == null) AddDBFactory();
-            return Records.GetNextMemberID(_dbFactory.Get().Workers);
+            return DomainRecords.GetNextMemberID(_dbFactory.Get().Workers);
         }
 
         public Worker ToWorker()
@@ -258,7 +258,7 @@ namespace Machete.Test.Integration
             if (_w == null) AddWorker();
             //
             // ARRANGE
-            _wr = (WorkerRequest)Records.request.Clone();
+            _wr = (WorkerRequest)DomainRecords.request.Clone();
             _wr.workOrder = _wo;
             _wr.workerRequested = _w;
             if (datecreated != null) _wr.datecreated = (DateTime)datecreated;
@@ -319,7 +319,7 @@ namespace Machete.Test.Integration
             if (_servI == null) AddServImage();
             //
             // ARRANGE
-            _i = (Image)Records.image.Clone();
+            _i = (Image)DomainRecords.image.Clone();
             if (datecreated != null) _i.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _i.dateupdated = (DateTime)dateupdated;
             //
@@ -380,7 +380,7 @@ namespace Machete.Test.Integration
             if (_servL == null) AddServLookup();
             //
             // ARRANGE
-            _l = (Lookup)Records.lookup.Clone();
+            _l = (Lookup)DomainRecords.lookup.Clone();
             if (datecreated != null) _l.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _l.dateupdated = (DateTime)dateupdated;
             //
@@ -445,7 +445,7 @@ namespace Machete.Test.Integration
             if (_servA == null) AddServActivity();
             //
             // ARRANGE
-            _a = (Activity)Records.activity.Clone();
+            _a = (Activity)DomainRecords.activity.Clone();
             if (datecreated != null) _a.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _a.dateupdated = (DateTime)dateupdated;
             if (startTime != null) _a.dateStart = (DateTime)startTime;
@@ -516,7 +516,7 @@ namespace Machete.Test.Integration
             if (_w == null) AddWorker();
             //
             // ARRANGE
-            _as = (ActivitySignin)Records.activitysignin.Clone();
+            _as = (ActivitySignin)DomainRecords.activitysignin.Clone();
             _as.Activity = _a;
             _as.activityID = _a.ID;
             if (datecreated != null) _as.datecreated = (DateTime)datecreated;
@@ -645,7 +645,7 @@ namespace Machete.Test.Integration
             if (_servEM == null) AddServEmail();
             //
             // ARRANGE
-            _email = (Email)Records.email.Clone();
+            _email = (Email)DomainRecords.email.Clone();
             if (datecreated != null) _email.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _email.dateupdated = (DateTime)dateupdated;
             if (status != null) _email.statusID = (int)status;
@@ -665,7 +665,7 @@ namespace Machete.Test.Integration
 
         public Email CloneEmail()
         {
-            var p = (Email)Records.email.Clone();
+            var p = (Email)DomainRecords.email.Clone();
             p.emailFrom = "joe@foo.com";
             p.emailTo = "foo@joe.com";
             p.subject = RandomString(5);
@@ -720,7 +720,7 @@ namespace Machete.Test.Integration
             if (_p == null) AddPerson();
             //
             // ARRANGE
-            _event = (Event)Records.event1.Clone();
+            _event = (Event)DomainRecords.event1.Clone();
             _event.PersonID = _p.ID;
             if (datecreated != null) _event.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _event.dateupdated = (DateTime)dateupdated;

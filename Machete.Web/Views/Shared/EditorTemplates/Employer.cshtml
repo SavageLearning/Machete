@@ -32,7 +32,7 @@
     <!--tb-row-->
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.referredby)
-        @Html.mUIDropDownListFor(model => model.referredby, Model.def.getSelectList(LCategory.emplrreference), new { tabindex = "10", id = idPrefix + "referredby" })
+        @Html.mUIDropDownListFor(model => model.referredby, Model.def.getSelectList(Machete.Domain.LCategory.emplrreference), new { tabindex = "10", id = idPrefix + "referredby" })
         @Html.mUITableLabelAndTextBoxFor(model => model.state, new { tabindex = "11", id = idPrefix + "state" })
     </div>
     <!--tb-row-->

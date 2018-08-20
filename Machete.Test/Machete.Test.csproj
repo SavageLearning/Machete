@@ -361,6 +361,7 @@
     <Compile Include="MvcMockHelpers.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DomainRecords.cs" />
     <Compile Include="Rx\WO.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

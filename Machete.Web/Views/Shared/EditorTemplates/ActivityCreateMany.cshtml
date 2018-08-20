@@ -15,8 +15,8 @@
         @Html.mUITableLabelFor(model => model.type): @(Model.def.byID(Model.type))
         @Html.HiddenFor(model => model.type)
     </div>
-    @if(Model.type == Model.def.byKeys(LCategory.activityType, LActType.Assembly) ||
-        Model.type == Model.def.byKeys(LCategory.activityType, LActType.OrgMtg))
+    @if(Model.type == Model.def.byKeys(Machete.Domain.LCategory.activityType, Machete.Domain.LActType.Assembly) ||
+        Model.type == Model.def.byKeys(Machete.Domain.LCategory.activityType, Machete.Domain.LActType.OrgMtg))
     {
         @Html.HiddenFor(model => model.name)
     }

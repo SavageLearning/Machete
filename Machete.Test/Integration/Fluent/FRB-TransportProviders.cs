@@ -57,7 +57,7 @@ namespace Machete.Test.Integration
 
             //
             // ARRANGE
-            _tp = (TransportProvider)Records.transportProvider.Clone();
+            _tp = (TransportProvider)DomainRecords.transportProvider.Clone();
 
             //
             // ACT

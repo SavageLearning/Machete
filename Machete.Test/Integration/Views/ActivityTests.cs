@@ -158,7 +158,7 @@ namespace Machete.Test.Selenium.View
             int rowcount = 1;
             Activity _act = (Activity)Records.activity.Clone();
             ActivitySignin _asi = (ActivitySignin)Records.activitysignin.Clone();
-            var worker = frb.AddWorker(status: Worker.iActive).ToWorker();
+            var worker = frb.AddWorker(status: Domain.Worker.iActive).ToWorker();
             // Act
             ui.gotoMachete();
             ui.activityCreate(_act);
@@ -198,7 +198,7 @@ namespace Machete.Test.Selenium.View
         {
             //Arrange
             var _act = (Activity)Records.activity.Clone();
-            var _sanctionedW = frb.AddWorker(status: Worker.iSanctioned, memberexpirationdate: DateTime.Now.AddYears(1)).ToWorker();
+            var _sanctionedW = frb.AddWorker(status: Domain.Worker.iSanctioned, memberexpirationdate: DateTime.Now.AddYears(1)).ToWorker();
             ui.gotoMachete();
             ui.activityCreate(_act);
             var idPrefix = "asi" + _act.ID + "-"; 

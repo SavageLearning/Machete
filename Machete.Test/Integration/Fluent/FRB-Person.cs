@@ -60,7 +60,7 @@ namespace Machete.Test.Integration
             if (_servP == null) AddServPerson();
             //
             // ARRANGE
-            _p = (Person)Records.person.Clone();
+            _p = (Person)DomainRecords.person.Clone();
             if (datecreated != null) _p.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _p.dateupdated = (DateTime)dateupdated;
             if (testID != null) _p.firstname2 = testID;
@@ -78,7 +78,7 @@ namespace Machete.Test.Integration
 
         public Person ClonePerson()
         {
-            var p = (Person)Records.person.Clone();
+            var p = (Person)DomainRecords.person.Clone();
             p.firstname1 = RandomString(5);
             p.lastname1 = RandomString(8);
             return p;
