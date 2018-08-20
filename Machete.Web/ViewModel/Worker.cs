@@ -13,11 +13,11 @@ namespace Machete.Web.ViewModel
         public string tablabel { get; set; }
         public IDefaults def { get; set; }
 
-        public static int iActive { get; set; }
-        public static int iInactive { get; set; }
-        public static int iSanctioned { get; set; }
-        public static int iExpired { get; set; }
-        public static int iExpelled { get; set; }
+        //public static int iActive { get; set; }
+        //public static int iInactive { get; set; }
+        //public static int iSanctioned { get; set; }
+        //public static int iExpired { get; set; }
+        //public static int iExpelled { get; set; }
 
         public Worker()
         {

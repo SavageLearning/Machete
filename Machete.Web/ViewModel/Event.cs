@@ -19,7 +19,7 @@ namespace Machete.Web.ViewModel
 
         public int PersonID { get; set; }
         public virtual Person Person { get; set; }
-        //public virtual ICollection<JoinEventImage> JoinEventImages { get; set; }
+        public virtual ICollection<JoinEventImage> JoinEventImages { get; set; }
         //
         //
         [Required(ErrorMessageResourceName = "eventTyperequired", ErrorMessageResourceType = typeof(Resources.Event))]
@@ -64,4 +64,28 @@ namespace Machete.Web.ViewModel
         public string updatedby { get; set; }
     }
 
+    public class JoinEventImage : Record
+    {
+        public int EventID { get; set; }
+        public virtual Event Event { get; set; }
+
+        public int ImageID { get; set; }
+        public virtual Image Image { get; set; }
+    }
+
+    public class Image : Record
+    {
+        public byte[] ImageData { get; set; }
+        [StringLength(30)]
+        public string ImageMimeType { get; set; }
+        [StringLength(255)]
+        public string filename { get; set; }
+        public byte[] Thumbnail { get; set; }
+        [StringLength(30)]
+        public string ThumbnailMimeType { get; set; }
+        [StringLength(30)]
+        public string parenttable { get; set; }
+        [StringLength(20)]
+        public string recordkey { get; set; }
+    }
 }

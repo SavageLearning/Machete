@@ -45,7 +45,7 @@ namespace Machete.Test.Integration.Data
         /// <summary>
         /// Used with SQL Profiler to see what SQL is produced
         /// </summary>
-        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Data), TestCategory(TC.Configs)]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Data)]
         public void Integration_Queryable_test()
         {
             // Arrange - load test records
@@ -64,7 +64,7 @@ namespace Machete.Test.Integration.Data
         /// <summary>
         /// Truncate ReportDefinitions and recreate
         /// </summary>
-        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Data), TestCategory(TC.Configs)]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Data)]
         public void MacheteReportDefinitions_Initialize_counts_match()
         {
             // Arrange - load test records

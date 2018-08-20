@@ -27,13 +27,14 @@ namespace Machete.Test.Selenium.View
         public static void ClassInitialize(TestContext testContext)
         {
             map = new Machete.Web.MapperConfig().getMapper();
-
+            WebServer.StartIis();
         }
 
         [TestInitialize]
         public void SetupTest()
         {
             frb = new FluentRecordBase();
+            frb.AddServLookup();
             driver = new ChromeDriver(ConfigurationManager.AppSettings["CHROMEDRIVERPATH"]);
             baseURL = "http://localhost:4213/";
             ui = new sharedUI(driver, baseURL, map);
