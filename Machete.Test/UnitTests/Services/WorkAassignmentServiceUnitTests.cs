@@ -123,7 +123,7 @@ namespace Machete.Test.Unit.Service
         {
             //
             //Arrange
-            WorkAssignment assignment = (WorkAssignment)DomainRecords.assignment.Clone();
+            WorkAssignment assignment = (WorkAssignment)Records.assignment.Clone();
             assignment.ID = 1; //This matches Records._workAssignment3 ID value
             waRepo.Setup(r => r.GetById(1)).Returns(assignment);
             //Act
@@ -139,12 +139,12 @@ namespace Machete.Test.Unit.Service
             //
             //Arrange
             string user = "UnitTest";
-            var _wa = (WorkAssignment)DomainRecords.assignment.Clone();
-            var _l = (Lookup)DomainRecords.lookup.Clone();
+            var _wa = (WorkAssignment)Records.assignment.Clone();
+            var _l = (Lookup)Records.lookup.Clone();
 
             _wa.datecreated = DateTime.MinValue;
             _wa.dateupdated = DateTime.MinValue;
-            _wa.workOrder = (WorkOrder)DomainRecords.order.Clone();
+            _wa.workOrder = (WorkOrder)Records.order.Clone();
             _wa.workOrder.paperOrderNum = _wa.workOrder.ID;
             waRepo.Setup(r => r.Add(_wa)).Returns(_wa);
             lRepo.Setup(r => r.GetById(It.IsAny<int>())).Returns(_l);
@@ -166,7 +166,7 @@ namespace Machete.Test.Unit.Service
             //Arrange
             string user = "UnitTest";
             int id = 1;
-            var _wa = (WorkAssignment)DomainRecords.assignment.Clone();
+            var _wa = (WorkAssignment)Records.assignment.Clone();
 
             WorkAssignment dp = new WorkAssignment();
            waRepo.Setup(r => r.Delete(It.IsAny<WorkAssignment>())).Callback((WorkAssignment p) => { dp = p; });
@@ -183,14 +183,14 @@ namespace Machete.Test.Unit.Service
         {
             //
             //Arrange
-            var _wa = (WorkAssignment)DomainRecords.assignment.Clone();
-            var _l = (Lookup)DomainRecords.lookup.Clone();
+            var _wa = (WorkAssignment)Records.assignment.Clone();
+            var _l = (Lookup)Records.lookup.Clone();
             lRepo.Setup(r => r.GetById(It.IsAny<int>())).Returns(_l);
 
             string user = "UnitTest";
             _wa.datecreated = DateTime.MinValue;
             _wa.dateupdated = DateTime.MinValue;
-            _wa.workOrder = (WorkOrder)DomainRecords.order.Clone();
+            _wa.workOrder = (WorkOrder)Records.order.Clone();
             _wa.workOrder.paperOrderNum = _wa.workOrder.ID;
             _wa.pseudoID = 1;
             //

@@ -25,7 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Machete.Web.ViewModel;
+using Machete.Domain;
 using Machete.Data;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
@@ -284,6 +284,37 @@ namespace Machete.Test
         };
 
         public static WorkerRequest request = new WorkerRequest
+        {
+            datecreated = DateTime.Now,             //datetime
+            dateupdated = DateTime.Now,              //datetime
+            createdby = "TestInitializer",
+            updatedby = "TestInitializer"
+        };
+
+        public static TransportRule transportRule = new TransportRule
+        {
+            datecreated = DateTime.Now,             //datetime
+            dateupdated = DateTime.Now,              //datetime
+            createdby = "TestInitializer",
+            updatedby = "TestInitializer"
+        };
+
+        public static TransportProvider transportProvider = new TransportProvider
+        {
+            datecreated = DateTime.Now,             //datetime
+            dateupdated = DateTime.Now,              //datetime
+            createdby = "TestInitializer",
+            updatedby = "TestInitializer"
+        };
+        public static TransportProviderAvailability transportProviderAvailability = new TransportProviderAvailability
+        {
+            datecreated = DateTime.Now,             //datetime
+            dateupdated = DateTime.Now,              //datetime
+            createdby = "TestInitializer",
+            updatedby = "TestInitializer"
+        };
+
+        public static ScheduleRule scheduleRule = new ScheduleRule
         {
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime

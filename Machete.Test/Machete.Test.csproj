@@ -351,6 +351,7 @@
     <Compile Include="Integration\Services\WorkAssignmentServiceTest.cs" />
     <Compile Include="Integration\Services\WorkerSigninServiceTest.cs" />
     <Compile Include="Integration\Services\WorkOrderServiceTest.cs" />
+    <Compile Include="Integration\System\MapperTests.cs" />
     <Compile Include="Integration\System\WorkerCacheTests.cs" />
     <Compile Include="Integration\Views\ActivityTests.cs" />
     <Compile Include="Integration\Views\PersonTests.cs" />
@@ -362,6 +363,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DomainRecords.cs" />
+    <Compile Include="ViewModelRecords.cs" />
     <Compile Include="Rx\WO.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

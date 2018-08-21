@@ -807,11 +807,14 @@ namespace Machete.Test.Integration
 
         public IMapper ToWebMapper()
         {
+
+            if (_webMap == null) AddMapper();
             return _webMap;
         }
 
         public IMapper ToApiMapper()
         {
+            if (_apiMap == null) AddMapper();
             return _apiMap;
         }
 

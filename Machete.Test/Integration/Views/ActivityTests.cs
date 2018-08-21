@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Machete.Web.ViewModel;
+using Machete.Domain;
 using Machete.Test.Integration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
@@ -70,7 +70,7 @@ namespace Machete.Test.Selenium.View
         public void SeActivity_Create_Validate()
         {
             //Arrange
-            var _act = (Activity)Records.activity.Clone();
+            var _act = (Web.ViewModel.Activity)ViewModelRecords.activity.Clone();
             //Act
             ui.activityCreate(_act);
             //Assert
@@ -95,7 +95,7 @@ namespace Machete.Test.Selenium.View
             int numberOfSignins = rand.Next(count / 10) + 1; //+1 will never lead to zero here
             int numberSignedIn = numberOfSignins;
             IEnumerable<int> list1 = list.Take<int>(numberOfSignins);
-            Activity _act = (Activity)Records.activity.Clone();
+            var _act = (Web.ViewModel.Activity)ViewModelRecords.activity.Clone();
 
             //Act
             ui.activityCreate(_act);
@@ -156,9 +156,9 @@ namespace Machete.Test.Selenium.View
         {
             // Arrange
             int rowcount = 1;
-            Activity _act = (Activity)Records.activity.Clone();
-            ActivitySignin _asi = (ActivitySignin)Records.activitysignin.Clone();
-            var worker = frb.AddWorker(status: Domain.Worker.iActive).ToWorker();
+            var _act = (Web.ViewModel.Activity)ViewModelRecords.activity.Clone();
+            var _asi = (Web.ViewModel.ActivitySignin)ViewModelRecords.activitysignin.Clone();
+            var worker = frb.AddWorker(status: Worker.iActive).ToWorker();
             // Act
             ui.gotoMachete();
             ui.activityCreate(_act);
@@ -173,7 +173,7 @@ namespace Machete.Test.Selenium.View
         public void SeActivity_Signin_random_worker()
         {
             //Arrange
-            Activity _act = (Activity)Records.activity.Clone();
+            var _act = (Web.ViewModel.Activity)ViewModelRecords.activity.Clone();
             IEnumerable<int> cardList = frb.ToRepoWorker().GetAllQ().Select(q => q.dwccardnum).Distinct();
             Random rand = new Random();
             int randCardIndex = rand.Next(cardList.Count());
@@ -197,7 +197,7 @@ namespace Machete.Test.Selenium.View
         public void SeActivity_Signin_random_sactioned_worker()
         {
             //Arrange
-            var _act = (Activity)Records.activity.Clone();
+            var _act = (Web.ViewModel.Activity)ViewModelRecords.activity.Clone();
             var _sanctionedW = frb.AddWorker(status: Domain.Worker.iSanctioned, memberexpirationdate: DateTime.Now.AddYears(1)).ToWorker();
             ui.gotoMachete();
             ui.activityCreate(_act);

@@ -112,7 +112,7 @@ namespace Machete.Test.Unit.Service
         {
             //
             //Arrange
-            Person _person = (Person)DomainRecords.person.Clone();
+            Person _person = (Person)Records.person.Clone();
             _person.ID = 3; //This matches Records._person3 ID value
             _repo.Setup(r => r.GetById(3)).Returns(_person);
             //Act
@@ -127,7 +127,7 @@ namespace Machete.Test.Unit.Service
         {
             //
             //Arrange
-            Person _person = (Person)DomainRecords.person.Clone(); 
+            Person _person = (Person)Records.person.Clone(); 
             string user = "UnitTest";
 
             _repo.Setup(r => r.Add(_person)).Returns(_person);
@@ -148,7 +148,7 @@ namespace Machete.Test.Unit.Service
         {
             //
             //Arrange
-            Person _p = (Person)DomainRecords.person.Clone();
+            Person _p = (Person)Records.person.Clone();
             _repo = new Mock<IPersonRepository>();
             _uow = new Mock<IUnitOfWork>();
             _lcache = new Mock<ILookupRepository>();
@@ -171,7 +171,7 @@ namespace Machete.Test.Unit.Service
         {
             //
             //Arrange
-            Person _p = (Person)DomainRecords.person.Clone();
+            Person _p = (Person)Records.person.Clone();
             _repo = new Mock<IPersonRepository>();
             _uow = new Mock<IUnitOfWork>();
             _lcache = new Mock<ILookupRepository>();

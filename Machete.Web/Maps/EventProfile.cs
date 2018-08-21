@@ -13,12 +13,15 @@ namespace Machete.Web.Maps
             CreateMap<Domain.Event, ViewModel.Event>()
                 .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/Event/Edit/" + Convert.ToString(d.ID)))
                 .ForMember(v => v.tablabel, opt => opt.MapFrom(d => d.dateFrom.ToShortDateString() + " " + getCI() == "ES" ? d.eventTypeES : d.eventTypeEN))
+                .ForMember(v => v.def, opt => opt.Ignore())
+                .ForMember(v => v.idString, opt => opt.Ignore())
                 ;
             CreateMap<Domain.Event, Service.DTO.EventList>();
             CreateMap<Service.DTO.EventList, ViewModel.EventList>()
                 .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/Event/Edit/" + Convert.ToString(d.ID)))
                 .ForMember(v => v.tablabel, opt => opt.MapFrom(d => d.dateFrom.ToShortDateString() + " " + getCI() == "ES" ? d.eventTypeES : d.eventTypeEN))
                 .ForMember(v => v.type, opt => opt.MapFrom(d => getCI() == "ES" ? d.eventTypeES : d.eventTypeEN ))
+                .ForMember(v => v.fileCount, opt => opt.Ignore())
 
                 ;
         }
