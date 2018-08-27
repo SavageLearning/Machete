@@ -56,7 +56,7 @@ namespace Machete.Test.Integration
             if (_servE == null) AddServEmployer();
             //
             // ARRANGE
-            _emp = (Employer)DomainRecords.employer.Clone();
+            _emp = (Employer)Records.employer.Clone();
             if (datecreated != null) _emp.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _emp.dateupdated = (DateTime)dateupdated;
             //
@@ -73,7 +73,8 @@ namespace Machete.Test.Integration
 
         public Web.ViewModel.Employer CloneEmployer()
         {
-            Web.ViewModel.Employer e = (Web.ViewModel.Employer)Records.employer.Clone();
+            AddMapper();
+            var e = _webMap.Map<Machete.Domain.Employer, Web.ViewModel.Employer>((Employer)Records.employer.Clone());
             e.name = RandomString(10);
             e.email = "changeme@gmail.com";
             return e;

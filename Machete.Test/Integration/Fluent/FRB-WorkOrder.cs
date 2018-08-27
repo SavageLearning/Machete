@@ -65,7 +65,7 @@ namespace Machete.Test.Integration
 
             //
             // ARRANGE
-            _wo = (WorkOrder)DomainRecords.order.Clone();
+            _wo = (WorkOrder)Records.order.Clone();
             _wo.Employer = _emp;
             _wo.workAssignments = new List<WorkAssignment>();
             if (datecreated != null) _wo.datecreated = (DateTime)datecreated;
@@ -87,14 +87,15 @@ namespace Machete.Test.Integration
 
         public Web.ViewModel.WorkOrder CloneWorkOrder()
         {
-            var wo = (Web.ViewModel.WorkOrder)Records.order.Clone();
+            AddMapper();
+            var wo = _webMap.Map<Machete.Domain.WorkOrder, Web.ViewModel.WorkOrder>((WorkOrder)Records.order.Clone());
             wo.contactName = RandomString(10);
             return wo;
         }
 
         public Machete.Domain.WorkOrder CloneDomainWorkOrder()
         {
-            var wo = (Machete.Domain.WorkOrder)DomainRecords.order.Clone();
+            var wo = (Machete.Domain.WorkOrder)Records.order.Clone();
             wo.contactName = RandomString(10);
             return wo;
         }

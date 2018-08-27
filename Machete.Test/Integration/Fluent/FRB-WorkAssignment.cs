@@ -65,7 +65,7 @@ namespace Machete.Test.Integration
             if (assignWorker == true && _w == null) AddWorker();
             //
             // ARRANGE
-            _wa = (WorkAssignment)DomainRecords.assignment.Clone();
+            _wa = (WorkAssignment)Records.assignment.Clone();
             _wa.workOrder = _wo;
             if (assignWorker) _wa.workerAssigned = _w;
             if (datecreated != null) _wa.datecreated = (DateTime)datecreated;
@@ -87,14 +87,16 @@ namespace Machete.Test.Integration
 
         public Web.ViewModel.WorkAssignment CloneWorkAssignment()
         {
-            var wa = (Web.ViewModel.WorkAssignment)Records.assignment.Clone();
+            AddMapper();
+            var wa = _webMap.Map<Machete.Domain.WorkAssignment, Web.ViewModel.WorkAssignment>
+                ((WorkAssignment)Records.assignment.Clone());
             wa.description = RandomString(10);
             return wa;
         }
 
         public Machete.Domain.WorkAssignment CloneDomainWorkAssignment()
         {
-            var wa = (Machete.Domain.WorkAssignment)DomainRecords.assignment.Clone();
+            var wa = (Machete.Domain.WorkAssignment)Records.assignment.Clone();
             wa.description = RandomString(10);
             return wa;
         }

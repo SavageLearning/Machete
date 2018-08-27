@@ -89,7 +89,7 @@ namespace Machete.Test.Unit.Service
         {
             //
             //Arrange
-            var employer = (Employer)DomainRecords.employer.Clone();
+            var employer = (Employer)Records.employer.Clone();
             employer.ID = 3;
             
             _repo.Setup(r => r.GetById(3)).Returns(employer);           
@@ -110,7 +110,7 @@ namespace Machete.Test.Unit.Service
             _woServ = new Mock<IWorkOrderService>();
             _map = new Mock<IMapper>();
             string user = "UnitTest";
-            var _e = (Employer)DomainRecords.employer.Clone();
+            var _e = (Employer)Records.employer.Clone();
             _e.datecreated = DateTime.MinValue;
             _e.dateupdated = DateTime.MinValue;
             _repo.Setup(r => r.Add(_e)).Returns(_e);
@@ -137,7 +137,7 @@ namespace Machete.Test.Unit.Service
             _woServ = new Mock<IWorkOrderService>();
             _map = new Mock<IMapper>();
 
-            var _e = (Employer)DomainRecords.employer.Clone();
+            var _e = (Employer)Records.employer.Clone();
 
             string user = "UnitTest";
             int id = 1;
@@ -163,7 +163,7 @@ namespace Machete.Test.Unit.Service
             _woServ = new Mock<IWorkOrderService>();
             _map = new Mock<IMapper>();
 
-            var _e = (Employer)DomainRecords.employer.Clone();
+            var _e = (Employer)Records.employer.Clone();
 
             string user = "UnitTest";
             _e.datecreated = DateTime.MinValue;

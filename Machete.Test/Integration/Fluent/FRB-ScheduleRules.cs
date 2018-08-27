@@ -56,7 +56,7 @@ namespace Machete.Test.Integration
 
             //
             // ARRANGE
-            _sr = (ScheduleRule)DomainRecords.scheduleRule.Clone();
+            _sr = (ScheduleRule)Records.scheduleRule.Clone();
 
             //
             // ACT

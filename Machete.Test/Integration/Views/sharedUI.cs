@@ -444,6 +444,9 @@ namespace Machete.Test.Selenium.View
 
             _wo.ID = getSelectedTabRecordID("WO");
             _wo.paperOrderNum = _wo.ID;
+            _wo.tablabel = Machete.Web.Resources.WorkOrders.tabprefix +
+                                                            Convert.ToString(_wo.paperOrderNum) +
+                                                            " @ " + _wo.workSiteAddress1;
             Assert.IsTrue(_d.FindElement(By.CssSelector("li.WO.ui-tabs-selected > a"))
                                             .Text == _wo.tablabel, 
                 "Work order anchor label doesn't match work order");
@@ -453,7 +456,7 @@ namespace Machete.Test.Selenium.View
 
         public int getSelectedTabRecordID(string cssClass)
         {
-            var selectedTab = WaitForElement(By.CssSelector("li.ui-state-default.ui-corner-top.ui-tabs-selected.ui-state-active"));
+            var selectedTab = WaitForElement(By.CssSelector("li." + cssClass + ".ui-tabs-selected"));
             Assert.IsNotNull(selectedTab, "Failed to find " + cssClass + " selected tab element");
             IWebElement tabAnchor = selectedTab.FindElement(By.CssSelector("a"));
             Assert.IsNotNull(tabAnchor, "Failed to find " + cssClass + " selected tab element anchor");

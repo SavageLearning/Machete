@@ -56,7 +56,7 @@ namespace Machete.Test.Integration
 
             //
             // ARRANGE
-            _tpa = (TransportProviderAvailability)DomainRecords.transportProviderAvailability.Clone();
+            _tpa = (TransportProviderAvailability)Records.transportProviderAvailability.Clone();
 
             //
             // ACT

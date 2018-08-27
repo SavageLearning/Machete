@@ -56,7 +56,7 @@ namespace Machete.Test.Integration
 
             //
             // ARRANGE
-            _tr = (TransportRule)DomainRecords.transportRule.Clone();
+            _tr = (TransportRule)Records.transportRule.Clone();
 
             //
             // ACT

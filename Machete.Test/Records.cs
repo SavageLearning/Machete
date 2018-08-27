@@ -47,6 +47,11 @@ namespace Machete.Test
             else return next;
         }
 
+        public static Image image = new Image
+        {
+            createdby = "initialization script",
+            updatedby = "initialization script"
+        };
 
         public static Lookup lookup = new Lookup
         {

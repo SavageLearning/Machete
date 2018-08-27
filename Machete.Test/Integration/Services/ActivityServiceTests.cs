@@ -84,7 +84,7 @@ namespace Machete.Test.Integration.Service
             int rAttendance = rand.Next(cardlist.Count() / 10);
             for (var i = 0; i < rAttendance; i++)
             {
-                ActivitySignin asi = (ActivitySignin)DomainRecords.activitysignin.Clone();
+                ActivitySignin asi = (ActivitySignin)Records.activitysignin.Clone();
                 asi.dateforsignin = today;
                 asi.activityID = a.ID;
                 asi.dwccardnum = cardlist.ElementAt(rand.Next(cardlist.Count()));
