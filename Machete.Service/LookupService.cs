@@ -54,6 +54,7 @@ namespace Machete.Service
             this.lrepo = lRepo;
             this.map = map;
             this.logPrefix = "Lookup";
+            populateStaticIds();
         }
 
         public IEnumerable<DTO.LookupList> GetIndexView(viewOptions o)

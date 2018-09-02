@@ -11,6 +11,7 @@ namespace Machete.Web.Maps
         public EmployerProfile()
         {
             CreateMap<Domain.Employer, ViewModel.Employer>()
+                .ForMember(e => e.WorkOrders, opt => opt.Ignore())
                 .ForMember(e => e.def, opt => opt.Ignore())
                 .ForMember(e => e.idString, opt => opt.Ignore())
                 .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/Employer/Edit/" + Convert.ToString(d.ID)))

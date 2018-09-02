@@ -198,14 +198,15 @@ namespace Machete.Test.Selenium.View
         {
             //Arrange
             var _act = (Web.ViewModel.Activity)ViewModelRecords.activity.Clone();
-            var _sanctionedW = frb.AddWorker(status: Domain.Worker.iSanctioned, memberexpirationdate: DateTime.Now.AddYears(1)).ToWorker();
+            var _sanctionedW = frb.AddWorker(status: Domain.Worker.iSanctioned, memberexpirationdate: DateTime.Now.AddDays(-1)).ToWorker();
             ui.gotoMachete();
             ui.activityCreate(_act);
             var idPrefix = "asi" + _act.ID + "-"; 
             ui.activitySignIn(idPrefix, _sanctionedW.dwccardnum);
 
             //Assert
-            Assert.IsFalse(ui.activitySignInValidate(idPrefix, _sanctionedW.dwccardnum, 1));
+            var result = ui.activitySignInValidate(idPrefix, _sanctionedW.dwccardnum, 1);
+            Assert.IsFalse(result);
             Assert.IsTrue(ui.activitySignInIsSanctioned(), "Sanctioned worker box is not visible like it should be.");
         }
 

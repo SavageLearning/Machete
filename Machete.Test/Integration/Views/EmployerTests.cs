@@ -103,8 +103,8 @@ namespace Machete.Test.Selenium.View
         public void SeEmployer_Create_workorder_copyinfo()
         {
             //Arrange
-            var _emp = (Web.ViewModel.Employer)frb.ToEmployer().Clone();
-            var _wo = (Web.ViewModel.WorkOrder)frb.ToWorkOrder().Clone(); 
+            var _emp = frb.CloneEmployer();
+            var _wo = frb.CloneWorkOrder(); 
 
             //Act
             ui.employerCreate(_emp);
@@ -122,7 +122,7 @@ namespace Machete.Test.Selenium.View
             _wo.phone = _emp.phone;
             _wo.description = "";
             _wo.statusID = frb.ToServLookup().GetByKey(LCategory.orderstatus, LOrderStatus.Pending).ID;
-            _wo.ID += 1;
+            _wo.ID = ui.getSelectedTabRecordID("WO");
             //Assert
             ui.workOrderValidate(_wo);
         }
@@ -141,7 +141,7 @@ namespace Machete.Test.Selenium.View
             // Create work order
             ui.workOrderCreate(_employer1, _wo);
             // create assignment
-            ui.workAssignmentCreate(_employer1, _wo, _wa1);
+            ui.workAssignmentCreate(_employer1, _wo, _wa1, frb);
             //Get WA ID and arrange pseudoID information
             _wa1.workOrder = _wo;
             _wa1.workOrderID = _wo.ID;

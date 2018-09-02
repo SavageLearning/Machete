@@ -23,6 +23,7 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.idString, opt => opt.Ignore())
                 .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/Worker/Edit/" + Convert.ToString(d.ID)))
                 .ForMember(v => v.tablabel, opt => opt.MapFrom(d => d.Person.firstname1 + ' ' + d.Person.lastname1))
+                .ForMember(v => v.Person, opt => opt.Ignore())
                 ;
             CreateMap<Service.DTO.WorkerList, ViewModel.WorkerList>()
                 .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/Worker/Edit/" + Convert.ToString(d.ID)))

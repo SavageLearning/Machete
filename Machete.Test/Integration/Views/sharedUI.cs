@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Machete.Data;
+using Machete.Test.Integration;
 //using Machete.Domain;
 using Machete.Web.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -518,7 +519,7 @@ namespace Machete.Test.Selenium.View
         /// <param name="wo"></param>
         /// <param name="wa"></param>
         /// <returns></returns>
-        public bool workAssignmentCreate(Employer emp, WorkOrder wo, WorkAssignment wa)
+        public bool workAssignmentCreate(Employer emp, WorkOrder wo, WorkAssignment wa, FluentRecordBase frb)
         {
             // Click on the assignment Create Tab
             WaitThenClickElement(By.Id("wact-" + wo.ID)); //the ID here is the WorkOrder.ID, not the Employer.ID
@@ -534,7 +535,9 @@ namespace Machete.Test.Selenium.View
 
             WaitForElement(By.Id("WO" + wo.ID + "-waCreateBtn")).Click();
             Thread.Sleep(1000);
-            wa.ID = getSelectedTabRecordID("WA"); 
+            wa.ID = getSelectedTabRecordID("WA");
+            wa.pseudoID = frb.ToServWorkAssignment().Get(wa.ID).pseudoID;
+            wa.tablabel = "Assignment #: " + System.String.Format("{0,5:D5}-{1,2:D2}", wo.paperOrderNum, wa.pseudoID);
             WaitForElement(By.Id(wa.idPrefix + "EditTab"));
             WaitThenClickElement(By.Id("walt-" + wo.ID));
             return true;

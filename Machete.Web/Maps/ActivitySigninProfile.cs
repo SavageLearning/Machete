@@ -26,6 +26,7 @@ namespace Machete.Web.Maps
                     d.person.lastname1 + " " + d.person.lastname2))
                 .ForMember(v => v.expirationDate, opt => opt.MapFrom(d => d.person.Worker.memberexpirationdate))
                 .ForMember(v => v.imageID, opt => opt.MapFrom(d => d.person.Worker.ImageID))
+                .ForMember(v => v.memberStatusID, opt => opt.MapFrom(d => d.memberStatusID))
                 .ForMember(v => v.memberStatusEN, opt => opt.Ignore())
                 .ForMember(v => v.memberStatusES, opt => opt.Ignore());
 
@@ -37,10 +38,10 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.expirationDate, opt => opt.MapFrom(d=> d.expirationDate.ToShortDateString()))
                 .ForMember(v => v.memberStatus, opt => opt.MapFrom(d => getCI() == "ES" ? d.memberStatusES : d.memberStatusEN))
                 .ForMember(v => v.dateforsignin, opt => opt.MapFrom(d => d.dateforsignin.ToShortDateString()))
-                .ForMember(v => v.memberInactive, opt => opt.Ignore())
-                .ForMember(v => v.memberExpelled, opt => opt.Ignore())
-                .ForMember(v => v.memberExpired, opt => opt.Ignore())
-                .ForMember(v => v.memberSanctioned, opt => opt.Ignore())
+                .ForMember(v => v.memberInactive, opt => opt.MapFrom(d => d.memberStatusID == Domain.Worker.iInactive ? true : false))
+                .ForMember(v => v.memberExpelled, opt => opt.MapFrom(d => d.memberStatusID == Domain.Worker.iExpelled ? true : false))
+                .ForMember(v => v.memberExpired, opt => opt.MapFrom(d => d.memberStatusID == Domain.Worker.iExpired ? true : false))
+                .ForMember(v => v.memberSanctioned, opt => opt.MapFrom(d => d.memberStatusID == Domain.Worker.iSanctioned ? true : false))
                 ;
         }
     }
