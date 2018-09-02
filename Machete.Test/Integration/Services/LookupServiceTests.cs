@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Machete.Test.Integration.Service
 {
     [TestClass]
-    public class ConfigTests
+    public class LookupTests
     {
         viewOptions dOptions;
         FluentRecordBase frb;
@@ -41,14 +41,14 @@ namespace Machete.Test.Integration.Service
             };
         }
 
-        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Configs)]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Lookups)]
         public void search_for_any_result()
         {
             //
             // Arrange
             
             // Act
-            IEnumerable<DTO.ConfigList> result = frb.ToServLookup().GetIndexView(dOptions);
+            IEnumerable<DTO.LookupList> result = frb.ToServLookup().GetIndexView(dOptions);
             // Assert
             Assert.IsTrue(result.Count() > 0, "LookupService.GetIndexReview returned null");
 

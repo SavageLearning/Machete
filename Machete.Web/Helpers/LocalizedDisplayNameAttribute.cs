@@ -25,7 +25,7 @@ using System;
 using System.ComponentModel;
 using System.Reflection;
 
-namespace Machete.Domain
+namespace Machete.Web
 {
     public class LocalizedDisplayNameAttribute : DisplayNameAttribute
     {

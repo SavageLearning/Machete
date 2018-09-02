@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using Machete.Data;
-using Machete.Domain;
-using Machete.Web;
+using Machete.Test.Integration;
+//using Machete.Domain;
+using Machete.Web.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
@@ -444,9 +445,11 @@ namespace Machete.Test.Selenium.View
 
             _wo.ID = getSelectedTabRecordID("WO");
             _wo.paperOrderNum = _wo.ID;
-            var v = map.Map<Domain.WorkOrder, Web.ViewModel.WorkOrder>(_wo);
+            _wo.tablabel = Machete.Web.Resources.WorkOrders.tabprefix +
+                                                            Convert.ToString(_wo.paperOrderNum) +
+                                                            " @ " + _wo.workSiteAddress1;
             Assert.IsTrue(_d.FindElement(By.CssSelector("li.WO.ui-tabs-selected > a"))
-                                            .Text == v.tablabel, 
+                                            .Text == _wo.tablabel, 
                 "Work order anchor label doesn't match work order");
             
             return true;
@@ -454,14 +457,14 @@ namespace Machete.Test.Selenium.View
 
         public int getSelectedTabRecordID(string cssClass)
         {
-            var selectedTab = WaitForElement(By.CssSelector("li.ui-state-default.ui-corner-top.ui-tabs-selected.ui-state-active"));
+            var selectedTab = WaitForElement(By.CssSelector("li." + cssClass + ".ui-tabs-selected"));
             Assert.IsNotNull(selectedTab, "Failed to find " + cssClass + " selected tab element");
             IWebElement tabAnchor = selectedTab.FindElement(By.CssSelector("a"));
             Assert.IsNotNull(tabAnchor, "Failed to find " + cssClass + " selected tab element anchor");
             return Convert.ToInt32(tabAnchor.GetAttribute("recordid"));
         }
 
-        public bool workOrderValidate(WorkOrder _wo) 
+        public bool workOrderValidate(Web.ViewModel.WorkOrder _wo) 
         {
             string prefix = "WO" + _wo.ID.ToString() + "-";
             Func<string, string, bool> getAttributeAssertEqual = ((p, q) =>
@@ -516,7 +519,7 @@ namespace Machete.Test.Selenium.View
         /// <param name="wo"></param>
         /// <param name="wa"></param>
         /// <returns></returns>
-        public bool workAssignmentCreate(Employer emp, WorkOrder wo, WorkAssignment wa)
+        public bool workAssignmentCreate(Employer emp, WorkOrder wo, WorkAssignment wa, FluentRecordBase frb)
         {
             // Click on the assignment Create Tab
             WaitThenClickElement(By.Id("wact-" + wo.ID)); //the ID here is the WorkOrder.ID, not the Employer.ID
@@ -532,7 +535,9 @@ namespace Machete.Test.Selenium.View
 
             WaitForElement(By.Id("WO" + wo.ID + "-waCreateBtn")).Click();
             Thread.Sleep(1000);
-            wa.ID = getSelectedTabRecordID("WA"); 
+            wa.ID = getSelectedTabRecordID("WA");
+            wa.pseudoID = frb.ToServWorkAssignment().Get(wa.ID).pseudoID;
+            wa.tablabel = "Assignment #: " + System.String.Format("{0,5:D5}-{1,2:D2}", wo.paperOrderNum, wa.pseudoID);
             WaitForElement(By.Id(wa.idPrefix + "EditTab"));
             WaitThenClickElement(By.Id("walt-" + wo.ID));
             return true;
@@ -546,15 +551,14 @@ namespace Machete.Test.Selenium.View
         /// <returns></returns>
         public bool workAssignmentActivate(Employer _emp, WorkOrder _wo, WorkAssignment _wa)
         {
-            var mapped = map.Map<Domain.WorkAssignment, Web.ViewModel.WorkAssignment>(_wa);
             // Verify we're on the WA ListTab we expected
             WaitForElement(By.Id("walt-" + _wo.ID));
             // Look for WA datatable to have a first row (at least one record)
             By walt = By.XPath("//table[@id='workAssignTable-wo-" + _wo.ID + "']/tbody/tr/td[1]");
             // The #####-## order number from the first column
             var waltText = "Assignment #: " + WaitForElement(walt).Text;
-            WaitForElementValue(walt, mapped.tablabel);
-            Assert.AreEqual(mapped.tablabel, waltText, "Unexpected PseudoID in assignment's list");
+            WaitForElementValue(walt, _wa.tablabel);
+            Assert.AreEqual(_wa.tablabel, waltText, "Unexpected PseudoID in assignment's list");
             Thread.Sleep(1000);
             WaitThenClickElement(By.Id("activateWorkOrderButton-" + _wo.ID));
             // todo: find a way to change this hard-coded value assignment

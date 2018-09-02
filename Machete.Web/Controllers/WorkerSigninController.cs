@@ -39,19 +39,16 @@ namespace Machete.Web.Controllers
     {
         private readonly IWorkerSigninService _serv;
         private readonly IWorkerService _wServ;
-        private readonly LookupCache lcache;
         private readonly IMapper map;
         private readonly IDefaults def;
         private System.Globalization.CultureInfo CI;        
         public WorkerSigninController(IWorkerSigninService workerSigninService, 
                                       IWorkerService workerService, 
-                                      LookupCache lc,
             IDefaults def,
             IMapper map)
         {
             this._serv = workerSigninService;
             this._wServ = workerService;
-            this.lcache = lc;
             this.map = map;
             this.def = def;
         }

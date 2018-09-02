@@ -139,6 +139,7 @@ namespace Machete.Service
 
             if (p == null) throw new NullReferenceException("Person record null");
             s.personID = p.ID;
+            s.memberStatusID = p.Worker.memberStatusID;
             //
             //Search for duplicate signin for the same day
             count = repo.GetAllQ().Count(q => q.activityID == s.activityID &&

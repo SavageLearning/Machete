@@ -40,7 +40,7 @@ namespace Machete.Api.Controllers
             dataTableResult<DTO.EmployersList> list = serv.GetIndexView(vo);
             var result = list.query
                 .Select(
-                    e => map.Map<DTO.EmployersList, ViewModel.Employer>(e)
+                    e => map.Map<DTO.EmployersList, ViewModel.EmployersList>(e)
                 ).AsEnumerable();
             return Json(new { data =  result });
         }

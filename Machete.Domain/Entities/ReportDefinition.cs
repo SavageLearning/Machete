@@ -10,7 +10,6 @@ namespace Machete.Domain
     {
         public ReportDefinition()
         {
-            idString = "reportdef";
         }
         public string name          { get; set; } // used in URLs, needs to be url-friendly, no spaces
         public string commonName    { get; set; } // used for dropdowns and titles

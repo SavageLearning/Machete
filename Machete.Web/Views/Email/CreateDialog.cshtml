@@ -1,6 +1,6 @@
 ﻿@model Machete.Web.ViewModel.EmailView
 @using Machete.Web.Resources
-@using Machete.Domain
+@using Machete.Web.ViewModel
 
 @using (Html.BeginForm("Create", "Email", FormMethod.Post, 
                         new { @id = Model.idPrefix + "createForm" }))

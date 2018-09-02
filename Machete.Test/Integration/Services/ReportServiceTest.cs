@@ -148,10 +148,8 @@ namespace Machete.Test.Integration.Service
             DateTime endDate = DateTime.Today;
 
             string desc = "description";
-
-            string fodEnText = frb.ToLookupCache().getByID(60).text_EN;
-
-            //var before = frb.ToServReports().ListJobs(beginDate, endDate).ToList();
+            // TODO brittle hardcoded LookupID=60
+            string fodEnText = frb.ToServLookup().Get(60).text_EN;
 
             frb.AddWorkAssignment(desc, 60, beginDate, endDate, "user", true);
 

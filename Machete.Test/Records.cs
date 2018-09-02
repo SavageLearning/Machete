@@ -143,18 +143,7 @@ namespace Machete.Test
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime
             createdby = "TestInitializer",
-            updatedby = "TestInitializer"//,
-//            attachment = @"<!DOCTYPE html>
-//<html>
-//<body>
-//
-//<h1>My First Heading</h1>
-//
-//<p>My first paragraph.</p>
-//
-//</body>
-//</html>",
-////            attachmentContentType = System.Net.Mime.MediaTypeNames.Text.Html
+            updatedby = "TestInitializer"
         };
 //
         public static Employer employer = new Employer
@@ -267,8 +256,8 @@ namespace Machete.Test
 
         public static Activity activity = new Activity
         {
-            typeID = MacheteLookup.cache.First(x => x.category == LCategory.activityType && x.text_EN == LActType.Class).ID,
-            nameID = MacheteLookup.cache.First(x => x.category == LCategory.activityName && x.text_EN == "Basic English").ID,
+            typeID = MacheteLookup.cache.First(x => x.category == Domain.LCategory.activityType && x.text_EN == Domain.LActType.Class).ID,
+            nameID = MacheteLookup.cache.First(x => x.category == Domain.LCategory.activityName && x.text_EN == "Basic English").ID,
             teacher = "jadmin",
             notes = "foo too",
             dateStart = DateTime.Now,

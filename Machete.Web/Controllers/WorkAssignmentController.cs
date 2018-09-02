@@ -41,7 +41,6 @@ namespace Machete.Web.Controllers
         private readonly IWorkerService wkrServ;
         private readonly IWorkOrderService woServ;
         private readonly IWorkerSigninService wsiServ;
-        private readonly ILookupCache lcache;
         private readonly IMapper map;
         private readonly IDefaults def;
         private System.Globalization.CultureInfo CI;
@@ -49,7 +48,6 @@ namespace Machete.Web.Controllers
             IWorkerService workerService,
             IWorkOrderService workOrderService,
             IWorkerSigninService signinService,
-            ILookupCache lc,
             IDefaults def,
             IMapper map)
 
@@ -58,7 +56,6 @@ namespace Machete.Web.Controllers
             this.wkrServ = workerService;
             this.woServ = workOrderService;
             this.wsiServ = signinService;
-            this.lcache = lc;
             this.map = map;
             this.def = def;
         }

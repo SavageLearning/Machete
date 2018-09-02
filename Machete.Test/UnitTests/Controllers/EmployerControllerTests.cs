@@ -45,7 +45,6 @@ namespace Machete.Test.Unit.Controller
     {
         Mock<IEmployerService> serv;
         Mock<IWorkOrderService> woServ;
-        Mock<ILookupCache> lcache;
         Mock<IDatabaseFactory> dbfactory;
         IMapper map;
         Mock<IDefaults> def;
@@ -59,7 +58,6 @@ namespace Machete.Test.Unit.Controller
             Domain.WorkOrder.iPending = 123;
             serv = new Mock<IEmployerService>();
             woServ = new Mock<IWorkOrderService>();
-            lcache = new Mock<ILookupCache>();
             dbfactory = new Mock<IDatabaseFactory>();
             def = new Mock<IDefaults>();
             map = new MapperConfig().getMapper();
@@ -101,7 +99,7 @@ namespace Machete.Test.Unit.Controller
             //Act
             var result = (PartialViewResult)ctrlr.Create();
             //Assert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Domain.Employer));
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Web.ViewModel.Employer));
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
@@ -156,7 +154,7 @@ namespace Machete.Test.Unit.Controller
             var result = ctrlr.Edit(Testid) as PartialViewResult;
             //Assert
             Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Domain.Employer));
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Web.ViewModel.Employer));
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]

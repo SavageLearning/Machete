@@ -40,7 +40,6 @@ namespace Machete.Web.Controllers
     {
         private readonly IEventService _serv;
         private readonly IImageService iServ;
-        private readonly LookupCache lcache;
         private readonly IMapper map;
         private readonly IDefaults def;
         System.Globalization.CultureInfo CI;
@@ -48,13 +47,11 @@ namespace Machete.Web.Controllers
         //
         public EventController(IEventService eventService, 
             IImageService imageServ, 
-            LookupCache lc,
             IDefaults def,
             IMapper map)
         {
             this._serv = eventService;
             this.iServ = imageServ;
-            this.lcache = lc;
             this.map = map;
             this.def = def;
         }

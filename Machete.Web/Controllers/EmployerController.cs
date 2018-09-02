@@ -145,7 +145,8 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Edit(int id)
         {
-            var m = map.Map<Domain.Employer, ViewModel.Employer>(serv.Get(id));
+            var e = serv.Get(id);
+            var m = map.Map<Domain.Employer, ViewModel.Employer>(e);
             m.def = def;
             return PartialView("Edit", m);
         }

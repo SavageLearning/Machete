@@ -45,7 +45,6 @@ namespace Machete.Web.Controllers
         private readonly IWorkerService wServ;
         private readonly IWorkerRequestService wrServ;
         private readonly IWorkAssignmentService waServ;
-        private readonly ILookupCache lcache;
         private readonly IMapper map;
         private readonly IDefaults def;
         CultureInfo CI;
@@ -64,7 +63,6 @@ namespace Machete.Web.Controllers
             IEmployerService eServ,
             IWorkerService wServ,
             IWorkerRequestService wrServ,
-            ILookupCache lcache,
             IDefaults def,
             IMapper map)
         {
@@ -73,7 +71,6 @@ namespace Machete.Web.Controllers
             this.wServ = wServ;
             this.waServ = waServ;
             this.wrServ = wrServ;
-            this.lcache = lcache;
             this.map = map;
             this.def = def;
         }
@@ -212,7 +209,7 @@ namespace Machete.Web.Controllers
         /// <returns>JSON Object representing new Work Order</returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public ActionResult Create(Domain.WorkOrder wo, string userName, List<WorkerRequest> workerRequestList)
+        public ActionResult Create(Domain.WorkOrder wo, string userName, List<Domain.WorkerRequest> workerRequestList)
         {
             UpdateModel(wo);
             Domain.WorkOrder neworder = woServ.Create(wo, userName);           
@@ -279,13 +276,13 @@ namespace Machete.Web.Controllers
         //[Bind(Exclude = "workerRequests")]
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public ActionResult Edit(int id, FormCollection collection, string userName, List<WorkerRequest> workerRequestList)
+        public ActionResult Edit(int id, FormCollection collection, string userName, List<Domain.WorkerRequest> workerRequestList)
         {
             Domain.WorkOrder workOrder = woServ.Get(id);
             UpdateModel(workOrder);
 
             // Stale requests to remove
-            foreach (var rem in workOrder.workerRequests.Except<WorkerRequest>(workerRequestList, new WorkerRequestComparer()).ToArray())
+            foreach (var rem in workOrder.workerRequests.Except<Domain.WorkerRequest>(workerRequestList, new WorkerRequestComparer()).ToArray())
             {
                 var request = wrServ.GetByWorkerID(workOrder.ID, rem.WorkerID);
                 wrServ.Delete(request.ID, userName);
@@ -293,7 +290,7 @@ namespace Machete.Web.Controllers
             }
 
             // New requests to add
-            foreach (var add in workerRequestList.Except<WorkerRequest>(workOrder.workerRequests, new WorkerRequestComparer()))
+            foreach (var add in workerRequestList.Except<Domain.WorkerRequest>(workOrder.workerRequests, new WorkerRequestComparer()))
             {
                 add.workOrder = workOrder;
                 add.workerRequested = wServ.Get(add.WorkerID);
