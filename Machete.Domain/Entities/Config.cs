@@ -9,11 +9,6 @@ namespace Machete.Domain
 {
     public class Config : Record
     {
-        public Config()
-        {
-            idString = "config";
-        }
-
         [StringLength(50)]
         [Required]
         public string key { get; set; }

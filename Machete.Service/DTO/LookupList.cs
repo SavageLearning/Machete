@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Machete.Service.DTO
 {
-    public class ConfigList
+    public class LookupList
     {
         public int ID { get; set; }
         public string tabref { get; set; }

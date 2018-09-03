@@ -93,7 +93,7 @@ namespace Machete.Web
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             //AuthConfig.RegisterAuth();
 
-            ModelBinders.Binders.Add(typeof(List<WorkerRequest>), new workerRequestBinder());
+            ModelBinders.Binders.Add(typeof(List<Domain.WorkerRequest>), new workerRequestBinder());
             var initializer = new MacheteInitializer();
             Database.SetInitializer(initializer);
             IUnityContainer container = GetUnityContainer();
@@ -189,7 +189,6 @@ namespace Machete.Web
             .RegisterType<ITransportProvidersAvailabilityService, TransportProvidersAvailabilityService>(new HierarchicalLifetimeManager())
 
             // 
-            .RegisterType<ILookupCache, LookupCache>(new ContainerControlledLifetimeManager())
             .RegisterType<IDefaults, Defaults>(new ContainerControlledLifetimeManager());
 
             return container;

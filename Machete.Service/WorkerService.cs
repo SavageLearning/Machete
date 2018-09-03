@@ -99,9 +99,9 @@ namespace Machete.Service
         public override Worker Create(Worker record, string user)
         {
             record.Person = pRepo.GetById(record.ID);
+            updateComputedFields(ref record);
             var result = base.Create(record, user);
-            updateComputedFields(ref result);
-            uow.Commit();
+            //uow.Commit();
             return result;
         }
 
@@ -114,7 +114,7 @@ namespace Machete.Service
         private void updateComputedFields(ref Worker record)
         {
             record.memberStatusEN = lRepo.GetById(record.memberStatusID).text_EN;
-            record.memberStatusES = lRepo.GetById(record.memberStatusID).text_EN;
+            record.memberStatusES = lRepo.GetById(record.memberStatusID).text_ES;
             record.typeOfWork = lRepo.GetById(record.typeOfWorkID).ltrCode;
             record.skillCodes = getSkillCodes(record);
             record.fullNameAndID = record.dwccardnum + " " + record.Person.fullName;

@@ -81,16 +81,16 @@ namespace Machete.Web.Helpers
         private SelectList skillLevelNum { get; set; }
         private List<SelectListItem> yesnoEN { get; set; }
         private List<SelectListItem> yesnoES { get; set; }
-        private ILookupCache lcache;
+        private ILookupService lServ;
         private IConfigService cfgServ;
         private ITransportProvidersService tpServ;
         //
         // Initialize once to prevent re-querying DB
         //
-        public Defaults(ILookupCache lc, IConfigService cfg, ITransportProvidersService tpServ)
+        public Defaults(ILookupService lServ, IConfigService cfg, ITransportProvidersService tpServ)
         {
             cfgServ = cfg;
-            lcache = lc;
+            this.lServ = lServ;
             this.tpServ = tpServ;
             hoursNum = new SelectList(new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16" }
                 .Select(x => new LookupNumber { Value = x, Text = x }),
@@ -160,7 +160,7 @@ namespace Machete.Web.Helpers
         // Get the Id string for a given lookup number
         public string byID(int ID)
         {
-            return lcache.textByID(ID, getCIString());
+            return lServ.textByID(ID, getCIString());
         }
         public string byID(int? ID)
         {
@@ -170,7 +170,7 @@ namespace Machete.Web.Helpers
         // Get the ID number for a given lookup string
         public int byKeys(string category, string key)
         {
-            return lcache.getByKeys(category, key);
+            return lServ.GetByKey(category, key).ID;
         }
         //
         // create multi-lingual yes/no strings
@@ -196,14 +196,12 @@ namespace Machete.Web.Helpers
         public int getDefaultID(string type)
         {
             int count;
-            count = lcache.getCache()
-                .Where(s => s.selected == true &&
+            count = lServ.GetMany(s => s.selected == true &&
                             s.category == type)
                 .Count();
             if (count > 0)
             {
-                return lcache.getCache()
-                            .Where(s => s.selected == true &&
+                return lServ.GetMany(s => s.selected == true &&
                                         s.category == type)
                             .FirstOrDefault().ID;
             }
@@ -213,14 +211,12 @@ namespace Machete.Web.Helpers
         public double getDefaultSkillWage()
         {
             double wage = 0.0;
-            int count = lcache.getCache()
-                .Where(s => s.selected == true &&
+            int count = lServ.GetMany(s => s.selected == true &&
                             s.category == LCategory.skill && s.active == true)
                 .Count();
             if (count > 0)
             {
-                return lcache.getCache()
-                            .Where(s => s.selected == true &&
+                return lServ.GetMany(s => s.selected == true &&
                                         s.category == LCategory.skill && s.active == true)
                             .FirstOrDefault().wage ?? 0.0;
             }
@@ -230,14 +226,12 @@ namespace Machete.Web.Helpers
         public int getDefaultSkillHours()
         {
             int hours = 0;
-            int count = lcache.getCache()
-                .Where(s => s.selected == true &&
+            int count = lServ.GetMany(s => s.selected == true &&
                             s.category == LCategory.skill && s.active == true)
                 .Count();
             if (count > 0)
             {
-                return lcache.getCache()
-                            .Where(s => s.selected == true &&
+                return lServ.GetMany(s => s.selected == true &&
                                         s.category == LCategory.skill && s.active == true)
                             .FirstOrDefault().minHour ?? 0;
             }
@@ -251,7 +245,7 @@ namespace Machete.Web.Helpers
 
         public IEnumerable<string> getTeachers()
         {
-            return lcache.getTeachers();
+            return lServ.GetTeachers();
         }
         /// <summary>
         /// Get the SelectList for the group
@@ -265,7 +259,7 @@ namespace Machete.Web.Helpers
             SelectList list;
             if (locale == "ES") field = "text_ES";
             else field = "text_EN";
-            list = new SelectList(lcache.getCache().Where(s => s.category == type && s.active == true),
+            list = new SelectList(lServ.GetMany(s => s.category == type && s.active == true),
                                     "ID",
                                     field,
                                     getDefaultID(type));
@@ -298,8 +292,7 @@ namespace Machete.Web.Helpers
         public List<SelectListItemEmail> getEmailTemplates()
         {
             var locale = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant();
-            IEnumerable<Lookup> prelist = lcache.getCache()
-                                         .Where(s => s.category == LCategory.emailTemplate);
+            IEnumerable<Lookup> prelist = lServ.GetMany(s => s.category == LCategory.emailTemplate);
             return new List<SelectListItemEmail>(prelist
                 .Select(x => new SelectListItemEmail
                 {
@@ -319,8 +312,7 @@ namespace Machete.Web.Helpers
         public List<SelectListItemEx> getSkill(bool specializedOnly)
         {
             var locale = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant();
-            IEnumerable<Lookup> prelist = lcache.getCache()
-                                                     .Where(s => s.category == LCategory.skill && s.active == true);
+            IEnumerable<Lookup> prelist = lServ.GetMany(s => s.category == LCategory.skill && s.active == true);
             Func<Lookup, string> textFunc; //anon function
             if (prelist == null) throw new ArgumentNullException("No skills returned");
             if (specializedOnly)
@@ -354,8 +346,7 @@ namespace Machete.Web.Helpers
         public List<SelectListItemEx> getEmployerSkill()
         {
             var locale = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant();
-            IEnumerable<Lookup> prelist = lcache.getCache()
-                                                     .Where(s => s.category == LCategory.skill && s.active == true);
+            IEnumerable<Lookup> prelist = lServ.GetMany(s => s.category == LCategory.skill && s.active == true);
             Func<Lookup, string> textFunc; //anon function
             if (prelist == null) throw new ArgumentNullException("No skills returned");
  
@@ -390,8 +381,7 @@ namespace Machete.Web.Helpers
             textFunc = (ll => (locale == "es" ? ll.text_ES : ll.text_EN));
             Func<Lookup, string> sortFunc = (ll => locale == "es" ? ll.text_ES : ll.text_EN); //created new sortFunc to sort only by skill text and not by concatenated ltrCode + skills 
 
-            IEnumerable<Lookup> prelist = lcache.getCache()
-                                                .Where(s => s.category == LCategory.skill && s.active == true)
+            IEnumerable<Lookup> prelist = lServ.GetMany(s => s.category == LCategory.skill && s.active == true)
                                                 .OrderBy(s => sortFunc(s)); //LINQ & FUNC
             if (prelist == null) throw new ArgumentNullException("No skills returned");
 

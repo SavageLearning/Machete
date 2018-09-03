@@ -1,8 +1,8 @@
 ﻿@model Machete.Web.ViewModel.Event
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
-@using Machete.Domain.Resources
-@using Machete.Domain
+
+@using Machete.Web.ViewModel
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
     string recType = "event";
@@ -18,7 +18,7 @@
             @Html.LabelFor(model => model.eventTypeID)
         </div>
         <div class="mui-event-edit-field tb-field">
-            @Html.mUIDropDownListFor(model => model.eventTypeID, Model.def.getSelectList(LCategory.eventtype),
+            @Html.mUIDropDownListFor(model => model.eventTypeID, Model.def.getSelectList(Machete.Domain.LCategory.eventtype),
                                   new { tabindex = "2", id = idPrefix + "eventType" })
             @Html.ValidationMessageFor(model => model.eventTypeID)
         </div>

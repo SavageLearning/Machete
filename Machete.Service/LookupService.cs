@@ -34,8 +34,10 @@ namespace Machete.Service
 {
     public interface ILookupService : IService<Lookup>
     {
-        IEnumerable<DTO.ConfigList> GetIndexView(viewOptions o);
+        IEnumerable<DTO.LookupList> GetIndexView(viewOptions o);
         Lookup GetByKey(string category, string key);
+        string textByID(int ID, string locale);
+        IEnumerable<string> GetTeachers();
     }
 
     // Business logic for Lookup record management
@@ -52,9 +54,10 @@ namespace Machete.Service
             this.lrepo = lRepo;
             this.map = map;
             this.logPrefix = "Lookup";
+            populateStaticIds();
         }
 
-        public IEnumerable<DTO.ConfigList> GetIndexView(viewOptions o)
+        public IEnumerable<DTO.LookupList> GetIndexView(viewOptions o)
         {
             //Get all the records
             IQueryable<Lookup> q = repo.GetAllQ();
@@ -64,7 +67,7 @@ namespace Machete.Service
             if (!string.IsNullOrEmpty(o.category)) IndexViewBase.byCategory(o, ref q);
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
 
-            return q.ProjectTo<DTO.ConfigList>(map.ConfigurationProvider)
+            return q.ProjectTo<DTO.LookupList>(map.ConfigurationProvider)
                 .Skip(o.displayStart)
                 .Take(o.displayLength)
                 .AsEnumerable();
@@ -128,6 +131,30 @@ namespace Machete.Service
             {
                 throw new MacheteIntegrityException("Unable to Lookup Category: " + category + ", text: " + key + "Exception:" + e.ToString());
             }
+        }
+
+        public string textByID(int ID, string locale)
+        {
+            Lookup record;
+            if (ID == 0) return null;
+            try
+            {
+                record = lrepo.GetById(ID);
+            }
+            catch
+            {
+                throw new MacheteIntegrityException("Unable to find Lookup record " + ID);
+            }
+            if (locale == "es" || locale == "ES")
+            {
+                return record.text_ES;
+            }
+            return record.text_EN; ;  //defaults to English
+        }
+
+        public IEnumerable<string> GetTeachers()
+        {
+            return lrepo.GetTeachers();
         }
     }
 }

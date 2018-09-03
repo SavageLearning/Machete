@@ -58,7 +58,6 @@ namespace Machete.Domain
         public Email()
         {
             statusID = Email.iPending;
-            idString = "email";
         }
 
         public virtual ICollection<WorkOrder> WorkOrders { get; set; }

@@ -245,9 +245,10 @@
     <Compile Include="Controllers\HirerAccountController.cs" />
     <Compile Include="Controllers\ReportsV2Controller.cs" />
     <Compile Include="Controllers\V2Controller.cs" />
+    <Compile Include="Helpers\LocalizedDisplayNameAttribute.cs" />
     <Compile Include="Maps\ActivityProfile.cs" />
     <Compile Include="Maps\ActivitySigninProfile.cs" />
-    <Compile Include="Maps\ConfigProfile.cs" />
+    <Compile Include="Maps\LookupProfile.cs" />
     <Compile Include="Maps\EmailProfile.cs" />
     <Compile Include="Maps\EmployerProfile.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -293,17 +294,33 @@
     <Compile Include="Helpers\MacheteController.cs" />
     <Compile Include="Helpers\mUIExtensions.cs" />
     <Compile Include="Helpers\workerRequestBinder.cs" />
+    <Compile Include="Resources\Activity.Designer.cs" />
     <Compile Include="Resources\ActivitySchedule.Designer.cs">
       <DependentUpon>ActivitySchedule.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Resources\ActivitySchedule.es.Designer.cs" />
+    <Compile Include="Resources\Employer.Designer.cs" />
+    <Compile Include="Resources\Employer.es.Designer.cs" />
+    <Compile Include="Resources\Event.Designer.cs" />
+    <Compile Include="Resources\Lookup.Designer.cs" />
+    <Compile Include="Resources\Person.Designer.cs" />
+    <Compile Include="Resources\Person.es.Designer.cs" />
+    <Compile Include="Resources\Record.Designer.cs" />
+    <Compile Include="Resources\Record.es.Designer.cs" />
+    <Compile Include="Resources\WorkAssignment.Designer.cs" />
+    <Compile Include="Resources\WorkAssignment.es.Designer.cs" />
+    <Compile Include="Resources\Worker.Designer.cs" />
+    <Compile Include="Resources\Worker.es.Designer.cs" />
+    <Compile Include="Resources\WorkOrder.Designer.cs" />
+    <Compile Include="Resources\WorkOrder.es.Designer.cs" />
     <Compile Include="ViewModel\AccountViewModels.cs" />
     <Compile Include="ViewModel\Activity.cs" />
     <Compile Include="ViewModel\ActivityIndex.cs" />
     <Compile Include="ViewModel\ActivitySchedule.cs" />
     <Compile Include="ViewModel\ActivitySignin.cs" />
-    <Compile Include="ViewModel\Config.cs" />
+    <Compile Include="ViewModel\Lookup.cs" />
     <Compile Include="ViewModel\Email.cs" />
     <Compile Include="ViewModel\Event.cs" />
     <Compile Include="ViewModel\IdentityModels.cs" />
@@ -422,11 +439,14 @@
     <Compile Include="ViewModel\EmailView.cs" />
     <Compile Include="ViewModel\Employer.cs" />
     <Compile Include="ViewModel\Person.cs" />
+    <Compile Include="ViewModel\Record.cs" />
     <Compile Include="ViewModel\ReportPrintView.cs" />
     <Compile Include="ViewModel\PeopleIndex.cs" />
+    <Compile Include="ViewModel\Signin.cs" />
     <Compile Include="ViewModel\WorkAssignment.cs" />
     <Compile Include="ViewModel\WorkAssignmentIndex.cs" />
     <Compile Include="ViewModel\Worker.cs" />
+    <Compile Include="ViewModel\WorkerRequest.cs" />
     <Compile Include="ViewModel\WorkerSignin.cs" />
     <Compile Include="ViewModel\WorkOrder.cs" />
     <Compile Include="ViewModel\WorkOrderGroupPrintView.cs" />
@@ -753,6 +773,20 @@
     <Content Include="Content\bundles\scripts.bundle.js.map" />
     <Content Include="Content\bundles\styles.bundle.js.map" />
     <Content Include="Content\bundles\vendor.bundle.js.map" />
+    <None Include="Properties\PublishProfiles\casa.machetessl.org.pubxml" />
+    <None Include="Properties\PublishProfiles\donbosco.machetessl.org.pubxml" />
+    <None Include="Properties\PublishProfiles\elcentro.machetessl.org.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\graton.machetessl.org.pubxml" />
+    <None Include="Properties\PublishProfiles\pasadena.machetessl.org.pubxml" />
+    <None Include="Properties\PublishProfiles\pomona.machetessl.org.pubxml" />
+    <None Include="Properties\PublishProfiles\southside.machetessl.org.pubxml" />
+    <None Include="Properties\PublishProfiles\test-casa.machetessl.org.pubxml" />
+    <None Include="Properties\PublishProfiles\test-graton.machetessl.org.pubxml" />
+    <None Include="Properties\PublishProfiles\test-mountainview.machetessl.org.pubxml" />
+    <None Include="Properties\PublishProfiles\test-voz.machetessl.org.pubxml" />
+    <None Include="Properties\PublishProfiles\test.machetessl.org.pubxml" />
+    <None Include="Properties\PublishProfiles\voz.machetessl.org.pubxml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -775,7 +809,6 @@
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="Views\HirerAccount\" />
   </ItemGroup>
   <ItemGroup>
@@ -794,6 +827,8 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Activities.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Activity.es.resx" />
+    <EmbeddedResource Include="Resources\Activity.resx" />
     <EmbeddedResource Include="Resources\ActivitySchedule.es.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -812,6 +847,8 @@
       <LastGenOutput>Emails.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Employer.es.resx" />
+    <EmbeddedResource Include="Resources\Employer.resx" />
     <EmbeddedResource Include="Resources\Employers.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Employers.es.Designer.cs</LastGenOutput>
@@ -821,11 +858,17 @@
       <LastGenOutput>Employers.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Event.es.resx" />
+    <EmbeddedResource Include="Resources\Event.resx" />
     <EmbeddedResource Include="Resources\Events.es.resx" />
     <EmbeddedResource Include="Resources\Events.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Events.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Lookup.es.resx" />
+    <EmbeddedResource Include="Resources\Lookup.resx" />
+    <EmbeddedResource Include="Resources\Person.es.resx" />
+    <EmbeddedResource Include="Resources\Person.resx" />
     <EmbeddedResource Include="Resources\Persons.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Persons.es.Designer.cs</LastGenOutput>
@@ -835,6 +878,8 @@
       <LastGenOutput>Persons.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Record.es.resx" />
+    <EmbeddedResource Include="Resources\Record.resx" />
     <EmbeddedResource Include="Resources\Reports.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Reports.es.Designer.cs</LastGenOutput>
@@ -863,6 +908,8 @@
       <LastGenOutput>ValidationStrings.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\WorkAssignment.es.resx" />
+    <EmbeddedResource Include="Resources\WorkAssignment.resx" />
     <EmbeddedResource Include="Resources\WorkAssignments.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>WorkAssignments.es.Designer.cs</LastGenOutput>
@@ -873,6 +920,8 @@
       <LastGenOutput>WorkAssignments.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Worker.es.resx" />
+    <EmbeddedResource Include="Resources\Worker.resx" />
     <EmbeddedResource Include="Resources\Workers.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Workers.es.Designer.cs</LastGenOutput>
@@ -889,6 +938,8 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>WorkerSignins.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\WorkOrder.es.resx" />
+    <EmbeddedResource Include="Resources\WorkOrder.resx" />
     <EmbeddedResource Include="Resources\WorkOrders.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>WorkOrders.es.Designer.cs</LastGenOutput>

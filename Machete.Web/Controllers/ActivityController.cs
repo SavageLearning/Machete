@@ -41,18 +41,15 @@ namespace Machete.Web.Controllers
     public class ActivityController : MacheteController
     {
         private readonly IActivityService serv;
-        private readonly LookupCache lcache;
         private readonly IMapper map;
         private readonly IDefaults def;
         private CultureInfo CI;
 
         public ActivityController(
             IActivityService aServ, 
-            LookupCache lc,
             IDefaults def,
             IMapper map)
         {
-            this.lcache = lc;
             this.serv = aServ;
             this.map = map;
             this.def = def;
@@ -134,10 +131,10 @@ namespace Machete.Web.Controllers
 
             if (activ.nameID == 0)
             {
-                if (activ.typeID == lcache.getByKeys(LCategory.activityType, LActType.Assembly))
-                    activ.nameID = lcache.getByKeys(LCategory.activityName, LActName.Assembly);
-                else if (activ.typeID == lcache.getByKeys(LCategory.activityType, LActType.OrgMtg))
-                    activ.nameID = lcache.getByKeys(LCategory.activityName, LActName.OrgMtg);
+                if (activ.typeID == def.byKeys(LCategory.activityType, LActType.Assembly))
+                    activ.nameID = def.byKeys(LCategory.activityName, LActName.Assembly);
+                else if (activ.typeID == def.byKeys(LCategory.activityType, LActType.OrgMtg))
+                    activ.nameID = def.byKeys(LCategory.activityName, LActName.OrgMtg);
                 else
                     throw new MacheteIntegrityException("Something went wrong with Activity Types.");
             }

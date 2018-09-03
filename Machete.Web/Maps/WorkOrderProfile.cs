@@ -27,6 +27,10 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.onlineSource,         opt => opt.MapFrom(d => d.onlineSource ? Shared.True : Shared.False))
                 .ForMember(v => v.recordid,             opt => opt.MapFrom(d => Convert.ToString(d.ID)))
                 .ForMember(v => v.transportMethod,      opt => opt.MapFrom(d => getCI() == "ES" ? d.transportMethodES : d.transportMethodEN))
+                .ForMember(v => v.def, opt => opt.Ignore())
+                .ForMember(v => v.idString, opt => opt.Ignore())
+                .ForMember(v => v.datecreatedstring, opt => opt.Ignore())
+                .ForMember(v => v.workAssignments, opt => opt.Ignore())
                 ;
             //
             //

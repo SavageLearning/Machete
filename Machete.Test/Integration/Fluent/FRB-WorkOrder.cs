@@ -60,7 +60,6 @@ namespace Machete.Test.Integration
         {
             //
             // DEPENDENCIES
-            if (_lcache == null) AddLookupCache();
             if (_emp == null) AddEmployer();
             if (_servWO == null) AddServWorkOrder();
 
@@ -86,12 +85,19 @@ namespace Machete.Test.Integration
             return _wo;
         }
 
-        public WorkOrder CloneWorkOrder()
+        public Web.ViewModel.WorkOrder CloneWorkOrder()
         {
-            var wo = (WorkOrder)Records.order.Clone();
+            AddMapper();
+            var wo = _webMap.Map<Machete.Domain.WorkOrder, Web.ViewModel.WorkOrder>((WorkOrder)Records.order.Clone());
             wo.contactName = RandomString(10);
             return wo;
         }
 
+        public Machete.Domain.WorkOrder CloneDomainWorkOrder()
+        {
+            var wo = (Machete.Domain.WorkOrder)Records.order.Clone();
+            wo.contactName = RandomString(10);
+            return wo;
+        }
     }
 }

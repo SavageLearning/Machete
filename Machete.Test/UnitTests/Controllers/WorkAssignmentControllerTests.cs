@@ -56,7 +56,6 @@ namespace Machete.Test.Unit.Controller
         WorkAssignmentController _ctrlr;
         WorkAssignmentIndex _view;
         FormCollection fakeform;
-        Mock<ILookupCache> lcache;
         Mock<IDatabaseFactory> dbfactory;
 
         [TestInitialize]
@@ -68,9 +67,8 @@ namespace Machete.Test.Unit.Controller
             wsiServ = new Mock<IWorkerSigninService>();
             def = new Mock<IDefaults>();
             map = new Mock<IMapper>();
-            lcache = new Mock<ILookupCache>();
             dbfactory = new Mock<IDatabaseFactory>();
-            _ctrlr = new WorkAssignmentController(waServ.Object, wkrServ.Object, woServ.Object, wsiServ.Object, lcache.Object, def.Object, map.Object);
+            _ctrlr = new WorkAssignmentController(waServ.Object, wkrServ.Object, woServ.Object, wsiServ.Object, def.Object, map.Object);
             _view = new WorkAssignmentIndex();
             _ctrlr.SetFakeControllerContext();
             fakeform = new FormCollection();
@@ -100,8 +98,7 @@ namespace Machete.Test.Unit.Controller
             var vmwo = new Machete.Web.ViewModel.WorkAssignment();
             map.Setup(x => x.Map<Domain.WorkAssignment, Machete.Web.ViewModel.WorkAssignment>(It.IsAny<Domain.WorkAssignment>()))
                 .Returns(vmwo);
-            var lc = new List<Lookup>();
-            lcache.Setup(p => p.getCache()).Returns(() => lc);
+            var lc = new List<Domain.Lookup>();
             //Act
             var result = (PartialViewResult)_ctrlr.Create(0, "Unit WA Cntroller desc");
             //Assert
@@ -173,7 +170,7 @@ namespace Machete.Test.Unit.Controller
             //Act
             PartialViewResult result = (PartialViewResult)_ctrlr.Edit(testid);
             //Assert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Domain.WorkAssignment));
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Web.ViewModel.WorkAssignment));
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WAs)]
@@ -222,7 +219,7 @@ namespace Machete.Test.Unit.Controller
         public void Unit_WA_Controller_edit_post_invalid_throws_exception()
         {
             //Arrange
-            var asmt = new Web.ViewModel.WorkAssignment();
+            var asmt = new Domain.WorkAssignment();
             Domain.Worker wkr = new Domain.Worker();
             wkr.ID = 424;
             int testid = 4243;

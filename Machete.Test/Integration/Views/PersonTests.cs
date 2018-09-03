@@ -38,6 +38,7 @@ namespace Machete.Test.Selenium.View
         public void SetupTest()
         {
             frb = new FluentRecordBase();
+
             driver = new ChromeDriver(ConfigurationManager.AppSettings["CHROMEDRIVERPATH"]);
             baseURL = "http://localhost:4213/";
             ui = new sharedUI(driver, baseURL, map);
@@ -69,7 +70,7 @@ namespace Machete.Test.Selenium.View
         public void SePerson_create_person()
         {
             //Arrange
-            Person _per = (Person)Records.person.Clone();
+            var _per = (Web.ViewModel.Person)ViewModelRecords.person.Clone();
             //Act
             ui.personCreate(_per);
             //Assert
@@ -80,8 +81,8 @@ namespace Machete.Test.Selenium.View
         public void SePerson_create_worker()
         {
             //Arrange
-            Person _per = (Person)Records.person.Clone();
-            Worker _wkr = (Worker)Records.worker.Clone();
+            var _per = (Web.ViewModel.Person)ViewModelRecords.person.Clone();
+            var _wkr = (Web.ViewModel.Worker)ViewModelRecords.worker.Clone();
             _wkr.memberexpirationdate = DateTime.Now.AddYears(1);
             //Act
             ui.personCreate(_per);
@@ -97,8 +98,8 @@ namespace Machete.Test.Selenium.View
         public void SePerson_delete_worker()
         {
             //Arrange
-            Person _per = (Person)Records.person.Clone();
-            Worker _wkr = (Worker)Records.worker.Clone();
+            var _per = (Web.ViewModel.Person)ViewModelRecords.person.Clone();
+            var _wkr = (Web.ViewModel.Worker)ViewModelRecords.worker.Clone();
             _wkr.memberexpirationdate = DateTime.Now.AddYears(1);
             //Act
             ui.personCreate(_per);
@@ -115,8 +116,8 @@ namespace Machete.Test.Selenium.View
         public void SePerson_create_event()
         {
             //Arrange
-            Person _per = (Person)Records.person.Clone();
-            Event _ev = (Event)Records.event1.Clone();
+            var _per = (Web.ViewModel.Person)ViewModelRecords.person.Clone();
+            var _ev = (Web.ViewModel.Event)ViewModelRecords.event1.Clone();
             _ev.Person = _per;
 
             //Act
@@ -132,14 +133,14 @@ namespace Machete.Test.Selenium.View
         public void SePerson_signin_sanctioned_worker_fails()
         {
             //Arrange
-            Person _per = (Person)Records.person.Clone();
-            Worker _wkr = (Worker)Records.worker.Clone();
+            var _per = (Web.ViewModel.Person)ViewModelRecords.person.Clone();
+            var _wkr = (Web.ViewModel.Worker)ViewModelRecords.worker.Clone();
             _wkr.memberexpirationdate = DateTime.Now.AddYears(1);
             _wkr.dwccardnum = sharedUI.nextAvailableDwccardnum(frb.ToFactory().Get());
-            Event _san = (Event)Records.event1.Clone();
+            var _san = (Web.ViewModel.Event)ViewModelRecords.event1.Clone();
             _san.Person = _per;
             _san.eventTypeID = MacheteLookup.cache.First(x => x.category == "eventtype" && x.text_EN == "Sanction").ID;
-            Activity _act = (Activity)Records.activity.Clone();
+            var _act = (Web.ViewModel.Activity)ViewModelRecords.activity.Clone();
 
             //Act
             ui.personCreate(_per);

@@ -318,7 +318,7 @@ namespace Machete.Service
         {
             switch (name)
             {
-                case "pWAID": q = descending ? q.OrderByDescending(p => string.Format("{0,5:D5}", p.workOrder.paperOrderNum) + "-" + p.pseudoID) : q.OrderBy(p => string.Format("{0,5:D5}", p.workOrder.paperOrderNum) + "-" + p.pseudoID); break;
+                case "pWAID": q = descending ? q.OrderByDescending(p => p.fullWAID) : q.OrderBy(p => p.fullWAID); break;
                 case "skill": q = descending ? q.OrderByDescending(p => p.skillID) : q.OrderBy(p => p.skillID); break;
                 case "earnings": q = descending ? q.OrderByDescending(p => p.hourlyWage * p.hours * p.days) : q.OrderBy(p => p.hourlyWage * p.hours * p.days); break;
                 case "hourlywage": q = descending ? q.OrderByDescending(p => p.hourlyWage) : q.OrderBy(p => p.hourlyWage); break;
