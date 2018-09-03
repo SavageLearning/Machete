@@ -37,18 +37,15 @@ namespace Machete.Web.Controllers
     [ElmahHandleError]
     public class WorkerSigninController : MacheteController
     {
-        private readonly IWorkerSigninService _serv;
-        private readonly IWorkerService _wServ;
+        private readonly IWorkerSigninService serv;
         private readonly IMapper map;
         private readonly IDefaults def;
         private System.Globalization.CultureInfo CI;        
         public WorkerSigninController(IWorkerSigninService workerSigninService, 
-                                      IWorkerService workerService, 
             IDefaults def,
             IMapper map)
         {
-            this._serv = workerSigninService;
-            this._wServ = workerService;
+            this.serv = workerSigninService;
             this.map = map;
             this.def = def;
         }
@@ -72,7 +69,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Manager, Administrator, Check-in")]
         public ActionResult Index(int dwccardnum, DateTime dateforsignin, string userName)
         {
-            var wsi = _serv.CreateSignin(dwccardnum, dateforsignin, this.User.Identity.Name);
+            var wsi = serv.CreateSignin(dwccardnum, dateforsignin, this.User.Identity.Name);
             var result = map.Map<WorkerSignin, ViewModel.WorkerSignin>(wsi);
             return Json(result, JsonRequestBehavior.AllowGet);
 
@@ -90,7 +87,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult moveDown(int id, string userName)
         {
-            _serv.moveDown(id, userName);
+            serv.moveDown(id, userName);
             return Json(new
             {
                 jobSuccess = true,
@@ -113,7 +110,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult moveUp(int id, string userName)
         {
-            _serv.moveUp(id, userName);
+            serv.moveUp(id, userName);
             return Json(new
             {
                 jobSuccess = true,
@@ -134,7 +131,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Check-in")]
         public JsonResult Delete(int id, string userName)
         {
-            var record = _serv.Get(id);
+            var record = serv.Get(id);
             if (record.WorkAssignmentID != null)
             {
                 return Json(new
@@ -146,7 +143,7 @@ namespace Machete.Web.Controllers
             }
             else
             { 
-                _serv.Delete(id, userName);            
+                serv.Delete(id, userName);            
                 return Json(new
                 {
                     jobSuccess = true,
@@ -162,11 +159,10 @@ namespace Machete.Web.Controllers
         {
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI = CI;
-            dataTableResult<Service.DTO.WorkerSigninList> was = _serv.GetIndexView(vo);
+            dataTableResult<Service.DTO.WorkerSigninList> was = serv.GetIndexView(vo);
             var result = was.query
-                .Select(
-                    e => map.Map<DTO.WorkerSigninList, ViewModel.WorkerSigninList>(e)
-                ).AsEnumerable();
+                .Select(e => map.Map<DTO.WorkerSigninList, ViewModel.WorkerSigninList>(e))
+                .AsEnumerable();
             return Json(new
             {
                 sEcho = param.sEcho,

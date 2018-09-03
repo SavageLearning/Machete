@@ -14,7 +14,7 @@ using System.Threading;
 namespace Machete.Test.Selenium.View
 {
     [TestClass]
-    public class UnauthActivityTests : FluentRecordBase
+    public class UnauthActivityTests
     {
         private IWebDriver driver;
         private StringBuilder verificationErrors;
@@ -127,9 +127,9 @@ namespace Machete.Test.Selenium.View
             //Arrange
 
             // creates an activity within the hour
-            AddActivity(startTime: DateTime.Now, endTime: DateTime.Now.AddHours(1));
+            frb.AddActivity(startTime: DateTime.Now, endTime: DateTime.Now.AddHours(1));
             Thread.Sleep(1000); //prevent race condition
-            AddActivity(startTime: DateTime.Now, endTime: DateTime.Now.AddHours(1));
+            frb.AddActivity(startTime: DateTime.Now, endTime: DateTime.Now.AddHours(1));
 
 
             //Act
@@ -177,7 +177,7 @@ namespace Machete.Test.Selenium.View
             // Arrange
 
             // creates one activity within the hour
-            AddActivity(startTime: DateTime.Now, endTime: DateTime.Now.AddHours(1));
+            frb.AddActivity(startTime: DateTime.Now, endTime: DateTime.Now.AddHours(1));
 
             Random rand = new Random();
             int rowcount = 1;

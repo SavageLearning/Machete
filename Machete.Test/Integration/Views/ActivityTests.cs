@@ -157,6 +157,7 @@ namespace Machete.Test.Selenium.View
             // Arrange
             int rowcount = 1;
             var _act = (Web.ViewModel.Activity)ViewModelRecords.activity.Clone();
+            frb.ToServLookup().populateStaticIds();
             var _asi = (Web.ViewModel.ActivitySignin)ViewModelRecords.activitysignin.Clone();
             var worker = frb.AddWorker(status: Worker.iActive).ToWorker();
             // Act

@@ -68,7 +68,7 @@ namespace Machete.Test.Unit.Controller
             def = new Mock<IDefaults>();
             map = new Mock<IMapper>();
             dbfactory = new Mock<IDatabaseFactory>();
-            _ctrlr = new WorkAssignmentController(waServ.Object, wkrServ.Object, woServ.Object, wsiServ.Object, def.Object, map.Object);
+            _ctrlr = new WorkAssignmentController(waServ.Object, woServ.Object, wsiServ.Object, def.Object, map.Object);
             _view = new WorkAssignmentIndex();
             _ctrlr.SetFakeControllerContext();
             fakeform = new FormCollection();
@@ -171,46 +171,6 @@ namespace Machete.Test.Unit.Controller
             PartialViewResult result = (PartialViewResult)_ctrlr.Edit(testid);
             //Assert
             Assert.IsInstanceOfType(result.ViewData.Model, typeof(Web.ViewModel.WorkAssignment));
-        }
-
-        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WAs)]
-        public void Unit_WA_Controller_edit_post_valid_updates_model_returns_json()
-        {
-            //Arrange
-            var vmwo = new Machete.Web.ViewModel.WorkAssignment();
-            map.Setup(x => x.Map<Domain.WorkAssignment, Machete.Web.ViewModel.WorkAssignment>(It.IsAny<Domain.WorkAssignment>()))
-                .Returns(vmwo);
-            int testid = 4242;
-            Domain.Worker wkr = new Domain.Worker();
-            wkr.ID = 424;
-            FormCollection fakeform = new FormCollection();
-            fakeform.Add("ID", testid.ToString());
-            fakeform.Add("description", "blah");     //Every required field must be populated,
-            fakeform.Add("comments", "UnitTest");  //or result will be null.            
-            Domain.WorkAssignment asmt = new Domain.WorkAssignment();
-            Domain.WorkAssignment savedAsmt = null;
-            asmt.workerAssignedID = wkr.ID;
-            asmt.ID = testid;
-            string user = "";
-            waServ.Setup(p => p.Get(testid)).Returns(asmt);
-            waServ.Setup(x => x.Save(It.IsAny<Domain.WorkAssignment>(),
-                                          It.IsAny<string>())
-                                         ).Callback((Domain.WorkAssignment p, string str) =>
-                                         {
-                                             savedAsmt = p;
-                                             user = str;
-                                         });
-            wkrServ.Setup(p => p.Get((int)asmt.workerAssignedID)).Returns(wkr);
-            _ctrlr.ValueProvider = fakeform.ToValueProvider();
-            //Act
-            var result = _ctrlr.Edit(testid, null, "UnitTest") as JsonResult;
-            //Assert
-            Assert.IsInstanceOfType(result, typeof(JsonResult));
-            Assert.AreEqual("{ jobSuccess = True }",
-                            result.Data.ToString());
-            Assert.AreEqual(asmt, savedAsmt);
-            Assert.AreEqual(savedAsmt.description, "blah");
-            Assert.AreEqual(savedAsmt.comments, "UnitTest");
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WAs)]

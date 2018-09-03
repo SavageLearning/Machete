@@ -41,10 +41,8 @@ namespace Machete.Web.Controllers
     public class WorkOrderController : MacheteController
     {
         private readonly IWorkOrderService woServ;
-        private readonly IEmployerService eServ;
         private readonly IWorkerService wServ;
         private readonly IWorkerRequestService wrServ;
-        private readonly IWorkAssignmentService waServ;
         private readonly IMapper map;
         private readonly IDefaults def;
         CultureInfo CI;
@@ -53,23 +51,16 @@ namespace Machete.Web.Controllers
         /// Constructor
         /// </summary>
         /// <param name="woServ">Work Order service</param>
-        /// <param name="waServ">Work Assignment service</param>
-        /// <param name="eServ">Employer service</param>
         /// <param name="wServ">Worker service</param>
         /// <param name="wrServ">Worker request service</param>
-        /// <param name="lcache">Lookup cache</param>
         public WorkOrderController(IWorkOrderService woServ,
-            IWorkAssignmentService waServ,
-            IEmployerService eServ,
             IWorkerService wServ,
             IWorkerRequestService wrServ,
             IDefaults def,
             IMapper map)
         {
             this.woServ = woServ;
-            this.eServ = eServ;
             this.wServ = wServ;
-            this.waServ = waServ;
             this.wrServ = wrServ;
             this.map = map;
             this.def = def;
@@ -214,18 +205,6 @@ namespace Machete.Web.Controllers
             UpdateModel(wo);
             Domain.WorkOrder neworder = woServ.Create(wo, userName);           
 
-            // New Worker Requests to add
-            foreach (var workerRequest in workerRequestList)
-            {
-                workerRequest.workOrder = neworder;
-                workerRequest.workerRequested = wServ.Get(workerRequest.WorkerID);
-                workerRequest.updatedByUser(userName);
-                workerRequest.createdByUser(userName);
-                neworder.workerRequests.Add(workerRequest);
-            }
-
-            woServ.Save(neworder, userName);
-
             // JSON object with new work order data
             var result = map.Map<Domain.WorkOrder, ViewModel.WorkOrder>(neworder);
             return Json(new 
@@ -276,30 +255,12 @@ namespace Machete.Web.Controllers
         //[Bind(Exclude = "workerRequests")]
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public ActionResult Edit(int id, FormCollection collection, string userName, List<Domain.WorkerRequest> workerRequestList)
+        public ActionResult Edit(int id, string userName, List<Domain.WorkerRequest> workerRequestList)
         {
             Domain.WorkOrder workOrder = woServ.Get(id);
             UpdateModel(workOrder);
 
-            // Stale requests to remove
-            foreach (var rem in workOrder.workerRequests.Except<Domain.WorkerRequest>(workerRequestList, new WorkerRequestComparer()).ToArray())
-            {
-                var request = wrServ.GetByWorkerID(workOrder.ID, rem.WorkerID);
-                wrServ.Delete(request.ID, userName);
-                workOrder.workerRequests.Remove(rem);
-            }
-
-            // New requests to add
-            foreach (var add in workerRequestList.Except<Domain.WorkerRequest>(workOrder.workerRequests, new WorkerRequestComparer()))
-            {
-                add.workOrder = workOrder;
-                add.workerRequested = wServ.Get(add.WorkerID);
-                add.updatedByUser(userName);
-                add.createdByUser(userName);
-                workOrder.workerRequests.Add(add);
-            }
-
-            woServ.Save(workOrder, userName);
+            woServ.Save(workOrder, workerRequestList, userName);
             return Json(new
             {
                 status = "OK",
