@@ -144,6 +144,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="packages.config" />
+    <Content Include="connections.config" />
+    <Content Include="appsettings.config" />
     <None Include="Properties\PublishProfiles\test-identity.pubxml" />
     <None Include="Properties\PublishProfiles\identity.pubxml" />
     <None Include="Web.Debug.config">

@@ -194,6 +194,8 @@
   <ItemGroup>
     <Content Include="App_Start\Elmah.txt" />
     <Content Include="packages.config" />
+    <Content Include="connections.config" />
+    <Content Include="identityprovider.config" />
     <None Include="Properties\PublishProfiles\test-api.pubxml" />
     <None Include="Properties\PublishProfiles\api.pubxml" />
     <None Include="Web.Debug.config">
