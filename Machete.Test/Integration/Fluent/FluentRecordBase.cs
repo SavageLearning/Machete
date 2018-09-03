@@ -53,7 +53,6 @@ namespace Machete.Test.Integration
         private EventRepository _repoEV;
         private DatabaseFactory _dbFactory;
         private ReadOnlyContext _dbReadOnly;
-        private LookupCache _lcache;
         private WorkerService _servW;
         private ImageService _servI;
         private ConfigService _servC;
