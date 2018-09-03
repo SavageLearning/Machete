@@ -265,9 +265,10 @@ namespace Machete.Data
         public IEnumerable<string> GetTeachers()
         {
             // TODO will break if Identity roles go away
-            var teacherID = db.Get().Roles.First(r => r.Name == "Teacher").Id;
-            return db.Get().Users.Where(u => u.Roles.Any(r => r.RoleId == teacherID))
-              .Select(x => x.UserName).Distinct().ToList();        }
+            var teacherID = dbFactory.Get().Roles.First(r => r.Name == "Teacher").Id;
+            return dbFactory.Get().Users.Where(u => u.Roles.Any(r => r.RoleId == teacherID))
+              .Select(x => x.UserName).Distinct().ToList();
+        }
     }
 
     public class ScheduleRuleRepository : RepositoryBase<ScheduleRule>, IScheduleRuleRepository

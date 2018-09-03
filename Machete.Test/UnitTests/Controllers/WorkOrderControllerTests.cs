@@ -84,7 +84,7 @@ namespace Machete.Test.Unit.Controller
             map = new Mock<IMapper>();
             workerRequest = new List<WorkerRequest> { };
             dbfactory = new Mock<IDatabaseFactory>();
-            _ctrlr = new WorkOrderController(serv.Object, waServ.Object, empServ.Object, reqServ.Object, wrServ.Object, def.Object, map.Object);
+            _ctrlr = new WorkOrderController(serv.Object, reqServ.Object, wrServ.Object, def.Object, map.Object);
             _ctrlr.SetFakeControllerContext();
             // TODO: Include Lookups in Dependency Injection, remove initialize statements
         }
