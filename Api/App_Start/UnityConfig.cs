@@ -25,6 +25,7 @@ namespace Machete.Api
             .RegisterType<IUserStore<MacheteUser>, UserStore<MacheteUser>>(new HierarchicalLifetimeManager())//HttpContextLifetimeManager<IUserStore<ApplicationUser>>())
             //.RegisterType<IUserManager<MacheteUser>, UserManager>(new HierarchicalLifetimeManager())//HttpContextLifetimeManager<IMyUserManager<ApplicationUser>>())
             .RegisterType<IDatabaseFactory, DatabaseFactory>(new HierarchicalLifetimeManager(), new InjectionConstructor("macheteConnection"))
+            .RegisterType<IReadOnlyContext, ReadOnlyContext>(new PerResolveLifetimeManager(), new InjectionConstructor("readonlyConnection"))
             .RegisterType<IUnitOfWork, UnitOfWork>(new HierarchicalLifetimeManager())
             .RegisterType<IEmailConfig, EmailConfig>(new HierarchicalLifetimeManager())
             .RegisterInstance<IMapper>(new MapperConfig().getMapper())

@@ -193,6 +193,24 @@ namespace Machete.Test.Integration.Service
             // assert
             Assert.IsNotNull(result);
         }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
+        public void ValidateReturnsEmptyList_WhenNoErrorsAreFound() {
+            var errorList = new List<string>();
+            var query = "SELECT 1 from dbo.ReportDefinitions";
+            errorList = frb.ToServReportsV2().validateQuery(query);
+            Assert.AreEqual(0, errorList.Count);
+        }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
+        public void ValidateReturnsListOfErrors_WhenTheyAreFound()
+        {
+            var errorList = new List<string>();
+            var query = "DROP TABLE dbo.ReportDefinitions";
+            errorList = frb.ToServReportsV2().validateQuery(query);
+            Assert.AreEqual(1, errorList.Count);
+            Assert.IsTrue(errorList[0].Equals("Cannot drop the table 'ReportDefinitions', because it does not exist or you do not have permission."));
+        }
     }
 
 }
