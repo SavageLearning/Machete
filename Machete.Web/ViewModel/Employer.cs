@@ -16,18 +16,18 @@ namespace Machete.Web.ViewModel
         public string tablabel { get; set; }
         public IDefaults def { get; set; }
         [LocalizedDisplayName("active", NameResourceType = typeof(Resources.Employer))]
-        public new bool active { get; set; }
+        public bool active { get; set; }
         [LocalizedDisplayName("onlineSource", NameResourceType = typeof(Resources.Employer))]
-        public new string onlineSource { get; set; }
+        public string onlineSource { get; set; }
         [LocalizedDisplayName("isbusiness", NameResourceType = typeof(Resources.Employer))]
-        public new bool business { get; set; }
-        public new string isOnlineProfileComplete { get; set; }
+        public bool business { get; set; }
+        public string isOnlineProfileComplete { get; set; }
         [LocalizedDisplayName("receiveUpdates", NameResourceType = typeof(Resources.Employer))]
-        public new string receiveUpdates { get; set; }
+        public string receiveUpdates { get; set; }
         [LocalizedDisplayName("returnCustomer", NameResourceType = typeof(Resources.Employer))]
-        public new string returnCustomer { get; set; }
+        public string returnCustomer { get; set; }
         [LocalizedDisplayName("businessname", NameResourceType = typeof(Resources.Employer))]
-        public new string businessname { get; set; }
+        public string businessname { get; set; }
 
 
         [LocalizedDisplayName("name", NameResourceType = typeof(Resources.Employer))]
@@ -89,7 +89,7 @@ namespace Machete.Web.ViewModel
         public string driverslicense { get; set; }
         //
         [LocalizedDisplayName("referredby", NameResourceType = typeof(Resources.Employer))]
-        public new int? referredby { get; set; }
+        public int? referredby { get; set; }
         //
         [LocalizedDisplayName("referredbyOther", NameResourceType = typeof(Resources.Employer))]
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Employer))]

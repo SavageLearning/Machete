@@ -2,6 +2,7 @@
 using Machete.Web.Resources;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Web;
 
@@ -21,9 +22,9 @@ namespace Machete.Web.Maps
             CreateMap<Domain.Lookup, Service.DTO.LookupList>()
                 //.ForMember(v => v.selected, opt => opt.MapFrom(d => d.selected ? Shared.yes : Shared.no ))
                 //.ForMember(v => v.level, opt => opt.MapFrom(d => d.level != null ? Convert.ToString(d.level) : "" ))
-                .ForMember(v => v.recordid, opt => opt.MapFrom(d => Convert.ToString(d.ID)))
-                .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/Lookup/Edit/" + Convert.ToString(d.ID)))
-                .ForMember(v => v.tablabel, opt => opt.MapFrom(d => d.category + " " + d.text_EN))
+                .ForMember(v => v.recordid, opt => opt.MapFrom(d => SqlFunctions.StringConvert((double)d.ID)))
+                .ForMember(v => v.tabref, opt => opt.Ignore())
+                .ForMember(v => v.tablabel, opt => opt.Ignore())
             ;
             CreateMap<Service.DTO.LookupList, ViewModel.LookupList>()
                 .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/Lookup/Edit/" + Convert.ToString(d.ID)))

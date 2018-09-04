@@ -37,19 +37,16 @@ namespace Machete.Web.Controllers
     public class ActivitySigninController : MacheteController
     {
         private readonly IActivitySigninService serv;
-        private readonly IWorkerService wServ;
         private readonly IMapper map;
         private readonly IDefaults def;
         private System.Globalization.CultureInfo CI;
 
         public ActivitySigninController(
             IActivitySigninService serv, 
-            IWorkerService wServ,
             IDefaults def,
             IMapper map)
         {
             this.serv = serv;
-            this.wServ = wServ;
             this.map = map;
             this.def = def;
         }
@@ -85,9 +82,9 @@ namespace Machete.Web.Controllers
             _asi.dwccardnum = dwccardnum;            
             //
             //
+            string imageRef = serv.getImageRef(dwccardnum);
             Worker w = serv.CreateSignin(_asi, this.User.Identity.Name);
             //Get picture from checkin, show with next view
-            string imageRef = serv.getImageRef(dwccardnum);
 
             return Json(new
             {

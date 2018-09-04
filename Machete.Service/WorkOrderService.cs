@@ -46,6 +46,8 @@ namespace Machete.Service
             int displayStart,
             int displayLength);
         dataTableResult<DTO.WorkOrdersList> GetIndexView(viewOptions opt);
+        void Save(WorkOrder workOrder, List<WorkerRequest> wrList, string user);
+        WorkOrder Create(WorkOrder wo, List<WorkerRequest> wrList, string userName);
     }
 
     // Business logic for WorkOrder record management
@@ -53,6 +55,8 @@ namespace Machete.Service
     public class WorkOrderService : ServiceBase<WorkOrder>, IWorkOrderService
     {
         private readonly IWorkAssignmentService waServ;
+        private readonly IWorkerRequestService wrServ;
+        private readonly IWorkerService wServ;
         private readonly IMapper map;
         private readonly ILookupRepository lRepo;
         private readonly IConfigService cfg;
@@ -66,12 +70,16 @@ namespace Machete.Service
         public WorkOrderService(IWorkOrderRepository repo, 
                                 IWorkAssignmentService waServ,
                                 ITransportProvidersService tpServ,
+                                IWorkerRequestService wrServ,
+                                IWorkerService wServ,
                                 ILookupRepository lRepo,
                                 IUnitOfWork uow,
                                 IMapper map,
                                 IConfigService cfg) : base(repo, uow)
         {
             this.waServ = waServ;
+            this.wrServ = wrServ;
+            this.wServ = wServ;
             this.map = map;
             this.lRepo = lRepo;
             this.cfg = cfg;
@@ -201,41 +209,81 @@ namespace Machete.Service
         /// <param name="workOrder">Work order to create</param>
         /// <param name="user">User performing action</param>
         /// <returns>Work Order object</returns>
-        public override WorkOrder Create(WorkOrder workOrder, string user)
+        public WorkOrder Create(WorkOrder workOrder, List<WorkerRequest> wrList,  string user)
         {
             WorkOrder wo;
             workOrder.timeZoneOffset = Convert.ToDouble(cfg.getConfig(Cfg.TimeZoneDifferenceFromPacific));
             updateComputedValues(ref workOrder);
             workOrder.createdByUser(user);
             wo = repo.Add(workOrder);
-            // TODO: investigate why worker requests collection is added to wo - there is a similar collection of wa added to wo
             wo.workerRequests = new Collection<WorkerRequest>();
-            uow.Commit();
-            if (wo.paperOrderNum == null)
+            if (wrList != null)
+            {
+                // New Worker Requests to add
+                foreach (var workerRequest in wrList)
+                {
+                    workerRequest.workOrder = wo;
+                    workerRequest.workerRequested = wServ.Get(workerRequest.WorkerID);
+                    workerRequest.updatedByUser(user);
+                    workerRequest.createdByUser(user);
+                    wo.workerRequests.Add(workerRequest);
+                }
+            }
+            uow.Save(); 
+            if (wo.paperOrderNum == null || wo.paperOrderNum == 0)
             {
                 wo.paperOrderNum = wo.ID;
-                uow.Commit();
             }
+            uow.Commit();
+
             _log(workOrder.ID, user, "WorkOrder created");
             return wo;
         }
+
+        public override WorkOrder Create(WorkOrder wo, string user)
+        {
+            return Create(wo, null, user);
+        }
+
         private void updateComputedValues(ref WorkOrder record)
         {
             record.statusES = lRepo.GetById(record.statusID).text_ES;
             record.statusEN = lRepo.GetById(record.statusID).text_EN;
-             record.transportMethodEN = tpServ.Get(record.transportProviderID).text_EN;
+            record.transportMethodEN = tpServ.Get(record.transportProviderID).text_EN;
             record.transportMethodES = tpServ.Get(record.transportProviderID).text_ES;
         }
+
+        public void Save(WorkOrder workOrder, List<WorkerRequest> wrList, string user)
+        {
+            // Stale requests to remove
+            foreach (var rem in workOrder.workerRequests.Except<WorkerRequest>(wrList, new WorkerRequestComparer()).ToArray())
+            {
+                var request = wrServ.GetByWorkerID(workOrder.ID, rem.WorkerID);
+                wrServ.Delete(request.ID, user);
+                workOrder.workerRequests.Remove(rem);
+            }
+
+            // New requests to add
+            foreach (var add in wrList.Except<WorkerRequest>(workOrder.workerRequests, new WorkerRequestComparer()))
+            {
+                add.workOrder = workOrder;
+                add.workerRequested = wServ.Get(add.WorkerID);
+                add.updatedByUser(user);
+                add.createdByUser(user);
+                workOrder.workerRequests.Add(add);
+            }
+
+            Save(workOrder, user);
+        }
+
         public override void Save(WorkOrder workOrder, string user)
         {
             updateComputedValues(ref workOrder);
-            base.Save(workOrder, user);
             if (workOrder.paperOrderNum == null)
             {
                 workOrder.paperOrderNum = workOrder.ID;
-                uow.Commit();
             }
-            
+            base.Save(workOrder, user);
         }
         /// <summary>
         /// Provide combined summary of WO/WA status
@@ -312,7 +360,7 @@ namespace Machete.Service
             levent.Properties["RecordID"] = ID; //magic string maps to NLog config
             //levent.Properties["username"] = user.Substring(0, 24); // Note: there is a bug in the logger that appends the username to itself causing logs generated by users with more than 25 characters to crash the code. Truncated this string to temporarily fix that bug.
             nlog.Log(levent);
-        }
+        }        
     }
 
     /// <summary>

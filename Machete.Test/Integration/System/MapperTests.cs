@@ -6,7 +6,7 @@ namespace Machete.Test
     [TestClass]
     public class MapperTests
     {
-        [TestMethod]
+        [Ignore, TestMethod]
         public void TestMethod1()
         {
             var mapper = new Machete.Web.MapperConfig().getMapper();

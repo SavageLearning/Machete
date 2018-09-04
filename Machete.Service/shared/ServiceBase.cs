@@ -101,7 +101,7 @@ namespace Machete.Service
         //{
         //    return repo.Get(where);
         //}
-        /// <summary>
+        /// <summary>`
         /// 
         /// </summary>
         /// <param name="record"></param>
@@ -111,7 +111,7 @@ namespace Machete.Service
         {
             record.createdByUser(user);
             T created = repo.Add(record);
-            uow.Commit();
+            uow.Save();
             log(record.ID, user, logPrefix + " created");
             return created;
         }
@@ -124,8 +124,8 @@ namespace Machete.Service
         {
             T record = repo.GetById(id);
             repo.Delete(record);
+            uow.Save();
             log(id, user, logPrefix + " deleted");
-            uow.Commit();
         }
         /// <summary>
         /// 
@@ -135,8 +135,8 @@ namespace Machete.Service
         public virtual void Save(T record, string user)
         {
             record.updatedByUser(user);
+            uow.Save();
             log(record.ID, user, logPrefix + " edited");
-            uow.Commit();
         }
         /// <summary>
         /// 

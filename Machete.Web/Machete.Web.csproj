@@ -1313,7 +1313,6 @@
   </Target>
   <Target Name="BeforeBuild">
     <Exec Condition="$(Configuration) == 'UAT-test'" Command="npm run build-cloud-test" WorkingDirectory="../UI" />
-    <Exec Condition="$(Configuration) == 'Debug'" Command="npm run build-mvc-embedded" WorkingDirectory="../UI" />
     <Exec Condition="$(Configuration) == 'Release'" Command="npm run build-prod" WorkingDirectory="../UI" />
     <Exec Condition="$(Configuration) == 'Chaim'" Command="npm run build-cloud-test-chaim" WorkingDirectory="../UI" />
   </Target>
