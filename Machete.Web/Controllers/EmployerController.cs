@@ -41,28 +41,24 @@ namespace Machete.Web.Controllers
     public class EmployerController : MacheteController
     {
         private readonly IEmployerService serv;
-        private readonly IWorkOrderService woServ;
         private readonly IMapper map;
         private readonly IDefaults def;
         private System.Globalization.CultureInfo CI;
 
         public EmployerController(
             IEmployerService employerService, 
-            IWorkOrderService workorderService,
             IDefaults def,
             IMapper map
         ) {
             this.serv = employerService;
-            this.woServ = workorderService;
             this.map = map;
             this.def = def;
-            //ViewBag.employerReferenceList = def.getSelectList(LCategory.emplrreference);
         }
         protected override void Initialize(RequestContext requestContext)
         {
             base.Initialize(requestContext);
             CI = (System.Globalization.CultureInfo)Session["Culture"];
-            ViewBag.idPrefix = "employer"; //TODO: integration with mUIExtension, feed idPrefix
+            ViewBag.idPrefix = "employer";
         }
         /// <summary>
         /// 
@@ -86,9 +82,8 @@ namespace Machete.Web.Controllers
             dataTableResult<DTO.EmployersList> list = serv.GetIndexView(vo);
             //return what's left to datatables
             var result = list.query
-                .Select(
-                    e => map.Map<DTO.EmployersList, ViewModel.EmployerList>(e)
-                ).AsEnumerable();
+                .Select(e => map.Map<DTO.EmployersList, ViewModel.EmployerList>(e))
+                .AsEnumerable();
             return Json(new
             {
                 sEcho = param.sEcho,
@@ -145,7 +140,8 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Edit(int id)
         {
-            var m = map.Map<Domain.Employer, ViewModel.Employer>(serv.Get(id));
+            var e = serv.Get(id);
+            var m = map.Map<Domain.Employer, ViewModel.Employer>(e);
             m.def = def;
             return PartialView("Edit", m);
         }

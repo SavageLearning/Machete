@@ -40,6 +40,8 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.memberExpelled, opt => opt.MapFrom(d => d.worker.memberStatusID == Domain.Worker.iExpelled ? true : false))
                 .ForMember(v => v.imageRef, opt => opt.MapFrom(d => d.worker.ImageID == null ? "/Content/images/NO-IMAGE-AVAILABLE.jpg" : "/Image/GetImage/" + d.worker.ImageID))
                 .ForMember(v => v.imageID, opt => opt.MapFrom(d => d.worker.ImageID))
+                .ForMember(v => v.typeOfWorkID, opt => opt.MapFrom(d => d.worker.typeOfWorkID))
+                .ForMember(v => v.signinID, opt => opt.MapFrom(d => d.ID))
             ;
             CreateMap<Domain.WorkerSignin, ViewModel.WorkerSignin>()
                 .ForMember(v => v.memberExpired, opt => opt.MapFrom(d => d.worker.memberStatusID == Domain.Worker.iExpired ? true : false))
@@ -49,6 +51,10 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.imageRef, opt => opt.MapFrom(d => d.worker.ImageID == null ? "/Content/images/NO-IMAGE-AVAILABLE.jpg" : "/Image/GetImage/" + d.worker.ImageID))
                 .ForMember(v => v.message, opt => opt.UseValue("success"))
                 .ForMember(v => v.worker, opt => opt.Ignore())
+                .ForMember(v => v.def, opt => opt.Ignore())
+                .ForMember(v => v.idString, opt => opt.Ignore())
+                .ForMember(v => v.tabref, opt => opt.Ignore())
+                .ForMember(v => v.tablabel, opt => opt.Ignore())
             ;
 
             CreateMap<Service.DTO.WorkerSigninList, ViewModel.WorkerSigninList>()

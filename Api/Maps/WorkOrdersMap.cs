@@ -31,8 +31,6 @@ namespace Machete.Api.Maps
                 .ForMember(v => v.dateupdated, opt => opt.Ignore())
                 .ForMember(v => v.createdby, opt => opt.Ignore())
                 .ForMember(v => v.updatedby, opt => opt.Ignore())
-                .ForMember(v => v.idPrefix, opt => opt.Ignore())
-                .ForMember(v => v.idString, opt => opt.Ignore())
                 .ForMember(v => v.ID, opt => opt.Ignore())
                 ;
         }

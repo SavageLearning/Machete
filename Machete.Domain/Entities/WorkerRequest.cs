@@ -29,7 +29,7 @@ namespace Machete.Domain
     {
         public WorkerRequest()
         {
-            idString = "wkrRequest";
+            //idString = "wkrRequest";
         }
 
         public int WorkOrderID { get; set; }

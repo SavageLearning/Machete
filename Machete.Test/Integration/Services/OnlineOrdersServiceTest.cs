@@ -49,15 +49,15 @@ namespace Machete.Test.Integration.Services
             //
             // Arrange
             var e = frb.ToEmployer();
-            var wo = frb.CloneWorkOrder();
+            var wo = frb.CloneDomainWorkOrder();
             var tpServ = frb.ToServTransportProvider();
 
             wo.zipcode = "98118";
             wo.EmployerID = e.ID;
             var ll = tpServ.GetMany(a => a.key == "transport_bus").SingleOrDefault();
             wo.transportProviderID = ll.ID;
-            wo.workAssignments = new List<WorkAssignment>();
-            var wa = frb.CloneWorkAssignment();
+            wo.workAssignments = new List<Machete.Domain.WorkAssignment>();
+            var wa = frb.CloneDomainWorkAssignment();
             wa.transportCost = 5; wa.ID = 1;
             wo.workAssignments.Add(wa);
             var serv = frb.ToServOnlineOrders();
@@ -79,7 +79,7 @@ namespace Machete.Test.Integration.Services
             //
             // Arrange
             var e = frb.ToEmployer();
-            var wo = frb.CloneWorkOrder();
+            var wo = frb.CloneDomainWorkOrder();
             var tpServ = frb.ToServTransportProvider();
 
             wo.zipcode = "98118";
@@ -102,15 +102,15 @@ namespace Machete.Test.Integration.Services
             //
             // Arrange
             var e = frb.ToEmployer();
-            var wo = frb.CloneWorkOrder();
+            var wo = frb.CloneDomainWorkOrder();
             var tpServ = frb.ToServTransportProvider();
 
             wo.zipcode = "98118";
             wo.EmployerID = e.ID;
             var ll = tpServ.GetMany(a => a.key == "transport_bus").SingleOrDefault();
             wo.transportProviderID = ll.ID;
-            wo.workAssignments = new List<WorkAssignment>();
-            var wa = frb.CloneWorkAssignment();
+            wo.workAssignments = new List<Machete.Domain.WorkAssignment>();
+            var wa = frb.CloneDomainWorkAssignment();
             wa.transportCost = 0;
             wo.workAssignments.Add(wa);
             var serv = frb.ToServOnlineOrders();
@@ -129,15 +129,15 @@ namespace Machete.Test.Integration.Services
             //
             // Arrange
             var e = frb.ToEmployer();
-            var wo = frb.CloneWorkOrder();
+            var wo = frb.CloneDomainWorkOrder();
             var tpServ = frb.ToServTransportProvider();
 
             wo.zipcode = "12345";
             wo.EmployerID = e.ID;
             var ll = tpServ.GetMany(a => a.key == "transport_bus").SingleOrDefault();
             wo.transportProviderID = ll.ID;
-            wo.workAssignments = new List<WorkAssignment>();
-            var wa = frb.CloneWorkAssignment();
+            wo.workAssignments = new List<Machete.Domain.WorkAssignment>();
+            var wa = frb.CloneDomainWorkAssignment();
             wa.transportCost = 5;
             wo.workAssignments.Add(wa);
             var serv = frb.ToServOnlineOrders();
@@ -156,21 +156,21 @@ namespace Machete.Test.Integration.Services
             //
             // Arrange
             var e = frb.ToEmployer();
-            var wo = frb.CloneWorkOrder();
+            var wo = frb.CloneDomainWorkOrder();
             var tpServ = frb.ToServTransportProvider();
 
             wo.zipcode = "98118"; // affects transport cost 
             wo.EmployerID = e.ID;
             var ll = tpServ.GetMany(a => a.key == "transport_van").SingleOrDefault();
             wo.transportProviderID = ll.ID;
-            wo.workAssignments = new List<WorkAssignment>();
-            var wa = frb.CloneWorkAssignment();
+            wo.workAssignments = new List<Machete.Domain.WorkAssignment>();
+            var wa = frb.CloneDomainWorkAssignment();
             wa.transportCost = 15; wa.ID = 1;
             wo.workAssignments.Add(wa);
-            wa = frb.CloneWorkAssignment();
+            wa = frb.CloneDomainWorkAssignment();
             wa.transportCost = 5; wa.ID = 2;
             wo.workAssignments.Add(wa);
-            wa = frb.CloneWorkAssignment();
+            wa = frb.CloneDomainWorkAssignment();
             wa.transportCost = 0; wa.ID = 3;
             wo.workAssignments.Add(wa);
 
@@ -193,21 +193,21 @@ namespace Machete.Test.Integration.Services
             //
             // Arrange
             var e = frb.ToEmployer();
-            var wo = frb.CloneWorkOrder();
+            var wo = frb.CloneDomainWorkOrder();
             var tpServ = frb.ToServTransportProvider();
 
             wo.zipcode = "98118"; // affects transport cost 
             wo.EmployerID = e.ID;
             var ll = tpServ.GetMany(a => a.key == "transport_bus").SingleOrDefault();
             wo.transportProviderID = ll.ID;
-            wo.workAssignments = new List<WorkAssignment>();
-            var wa = frb.CloneWorkAssignment();
+            wo.workAssignments = new List<Machete.Domain.WorkAssignment>();
+            var wa = frb.CloneDomainWorkAssignment();
             wa.transportCost = 15; wa.ID = 1;
             wo.workAssignments.Add(wa);
-            wa = frb.CloneWorkAssignment();
+            wa = frb.CloneDomainWorkAssignment();
             wa.transportCost = 5; wa.ID = 2;
             wo.workAssignments.Add(wa);
-            wa = frb.CloneWorkAssignment();
+            wa = frb.CloneDomainWorkAssignment();
             wa.transportCost = 0; wa.ID = 2;
             wo.workAssignments.Add(wa);
 

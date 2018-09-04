@@ -34,7 +34,7 @@ namespace Machete.Data
         public List<SimpleDataRow> getSimpleAggregate(int id, DateTime beginDate, DateTime endDate)
         {
             var rdef = dbset.Single(a => a.ID == id);
-            return db.Get().Database.SqlQuery<SimpleDataRow>(rdef.sqlquery,
+            return dbFactory.Get().Database.SqlQuery<SimpleDataRow>(rdef.sqlquery,
                 new SqlParameter { ParameterName = "beginDate", Value = beginDate },
                 new SqlParameter { ParameterName = "endDate", Value = endDate })
                 .ToList();
@@ -45,7 +45,7 @@ namespace Machete.Data
             var rdef = dbset.Single(a => a.ID == id);
             var meta = SqlServerUtils.getMetadata(DataContext, rdef.sqlquery);
             var queryType = buildQueryType(meta);
-            Task<List<object>> raw = db.Get().Database.SqlQuery(
+            Task<List<object>> raw = dbFactory.Get().Database.SqlQuery(
                 queryType, 
                 rdef.sqlquery,
                 new SqlParameter { ParameterName = "beginDate", Value = o.beginDate },
@@ -103,7 +103,7 @@ namespace Machete.Data
 
         public List<ReportDefinition> getList()
         {
-            return db.Get().ReportDefinitions.AsEnumerable().ToList();
+            return dbFactory.Get().ReportDefinitions.AsEnumerable().ToList();
         }
 
         public List<QueryMetadata> getColumns(string tableName)

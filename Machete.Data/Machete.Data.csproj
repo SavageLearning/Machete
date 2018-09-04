@@ -415,7 +415,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Readme\Elmah.txt" />
     <Content Include="Migrations\migration_commands.txt" />
     <Content Include="SQL\AddActivityConstants.sql" />
     <Content Include="SQL\CreateElmahTable.sql" />

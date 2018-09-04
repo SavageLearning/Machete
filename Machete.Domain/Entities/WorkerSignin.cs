@@ -29,10 +29,6 @@ namespace Machete.Domain
 {
     public class WorkerSignin : Signin 
     {
-        public WorkerSignin()
-        {
-            idString = "wsi";
-        }
         public int? WorkAssignmentID { get; set; }
         public DateTime? lottery_timestamp { get; set; }
         public int? lottery_sequence { get; set; }
@@ -42,9 +38,7 @@ namespace Machete.Domain
     }
     public abstract class Signin : Record
     {
-        [Required(ErrorMessageResourceName = "dwccardnum", ErrorMessageResourceType = typeof(Resources.Worker))]
-        [RegularExpression("^[0-9]{5,5}$", ErrorMessageResourceName = "dwccardnumerror", ErrorMessageResourceType = typeof(Resources.Worker))]
-        [LocalizedDisplayName("dwccardnum", NameResourceType = typeof(Resources.Worker))]
+        [Required, RegularExpression("^[0-9]{5,5}$")]
         public virtual int dwccardnum { get; set; } 
         [Column("memberStatus")]
         public int? memberStatusID { get; set; }

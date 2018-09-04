@@ -28,6 +28,25 @@ namespace Machete.Service
             this.logPrefix = "Config";
         }
 
+        public override Config Create(Config record, string user)
+        {
+            var result = base.Create(record, user);
+            uow.Commit();
+            return result;
+        }
+
+        public override void Save(Config record, string user)
+        {
+            base.Save(record, user);
+            uow.Commit();
+        }
+
+        public override void Delete(int id, string user)
+        {
+            base.Delete(id, user);
+            uow.Commit();
+        }
+
         public string getConfig(string key)
         {
             if (config == null)

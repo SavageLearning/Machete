@@ -38,27 +38,21 @@ namespace Machete.Web.Controllers
     public class WorkAssignmentController : MacheteController
     {
         private readonly IWorkAssignmentService waServ;
-        private readonly IWorkerService wkrServ;
         private readonly IWorkOrderService woServ;
         private readonly IWorkerSigninService wsiServ;
-        private readonly ILookupCache lcache;
         private readonly IMapper map;
         private readonly IDefaults def;
         private System.Globalization.CultureInfo CI;
         public WorkAssignmentController(IWorkAssignmentService workAssignmentService,
-            IWorkerService workerService,
             IWorkOrderService workOrderService,
             IWorkerSigninService signinService,
-            ILookupCache lc,
             IDefaults def,
             IMapper map)
 
         {
             this.waServ = workAssignmentService;
-            this.wkrServ = workerService;
             this.woServ = workOrderService;
             this.wsiServ = signinService;
-            this.lcache = lc;
             this.map = map;
             this.def = def;
         }
@@ -90,9 +84,8 @@ namespace Machete.Web.Controllers
             vo.CI = CI;
             dataTableResult<Service.DTO.WorkAssignmentsList> was = waServ.GetIndexView(vo);
             var result = was.query
-            .Select(
-                e => map.Map<Service.DTO.WorkAssignmentsList, ViewModel.WorkAssignmentsList>(e)
-            ).AsEnumerable();
+                .Select(e => map.Map<Service.DTO.WorkAssignmentsList, ViewModel.WorkAssignmentsList>(e))
+                .AsEnumerable();
             return Json(new
             {
                 sEcho = param.sEcho,
@@ -217,16 +210,10 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Edit(int id, int? workerAssignedID, string userName)
         {
-            Domain.WorkAssignment asmt = waServ.Get(id);
-            //check if workerAssigned changed; if so, Unassign
-            int? origWorker = asmt.workerAssignedID;
-            if (workerAssignedID != origWorker)
-                waServ.Unassign(asmt.ID, asmt.workerSigninID, userName);     
+            Domain.WorkAssignment asmt = waServ.Get(id);    
             //Update from HTML attributes
             UpdateModel(asmt);
-            //Save will link workerAssigned to Assignment record
-            // if changed from orphan assignment
-            waServ.Save(asmt, userName);
+            waServ.Save(asmt, workerAssignedID, userName);
                 
             return Json(new { jobSuccess = true }, JsonRequestBehavior.AllowGet);
         }

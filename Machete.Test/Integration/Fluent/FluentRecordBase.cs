@@ -50,7 +50,6 @@ namespace Machete.Test.Integration
         private EmailRepository _repoEM;
         private EventRepository _repoEV;
         private DatabaseFactory _dbFactory;
-        private LookupCache _lcache;
         private WorkerService _servW;
         private ImageService _servI;
         private ConfigService _servC;
@@ -87,6 +86,7 @@ namespace Machete.Test.Integration
         {
 
             _user = user;
+            ToServLookup().populateStaticIds();
         }
 
 
@@ -100,7 +100,7 @@ namespace Machete.Test.Integration
             _uow = new UnitOfWork(_dbFactory);
             _uow.Commit();
 
-            AddLookupCache();
+            AddServLookup();
             return this;
         }
 
@@ -114,20 +114,6 @@ namespace Machete.Test.Integration
         {
             if (_dbFactory == null) AddDBFactory();
             return _dbFactory;
-        }
-
-        public FluentRecordBase AddLookupCache()
-        {
-            if (_dbFactory == null) AddDBFactory();
-            _lcache = new LookupCache(_dbFactory);
-            _lcache.getCache();
-            return this;
-        }
-
-        public LookupCache ToLookupCache()
-        {
-            if (_lcache == null) AddLookupCache();
-            return _lcache;
         }
 
         public void Reload<T>(T entity) where T : Record
@@ -374,6 +360,7 @@ namespace Machete.Test.Integration
             if (_webMap == null) AddMapper();
             if (_uow == null) AddUOW();
             _servL = new LookupService(_repoL, _webMap, _uow);
+            _servL.populateStaticIds();
             return this;
         }
 
@@ -432,10 +419,10 @@ namespace Machete.Test.Integration
             // DEPENDENCIES
             if (_repoA == null) AddRepoActivity();
             if (_servAS == null) AddServActivitySignin();
-            if (_lcache == null) AddLookupCache();
+            if (_servL == null) AddServLookup();
             if (_uow == null) AddUOW();
             if (_webMap == null) AddMapper();
-            _servA = new ActivityService(_repoA, _servAS, _lcache, _uow, _webMap);
+            _servA = new ActivityService(_repoA, _servAS, _servL, _uow, _webMap);
             return this;
         }
 
@@ -820,11 +807,14 @@ namespace Machete.Test.Integration
 
         public IMapper ToWebMapper()
         {
+
+            if (_webMap == null) AddMapper();
             return _webMap;
         }
 
         public IMapper ToApiMapper()
         {
+            if (_apiMap == null) AddMapper();
             return _apiMap;
         }
 

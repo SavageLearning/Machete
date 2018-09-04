@@ -341,7 +341,7 @@
     <Compile Include="Integration\Fluent\FRB-WorkerSignins.cs" />
     <Compile Include="Integration\Fluent\FRB-WorkOrder.cs" />
     <Compile Include="Integration\Services\ActivityServiceTests.cs" />
-    <Compile Include="Integration\Services\ConfigServiceTests.cs" />
+    <Compile Include="Integration\Services\LookupServiceTests.cs" />
     <Compile Include="Integration\Services\OnlineOrdersServiceTest.cs" />
     <Compile Include="Integration\Services\ReportServiceTest.cs" />
     <Compile Include="Integration\Services\IndexViewBaseServiceTest.cs" />
@@ -351,6 +351,7 @@
     <Compile Include="Integration\Services\WorkAssignmentServiceTest.cs" />
     <Compile Include="Integration\Services\WorkerSigninServiceTest.cs" />
     <Compile Include="Integration\Services\WorkOrderServiceTest.cs" />
+    <Compile Include="Integration\System\MapperTests.cs" />
     <Compile Include="Integration\System\WorkerCacheTests.cs" />
     <Compile Include="Integration\Views\ActivityTests.cs" />
     <Compile Include="Integration\Views\PersonTests.cs" />
@@ -361,6 +362,7 @@
     <Compile Include="MvcMockHelpers.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ViewModelRecords.cs" />
     <Compile Include="Rx\WO.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -371,7 +373,6 @@
     <Compile Include="UnitTests\Controllers\WorkAssignmentControllerTests.cs" />
     <Compile Include="UnitTests\Controllers\WorkOrderControllerTests.cs" />
     <Compile Include="UnitTests\Services\EmployerServiceUnitTests.cs" />
-    <Compile Include="UnitTests\Services\LookupCacheUnitTests.cs" />
     <Compile Include="UnitTests\Services\WorkAassignmentServiceUnitTests.cs" />
     <Compile Include="UnitTests\Services\WorkerServiceUnitTests.cs" />
     <Compile Include="UnitTests\Services\WorkerSigninServiceUnitTest.cs" />

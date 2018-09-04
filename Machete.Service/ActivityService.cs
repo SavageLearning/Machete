@@ -44,36 +44,37 @@ namespace Machete.Service
     public class ActivityService : ServiceBase<Activity>, IActivityService
     {
         private IActivitySigninService asServ;
-        private LookupCache lcache;
+        private ILookupService lServ;
         private readonly IMapper map;
         public ActivityService(IActivityRepository repo,
             IActivitySigninService asServ,
-            LookupCache lc,
+            ILookupService lServ,
             IUnitOfWork uow,
             IMapper map) : base(repo, uow)
         {
             this.logPrefix = "Activity";
-            this.lcache = lc;
+            this.lServ = lServ;
             this.map = map;
             this.asServ = asServ;
         }
 
         public override Activity Create(Activity record, string user)
         {
-            record.nameEN = lcache.textByID(record.nameID, "EN");
-            record.nameES = lcache.textByID(record.nameID, "ES");
-            record.typeEN = lcache.textByID(record.typeID, "EN");
-            record.typeES = lcache.textByID(record.typeID, "ES");
+            updateCalculatedFields(ref record);
             return base.Create(record, user);
         }
 
         public override void Save(Activity record, string user)
         {
-            record.nameEN = lcache.textByID(record.nameID, "EN");
-            record.nameES = lcache.textByID(record.nameID, "ES");
-            record.typeEN = lcache.textByID(record.typeID, "EN");
-            record.typeES = lcache.textByID(record.typeID, "ES");
+            updateCalculatedFields(ref record);
             base.Save(record, user);
+        }
+        private void updateCalculatedFields(ref Activity record)
+        {
+            record.nameEN = lServ.textByID(record.nameID, "EN");
+            record.nameES = lServ.textByID(record.nameID, "ES");
+            record.typeEN = lServ.textByID(record.typeID, "EN");
+            record.typeES = lServ.textByID(record.typeID, "ES");
         }
 
         public dataTableResult<DTO.ActivityList> GetIndexView(viewOptions o)
