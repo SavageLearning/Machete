@@ -51,6 +51,7 @@ namespace Machete.Web
                 c.AddProfile<LookupProfile>();
                 c.AddProfile<Service.WorkOrderMap>();
                 c.AddProfile<Service.EmployersMap>();
+                c.AddProfile<WorkerRequestProfile>();
 
             });
         }

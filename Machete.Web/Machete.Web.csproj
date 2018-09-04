@@ -260,6 +260,7 @@
     <Compile Include="Maps\PersonProfile.cs" />
     <Compile Include="Maps\WorkAssignmentProfile.cs" />
     <Compile Include="Maps\WorkerProfile.cs" />
+    <Compile Include="Maps\WorkerRequestProfile.cs" />
     <Compile Include="Maps\WorkerSigninProfile.cs" />
     <Compile Include="Maps\WorkOrderProfile.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
