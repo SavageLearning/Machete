@@ -10,7 +10,8 @@ namespace Machete.Web.Maps
         public WorkerRequestProfile()
         {
             CreateMap<Domain.WorkerRequest, ViewModel.WorkerRequest>()
-                .ForMember(vo => vo.workOrder, opt => opt.Ignore());
+                .ForMember(vo => vo.workOrder, opt => opt.Ignore())
+                .MaxDepth(3);
         }
     }
 }
