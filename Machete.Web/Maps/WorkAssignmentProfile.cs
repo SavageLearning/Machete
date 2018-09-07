@@ -18,6 +18,7 @@ namespace Machete.Web.Maps
                     System.String.Format("{0,5:D5}-{1,2:D2}", d.workOrder.paperOrderNum, d.pseudoID)))
                 .ForMember(v => v.def, opt => opt.Ignore())
                 .ForMember(v => v.idString, opt => opt.Ignore())
+                .MaxDepth(3)
             ;
             CreateMap<Domain.WorkAssignment, Service.DTO.WorkAssignmentsList>()
                  .ForMember(v => v.employername, opt => opt.MapFrom(d => d.workOrder.Employer.name))
