@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Machete.Web.Resources;
 using System;
 using System.Collections.Generic;
@@ -30,7 +30,7 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.def, opt => opt.Ignore())
                 .ForMember(v => v.idString, opt => opt.Ignore())
                 .ForMember(v => v.datecreatedstring, opt => opt.Ignore())
-                .ForMember(v => v.workAssignments, opt => opt.Ignore())
+                .ForMember(v => v.workAssignments, opt => opt.MapFrom(d => d.workAssignments)).MaxDepth(3)  
                 ;
             //
             //
