@@ -195,6 +195,9 @@
   <ItemGroup>
     <Content Include="App_Start\Elmah.txt" />
     <Content Include="packages.config" />
+    <Content Include="connections.config" />
+    <Content Include="identityprovider.config" />
+    <None Include="Properties\PublishProfiles\chaim-api.pubxml" />
     <None Include="Properties\PublishProfiles\test-api.pubxml" />
     <None Include="Properties\PublishProfiles\api.pubxml" />
     <None Include="Web.Debug.config">
@@ -242,6 +245,7 @@
     <Compile Include="ViewModels\Lookup.cs" />
     <Compile Include="ViewModels\Record.cs" />
     <Compile Include="ViewModels\ReportDefinition.cs" />
+    <Compile Include="ViewModels\ReportQuery.cs" />
     <Compile Include="ViewModels\TransportProvider.cs" />
     <Compile Include="ViewModels\TransportProviderAvailability.cs" />
     <Compile Include="ViewModels\ScheduleRule.cs" />
@@ -282,6 +286,16 @@
     <OutputPath>bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Chaim|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
