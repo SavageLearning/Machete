@@ -469,53 +469,6 @@
     <Content Include="Content\back_enabled_hover.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\bundles\assets\layout\css\layout-dark-blue.css" />
-    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-300.svg" />
-    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-700.svg" />
-    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-regular.svg" />
-    <Content Include="Content\bundles\assets\layout\images\401.svg" />
-    <Content Include="Content\bundles\assets\layout\images\404.svg" />
-    <Content Include="Content\bundles\assets\layout\images\avatar.png" />
-    <Content Include="Content\bundles\assets\layout\images\dark-user-bg.png" />
-    <Content Include="Content\bundles\assets\layout\images\dark-user-bg2x.png" />
-    <Content Include="Content\bundles\assets\layout\images\error.svg" />
-    <Content Include="Content\bundles\assets\layout\images\favicon.png" />
-    <Content Include="Content\bundles\assets\layout\images\landing\landing-header.png" />
-    <Content Include="Content\bundles\assets\layout\images\landing\promotion.png" />
-    <Content Include="Content\bundles\assets\layout\images\login\login.png" />
-    <Content Include="Content\bundles\assets\layout\images\login\login2x.png" />
-    <Content Include="Content\bundles\assets\layout\images\logo-ultima.svg" />
-    <Content Include="Content\bundles\assets\layout\images\logo.png" />
-    <Content Include="Content\bundles\assets\layout\images\logo2x.png" />
-    <Content Include="Content\bundles\assets\layout\images\preloader.gif" />
-    <Content Include="Content\bundles\assets\layout\images\profile-bg-dark.png" />
-    <Content Include="Content\bundles\assets\layout\images\profile-bg.png" />
-    <Content Include="Content\bundles\assets\layout\images\profile-bg.svg" />
-    <Content Include="Content\bundles\assets\layout\images\user-bg.png" />
-    <Content Include="Content\bundles\assets\layout\images\user-bg2x.png" />
-    <Content Include="Content\bundles\assets\layout\js\ripple.js" />
-    <Content Include="Content\bundles\assets\pages\404.html" />
-    <Content Include="Content\bundles\assets\pages\access.html" />
-    <Content Include="Content\bundles\assets\pages\error.html" />
-    <Content Include="Content\bundles\assets\pages\jquery.js" />
-    <Content Include="Content\bundles\assets\pages\landing.html" />
-    <Content Include="Content\bundles\assets\pages\login.html" />
-    <Content Include="Content\bundles\assets\pages\primeng.min.css" />
-    <Content Include="Content\bundles\assets\theme\theme-dark-blue.css" />
-    <Content Include="Content\bundles\color.c7a33805ffda0d32bd2a.png" />
-    <Content Include="Content\bundles\favicon.ico" />
-    <Content Include="Content\bundles\index.html" />
-    <Content Include="Content\bundles\inline.bundle.js" />
-    <Content Include="Content\bundles\line.567f57385ea3dde2c9ae.gif" />
-    <Content Include="Content\bundles\main.bundle.js" />
-    <Content Include="Content\bundles\oidc-client.js" />
-    <Content Include="Content\bundles\oidc-client.min.js" />
-    <Content Include="Content\bundles\polyfills.bundle.js" />
-    <Content Include="Content\bundles\scripts.bundle.js" />
-    <Content Include="Content\bundles\silent-renew.html" />
-    <Content Include="Content\bundles\silent-renew.js" />
-    <Content Include="Content\bundles\styles.bundle.js" />
-    <Content Include="Content\bundles\vendor.bundle.js" />
     <Content Include="Content\calendar.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -727,53 +680,7 @@
     <Content Include="Scripts\jquery.lightbox-0.5.js" />
     <Content Include="Scripts\jquery.macheteUI-0.1.js" />
     <Content Include="Scripts\jquery.ui.datepicker.js" />
-    <Content Include="Content\bundles\assets\jobs-dispatched-count.json" />
-    <Content Include="Content\bundles\assets\layout\css\layout-dark-blue.scss" />
-    <Content Include="Content\bundles\assets\layout\fonts\MaterialIcons-Regular.eot" />
-    <Content Include="Content\bundles\assets\layout\fonts\MaterialIcons-Regular.ttf" />
-    <Content Include="Content\bundles\assets\layout\fonts\MaterialIcons-Regular.woff" />
-    <Content Include="Content\bundles\assets\layout\fonts\MaterialIcons-Regular.woff2" />
-    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-300.eot" />
-    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-300.ttf" />
-    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-300.woff" />
-    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-300.woff2" />
-    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-700.eot" />
-    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-700.ttf" />
-    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-700.woff" />
-    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-700.woff2" />
-    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-regular.eot" />
-    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-regular.ttf" />
-    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-regular.woff" />
-    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-regular.woff2" />
-    <Content Include="Content\bundles\assets\sass\layout\_compact.scss" />
-    <Content Include="Content\bundles\assets\sass\layout\_dashboard.scss" />
-    <Content Include="Content\bundles\assets\sass\layout\_exception.scss" />
-    <Content Include="Content\bundles\assets\sass\layout\_landing.scss" />
-    <Content Include="Content\bundles\assets\sass\layout\_layout.scss" />
-    <Content Include="Content\bundles\assets\sass\layout\_login.scss" />
-    <Content Include="Content\bundles\assets\sass\layout\_main.scss" />
-    <Content Include="Content\bundles\assets\sass\layout\_splash.scss" />
-    <Content Include="Content\bundles\assets\sass\layout\_utils.scss" />
-    <Content Include="Content\bundles\assets\sass\theme\_common.scss" />
-    <Content Include="Content\bundles\assets\sass\theme\_data.scss" />
-    <Content Include="Content\bundles\assets\sass\theme\_forms.scss" />
-    <Content Include="Content\bundles\assets\sass\theme\_icons.scss" />
-    <Content Include="Content\bundles\assets\sass\theme\_menu.scss" />
-    <Content Include="Content\bundles\assets\sass\theme\_message.scss" />
-    <Content Include="Content\bundles\assets\sass\theme\_misc.scss" />
-    <Content Include="Content\bundles\assets\sass\theme\_overlay.scss" />
-    <Content Include="Content\bundles\assets\sass\theme\_panel.scss" />
-    <Content Include="Content\bundles\assets\sass\theme\_theme.scss" />
-    <Content Include="Content\bundles\assets\sass\_fonts.scss" />
-    <Content Include="Content\bundles\assets\sass\_mixins.scss" />
-    <Content Include="Content\bundles\assets\sass\_variables.scss" />
-    <Content Include="Content\bundles\assets\theme\theme-dark-blue.scss" />
-    <Content Include="Content\bundles\inline.bundle.js.map" />
-    <Content Include="Content\bundles\main.bundle.js.map" />
-    <Content Include="Content\bundles\polyfills.bundle.js.map" />
-    <Content Include="Content\bundles\scripts.bundle.js.map" />
-    <Content Include="Content\bundles\styles.bundle.js.map" />
-    <Content Include="Content\bundles\vendor.bundle.js.map" />
+    <Content Include="Content\bundles\**\*" />
     <None Include="Properties\PublishProfiles\casa.machetessl.org.pubxml" />
     <None Include="Properties\PublishProfiles\donbosco.machetessl.org.pubxml" />
     <None Include="Properties\PublishProfiles\elcentro.machetessl.org.pubxml" />
@@ -1316,6 +1223,9 @@
     <Exec Condition="$(Configuration) == 'UAT-test'" Command="npm run build-cloud-test" WorkingDirectory="../UI" />
     <Exec Condition="$(Configuration) == 'Release'" Command="npm run build-prod" WorkingDirectory="../UI" />
     <Exec Condition="$(Configuration) == 'Chaim'" Command="npm run build-cloud-test-chaim" WorkingDirectory="../UI" />
+    <ItemGroup>
+      <Content Include="Content\Bundles\*.*" />
+    </ItemGroup>
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -53,7 +54,15 @@ namespace Machete.Service
             {
                 config = GetAll().ToList();
             }
-            return config.Where(c => c.key == key).SingleOrDefault().value;
+            try
+            {
+                return config.Where(c => c.key == key).SingleOrDefault().value;
+            }
+            catch(Exception e)
+            {
+                var msg = System.String.Format("Didn't find an entry for: {0}; Exception {1}", key, e.Message);
+                throw new MacheteNullObjectException(msg);
+            }
         }
     }
 }
