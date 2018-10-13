@@ -9,13 +9,16 @@ namespace Machete.Web
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/angular").Include(
-                        "~/Content/bundles/inline*",
-                        "~/Content/bundles/main*",
-                        "~/Content/bundles/scripts*",
+                        "~/Content/bundles/runtime*",
+                        "~/Content/bundles/polyfills*",
                         "~/Content/bundles/styles*",
+                        "~/Content/bundles/scripts*",
                         "~/Content/bundles/vendor*",
-                        "~/Content/bundles/polyfills*"
+                        "~/Content/bundles/main*"
                         ));
+            bundles.Add(new StyleBundle("~/bundles/angular-css").Include(
+                        "~/Content/bundles/styles*"
+                ));
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-1.7.1.js",
                         "~/Scripts/jquery-ui-1.8.11.js",

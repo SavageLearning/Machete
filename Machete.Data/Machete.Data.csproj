@@ -317,7 +317,6 @@
     <Compile Include="Infrastructure\DatabaseFactory.cs" />
     <Compile Include="Infrastructure\Disposable.cs" />
     <Compile Include="Infrastructure\ReadOnlyContext.cs" />
-    <Compile Include="Initialize\XmlParserMacheteConfigs.cs" />
     <Compile Include="Initialize\MacheteConfigs.cs" />
     <Compile Include="Initialize\MacheteInitializer.cs" />
     <Compile Include="Infrastructure\RepositoryBase.cs" />

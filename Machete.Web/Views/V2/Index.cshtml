@@ -1,6 +1,5 @@
 <body>
-
-    @Scripts.Render("~/bundles/angular")
-    
     <app-root></app-root>
+
+    @Scripts.RenderFormat("<script type=\"text/javascript\" src=\"{0}\"></script>", "~/bundles/angular")
 </body>
