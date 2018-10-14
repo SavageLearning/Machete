@@ -235,13 +235,16 @@ namespace Machete.Service
             {
                 wo.paperOrderNum = wo.ID;
             }
-
-            foreach (var a in was)
+            if (was != null)
             {
-                a.workOrderID = wo.ID;
-                a.workOrder = wo;
-                waServ.Create(a, user);
+                foreach (var a in was)
+                {
+                    a.workOrderID = wo.ID;
+                    a.workOrder = wo;
+                    waServ.Create(a, user);
+                }
             }
+
             uow.Commit();
 
             _log(workOrder.ID, user, "WorkOrder created");

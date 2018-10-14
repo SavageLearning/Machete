@@ -51,7 +51,7 @@ namespace Machete.Data.Infrastructure
 
         protected MacheteContext DataContext
         {
-            get { return dataContext; }
+            get { return dataContext ?? (dataContext = databaseFactory.Get()); }
         }
 
         public void Save()
