@@ -11,7 +11,6 @@ namespace Machete.Web
             bundles.Add(new ScriptBundle("~/bundles/angular").Include(
                         "~/Content/bundles/runtime*",
                         "~/Content/bundles/polyfills*",
-                        "~/Content/bundles/styles*",
                         "~/Content/bundles/scripts*",
                         "~/Content/bundles/vendor*",
                         "~/Content/bundles/main*"
