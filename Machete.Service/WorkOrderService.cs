@@ -47,7 +47,8 @@ namespace Machete.Service
             int displayLength);
         dataTableResult<DTO.WorkOrdersList> GetIndexView(viewOptions opt);
         void Save(WorkOrder workOrder, List<WorkerRequest> wrList, string user);
-        WorkOrder Create(WorkOrder wo, List<WorkerRequest> wrList, string userName);
+        WorkOrder Create(WorkOrder wo, List<WorkerRequest> wrList, string userName, ICollection<WorkAssignment> was = null);
+        WorkOrder Create(WorkOrder wo, string userName, ICollection<WorkAssignment> was = null);
     }
 
     // Business logic for WorkOrder record management
@@ -209,7 +210,7 @@ namespace Machete.Service
         /// <param name="workOrder">Work order to create</param>
         /// <param name="user">User performing action</param>
         /// <returns>Work Order object</returns>
-        public WorkOrder Create(WorkOrder workOrder, List<WorkerRequest> wrList,  string user)
+        public WorkOrder Create(WorkOrder workOrder, List<WorkerRequest> wrList,  string user, ICollection<WorkAssignment> was = null)
         {
             WorkOrder wo;
             workOrder.timeZoneOffset = Convert.ToDouble(cfg.getConfig(Cfg.TimeZoneDifferenceFromPacific));
@@ -234,15 +235,22 @@ namespace Machete.Service
             {
                 wo.paperOrderNum = wo.ID;
             }
+
+            foreach (var a in was)
+            {
+                a.workOrderID = wo.ID;
+                a.workOrder = wo;
+                waServ.Create(a, user);
+            }
             uow.Commit();
 
             _log(workOrder.ID, user, "WorkOrder created");
             return wo;
         }
 
-        public override WorkOrder Create(WorkOrder wo, string user)
+        public WorkOrder Create(WorkOrder wo, string user, ICollection<WorkAssignment> was = null)
         {
-            return Create(wo, null, user);
+            return Create(wo, null, user, was);
         }
 
         private void updateComputedValues(ref WorkOrder record)

@@ -64,9 +64,9 @@ namespace Machete.Api.Controllers
             {
                 e = findEmployerBy();
             }
-            catch
+            catch (Exception ex)
             {
-                return InternalServerError();
+                return InternalServerError(ex);
             }
 
             if (e == null) return NotFound();

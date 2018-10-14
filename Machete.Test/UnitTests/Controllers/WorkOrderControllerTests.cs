@@ -123,7 +123,7 @@ namespace Machete.Test.Unit.Controller
             var vmwo = new Machete.Web.ViewModel.WorkOrder();
             map.Setup(x => x.Map<Domain.WorkOrder, Machete.Web.ViewModel.WorkOrder>(It.IsAny<Domain.WorkOrder>()))
                 .Returns(vmwo);
-            serv.Setup(p => p.Create(workOrder, "UnitTest")).Returns(() => workOrder);
+            serv.Setup(p => p.Create(workOrder, null, "UnitTest", null)).Returns(() => workOrder);
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
             var result = (JsonResult)_ctrlr.Create(workOrder, "UnitTest", workerRequest);
@@ -139,7 +139,7 @@ namespace Machete.Test.Unit.Controller
         {
             //Arrange
             var workOrder = new WorkOrder();
-            serv.Setup(p => p.Create(workOrder, "UnitTest")).Returns(workOrder);
+            serv.Setup(p => p.Create(workOrder, null, "UnitTest", null)).Returns(workOrder);
             fakeform.Remove("contactName");
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act

@@ -61,13 +61,7 @@ namespace Machete.Service
             order.statusID = WorkOrder.iPending;
             var assignments = order.workAssignments;
             order.workAssignments = null;
-            var entity = woserv.Create(order, user);
-            foreach (var a in assignments)
-            {
-                a.workOrderID = entity.ID;
-                a.workOrder = entity;
-                waserv.Create(a, user);
-            }
+            var entity = woserv.Create(order, null, user, assignments);
             return woserv.Get(entity.ID);
         }
 

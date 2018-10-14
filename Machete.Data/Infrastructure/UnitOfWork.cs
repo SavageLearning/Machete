@@ -46,11 +46,12 @@ namespace Machete.Data.Infrastructure
         public UnitOfWork(IDatabaseFactory databaseFactory)
         {
             this.databaseFactory = databaseFactory;
+            dataContext = databaseFactory.Get();
         }
 
         protected MacheteContext DataContext
         {
-            get { return dataContext ?? (dataContext = databaseFactory.Get()); }
+            get { return dataContext; }
         }
 
         public void Save()

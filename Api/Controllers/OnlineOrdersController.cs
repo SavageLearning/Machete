@@ -116,6 +116,7 @@ namespace Machete.Api.Controllers
         {
 
             var domain = map.Map<ViewModel.WorkOrder, Domain.WorkOrder>(order);
+            domain.Employer = employer;
             domain.EmployerID = employer.ID;
             domain.onlineSource = true;
             Domain.WorkOrder newOrder = null;
