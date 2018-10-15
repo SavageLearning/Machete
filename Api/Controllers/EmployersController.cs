@@ -93,7 +93,10 @@ namespace Machete.Api.Controllers
             // legacy accounts wont have an email; comes from a claim
             if (userEmail != null)
             {
-                e = serv.GetMany(em => em.email == userEmail).SingleOrDefault();
+                // If SingleOrDefault, then ~500 users will fail to login.
+                // Need solution to de-duplicating employers before getting
+                // string on emails duplication
+                e = serv.GetMany(em => em.email == userEmail).OrderByDescending(em => em.dateupdated).FirstOrDefault();
                 return e;
             }
             return e;

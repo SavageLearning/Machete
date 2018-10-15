@@ -1219,7 +1219,8 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
   </Target>
-  <!--<Target Name="BeforeBuild">
+  <Target Name="BeforeBuild">
+    <!--
     <Exec Condition="$(Configuration) == 'UAT-test'" Command="npm run build-cloud-test" WorkingDirectory="../UI" />
     <Exec Condition="$(Configuration) == 'Release'" Command="npm run build-prod" WorkingDirectory="../UI" />
     <Exec Condition="$(Configuration) == 'Chaim'" Command="npm run build-cloud-test-chaim" WorkingDirectory="../UI" />-->
