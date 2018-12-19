@@ -71,9 +71,10 @@ namespace Machete.Test.Integration
             return _emp;
         }
 
-        public Employer CloneEmployer()
+        public Web.ViewModel.Employer CloneEmployer()
         {
-            var e = (Employer)Records.employer.Clone();
+            AddMapper();
+            var e = _webMap.Map<Machete.Domain.Employer, Web.ViewModel.Employer>((Employer)Records.employer.Clone());
             e.name = RandomString(10);
             e.email = "changeme@gmail.com";
             return e;

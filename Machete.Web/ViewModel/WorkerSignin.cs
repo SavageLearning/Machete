@@ -6,8 +6,12 @@ using System.Web;
 
 namespace Machete.Web.ViewModel
 {
-    public class WorkerSignin : Domain.WorkerSignin
+    public class WorkerSignin : Signin
     {
+        public WorkerSignin()
+        {
+            idString = "wsi";
+        }
         public string tabref { get; set; }
         public string tablabel { get; set; }
         public IDefaults def { get; set; }
@@ -17,6 +21,12 @@ namespace Machete.Web.ViewModel
         public bool memberExpelled { get; set; }
         public string imageRef { get; set; }
         public string message { get; set; }
+
+        public int? WorkAssignmentID { get; set; }
+        public DateTime? lottery_timestamp { get; set; }
+        public int? lottery_sequence { get; set; }
+        public virtual Worker worker { get; set; }
+        public int? WorkerID { get; set; }
     }
 
     public class WorkerSigninList

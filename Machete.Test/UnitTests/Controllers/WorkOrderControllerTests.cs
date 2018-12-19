@@ -51,7 +51,6 @@ namespace Machete.Test.Unit.Controller
         Mock<IWorkerRequestService> wrServ;
         Mock<IDefaults> def;
         Mock<IMapper> map;
-        Mock<ILookupCache> lcache;
         Mock<IDatabaseFactory> dbfactory;
         FormCollection fakeform;
         List<WorkerRequest> workerRequest;
@@ -84,9 +83,8 @@ namespace Machete.Test.Unit.Controller
             def = new Mock<IDefaults>();
             map = new Mock<IMapper>();
             workerRequest = new List<WorkerRequest> { };
-            lcache = new Mock<ILookupCache>();
             dbfactory = new Mock<IDatabaseFactory>();
-            _ctrlr = new WorkOrderController(serv.Object, waServ.Object, empServ.Object, reqServ.Object, wrServ.Object, lcache.Object, def.Object, map.Object);
+            _ctrlr = new WorkOrderController(serv.Object, reqServ.Object, wrServ.Object, def.Object, map.Object);
             _ctrlr.SetFakeControllerContext();
             // TODO: Include Lookups in Dependency Injection, remove initialize statements
         }
@@ -113,7 +111,7 @@ namespace Machete.Test.Unit.Controller
             // Act
             var result = (PartialViewResult)_ctrlr.Create(0);
             // ASsert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(WorkOrder));
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Web.ViewModel.WorkOrder));
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WorkOrders)]
@@ -125,7 +123,7 @@ namespace Machete.Test.Unit.Controller
             var vmwo = new Machete.Web.ViewModel.WorkOrder();
             map.Setup(x => x.Map<Domain.WorkOrder, Machete.Web.ViewModel.WorkOrder>(It.IsAny<Domain.WorkOrder>()))
                 .Returns(vmwo);
-            serv.Setup(p => p.Create(workOrder, "UnitTest")).Returns(() => workOrder);
+            serv.Setup(p => p.Create(workOrder, null, "UnitTest", null)).Returns(() => workOrder);
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
             var result = (JsonResult)_ctrlr.Create(workOrder, "UnitTest", workerRequest);
@@ -141,7 +139,7 @@ namespace Machete.Test.Unit.Controller
         {
             //Arrange
             var workOrder = new WorkOrder();
-            serv.Setup(p => p.Create(workOrder, "UnitTest")).Returns(workOrder);
+            serv.Setup(p => p.Create(workOrder, null, "UnitTest", null)).Returns(workOrder);
             fakeform.Remove("contactName");
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
@@ -168,7 +166,7 @@ namespace Machete.Test.Unit.Controller
             //Act
             var result = (PartialViewResult)_ctrlr.Edit(testid);
             //Assert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(WorkOrder));
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Web.ViewModel.WorkOrder));
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WorkOrders)]
@@ -179,13 +177,16 @@ namespace Machete.Test.Unit.Controller
             WorkOrder fakeworkOrder = new WorkOrder();
             fakeworkOrder.workerRequests = workerRequest;
             WorkOrder savedworkOrder = new WorkOrder();
+            List<WorkerRequest> savedList;
             string user = "";
             serv.Setup(p => p.Get(testid)).Returns(fakeworkOrder);
             serv.Setup(x => x.Save(It.IsAny<WorkOrder>(),
+                                          It.IsAny<List<WorkerRequest>>(),
                                           It.IsAny<string>())
-                                         ).Callback((WorkOrder p, string str) =>
+                                         ).Callback((WorkOrder p, List<WorkerRequest> wr, string str) =>
                                          {
                                              savedworkOrder = p;
+                                             savedList = wr;
                                              user = str;
                                          });
             _ctrlr.SetFakeControllerContext();
@@ -197,7 +198,7 @@ namespace Machete.Test.Unit.Controller
             list.Add(new WorkerRequest { WorkerID = 30311 });
             list.Add(new WorkerRequest { WorkerID = 30420 });
             list.Add(new WorkerRequest { WorkerID = 30421 });
-            var result = _ctrlr.Edit(testid, fakeform, "UnitTest", list) as JsonResult;
+            var result = _ctrlr.Edit(testid, "UnitTest", list) as JsonResult;
             //Assert
             //Assert.AreEqual("Index", result.RouteValues["action"]);
             Assert.AreEqual(fakeworkOrder, savedworkOrder);
@@ -212,66 +213,6 @@ namespace Machete.Test.Unit.Controller
             Assert.AreEqual(savedworkOrder.transportFee, Convert.ToDouble("20.00"));
             //Assert.AreEqual(savedworkOrder.workerRequests.Count(), 5);
 
-        }
-        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WorkOrders)]
-        public void edit_post_workerRequests_finds_duplicates()
-        {
-            //Arrange
-            int testid = 4242;
-            WorkOrder fakeworkOrder = new WorkOrder();
-            fakeworkOrder.workerRequests = workerRequest;
-            WorkerRequest foo1 = new WorkerRequest
-            {
-                ID = 111,
-                WorkerID = 1,
-                WorkOrderID = testid,
-                workerRequested = new Worker { ID = 1, dwccardnum = 12345 }
-
-            };
-            
-            WorkerRequest foo2 = new WorkerRequest 
-            {
-                ID = 222,
-                WorkerID = 2,
-                WorkOrderID = testid,
-                workerRequested = new Worker { ID = 2, dwccardnum = 12346 } 
-            };
-            workerRequest.Add(foo1);
-            workerRequest.Add(foo2);
-            WorkOrder savedworkOrder = new WorkOrder();
-            string user = "";
-            serv.Setup(p => p.Get(testid)).Returns(fakeworkOrder);
-            serv.Setup(x => x.Save(It.IsAny<WorkOrder>(),
-                                          It.IsAny<string>())
-                                         ).Callback((WorkOrder p, string str) =>
-                                         {
-                                             savedworkOrder = p;
-                                             user = str;
-                                         });
-            wrServ.Setup(x => x.GetByWorkerID(testid, 1)).Returns(foo1);
-            wrServ.Setup(x => x.GetByWorkerID(testid, 2)).Returns(foo2);
-            _ctrlr.SetFakeControllerContext();
-            _ctrlr.ValueProvider = fakeform.ToValueProvider();
-            List<WorkerRequest> list = new List<WorkerRequest>();
-            list.Add(new WorkerRequest { WorkerID = 12345 });
-            list.Add(new WorkerRequest { WorkerID = 30002 });
-            list.Add(new WorkerRequest { WorkerID = 30311 });
-            list.Add(new WorkerRequest { WorkerID = 30420 });
-            list.Add(new WorkerRequest { WorkerID = 30421 });
-            //Act
-
-            var result = _ctrlr.Edit(testid, fakeform, "UnitTest", list) as JsonResult;
-            //Assert
-            //Assert.AreEqual("Index", result.RouteValues["action"]);
-            Assert.AreEqual(fakeworkOrder, savedworkOrder);
-
-            Assert.AreEqual(savedworkOrder.workerRequests.Count(), 5);
-            Assert.AreEqual(savedworkOrder.workerRequests.Count(a => a.WorkerID == 12345), 1);
-            Assert.AreEqual(savedworkOrder.workerRequests.Count(a => a.WorkerID == 30002), 1);
-            Assert.AreEqual(savedworkOrder.workerRequests.Count(a => a.WorkerID == 30311), 1);
-            Assert.AreEqual(savedworkOrder.workerRequests.Count(a => a.WorkerID == 30420), 1);
-            Assert.AreEqual(savedworkOrder.workerRequests.Count(a => a.WorkerID == 30421), 1);
-            Assert.AreEqual(savedworkOrder.workerRequests.Count(a => a.WorkerID == 12346), 0);
         }
 
         /// <summary>
@@ -296,7 +237,7 @@ namespace Machete.Test.Unit.Controller
             //
             //Act
             List<WorkerRequest> list = new List<WorkerRequest>();
-            _ctrlr.Edit(testid, fakeform, "UnitTest", list);
+            _ctrlr.Edit(testid, "UnitTest", list);
             //Assert
 
         }

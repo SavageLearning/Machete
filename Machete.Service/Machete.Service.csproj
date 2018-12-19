@@ -241,6 +241,15 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Chaim|AnyCPU'">
+    <OutputPath>bin\Chaim\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoMapper, Version=6.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.6.1.1\lib\net45\AutoMapper.dll</HintPath>
@@ -279,7 +288,7 @@
     <Compile Include="ConfigService.cs" />
     <Compile Include="DTO\ActivityList.cs" />
     <Compile Include="DTO\ActivitySigninList.cs" />
-    <Compile Include="DTO\ConfigList.cs" />
+    <Compile Include="DTO\LookupList.cs" />
     <Compile Include="DTO\EmailList.cs" />
     <Compile Include="DTO\EmployersList.cs" />
     <Compile Include="DTO\EventList.cs" />
@@ -304,7 +313,6 @@
     <Compile Include="shared\Exceptions.cs" />
     <Compile Include="ImageService.cs" />
     <Compile Include="shared\IndexViewBase.cs" />
-    <Compile Include="shared\LookupCache.cs" />
     <Compile Include="PersonService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="shared\ServiceBase.cs" />

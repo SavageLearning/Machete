@@ -11,12 +11,14 @@ namespace Machete.Web.Maps
     {
         public WorkAssignmentProfile()
         {
-            CreateMap<Service.DTO.WorkAssignmentsList, Web.ViewModel.WorkAssignment >();
             CreateMap<Domain.WorkAssignment, ViewModel.WorkAssignment>()
                 .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/WorkAssignment/Edit/" + Convert.ToString(d.ID)))
                 .ForMember(v => v.tablabel, opt => opt.MapFrom(d =>
                     Resources.WorkAssignments.tabprefix +
                     System.String.Format("{0,5:D5}-{1,2:D2}", d.workOrder.paperOrderNum, d.pseudoID)))
+                .ForMember(v => v.def, opt => opt.Ignore())
+                .ForMember(v => v.idString, opt => opt.Ignore())
+                .MaxDepth(3)
             ;
             CreateMap<Domain.WorkAssignment, Service.DTO.WorkAssignmentsList>()
                  .ForMember(v => v.employername, opt => opt.MapFrom(d => d.workOrder.Employer.name))

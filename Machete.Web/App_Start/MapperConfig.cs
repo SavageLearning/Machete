@@ -23,6 +23,7 @@ namespace Machete.Web
             cfg = new MapperConfiguration(c => {
                 c.CreateMap<jQueryDataTableParam, viewOptions>()
                     .ForMember(vo => vo.CI, opt => opt.Ignore())
+                    .ForMember(vo => vo.employerGuid, opt => opt.Ignore()) // API-only option
                     .ForMember(vo => vo.authenticated, opt => opt.Ignore())
                     .ForMember(vo => vo.personID, opt => opt.MapFrom(dt => dt.personID ?? 0))
                     .ForMember(vo => vo.emailID, opt => opt.MapFrom(dt => string.IsNullOrEmpty(dt.searchColName("emailID")) ? null : (int?)Convert.ToInt32(dt.searchColName("emailID"))))
@@ -47,9 +48,10 @@ namespace Machete.Web
                 c.AddProfile<ActivityProfile>();
                 c.AddProfile<ActivitySigninProfile>();
                 c.AddProfile<EventProfile>();
-                c.AddProfile<ConfigProfile>();
+                c.AddProfile<LookupProfile>();
                 c.AddProfile<Service.WorkOrderMap>();
                 c.AddProfile<Service.EmployersMap>();
+                c.AddProfile<WorkerRequestProfile>();
 
             });
         }

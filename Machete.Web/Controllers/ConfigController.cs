@@ -35,13 +35,13 @@ using System.Web.Routing;
 namespace Machete.Web.Controllers
 {
     [ElmahHandleError]
-    public class ConfigController : MacheteController
+    public class LookupController : MacheteController
     {
         private readonly ILookupService serv;
         private readonly IMapper map;
         private readonly IDefaults def;
         System.Globalization.CultureInfo CI;
-        public ConfigController(ILookupService serv,
+        public LookupController(ILookupService serv,
             IDefaults def,
             IMapper map)
         {
@@ -70,10 +70,10 @@ namespace Machete.Web.Controllers
             //Get all the records
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI = CI;
-            IEnumerable<DTO.ConfigList> list = serv.GetIndexView(vo);
+            IEnumerable<DTO.LookupList> list = serv.GetIndexView(vo);
             var result = list
                 .Select(
-                    e => map.Map<DTO.ConfigList, ViewModel.ConfigList>(e)
+                    e => map.Map<DTO.LookupList, ViewModel.LookupList>(e)
                 ).AsEnumerable();
             return Json(new
             {
@@ -91,7 +91,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Create()
         {
-            var m = map.Map<Domain.Lookup, ViewModel.Config>(new Lookup());
+            var m = map.Map<Domain.Lookup, ViewModel.Lookup>(new Lookup());
             m.def = def;
             return PartialView(m);
         }
@@ -108,7 +108,7 @@ namespace Machete.Web.Controllers
             //Lookup lookup = null;
             UpdateModel(lookup);
             lookup = serv.Create(lookup, userName);
-            var result = map.Map<Domain.Lookup, ViewModel.Config>(lookup);
+            var result = map.Map<Domain.Lookup, ViewModel.Lookup>(lookup);
             return Json(new
             {
                 sNewRef = result.tabref,
@@ -127,7 +127,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Edit(int id)
         {
-            var m = map.Map<Domain.Lookup, ViewModel.Config>(serv.Get(id));
+            var m = map.Map<Domain.Lookup, ViewModel.Lookup>(serv.Get(id));
             m.def = def;
             return PartialView("Edit", m);
         }
@@ -158,7 +158,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult View(int id)
         {
-            var m = map.Map<Domain.Lookup, ViewModel.Config>(serv.Get(id));
+            var m = map.Map<Domain.Lookup, ViewModel.Lookup>(serv.Get(id));
             m.def = def;
             return PartialView("Edit", m);
         }

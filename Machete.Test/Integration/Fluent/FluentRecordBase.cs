@@ -33,6 +33,8 @@ using System.Data.Entity;
 using Machete.Domain;
 using System.IO;
 using AutoMapper;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace Machete.Test.Integration
 {
@@ -50,7 +52,7 @@ namespace Machete.Test.Integration
         private EmailRepository _repoEM;
         private EventRepository _repoEV;
         private DatabaseFactory _dbFactory;
-        private LookupCache _lcache;
+        private ReadOnlyContext _dbReadOnly;
         private WorkerService _servW;
         private ImageService _servI;
         private ConfigService _servC;
@@ -87,6 +89,7 @@ namespace Machete.Test.Integration
         {
 
             _user = user;
+            ToServLookup().populateStaticIds();
         }
 
 
@@ -100,8 +103,40 @@ namespace Machete.Test.Integration
             _uow = new UnitOfWork(_dbFactory);
             _uow.Commit();
 
-            AddLookupCache();
+            AddServLookup();
             return this;
+        }
+
+        private void AddDBReadonly(string connStringName = "readonlyConnection")
+        {
+            if (_dbFactory == null) throw new InvalidOperationException("You must first initialize the database.");
+            var db = _dbFactory.Get();
+            var connection = (db as DbContext).Database.Connection;
+
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = "sp_executesql";
+                command.CommandType = CommandType.StoredProcedure;
+                var param = command.CreateParameter();
+                param.ParameterName = "@statement";
+                param.Value = @"
+CREATE LOGIN readonlyLogin WITH PASSWORD='@testPassword1'
+CREATE USER readonlyUser FROM LOGIN readonlyLogin
+EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
+                    ";
+                command.Parameters.Add(param);
+                connection.Open();
+                try
+                {
+                    command.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {                               // user already exists
+                    if (ex.Errors[0].Number.Equals(15025)) { } else throw ex;
+                }
+            }
+
+            _dbReadOnly = new ReadOnlyContext(connStringName);
         }
 
         public void Dispose()
@@ -114,20 +149,6 @@ namespace Machete.Test.Integration
         {
             if (_dbFactory == null) AddDBFactory();
             return _dbFactory;
-        }
-
-        public FluentRecordBase AddLookupCache()
-        {
-            if (_dbFactory == null) AddDBFactory();
-            _lcache = new LookupCache(_dbFactory);
-            _lcache.getCache();
-            return this;
-        }
-
-        public LookupCache ToLookupCache()
-        {
-            if (_lcache == null) AddLookupCache();
-            return _lcache;
         }
 
         public void Reload<T>(T entity) where T : Record
@@ -374,6 +395,7 @@ namespace Machete.Test.Integration
             if (_webMap == null) AddMapper();
             if (_uow == null) AddUOW();
             _servL = new LookupService(_repoL, _webMap, _uow);
+            _servL.populateStaticIds();
             return this;
         }
 
@@ -432,10 +454,10 @@ namespace Machete.Test.Integration
             // DEPENDENCIES
             if (_repoA == null) AddRepoActivity();
             if (_servAS == null) AddServActivitySignin();
-            if (_lcache == null) AddLookupCache();
+            if (_servL == null) AddServLookup();
             if (_uow == null) AddUOW();
             if (_webMap == null) AddMapper();
-            _servA = new ActivityService(_repoA, _servAS, _lcache, _uow, _webMap);
+            _servA = new ActivityService(_repoA, _servAS, _servL, _uow, _webMap);
             return this;
         }
 
@@ -590,8 +612,9 @@ namespace Machete.Test.Integration
         public FluentRecordBase AddRepoReports()
         {
             if (_dbFactory == null) AddDBFactory();
+            if (_dbReadOnly == null) AddDBReadonly();
 
-            _repoR = new ReportsRepository(_dbFactory);
+            _repoR = new ReportsRepository(_dbFactory, _dbReadOnly);
             return this;
         }
 
@@ -820,11 +843,14 @@ namespace Machete.Test.Integration
 
         public IMapper ToWebMapper()
         {
+
+            if (_webMap == null) AddMapper();
             return _webMap;
         }
 
         public IMapper ToApiMapper()
         {
+            if (_apiMap == null) AddMapper();
             return _apiMap;
         }
 

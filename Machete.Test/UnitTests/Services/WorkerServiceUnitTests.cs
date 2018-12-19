@@ -175,7 +175,7 @@ namespace Machete.Test.Unit.Service
             int id = 1;
             Worker dp = new Worker();
             _repo.Setup(r => r.Delete(It.IsAny<Worker>())).Callback((Worker p) => { dp = p; });
-            _repo.Setup(r => r.GetById(id)).Returns(Records.worker);
+            _repo.Setup(r => r.GetById(id)).Returns((Domain.Worker)Records.worker);
             var _serv = new WorkerService(_repo.Object, _lRepo.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object, _map.Object);
             //
             //Act

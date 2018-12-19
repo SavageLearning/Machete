@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -28,13 +29,40 @@ namespace Machete.Service
             this.logPrefix = "Config";
         }
 
+        public override Config Create(Config record, string user)
+        {
+            var result = base.Create(record, user);
+            uow.Commit();
+            return result;
+        }
+
+        public override void Save(Config record, string user)
+        {
+            base.Save(record, user);
+            uow.Commit();
+        }
+
+        public override void Delete(int id, string user)
+        {
+            base.Delete(id, user);
+            uow.Commit();
+        }
+
         public string getConfig(string key)
         {
             if (config == null)
             {
                 config = GetAll().ToList();
             }
-            return config.Where(c => c.key == key).SingleOrDefault().value;
+            try
+            {
+                return config.Where(c => c.key == key).SingleOrDefault().value;
+            }
+            catch(Exception e)
+            {
+                var msg = System.String.Format("Didn't find an entry for: {0}; Exception {1}", key, e.Message);
+                throw new MacheteNullObjectException(msg);
+            }
         }
     }
 }

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Machete.Domain.Resources {
+namespace Machete.Web.Resources {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace Machete.Domain.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Person {
+    public class Employer {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Person() {
+        internal Employer() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Machete.Domain.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Machete.Domain.Resources.Person", typeof(Person).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Machete.Web.Resources.Employer", typeof(Employer).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,7 +61,7 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Active person.
+        ///   Looks up a localized string similar to Active employer?.
         /// </summary>
         public static string active {
             get {
@@ -79,6 +79,15 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An adddress is required.
+        /// </summary>
+        public static string address1required {
+            get {
+                return ResourceManager.GetString("address1required", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Address (2).
         /// </summary>
         public static string address2 {
@@ -88,7 +97,25 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cellphone.
+        ///   Looks up a localized string similar to Participate in blog?.
+        /// </summary>
+        public static string blogparticipate {
+            get {
+                return ResourceManager.GetString("blogparticipate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Business name.
+        /// </summary>
+        public static string businessname {
+            get {
+                return ResourceManager.GetString("businessname", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cell phone.
         /// </summary>
         public static string cellphone {
             get {
@@ -106,7 +133,25 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Email.
+        ///   Looks up a localized string similar to A city is required.
+        /// </summary>
+        public static string cityrequired {
+            get {
+                return ResourceManager.GetString("cityrequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Driver&apos;s License Number.
+        /// </summary>
+        public static string driverslicense {
+            get {
+                return ResourceManager.GetString("driverslicense", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email address.
         /// </summary>
         public static string email {
             get {
@@ -124,124 +169,70 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Facebook.
+        ///   Looks up a localized string similar to Fax Number.
         /// </summary>
-        public static string facebook {
+        public static string fax {
             get {
-                return ResourceManager.GetString("facebook", resourceCulture);
+                return ResourceManager.GetString("fax", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to First Name.
+        ///   Looks up a localized string similar to Is a business?.
         /// </summary>
-        public static string firstname {
+        public static string isbusiness {
             get {
-                return ResourceManager.GetString("firstname", resourceCulture);
+                return ResourceManager.GetString("isbusiness", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to First Name (1).
+        ///   Looks up a localized string similar to License Plate.
         /// </summary>
-        public static string firstname1 {
+        public static string licenseplate {
             get {
-                return ResourceManager.GetString("firstname1", resourceCulture);
+                return ResourceManager.GetString("licenseplate", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to At least one first name is required.
+        ///   Looks up a localized string similar to Name.
         /// </summary>
-        public static string firstname1error {
+        public static string name {
             get {
-                return ResourceManager.GetString("firstname1error", resourceCulture);
+                return ResourceManager.GetString("name", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to First Name (2).
+        ///   Looks up a localized string similar to A name is required.
         /// </summary>
-        public static string firstname2 {
+        public static string namerequired {
             get {
-                return ResourceManager.GetString("firstname2", resourceCulture);
+                return ResourceManager.GetString("namerequired", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Gender.
+        ///   Looks up a localized string similar to Notes.
         /// </summary>
-        public static string gender {
+        public static string notes {
             get {
-                return ResourceManager.GetString("gender", resourceCulture);
+                return ResourceManager.GetString("notes", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Gender is required.
+        ///   Looks up a localized string similar to Created online?.
         /// </summary>
-        public static string gendererror {
+        public static string onlineSource {
             get {
-                return ResourceManager.GetString("gendererror", resourceCulture);
+                return ResourceManager.GetString("onlineSource", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Other gender.
-        /// </summary>
-        public static string genderother {
-            get {
-                return ResourceManager.GetString("genderother", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Last Name.
-        /// </summary>
-        public static string lastname {
-            get {
-                return ResourceManager.GetString("lastname", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Last Name (1).
-        /// </summary>
-        public static string lastname1 {
-            get {
-                return ResourceManager.GetString("lastname1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to At least one last name is required.
-        /// </summary>
-        public static string lastname1error {
-            get {
-                return ResourceManager.GetString("lastname1error", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Last Name (2).
-        /// </summary>
-        public static string lastname2 {
-            get {
-                return ResourceManager.GetString("lastname2", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Nickname.
-        /// </summary>
-        public static string nickname {
-            get {
-                return ResourceManager.GetString("nickname", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Phone.
+        ///   Looks up a localized string similar to Phone number.
         /// </summary>
         public static string phone {
             get {
@@ -259,11 +250,65 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to At least one phone number is required.
+        /// </summary>
+        public static string phonerequired {
+            get {
+                return ResourceManager.GetString("phonerequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Receive email updates?.
+        /// </summary>
+        public static string receiveUpdates {
+            get {
+                return ResourceManager.GetString("receiveUpdates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Employer referred by.
+        /// </summary>
+        public static string referredby {
+            get {
+                return ResourceManager.GetString("referredby", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Other reference.
+        /// </summary>
+        public static string referredbyOther {
+            get {
+                return ResourceManager.GetString("referredbyOther", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Duplicate Employer.
+        /// </summary>
+        public static string returnCustomer {
+            get {
+                return ResourceManager.GetString("returnCustomer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to State.
         /// </summary>
         public static string state {
             get {
                 return ResourceManager.GetString("state", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A state is required.
+        /// </summary>
+        public static string staterequired {
+            get {
+                return ResourceManager.GetString("staterequired", resourceCulture);
             }
         }
         
@@ -277,11 +322,20 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Zipcode.
+        ///   Looks up a localized string similar to Zip code.
         /// </summary>
         public static string zipcode {
             get {
                 return ResourceManager.GetString("zipcode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A zip code is required.
+        /// </summary>
+        public static string zipcoderequired {
+            get {
+                return ResourceManager.GetString("zipcoderequired", resourceCulture);
             }
         }
     }

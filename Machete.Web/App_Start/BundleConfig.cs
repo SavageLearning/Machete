@@ -8,6 +8,16 @@ namespace Machete.Web
         // For more information on Bundling, visit http://go.microsoft.com/fwlink/?LinkId=254725
         public static void RegisterBundles(BundleCollection bundles)
         {
+            bundles.Add(new ScriptBundle("~/bundles/angular").Include(
+                        "~/Content/bundles/runtime*",
+                        "~/Content/bundles/polyfills*",
+                        "~/Content/bundles/scripts*",
+                        "~/Content/bundles/vendor*",
+                        "~/Content/bundles/main*"
+                        ));
+            bundles.Add(new StyleBundle("~/bundles/angular-css").Include(
+                        "~/Content/bundles/styles*"
+                ));
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-1.7.1.js",
                         "~/Scripts/jquery-ui-1.8.11.js",

@@ -77,6 +77,68 @@ namespace Machete.Identity
             new Client
             {
                 Enabled = true,
+                ClientName = "Machete UI (cloud-chaim)",
+                ClientId = "machete-ui-local-chaim",
+                Flow = Flows.Implicit,
+                RequireConsent = false,
+                RedirectUris = new List<string>
+                {
+                    "http://localhost:4200/auth.html",
+                    "http://localhost:4200/authorize",
+                    "http://localhost:4200/silent-renewal.html",
+                    "http://localhost:4200/silent-renewal",
+                    "http://localhost:4200/V2/auth.html",
+                    "http://localhost:4200/V2/authorize",
+                    "http://localhost:4200/V2/silent-renewal.html",
+                    "http://localhost:4200/V2/silent-renewal"
+
+                },
+                // Valid URLs after logging out
+                PostLogoutRedirectUris = new List<string>
+                {
+                    "http://localhost:4200/logout",
+                    "http://localhost:4200/V2/logout"
+                },
+                AllowedCorsOrigins = new List<string>
+                {
+                    "http://localhost:4200",
+                    "http://localhost:4200/V2"
+                },
+
+                AllowAccessToAllScopes = true,
+                AccessTokenLifetime = 3600
+            },
+            new Client
+            {
+                Enabled = true,
+                ClientName = "Machete UI (cloud-chaim)",
+                ClientId = "machete-ui-cloud-chaim",
+                Flow = Flows.Implicit,
+                RequireConsent = false,
+                RedirectUris = new List<string>
+                {
+                    "https://chaim.machetessl.org/V2/auth.html",
+                    "https://chaim.machetessl.org/V2/authorize",
+                    "https://chaim.machetessl.org/V2/silent-renewal.html",
+                    "https://chaim.machetessl.org/V2/silent-renewal"
+
+                },
+                // Valid URLs after logging out
+                PostLogoutRedirectUris = new List<string>
+                {
+                    "https://chaim.machetessl.org/V2/logout"
+                },
+                AllowedCorsOrigins = new List<string>
+                {
+                    "https://chaim.machetessl.org/V2"
+                },
+
+                AllowAccessToAllScopes = true,
+                AccessTokenLifetime = 3600
+            },
+            new Client
+            {
+                Enabled = true,
                 ClientName = "Machete UI (cloud-test)",
                 ClientId = "machete-ui-cloud-test",
                 Flow = Flows.Implicit,
@@ -102,7 +164,7 @@ namespace Machete.Identity
                 AllowAccessToAllScopes = true,
                 AccessTokenLifetime = 3600
             },
-                        new Client
+            new Client
             {
                 Enabled = true,
                 ClientName = "Machete casa UI",

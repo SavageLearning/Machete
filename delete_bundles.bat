@@ -1,0 +1,1 @@
+del /f /s /q Machete.Web\Content\bundles\*.*

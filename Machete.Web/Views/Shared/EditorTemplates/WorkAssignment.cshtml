@@ -102,7 +102,7 @@
 @if (Html.IsInRole(Html.Role_AM()))
 {
 <div class="Accordion" id="dispatchAccordion">
-    <h3><a href="#">@Machete.Domain.Resources.WorkAssignment.dispatchinfo</a></h3>
+    <h3><a href="#">@Machete.Web.Resources.WorkAssignment.dispatchinfo</a></h3>
     <div class="tb-table">
         <div class="tb-row">
             @Html.mUITableLabelFor(model => model.workerAssignedID)
@@ -127,10 +127,10 @@
                     })
              </div>
              <div class="tb-label">
-                    <input type="button" value="@Machete.Domain.Resources.WorkAssignment.change" 
+                    <input type="button" value="@Machete.Web.Resources.WorkAssignment.change" 
                             class="formButton" 
                             id="changeAssigned-@(Model.ID)"/>
-                    <input type="button" value="@Machete.Domain.Resources.WorkAssignment.delete" 
+                    <input type="button" value="@Machete.Web.Resources.WorkAssignment.delete" 
                             class="formButton" 
                             id="deleteAssigned-@(Model.ID)"/>
              </div>
@@ -166,8 +166,8 @@
         //
         // Delete confirmation 
         $('#deleteAssigned-@(Model.ID)').click(function () {
-            jConfirm('@Machete.Domain.Resources.WorkAssignment.deleteassignedconfirm',
-                     '@Machete.Domain.Resources.WorkAssignment.deleteassignedtitle',
+            jConfirm('@Machete.Web.Resources.WorkAssignment.deleteassignedconfirm',
+                     '@Machete.Web.Resources.WorkAssignment.deleteassignedtitle',
                      function (r) {
                          if (r == true) {
                             $('#workerAssigned-@(Model.ID)').val(null);

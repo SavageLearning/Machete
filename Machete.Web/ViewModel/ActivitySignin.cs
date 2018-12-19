@@ -1,16 +1,21 @@
 ﻿using Machete.Web.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace Machete.Web.ViewModel
 {
-    public class ActivitySignin : Domain.ActivitySignin
+    public class ActivitySignin : Signin
     {
+        public ActivitySignin()
+        {
+            idString = "asi";
+        }
         public string tabref { get; set; }
         public string tablabel { get; set; }
         public IDefaults def { get; set; }
+
+        public virtual Activity Activity { get; set; }
+        public int activityID { get; set; }
+        public int? personID { get; set; }
+        public virtual Person person { get; set; }
     }
 
     public class ActivitySigninList

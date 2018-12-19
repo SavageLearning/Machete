@@ -40,7 +40,7 @@ namespace Machete.Api.Controllers
             dataTableResult<DTO.EmployersList> list = serv.GetIndexView(vo);
             var result = list.query
                 .Select(
-                    e => map.Map<DTO.EmployersList, ViewModel.Employer>(e)
+                    e => map.Map<DTO.EmployersList, ViewModel.EmployersList>(e)
                 ).AsEnumerable();
             return Json(new { data =  result });
         }
@@ -64,9 +64,9 @@ namespace Machete.Api.Controllers
             {
                 e = findEmployerBy();
             }
-            catch
+            catch (Exception ex)
             {
-                return InternalServerError();
+                return InternalServerError(ex);
             }
 
             if (e == null) return NotFound();
@@ -93,7 +93,10 @@ namespace Machete.Api.Controllers
             // legacy accounts wont have an email; comes from a claim
             if (userEmail != null)
             {
-                e = serv.GetMany(em => em.email == userEmail).SingleOrDefault();
+                // If SingleOrDefault, then ~500 users will fail to login.
+                // Need solution to de-duplicating employers before getting
+                // string on emails duplication
+                e = serv.GetMany(em => em.email == userEmail).OrderByDescending(em => em.dateupdated).FirstOrDefault();
                 return e;
             }
             return e;

@@ -42,7 +42,7 @@ namespace Machete.Test.Integration.System
         public void TestInitialize()
         {
             frb = new FluentRecordBase();
-            frb.AddLookupCache(); 
+            frb.AddServLookup();
             dOptions = new viewOptions
             {
                 CI = new CultureInfo("en-US", false),

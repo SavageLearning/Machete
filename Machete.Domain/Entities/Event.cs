@@ -30,35 +30,21 @@ namespace Machete.Domain
 {
     public class Event : Record
     {
-        public Event()
-        {
-            idString = "event";
-        }
         public int PersonID { get; set; }
         public virtual Person Person { get; set; }
         public virtual ICollection<JoinEventImage> JoinEventImages { get; set; }
         //
-        //
-        [Required(ErrorMessageResourceName = "eventTyperequired", ErrorMessageResourceType = typeof(Resources.Event))]
-        [LocalizedDisplayName("eventType", NameResourceType = typeof(Resources.Event))]
-        [Column("eventType")]
+        [Required, Column("eventType")]
         public int eventTypeID { get; set; }
         [StringLength(50)]
         public string eventTypeEN { get; set; }
         [StringLength(50)]
         public string eventTypeES { get; set; }
-        //
-        [LocalizedDisplayName("dateFrom", NameResourceType = typeof(Resources.Event))]
-        [Required(ErrorMessageResourceName = "dateFromrequired", ErrorMessageResourceType = typeof(Resources.Event))]
+        [Required]
         public DateTime dateFrom { get; set; }
-        //
-        [LocalizedDisplayName("dateTo", NameResourceType = typeof(Resources.Event))]        
         public DateTime? dateTo { get; set; }
-        //
-        [LocalizedDisplayName("notes", NameResourceType = typeof(Resources.Event))]
-        [StringLength(4000, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Event))]
+        [StringLength(4000)]
         public string notes { get; set; }
-
     }
 
     public class JoinEventImage : Record

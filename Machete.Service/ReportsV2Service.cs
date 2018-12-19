@@ -24,6 +24,7 @@ namespace Machete.Service
         List<QueryMetadata> getColumns(string tableName);
         DataTable getDataTable(string query, DTO.SearchOptions o);
         void getXlsxFile(DTO.SearchOptions o, ref byte[] bytes);
+        List<string> validateQuery(string query);
     }
 
     public class ReportsV2Service : ServiceBase<ReportDefinition>, IReportsV2Service
@@ -146,6 +147,9 @@ namespace Machete.Service
             return "[" + col + "]";
         }
 
-
+        public List<string> validateQuery(string query)
+        {
+            return rRepo.validate(query).ToList();
+        }
     }
 }

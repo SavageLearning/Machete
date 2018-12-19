@@ -93,7 +93,7 @@ namespace Machete.Web
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             //AuthConfig.RegisterAuth();
 
-            ModelBinders.Binders.Add(typeof(List<WorkerRequest>), new workerRequestBinder());
+            ModelBinders.Binders.Add(typeof(List<Domain.WorkerRequest>), new workerRequestBinder());
             var initializer = new MacheteInitializer();
             Database.SetInitializer(initializer);
             IUnityContainer container = GetUnityContainer();
@@ -102,6 +102,9 @@ namespace Machete.Web
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
             GlobalConfiguration.Configuration.DependencyResolver = new Unity.WebApi.UnityDependencyResolver(container);
             GlobalConfiguration.Configuration.EnsureInitialized();
+            var workerService = container.Resolve<IWorkerService>();
+            workerService.ExpireMembers();
+            workerService.ReactivateMembers();
         }
 
         protected void Application_Error(object sender, EventArgs e)
@@ -144,6 +147,7 @@ namespace Machete.Web
             .RegisterType<IUserStore<MacheteUser>, UserStore<MacheteUser>>(new PerResolveLifetimeManager())//HttpContextLifetimeManager<IUserStore<ApplicationUser>>())
             .RegisterType<IMacheteUserManager<MacheteUser>, MacheteUserManager>(new PerResolveLifetimeManager())//HttpContextLifetimeManager<IMyUserManager<ApplicationUser>>())
             .RegisterType<IDatabaseFactory, DatabaseFactory>(new PerResolveLifetimeManager(), new InjectionConstructor("macheteConnection"))
+            .RegisterType<IReadOnlyContext, ReadOnlyContext>(new PerResolveLifetimeManager(), new InjectionConstructor("readonlyConnection"))
             .RegisterType<IUnitOfWork, UnitOfWork>(new PerResolveLifetimeManager())
             .RegisterType<IEmailConfig, EmailConfig>(new PerResolveLifetimeManager())
             .RegisterInstance<IMapper>(new MapperConfig().getMapper())
@@ -188,7 +192,6 @@ namespace Machete.Web
             .RegisterType<ITransportProvidersAvailabilityService, TransportProvidersAvailabilityService>(new HierarchicalLifetimeManager())
 
             // 
-            .RegisterType<ILookupCache, LookupCache>(new ContainerControlledLifetimeManager())
             .RegisterType<IDefaults, Defaults>(new ContainerControlledLifetimeManager());
 
             return container;
