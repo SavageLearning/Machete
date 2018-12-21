@@ -38,7 +38,7 @@ namespace Machete.Data
                 c.createdby = "Init T. Script";
                 c.updatedby = "Init T. Script";
                 context.Configs.Add(c);
-                context.Commit();
+                context.SaveChanges();
             }
         }
     }

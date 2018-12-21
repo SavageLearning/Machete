@@ -91,7 +91,7 @@ namespace Machete.Test.Integration.Data
             {
                 l.columnsJson = SqlServerUtils.getUIColumnsJson(ctxt, l.sqlquery);
             }
-            frb.ToFactory().Get().Commit();
+            frb.ToFactory().Get().SaveChanges();
 
         }
     }

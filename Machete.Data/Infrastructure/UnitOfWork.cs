@@ -56,12 +56,12 @@ namespace Machete.Data.Infrastructure
 
         public void Save()
         {
-            DataContext.Commit();
+            DataContext.SaveChanges();
         }
 
         public void Commit()
         {
-            DataContext.Commit();
+            DataContext.SaveChanges();
             databaseFactory.Dispose();
             dataContext = null;
         } 

@@ -200,7 +200,7 @@ namespace Machete.Data
                 u.updatedby = "Init T. Script";
                 context.Lookups.Add(u); 
             });
-            context.Commit();
+            context.SaveChanges();
         }
     }    
 }
