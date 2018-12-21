@@ -20,13 +20,16 @@ namespace Machete.Web.ViewModel
         }
         //public int ID { get; set; }        
         public int? workerAssignedID { get; set; }
-        public virtual Worker workerAssigned { get; set; }
+        public bool isWorkerAssigned { get; set; }
+        public int? assignedWorkerDwccardnum { get; set; }
+        public string assignedWorkerFullname { get; set; }
 
         public int workOrderID { get; set; }
-        public virtual WorkOrder workOrder { get; set; }
+        //public virtual WorkOrder workOrder { get; set; }
+        public DateTime workOrder_DateTimeOfWork { get; set; }
 
         public int? workerSigninID { get; set; }
-        public virtual WorkerSignin workerSiginin { get; set; }
+        //public virtual WorkerSignin workerSiginin { get; set; }
 
         public bool active { get; set; }
         // This is relative to the work order...WA1, WA2, WA3...

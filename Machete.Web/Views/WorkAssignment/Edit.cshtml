@@ -7,7 +7,7 @@
     string idPrefix = recType + Model.ID + "-";
     string woPrefix = woRecType + Model.workOrderID + "-"; 
     int editDisable = 0;
-    if (!Html.IsInRole(Html.Role_AM()) && (Html.IsInRole(Html.Role_AMP()) && Model.workOrder.dateTimeofWork < DateTime.Today))
+    if (!Html.IsInRole(Html.Role_AM()) && (Html.IsInRole(Html.Role_AMP()) && Model.workOrder_DateTimeOfWork < DateTime.Today))
     {
         editDisable = 1;
     }
@@ -16,14 +16,14 @@
                         new { @class = "edittab-form EditPost", @id = idPrefix +"waForm" }))
 {
     @*<input type="button" value="@WorkAssignments.viewlink" class="formButton" id="view-@(Model.ID)" />*@
-    if ((Html.IsInRole(Html.Role_AMP()) && Model.workOrder.dateTimeofWork >= DateTime.Today) || Html.IsInRole(Html.Role_AM()))
+    if ((Html.IsInRole(Html.Role_AMP()) && Model.workOrder_DateTimeOfWork >= DateTime.Today) || Html.IsInRole(Html.Role_AM()))
     {
     <input type="submit" value="@WorkAssignments.editsubmit" class="formButton saveBtn" id="waEditSubmitBtn-@(Model.ID)"/>
     <input type="button" value="@WorkAssignments.dupsubmit" class="formButton" id="duplicate-@(Model.ID)" />
     }
 
     if ((Html.IsInRole(Html.Role_AMP()) &&
-        Model.workOrder.dateTimeofWork >= DateTime.Today) ||
+        Model.workOrder_DateTimeOfWork >= DateTime.Today) ||
     Html.IsInRole(Html.Role_AM())
     )
     {
@@ -43,7 +43,7 @@
 }
 
 @if ((Html.IsInRole(Html.Role_AMP()) &&
-        Model.workOrder.dateTimeofWork >= DateTime.Today) ||
+        Model.workOrder_DateTimeOfWork >= DateTime.Today) ||
     Html.IsInRole(Html.Role_AM())
     )
 {
