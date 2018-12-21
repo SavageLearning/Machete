@@ -230,7 +230,7 @@ namespace Machete.Service
                     wo.workerRequests.Add(workerRequest);
                 }
             }
-            uow.Save(); 
+            uow.SaveChanges(); 
             if (wo.paperOrderNum == null || wo.paperOrderNum == 0)
             {
                 wo.paperOrderNum = wo.ID;

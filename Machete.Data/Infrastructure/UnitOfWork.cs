@@ -34,7 +34,7 @@ namespace Machete.Data.Infrastructure
     public interface IUnitOfWork
     {
         void Commit();
-        void Save();
+        void SaveChanges();
     }
     //
     //
@@ -54,7 +54,7 @@ namespace Machete.Data.Infrastructure
             get { return dataContext ?? (dataContext = databaseFactory.Get()); }
         }
 
-        public void Save()
+        public void SaveChanges()
         {
             DataContext.SaveChanges();
         }
@@ -62,7 +62,7 @@ namespace Machete.Data.Infrastructure
         public void Commit()
         {
             DataContext.SaveChanges();
-            databaseFactory.Dispose();
+            databaseFactory.Dispose(); // suppresses GC and does nothing!
             dataContext = null;
         } 
     }
