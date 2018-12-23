@@ -245,7 +245,7 @@ namespace Machete.Service
                 }
             }
 
-            uow.Commit();
+            uow.SaveChanges();
 
             _log(workOrder.ID, user, "WorkOrder created");
             return wo;

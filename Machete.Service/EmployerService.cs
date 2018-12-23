@@ -62,20 +62,20 @@ namespace Machete.Service
         public override Employer Create(Employer record, string user)
         {
             var result = base.Create(record, user);
-            uow.Commit();
+            uow.SaveChanges();
             return result;
         }
 
         public override void Save(Employer record, string user)
         {
             base.Save(record, user);
-            uow.Commit();
+            uow.SaveChanges();
         }
 
         public override void Delete(int id, string user)
         {
             base.Delete(id, user);
-            uow.Commit();
+            uow.SaveChanges();
         }
         /// <summary>
         /// 

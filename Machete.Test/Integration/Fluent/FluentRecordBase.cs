@@ -53,7 +53,7 @@ namespace Machete.Test.Integration
         private IActivitySigninService _servAS;
         private ReportService _servR;
         private ReportsV2Service _servRV2;
-        //private EmailService _servEM;
+        private IEmailService _servEM;
         private IEventService _servEV;
         private ILookupService _servL;
         private IUnitOfWork _uow;
@@ -269,11 +269,7 @@ EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
         #endregion
 
         #region Lookups
-        
-        //public ILookupService ToServ<ILookupService>()
-        //{
-        //    return container.Resolve<ILookupService>();
-        //}
+       
 
         public FluentRecordBase AddLookup(
             DateTime? datecreated = null,
@@ -320,7 +316,7 @@ EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
         {
             //
             // DEPENDENCIES
-            IActivityService servA = container.Resolve<IActivityService>();
+            _servA = container.Resolve<IActivityService>();
             //
             // ARRANGE
             _a = (Activity)Records.activity.Clone();
@@ -331,7 +327,7 @@ EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
             if (teacher != null) _a.teacher = teacher;
             //
             // ACT
-            servA.Create(_a, _user);
+            _servA.Create(_a, _user);
             return this;
         }
 
@@ -401,7 +397,7 @@ EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
         {
             //
             // DEPENDENCIES
-            IEmailService _servEM = container.Resolve<IEmailService>();
+            _servEM = container.Resolve<IEmailService>();
             //
             // ARRANGE
             _email = (Email)Records.email.Clone();
