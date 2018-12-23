@@ -6,48 +6,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Practices.Unity;
 
 namespace Machete.Test.Integration
 {
     public partial class FluentRecordBase : IDisposable
     {
-
-        private PersonRepository _repoP;
-        private PersonService _servP;
+        private IPersonService _servP;
         private Person _p;
-
-        public FluentRecordBase AddRepoPerson()
-        {
-            if (_dbFactory == null) AddDBFactory();
-
-            _repoP = new PersonRepository(_dbFactory);
-            return this;
-        }
-
-        public PersonRepository ToRepoPerson()
-        {
-            if (_repoP == null) AddRepoPerson();
-            return _repoP;
-        }
-
-        public FluentRecordBase AddServPerson()
-        {
-            //
-            // DEPENDENCIES
-            if (_repoP == null) AddRepoPerson();
-            if (_uow == null) AddUOW();
-            if (_repoL == null) AddRepoLookup();
-            if (_webMap == null) AddMapper();
-
-            _servP = new PersonService(_repoP, _uow, _repoL, _webMap);
-            return this;
-        }
-
-        public PersonService ToServPerson()
-        {
-            if (_servP == null) AddServPerson();
-            return _servP;
-        }
 
         public FluentRecordBase AddPerson(
             DateTime? datecreated = null,
@@ -57,7 +23,7 @@ namespace Machete.Test.Integration
         {
             //
             // DEPENDENCIES
-            if (_servP == null) AddServPerson();
+            _servP = container.Resolve<IPersonService>();
             //
             // ARRANGE
             _p = (Person)Records.person.Clone();

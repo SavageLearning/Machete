@@ -54,7 +54,7 @@ namespace Machete.Service
                 newEmail.WorkOrders = new Collection<WorkOrder>();
                 newEmail.WorkOrders.Add(wo);
             }
-            uow.Commit();
+            uow.SaveChanges();
             return newEmail;
         }
 
@@ -128,7 +128,7 @@ namespace Machete.Service
             // transmit errors will remain as error re-sent
             e.updatedByUser(user);
             log(e.ID, user, logPrefix + " get exclusive for email");
-            uow.Commit();
+            uow.SaveChanges();
             return e;
         }
 

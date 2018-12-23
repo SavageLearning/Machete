@@ -44,13 +44,13 @@ namespace Machete.Test
             var result = frb.ToWorkerSignin();
             Assert.IsInstanceOfType(result, typeof(WorkerSignin));
         }
-        [TestMethod, TestCategory(TC.Fluent), TestCategory(TC.IT), TestCategory(TC.WorkOrders)]
+        [Ignore, TestMethod, TestCategory(TC.Fluent), TestCategory(TC.IT), TestCategory(TC.WorkOrders)]
         public void FluentRecordBase_AddRepoWorkerRequest()
         {
             var result = frb.ToWorkerRequest();
             Assert.IsInstanceOfType(result, typeof(WorkerRequest));
         }
-        [TestMethod, TestCategory(TC.Fluent), TestCategory(TC.IT), TestCategory(TC.Persons)]
+        [Ignore, TestMethod, TestCategory(TC.Fluent), TestCategory(TC.IT), TestCategory(TC.Persons)]
         public void FluentRecordBase_AddRepoPerson()
         {
             var result = frb.AddPerson(testID: "FluentRecordBase_AddRepoPerson").ToPerson();
@@ -59,13 +59,13 @@ namespace Machete.Test
         [TestMethod, TestCategory(TC.Fluent), TestCategory(TC.IT), TestCategory(TC.Workers)]
         public void FluentRecordBase_AddRepoWorker()
         {
-            var result = frb.AddPerson(testID: "FluentRecordBase_AddRepoWorker").ToWorker();
+            var result = frb.AddWorker(testID: "FluentRecordBase_AddRepoWorker").ToWorker();
             Assert.IsInstanceOfType(result, typeof(Worker));
         }
         [TestMethod, TestCategory(TC.Fluent), TestCategory(TC.IT), TestCategory(TC.Activities)]
         public void FluentRecordBase_AddRepoActivity()
         {
-            var result = frb.AddPerson(testID: "FluentRecordBase_AddRepoActivity").ToActivity();
+            var result = frb.AddActivity().ToActivity();
             Assert.IsInstanceOfType(result, typeof(Activity));
         }
         [TestMethod, TestCategory(TC.Fluent), TestCategory(TC.IT), TestCategory(TC.Activities)]

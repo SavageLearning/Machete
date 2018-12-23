@@ -22,6 +22,7 @@
 // 
 #endregion
 using Machete.Domain;
+using Machete.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Data.Entity.Validation;
@@ -73,10 +74,10 @@ namespace Machete.Test.Integration.Service
             {
                 // Using Service Create to test behavior when same object is created
                 // 3 times. Expecting 3 different records. 
-                frb.ToServPerson().Create(_p, "UnitTest");
-                frb.ToServPerson().Create(_p, "UnitTest");
-                frb.ToServPerson().Create(_p, "UnitTest");
-                reccount = frb.ToServPerson().GetAll().Count(n => n.firstname1 == _p.firstname1);
+                frb.ToServ<IPersonService>().Create(_p, "UnitTest");
+                frb.ToServ<IPersonService>().Create(_p, "UnitTest");
+                frb.ToServ<IPersonService>().Create(_p, "UnitTest");
+                reccount = frb.ToServ<IPersonService>().GetAll().Count(n => n.firstname1 == _p.firstname1);
            } 
             catch (DbEntityValidationException ex)
             {

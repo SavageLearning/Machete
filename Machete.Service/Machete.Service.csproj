@@ -316,6 +316,7 @@
     <Compile Include="PersonService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="shared\ServiceBase.cs" />
+    <Compile Include="shared\ServiceBase2.cs" />
     <Compile Include="shared\ServiceExceptions.cs" />
     <Compile Include="shared\SigninServiceBase.cs" />
     <Compile Include="shared\viewOptions.cs" />

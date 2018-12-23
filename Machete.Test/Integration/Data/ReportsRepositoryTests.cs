@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Machete.Domain;
 using Machete.Data.Helpers;
 using Machete.Data.DTO;
+using System.Data.Entity;
+using System.Linq;
 
 namespace Machete.Test.Integration.Data
 {
@@ -57,7 +59,7 @@ namespace Machete.Test.Integration.Data
         {
             // arrange
             var context = frb.ToFactory().Get();
-            var reports = frb.ToRepoReports().GetAllQ();
+            var reports = frb.ToFactory().Get().ReportDefinitions.AsQueryable();
 
             foreach (var r in reports)
             {
@@ -91,7 +93,7 @@ namespace Machete.Test.Integration.Data
             {
                 l.columnsJson = SqlServerUtils.getUIColumnsJson(ctxt, l.sqlquery);
             }
-            frb.ToFactory().Get().Commit();
+            frb.ToFactory().Get().SaveChanges();
 
         }
     }

@@ -29,6 +29,8 @@ namespace Machete.Data.Infrastructure
     {
         private bool isDisposed;
 
+        // ~ is the destructor
+        // https://stackoverflow.com/questions/188688/what-does-the-tilde-before-a-function-name-mean-in-c
         ~Disposable()
         {
             Dispose(false);

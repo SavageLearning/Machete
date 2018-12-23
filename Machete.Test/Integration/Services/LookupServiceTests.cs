@@ -48,7 +48,7 @@ namespace Machete.Test.Integration.Service
             // Arrange
             
             // Act
-            IEnumerable<DTO.LookupList> result = frb.ToServLookup().GetIndexView(dOptions);
+            IEnumerable<DTO.LookupList> result = frb.ToServ<ILookupService>().GetIndexView(dOptions);
             // Assert
             Assert.IsTrue(result.Count() > 0, "LookupService.GetIndexReview returned null");
 
