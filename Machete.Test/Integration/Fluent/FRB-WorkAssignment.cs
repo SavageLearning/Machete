@@ -6,49 +6,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Practices.Unity;
 
 namespace Machete.Test.Integration
 {
     public partial class FluentRecordBase : IDisposable
     {
-        private WorkAssignmentRepository _repoWA;
-        private WorkAssignmentService _servWA;
+        private IWorkAssignmentService _servWA;
         private WorkAssignment _wa;
-
-
-        public FluentRecordBase AddRepoWorkAssignment()
-        {
-            if (_dbFactory == null) AddDBFactory();
-
-            _repoWA = new WorkAssignmentRepository(_dbFactory);
-            return this;
-        }
-
-        public WorkAssignmentRepository ToRepoWorkAssignment()
-        {
-            if (_repoWA == null) AddRepoWorkAssignment();
-            return _repoWA;
-        }
-
-        public FluentRecordBase AddServWorkAssignment()
-        {
-            //
-            // DEPENDENCIES
-            if (_repoWA == null) AddRepoWorkAssignment();
-            if (_repoW == null) AddRepoWorker();
-            if (_repoL == null) AddRepoLookup();
-            if (_repoWSI == null) AddRepoWorkerSignin();
-            if (_uow == null) AddUOW();
-            if (_webMap == null) AddMapper();
-            _servWA = new WorkAssignmentService(_repoWA, _repoW, _repoL, _repoWSI, _uow, _webMap);
-            return this;
-        }
-
-        public WorkAssignmentService ToServWorkAssignment()
-        {
-            if (_servWA == null) AddServWorkAssignment();
-            return _servWA;
-        }
 
         public FluentRecordBase AddWorkAssignment(
             string desc = null,
@@ -63,6 +28,7 @@ namespace Machete.Test.Integration
             // DEPENDENCIES
             if (_wo == null) AddWorkOrder();
             if (assignWorker == true && _w == null) AddWorker();
+            _servWA = container.Resolve<IWorkAssignmentService>();
             //
             // ARRANGE
             _wa = (WorkAssignment)Records.assignment.Clone();

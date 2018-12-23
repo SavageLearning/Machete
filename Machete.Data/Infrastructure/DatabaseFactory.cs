@@ -38,7 +38,7 @@ namespace Machete.Data.Infrastructure
     }
     //
     //
-    public class DatabaseFactory : Disposable, IDatabaseFactory
+    public class DatabaseFactory : IDatabaseFactory
     {
         string connString;
         private MacheteContext macheteContext;
@@ -90,12 +90,12 @@ namespace Machete.Data.Infrastructure
         //{
         //    dataContext = context;
         //}
-        protected override void DisposeCore()
+        public void Dispose()
         {
             if (macheteContext != null)
             {
 
-                log_connection_count("DatabaseFactory.DisposeCore");
+                log_connection_count("DatabaseFactory.Dispose");
                 macheteContext.Dispose();
                 macheteContext = null;
             }

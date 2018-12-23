@@ -62,7 +62,7 @@ namespace Machete.Data.Infrastructure
         public void Commit()
         {
             DataContext.SaveChanges();
-            databaseFactory.Dispose(); // suppresses GC and does nothing!
+            databaseFactory.Dispose();
             dataContext = null;
         } 
     }

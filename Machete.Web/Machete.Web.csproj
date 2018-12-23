@@ -242,6 +242,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="Controllers\HirerAccountController.cs" />
     <Compile Include="Controllers\ReportsV2Controller.cs" />
     <Compile Include="Controllers\V2Controller.cs" />

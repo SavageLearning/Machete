@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Machete.Domain;
+using Machete.Service;
 using Machete.Test.Integration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
@@ -36,7 +37,6 @@ namespace Machete.Test.Selenium.View
         public void SetupTest()
         {
             frb = new FluentRecordBase();
-            frb.AddServLookup();
             driver = new ChromeDriver(ConfigurationManager.AppSettings["CHROMEDRIVERPATH"]);
             baseURL = "http://localhost:4213/";
             ui = new sharedUI(driver, baseURL, map);
@@ -84,13 +84,13 @@ namespace Machete.Test.Selenium.View
             int rowcount = 1;                        
             Random rand = new Random();
 
-            if (frb.ToRepoWorker().GetAllQ().Select(q => q.dwccardnum).Distinct().Count() <= 10)
+            if (frb.ToFactory().Get().Workers.Select(q => q.dwccardnum).Distinct().Count() <= 10)
             {
                 frb.AddWorker();
             }
             //
             //
-            IEnumerable<int> list = frb.ToRepoWorker().GetAllQ().Select(q => q.dwccardnum).Distinct().ToList();
+            IEnumerable<int> list = frb.ToFactory().Get().Workers.Select(q => q.dwccardnum).Distinct().ToList();
             var count = list.Count();
             int numberOfSignins = rand.Next(count / 10) + 1; //+1 will never lead to zero here
             int numberSignedIn = numberOfSignins;
@@ -117,7 +117,7 @@ namespace Machete.Test.Selenium.View
 
                 //This line ensures the test doesn't break if we try to sign in an ID that has multiple workers attached to it.
                 //rowcount increments by the number of records found in the database matching that cardNum
-                rowcount += frb.ToRepoWorker().GetAllQ().Where(q => q.dwccardnum == cardNum).Count();
+                rowcount += frb.ToFactory().Get().Workers.Where(q => q.dwccardnum == cardNum).Count();
             }
             ui.WaitThenClickElement(By.Id("activityListTab"));
             //ui.SelectOption(By.XPath("//*[@id='activityTable_length']/label/select"), "100");
@@ -157,7 +157,7 @@ namespace Machete.Test.Selenium.View
             // Arrange
             int rowcount = 1;
             var _act = (Web.ViewModel.Activity)ViewModelRecords.activity.Clone();
-            frb.ToServLookup().populateStaticIds();
+            frb.ToServ<ILookupService>().populateStaticIds();
             var _asi = (Web.ViewModel.ActivitySignin)ViewModelRecords.activitysignin.Clone();
             var worker = frb.AddWorker(status: Worker.iActive).ToWorker();
             // Act
@@ -175,12 +175,12 @@ namespace Machete.Test.Selenium.View
         {
             //Arrange
             var _act = (Web.ViewModel.Activity)ViewModelRecords.activity.Clone();
-            IEnumerable<int> cardList = frb.ToRepoWorker().GetAllQ().Select(q => q.dwccardnum).Distinct();
+            IEnumerable<int> cardList = frb.ToFactory().Get().Workers.Select(q => q.dwccardnum).Distinct();
             Random rand = new Random();
             int randCardIndex = rand.Next(cardList.Count());
             int rowCount = 1;
             int randCard = cardList.ElementAt(randCardIndex);
-            while (frb.ToRepoWorker().GetAllQ().First(c => c.dwccardnum == randCard).isSanctioned)
+            while (frb.ToFactory().Get().Workers.First(c => c.dwccardnum == randCard).isSanctioned)
             {
                 randCardIndex = rand.Next(cardList.Count());
                 randCard = cardList.ElementAt(randCardIndex);
@@ -217,11 +217,11 @@ namespace Machete.Test.Selenium.View
         {
             // Arrange
             FluentRecordBase SeDB = new FluentRecordBase();
-            int count = SeDB.ToServActivity().GetAll().Count();
+            int count = SeDB.ToServ<IActivityService>().GetAll().Count();
             if (count < 20)
             {
                 Domain.Person _person = (Domain.Person)Records.person.Clone();
-                SeDB.ToServPerson().Create(_person, "ME");
+                SeDB.ToServ<IPersonService>().Create(_person, "ME");
             }
 
             // Act
@@ -240,11 +240,11 @@ namespace Machete.Test.Selenium.View
         {
             // Arrange
             FluentRecordBase SeDB = new FluentRecordBase();
-            int count = SeDB.ToServActivity().GetAll().Count();
+            int count = SeDB.ToServ<IActivityService>().GetAll().Count();
             if (count < 20)
             {
                 var _activity = (Domain.Activity)Records.activity.Clone();
-                SeDB.ToServActivity().Create(_activity, "ME");
+                SeDB.ToServ<IActivityService>().Create(_activity, "ME");
             }
 
             // Act
@@ -267,12 +267,12 @@ namespace Machete.Test.Selenium.View
         public void SeActivity_test_record_limit()
         {
             // Arrange
-            int count = frb.ToServActivity().GetAll().Count();
+            int count = frb.ToServ<IActivityService>().GetAll().Count();
             while (count < 100)
             {
                 var _activity = (Domain.Activity)Records.activity.Clone();
-                frb.ToServActivity().Create(_activity, "ME");
-                count = frb.ToServActivity().GetAll().Count();
+                frb.ToServ<IActivityService>().Create(_activity, "ME");
+                count = frb.ToServ<IActivityService>().GetAll().Count();
             }
 
             // Act
@@ -307,11 +307,11 @@ namespace Machete.Test.Selenium.View
         public void SeActivity_test_column_sorting()
         {
             // Arrange
-            int count = frb.ToServActivity().GetAll().Count();
+            int count = frb.ToServ<IActivityService>().GetAll().Count();
             if (count < 100)
             {
                 var _activity = (Domain.Activity)Records.activity.Clone();
-                frb.ToServActivity().Create(_activity, "ME");
+                frb.ToServ<IActivityService>().Create(_activity, "ME");
             }
 
             // Act

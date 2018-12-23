@@ -73,7 +73,7 @@ namespace Machete.Test.Integration.Service
             frb.AddActivity().AddActivity();
             frb.AddActivitySignin(worker: worker);
 
-            IQueryable<Activity> q = frb.ToRepoActivity().GetAllQ();
+            IQueryable<Activity> q = frb.ToFactory().Get().Activities;
             var count = q.Count();
             //Act
             IndexViewBase.getUnassociated(worker.ID, ref q, frb.ToFactory().Get());

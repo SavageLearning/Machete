@@ -6,53 +6,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Practices.Unity;
 
 namespace Machete.Test.Integration
 {
     public partial class FluentRecordBase : IDisposable
     {
-        private TransportProvidersAvailabilityRepository _repoTPA;
-        private TransportProvidersAvailabilityService _servTPA;
+        private ITransportProvidersAvailabilityService _servTPA;
         private TransportProviderAvailability _tpa;
-
-        public FluentRecordBase AddRepoTransportProviderAvailability()
-        {
-            if (_dbFactory == null) AddDBFactory();
-
-            _repoTPA = new TransportProvidersAvailabilityRepository(_dbFactory);
-            return this;
-        }
-
-        public TransportProvidersAvailabilityRepository ToRepoTransportProviderAvailability()
-        {
-            if (_repoTPA == null) AddRepoTransportProviderAvailability();
-            return _repoTPA;
-        }
-
-        public FluentRecordBase AddServTransportProviderAvailability()
-        {
-            //
-            // Dependencies
-            if (_repoTPA == null) AddRepoTransportProviderAvailability();
-            if (_uow == null) AddUOW();
-            if (_apiMap == null) AddMapper();
-
-            _servTPA = new TransportProvidersAvailabilityService(_repoTPA, _uow, _apiMap);
-            return this;
-        }
-
-        public TransportProvidersAvailabilityService ToServTransportProviderAvailability()
-        {
-            if (_servTPA == null) AddServTransportProviderAvailability();
-            return _servTPA;
-        }
 
         public FluentRecordBase AddTransportProviderAvailability(
     )
         {
             //
             // DEPENDENCIES
-            if (_servTR == null) AddServTransportProviderAvailability();
+            _servTPA = container.Resolve<ITransportProvidersAvailabilityService>();
 
             //
             // ARRANGE

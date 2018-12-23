@@ -21,6 +21,10 @@ namespace Machete.Web
         public MapperConfig()
         {
             cfg = new MapperConfiguration(c => {
+                c.CreateMap<Service.DTO.SearchOptions, Data.DTO.SearchOptions>()
+    .ForMember(v => v.beginDate, opt => opt.MapFrom(d => d.beginDate ?? new DateTime(1753, 1, 1)))
+    .ForMember(v => v.endDate, opt => opt.MapFrom(d => d.endDate ?? DateTime.MaxValue))
+    .ForMember(v => v.dwccardnum, opt => opt.MapFrom(d => d.dwccardnum ?? 0));
                 c.CreateMap<jQueryDataTableParam, viewOptions>()
                     .ForMember(vo => vo.CI, opt => opt.Ignore())
                     .ForMember(vo => vo.employerGuid, opt => opt.Ignore()) // API-only option
