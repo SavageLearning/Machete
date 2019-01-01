@@ -25,7 +25,7 @@ namespace Machete.Web.ViewModel
         public string tablabel { get; set; }
         public IDefaults def { get; set; }
 
-        public virtual ICollection<ActivitySignin> Signins { get; set; }
+        //public virtual ICollection<ActivitySignin> Signins { get; set; }
         //
         [LocalizedDisplayName("name", NameResourceType = typeof(Resources.Activity))]
         [Required(ErrorMessageResourceName = "namerequired", ErrorMessageResourceType = typeof(Resources.Activity))]

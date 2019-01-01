@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Machete.Domain;
+using Machete.Service;
 using Machete.Test.Integration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
@@ -88,7 +89,7 @@ namespace Machete.Test.Selenium.View
             //Arrange
             var _emp = frb.CloneEmployer();
             var _wo = frb.CloneWorkOrder();
-            _wo.statusID = frb.ToServLookup().GetByKey(LCategory.orderstatus, LOrderStatus.Pending).ID; // start work order off as pending
+            _wo.statusID = frb.ToServ<ILookupService>().GetByKey(LCategory.orderstatus, LOrderStatus.Pending).ID; // start work order off as pending
             //Act
             ui.employerCreate(_emp);
             ui.workOrderCreate(_emp, _wo);
@@ -121,7 +122,7 @@ namespace Machete.Test.Selenium.View
             _wo.zipcode = _emp.zipcode;
             _wo.phone = _emp.phone;
             _wo.description = "";
-            _wo.statusID = frb.ToServLookup().GetByKey(LCategory.orderstatus, LOrderStatus.Pending).ID;
+            _wo.statusID = frb.ToServ<ILookupService>().GetByKey(LCategory.orderstatus, LOrderStatus.Pending).ID;
             _wo.ID = ui.getSelectedTabRecordID("WO");
             //Assert
             ui.workOrderValidate(_wo);
@@ -134,7 +135,7 @@ namespace Machete.Test.Selenium.View
             var _wo = frb.CloneWorkOrder();
             var _wa1 = frb.CloneWorkAssignment();
             _wo.contactName = ui.RandomString(10);
-            _wo.statusID = frb.ToServLookup().GetByKey(LCategory.orderstatus, LOrderStatus.Pending).ID; // status = pending
+            _wo.statusID = frb.ToServ<ILookupService>().GetByKey(LCategory.orderstatus, LOrderStatus.Pending).ID; // status = pending
             //
             // Create employer
             ui.employerCreate(_employer1);
@@ -143,10 +144,10 @@ namespace Machete.Test.Selenium.View
             // create assignment
             ui.workAssignmentCreate(_employer1, _wo, _wa1, frb);
             //Get WA ID and arrange pseudoID information
-            _wa1.workOrder = _wo;
+            //_wa1.workOrder = _wo;
             _wa1.workOrderID = _wo.ID;
             // pseudoID needs to be updated; created on save above
-            _wa1.pseudoID = frb.ToServWorkAssignment().Get(_wa1.ID).pseudoID;
+            _wa1.pseudoID = frb.ToServ<IWorkAssignmentService>().Get(_wa1.ID).pseudoID;
             // Activate assignment
             ui.workAssignmentActivate(_employer1, _wo, _wa1);
             //

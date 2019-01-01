@@ -23,11 +23,11 @@ namespace Machete.Data
                 createdby = "Init T. Script",
                 updatedby = "Init T. Script"
             });
-            c.Commit();
+            c.SaveChanges();
             var biz = c.TransportRules.Find(1);
             biz.costRules = new List<TransportCostRule>();
             biz.costRules.Add(new TransportCostRule { ID = 1, minWorker = 0, maxWorker = 100, cost = 5, datecreated = DateTime.Now, dateupdated = DateTime.Now, createdby = "Init T. Script", updatedby = "Init T. Script" } );
-            c.Commit();
+            c.SaveChanges();
 
             c.TransportRules.Add(new TransportRule
             {
@@ -41,11 +41,11 @@ namespace Machete.Data
                 createdby = "Init T. Script",
                 updatedby = "Init T. Script"
             });
-            c.Commit();
+            c.SaveChanges();
             var boz = c.TransportRules.Find(2);
             boz.costRules = new List<TransportCostRule>();
             boz.costRules.Add(new TransportCostRule { ID = 2, minWorker = 0, maxWorker = 100, cost = 10, datecreated = DateTime.Now, dateupdated = DateTime.Now, createdby = "Init T. Script", updatedby = "Init T. Script" });
-            c.Commit();
+            c.SaveChanges();
 
             c.TransportRules.Add(new TransportRule
             {
@@ -59,13 +59,13 @@ namespace Machete.Data
                 createdby = "Init T. Script",
                 updatedby = "Init T. Script"
             });
-            c.Commit();
+            c.SaveChanges();
             var viz = c.TransportRules.Find(3);
             viz.costRules = new List<TransportCostRule>();
             viz.costRules.Add(new TransportCostRule { ID = 3, minWorker = 0, maxWorker = 1, cost = 15, datecreated = DateTime.Now, dateupdated = DateTime.Now, createdby = "Init T. Script", updatedby = "Init T. Script" });
             viz.costRules.Add(new TransportCostRule { ID = 4, minWorker=1, maxWorker=2, cost=5, datecreated = DateTime.Now, dateupdated = DateTime.Now, createdby = "Init T. Script", updatedby = "Init T. Script" });
             viz.costRules.Add(new TransportCostRule { ID = 5, minWorker=2, maxWorker=10, cost=0, datecreated = DateTime.Now, dateupdated = DateTime.Now, createdby = "Init T. Script", updatedby = "Init T. Script" });
-            c.Commit();
+            c.SaveChanges();
 
             c.TransportRules.Add(new TransportRule
             {
@@ -79,12 +79,12 @@ namespace Machete.Data
                 createdby = "Init T. Script",
                 updatedby = "Init T. Script"
             });
-            c.Commit();
+            c.SaveChanges();
             var voz = c.TransportRules.Find(4);
             voz.costRules = new List<TransportCostRule>();
             voz.costRules.Add(new TransportCostRule { ID = 6, minWorker = 0, maxWorker = 1, cost = 25, datecreated = DateTime.Now, dateupdated = DateTime.Now, createdby = "Init T. Script", updatedby = "Init T. Script" });
             voz.costRules.Add(new TransportCostRule { ID = 7, minWorker = 1, maxWorker = 10, cost = 0, datecreated = DateTime.Now, dateupdated = DateTime.Now, createdby = "Init T. Script", updatedby = "Init T. Script" });
-            c.Commit();
+            c.SaveChanges();
        
             c.TransportRules.Add(new TransportRule
             {
@@ -98,11 +98,11 @@ namespace Machete.Data
                 createdby = "Init T. Script",
                 updatedby = "Init T. Script"
             });
-            c.Commit();
+            c.SaveChanges();
             var p = c.TransportRules.Find(5);
             p.costRules = new List<TransportCostRule>();
             p.costRules.Add(new TransportCostRule { ID = 8, minWorker = 0, maxWorker = 100, cost = 0, datecreated = DateTime.Now, dateupdated = DateTime.Now, createdby = "Init T. Script", updatedby = "Init T. Script" });
-            c.Commit();
+            c.SaveChanges();
 
             //
             // Schedule Rules
@@ -119,7 +119,7 @@ namespace Machete.Data
                     createdby = "Init T. Script",
                     updatedby = "Init T. Script"
                 });
-                c.Commit();
+                c.SaveChanges();
             }
         }
 

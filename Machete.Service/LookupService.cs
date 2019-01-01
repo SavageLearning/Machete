@@ -38,6 +38,7 @@ namespace Machete.Service
         Lookup GetByKey(string category, string key);
         string textByID(int ID, string locale);
         IEnumerable<string> GetTeachers();
+        void populateStaticIds();
     }
 
     // Business logic for Lookup record management

@@ -6,51 +6,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Practices.Unity;
 
 namespace Machete.Test.Integration
 {
     public partial class FluentRecordBase : IDisposable
     {
-        private WorkOrderRepository _repoWO;
-        private WorkOrderService _servWO;
+        private IWorkOrderService _servWO;
         private WorkOrder _wo;
-
-        public FluentRecordBase AddRepoWorkOrder()
-        {
-            if (_dbFactory == null) AddDBFactory();
-
-            _repoWO = new WorkOrderRepository(_dbFactory);
-            return this;
-        }
-
-        public WorkOrderRepository ToRepoWorkOrder()
-        {
-            if (_repoWO == null) AddRepoWorkOrder();
-            return _repoWO;
-        }
-
-        public FluentRecordBase AddServWorkOrder()
-        {
-            //
-            // DEPENDENCIES
-            if (_repoWO == null) AddRepoWorkOrder();
-            if (_servWA == null) AddServWorkAssignment();
-            if (_servW == null) AddServWorker();
-            if (_servWR == null) AddServWorkerRequest();
-            if (_repoL == null) AddRepoLookup();
-            if (_uow == null) AddUOW();
-            if (_webMap == null) AddMapper();
-            if (_servC == null) AddServConfig();
-            if (_servTP == null) AddServTransportProvider();
-            _servWO = new WorkOrderService(_repoWO,_servWA, _servTP, _servWR, _servW, _repoL, _uow, _webMap, _servC);
-            return this;
-        }
-
-        public WorkOrderService ToServWorkOrder()
-        {
-            if (_servWO == null) AddServWorkOrder();
-            return _servWO;
-        }
 
         public FluentRecordBase AddWorkOrder(
             DateTime? datecreated = null,
@@ -63,7 +26,7 @@ namespace Machete.Test.Integration
             //
             // DEPENDENCIES
             if (_emp == null) AddEmployer();
-            if (_servWO == null) AddServWorkOrder();
+            _servWO = container.Resolve<IWorkOrderService>();
 
             //
             // ARRANGE

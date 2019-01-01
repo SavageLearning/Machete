@@ -63,11 +63,11 @@ namespace Machete.Data
         public DbSet<TransportRule> TransportRules { get; set; }
         public DbSet<TransportCostRule> TransportCostRules { get; set; }
         public DbSet<ScheduleRule> ScheduleRules { get; set; }
-        public virtual void Commit()
+        public override int SaveChanges()
         {
             try
             {
-                base.SaveChanges();
+                return base.SaveChanges();
             }
 
             catch (DbEntityValidationException dbEx)

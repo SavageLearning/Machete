@@ -1556,7 +1556,7 @@ where jobcount is not null or actcount is not null or eslcount is not null
                     context.ReportDefinitions.Add(u);
                 }
             });
-            context.Commit();
+            context.SaveChanges();
         }
     }
 

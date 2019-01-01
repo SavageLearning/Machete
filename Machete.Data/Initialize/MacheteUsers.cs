@@ -39,7 +39,7 @@ namespace Machete.Data
             ir = um.AddToRole(admin.Id, "Teacher"); //Required to make tests work
             ir = um.Create(user, "ChangeMe");
             ir = um.AddToRole(admin.Id, "User"); //Default Administrator, edit to change
-            DB.Commit();
+            DB.SaveChanges();
         }
 
     }

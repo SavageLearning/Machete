@@ -68,8 +68,8 @@ namespace Machete.Test.Integration.Service
         {
             //Used once to create dummy data to support report creation
             // requires change in app.config to point test database to production
-            IEnumerable<int> cardlist = frb.ToRepoWorker().GetAllQ().Select(q => q.dwccardnum).Distinct();
-            IEnumerable<int> classlist = frb.ToRepoLookup().GetAllQ().Where(l => l.category == "activityName").Select(q => q.ID);
+            IEnumerable<int> cardlist = frb.ToFactory().Get().Workers.Select(q => q.dwccardnum).Distinct().ToList();
+            IEnumerable<int> classlist = frb.ToFactory().Get().Lookups.Where(l => l.category == "activityName").Select(q => q.ID).ToList();
             Activity a = new Activity();
             //random date, within last 30 days
             Random rand = new Random();
@@ -80,7 +80,7 @@ namespace Machete.Test.Integration.Service
             a.typeID = 101; //type==class
             a.teacher = "UnitTest script";
             a.notes = "From Integration_Activity_Service";
-            frb.ToServActivity().Create(a, "TestScript");
+            frb.ToServ<IActivityService>().Create(a, "TestScript");
             int rAttendance = rand.Next(cardlist.Count() / 10);
             for (var i = 0; i < rAttendance; i++)
             {
@@ -88,15 +88,15 @@ namespace Machete.Test.Integration.Service
                 asi.dateforsignin = today;
                 asi.activityID = a.ID;
                 asi.dwccardnum = cardlist.ElementAt(rand.Next(cardlist.Count()));
-                frb.ToServActivitySignin().CreateSignin(asi, "TestScript");
+                frb.ToServ<IActivitySigninService>().CreateSignin(asi, "TestScript");
             }
             //a.
         }
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Activities)]
         public void CreateClass_within_hour()
         {
-            IEnumerable<int> cardlist = frb.ToRepoWorker().GetAllQ().Select(q => q.dwccardnum).Distinct();
-            IEnumerable<int> classlist = frb.ToRepoLookup().GetAllQ().Where(l => l.category == "activityName").Select(q => q.ID);
+            IEnumerable<int> cardlist = frb.ToFactory().Get().Workers.Select(q => q.dwccardnum).Distinct().ToList();
+            IEnumerable<int> classlist = frb.ToFactory().Get().Lookups.Where(l => l.category == "activityName").Select(q => q.ID).ToList();
             Activity a = new Activity();
             //random date, within last 30 days
             Random rand = new Random();
@@ -107,9 +107,9 @@ namespace Machete.Test.Integration.Service
             a.typeID = 101; //type==class
             a.teacher = "UnitTest script";
             a.notes = "From Integration_Activity_Service";
-            frb.ToServActivity().Create(a, "TestScript");
+            frb.ToServ<IActivityService>().Create(a, "TestScript");
             
-            Assert.IsTrue(1 == frb.ToRepoActivity().GetAllQ().Where(aa => aa.ID == a.ID).Count());
+            Assert.IsTrue(1 == frb.ToServ<IActivityService>().GetMany(aa => aa.ID == a.ID).Count());
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Activities)]
@@ -117,7 +117,7 @@ namespace Machete.Test.Integration.Service
         {
             //
             //Arrange
-            var maxDate = frb.ToRepoActivity().GetAllQ().Select(a => a.dateStart).Max().AddDays(1);
+            var maxDate = frb.ToFactory().Get().Activities.Select(a => a.dateStart).Max().AddDays(1);
             var teacher = "teacher_" + frb.RandomString(4);
             frb.AddActivity(startTime: maxDate, endTime: maxDate.AddHours(1), teacher: teacher);
             frb.AddActivity(startTime: maxDate.AddHours(-4), endTime: maxDate.AddHours(-3));
@@ -126,7 +126,7 @@ namespace Machete.Test.Integration.Service
             dOptions.sSearch = teacher;
             //
             //Act
-            dataTableResult<DTO.ActivityList> result = frb.ToServActivity().GetIndexView(dOptions);
+            dataTableResult<DTO.ActivityList> result = frb.ToServ<IActivityService>().GetIndexView(dOptions);
             //
             //Assert
             IEnumerable<DTO.ActivityList> query = result.query.ToList();
@@ -139,7 +139,7 @@ namespace Machete.Test.Integration.Service
         {
             //
             //Arrange
-            var maxDate = frb.ToRepoActivity().GetAllQ().Select(a => a.dateStart).Max().AddDays(1);
+            var maxDate = frb.ToFactory().Get().Activities.Select(a => a.dateStart).Max().AddDays(1);
             var teacher = "teacher_" + frb.RandomString(4);
 
             frb.AddActivity(startTime: maxDate, endTime: maxDate.AddHours(1), teacher: teacher);
@@ -151,7 +151,7 @@ namespace Machete.Test.Integration.Service
 
             //
             //Act
-            dataTableResult<DTO.ActivityList> result = frb.ToServActivity().GetIndexView(dOptions);
+            dataTableResult<DTO.ActivityList> result = frb.ToServ<IActivityService>().GetIndexView(dOptions);
             //
             //Assert
             IEnumerable<DTO.ActivityList> query = result.query.ToList();

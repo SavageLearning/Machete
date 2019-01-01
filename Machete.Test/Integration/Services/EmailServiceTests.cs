@@ -74,7 +74,7 @@ namespace Machete.Test.Integration.Service
         {
             var wo = frb.ToWorkOrder();
             var email = frb.ToEmail();
-            var serv = frb.ToServEmail();
+            var serv = frb.ToServ<IEmailService>();
             //ACT
             var result = serv.Create(email, "integration test", wo.ID);
             // ASSERT
@@ -86,7 +86,7 @@ namespace Machete.Test.Integration.Service
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Emails)]
         public void GetIndex_filterOn_recordid()
         {
-            var serv = frb.ToServEmail();
+            var serv = frb.ToServ<IEmailService>();
             var _em = frb.ToEmail();
             dOptions.sortColName = "RelatedTo";
             dOptions.emailID = _em.ID;
@@ -101,26 +101,13 @@ namespace Machete.Test.Integration.Service
         {
             var wo = frb.ToWorkOrder();
             var email = frb.ToEmail();
-            var serv = frb.ToServEmail();
+            var serv = frb.ToServ<IEmailService>();
             var joinedEmail = serv.Create(email, "integration test", wo.ID);
             dOptions.woid = wo.ID;
             // ACT
             var result = serv.GetIndexView(dOptions);
             // ASSERT
             Assert.AreEqual(1, result.filteredCount);
-        }
-        [Ignore]
-        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Emails)]
-        public void SendEmailSimple()
-        {
-            var email = frb.ToEmail();
-            var cfg = frb.ToEmailConfig();
-            email.emailFrom = cfg.fromAddress;
-            email.emailTo = cfg.fromAddress;
-            var serv = frb.ToServEmail();
-            email.statusID = Email.iReadyToSend;
-            var emailsent = serv.Create(email, "integration test");
-            Assert.AreEqual(Email.iSent, emailsent.statusID);
         }
     }
 }

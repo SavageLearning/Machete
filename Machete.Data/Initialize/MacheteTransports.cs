@@ -17,7 +17,7 @@ namespace Machete.Data
                             select [key], text_EN, text_ES, selected, sortorder, active, datecreated, dateupdated, Createdby, Updatedby
                             from dbo.Lookups
                             where category = 'transportmethod'");
-                c.Commit();
+                c.SaveChanges();
             }
 
             if (c.TransportProvidersAvailability.Count() == 0)
@@ -40,7 +40,7 @@ namespace Machete.Data
                         });
                     }
                 }
-                c.Commit();
+                c.SaveChanges();
             }
 
         }
