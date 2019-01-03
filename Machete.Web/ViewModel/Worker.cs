@@ -30,7 +30,7 @@ namespace Machete.Web.ViewModel
         //
         [StringLength(100)]
         public string fullNameAndID { get; set; }
-
+        public string fullName { get; set; }
         [Required(ErrorMessageResourceName = "typeOfWorkID", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("typeOfWorkID", NameResourceType = typeof(Resources.Worker))]
         public int typeOfWorkID { get; set; }

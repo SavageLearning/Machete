@@ -41,7 +41,7 @@
     <div class="tb-field">
         @foreach (var req in Model.workerRequests)
         {
-            @System.String.Format(req.workerRequested.dwccardnum + "--" + req.workerRequested.Person.fullName) <br />
+            @System.String.Format(req.workerRequested.dwccardnum + "--" + req.workerRequested.fullName) <br />
         }
     </div>
     <h4>@WorkOrders.listOfPositions</h4>
@@ -96,9 +96,9 @@
                                 <p>@Machete.Web.Resources.WorkOrders.workername</p>
                             </div>
                             <div class="tb-field">
-                                @if (item.workerAssigned != null)
+                                @if (item.isWorkerAssigned == true)
                                 {
-                                    <p>@Html.Encode(item.workerAssigned.Person.fullName)</p>
+                                    <p>@Html.Encode(item.assignedWorkerFullname)</p>
                                 }
                                 else
                                 {
