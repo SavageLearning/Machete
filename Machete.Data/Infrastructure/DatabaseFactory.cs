@@ -1,4 +1,4 @@
-#region COPYRIGHT
+﻿#region COPYRIGHT
 // File:     DatabaseFactory.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -37,7 +37,7 @@ namespace Machete.Data.Infrastructure
     }
     //
     //
-    public class DatabaseFactory : Disposable, IDatabaseFactory
+    public class DatabaseFactory : IDatabaseFactory
     {
         DbContextOptions<MacheteContext> options;
         // ReSharper disable once InconsistentNaming

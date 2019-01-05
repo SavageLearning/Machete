@@ -12,10 +12,10 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/WorkAssignment/Edit/" + Convert.ToString(d.ID)))
                 .ForMember(v => v.tablabel, opt => opt.MapFrom(d =>
                     Resources.WorkAssignments.tabprefix +
-                    string.Format("{0,5:D5}-{1,2:D2}", d.workOrder.paperOrderNum, d.pseudoID)))
+                    System.String.Format("{0,5:D5}-{1,2:D2}", d.workOrder.paperOrderNum, d.pseudoID)))
                 .ForMember(v => v.def, opt => opt.Ignore())
                 .ForMember(v => v.idString, opt => opt.Ignore())
-                .ForMember(v => v.isWorkerAssigned, opt => opt.MapFrom(d => d.workerAssigned != null))
+                .ForMember(v => v.isWorkerAssigned, opt => opt.MapFrom(d => d.workerAssigned == null ? false : true))
                 .ForMember(v => v.assignedWorkerDwccardnum, 
                            opt => opt.MapFrom(d => d.workerAssigned == null ? null : (int?)d.workerAssigned.dwccardnum))
                 .ForMember(v => v.assignedWorkerFullname, 
@@ -42,7 +42,7 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/WorkAssignment/Edit/" + Convert.ToString(d.ID)))
                 .ForMember(v => v.tablabel, opt => opt.MapFrom(d =>
                     Resources.WorkAssignments.tabprefix +
-                    string.Format("{0,5:D5}-{1,2:D2}", d.paperOrderNum, d.pseudoID)))
+                    System.String.Format("{0,5:D5}-{1,2:D2}", d.paperOrderNum, d.pseudoID)))
                 .ForMember(v => v.WOID, opt => opt.MapFrom(d => d.workOrderID))
                 .ForMember(v => v.WAID, opt => opt.MapFrom(d => d.ID))
                 .ForMember(v => v.recordid, opt => opt.MapFrom(d => d.ID))
@@ -50,14 +50,14 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.pWAID, opt => opt.MapFrom(d => d.fullWAID))
                 .ForMember(v => v.englishlevel, opt => opt.MapFrom(d => Convert.ToString(d.englishLevelID)))
                 .ForMember(v => v.skill, opt => opt.MapFrom(d => getCI() == "ES" ? d.skillES : d.skillEN))
-                .ForMember(v => v.hourlywage, opt => opt.MapFrom(d => string.Format("${0:f2}", d.hourlyWage)))
-                .ForMember(v => v.hours, opt => opt.MapFrom(d => Convert.ToString(d.hours, CultureInfo.InvariantCulture)))
+                .ForMember(v => v.hourlywage, opt => opt.MapFrom(d => System.String.Format("${0:f2}", d.hourlyWage)))
+                .ForMember(v => v.hours, opt => opt.MapFrom(d => Convert.ToString(d.hours)))
                 .ForMember(v => v.hourRange, opt => opt.MapFrom(d => Convert.ToString(d.hourRange)))
                 .ForMember(v => v.days, opt => opt.MapFrom(d => Convert.ToString(d.days)))
-                .ForMember(v => v.dateupdated, opt => opt.MapFrom(d => Convert.ToString(d.dateupdated, CultureInfo.InvariantCulture)))
-                .ForMember(v => v.dateTimeofWork, opt => opt.MapFrom(d => Convert.ToString(d.dateTimeofWork.AddHours(d.timeZoneOffset), CultureInfo.InvariantCulture)))
+                .ForMember(v => v.dateupdated, opt => opt.MapFrom(d => Convert.ToString(d.dateupdated)))
+                .ForMember(v => v.dateTimeofWork, opt => opt.MapFrom(d => Convert.ToString(d.dateTimeofWork.AddHours(d.timeZoneOffset))))
                 .ForMember(v => v.timeofwork, opt => opt.MapFrom(d => d.dateTimeofWork.AddHours(d.timeZoneOffset).ToShortTimeString()))
-                .ForMember(v => v.earnings, opt => opt.MapFrom(d => string.Format("${0:f2}", d.earnings)))
+                .ForMember(v => v.earnings, opt => opt.MapFrom(d => System.String.Format("${0:f2}", d.earnings)))
                 .ForMember(v => v.asmtStatus, opt => opt.MapFrom(d => AssignmentStatus(d)))
             ;
         }

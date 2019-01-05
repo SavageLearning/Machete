@@ -1,4 +1,4 @@
-#region COPYRIGHT
+﻿#region COPYRIGHT
 // File:     MacheteContext.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -63,51 +63,35 @@ namespace Machete.Data
         public DbSet<TransportRule> TransportRules { get; set; }
         public DbSet<TransportCostRule> TransportCostRules { get; set; }
         public DbSet<ScheduleRule> ScheduleRules { get; set; }
-
-        public virtual void Commit()
+        public override int SaveChanges()
         {
             try
             {
-                SaveChanges();
+                return base.SaveChanges();
             }
-            catch (ValidationException)
-            {
-			// TODO: Jimmy: Need to understand why the code was moved out of the catch block
-			// Originally this printed out EF debug information when the SQL constraints errored
-			//    var details = new StringBuilder();
-            //    var preface = String.Format("DbEntityValidation Error: ");
-            //    Trace.TraceInformation(preface);
-            //    details.AppendLine(preface);
-            //    foreach (var validationErrors in dbEx.EntityValidationErrors)
-            //    {
-            //        foreach (var validationError in validationErrors.ValidationErrors)
-            //        {
-            //            var tempstr = String.Format("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage);
-            //            details.AppendLine(tempstr);
-            //            Trace.TraceInformation(tempstr);
-            //        }
-            //    }
-            //    
-            //    throw new Exception(details.ToString());
-            }
-        }
 
-        public override int SaveChanges()
-        {
-            var entities = ChangeTracker.Entries().Where(entry =>
-                entry.State == EntityState.Modified || entry.State == EntityState.Added
-            ).Select(entry => entry.Entity);
-
-            foreach (var entity in entities)
+            catch (DbEntityValidationException dbEx)
             {
-                var validationContext = new ValidationContext(entity);
-                Validator.ValidateObject(entity, validationContext);
+                var details = new StringBuilder();
+                var preface = String.Format("DbEntityValidation Error: ");
+                Trace.TraceInformation(preface);
+                details.AppendLine(preface);
+                foreach (var validationErrors in dbEx.EntityValidationErrors)
+                {
+                    foreach (var validationError in validationErrors.ValidationErrors)
+                    {
+                        var tempstr = String.Format("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage);
+                        details.AppendLine(tempstr);
+                        Trace.TraceInformation(tempstr);
+                    }
+                }
+                
+                throw new Exception(details.ToString());
             }
 
             return base.SaveChanges();
         }
-        // TODO: Need to make sure GC is working with EF Core
-        // This looks half-baked from whatever I was doing previously
+
         public bool IsDead { get; set; }
         //protected override void Dispose(bool disposing)
         //{
@@ -194,7 +178,6 @@ namespace Machete.Data
             builder.HasMany(a => a.workAssignments)
                 .WithOne(a => a.workerAssigned).IsRequired(false)
                 .HasForeignKey(a => a.workerAssignedID);
-            //builder.ToTable("Workers");
         }
     }
 

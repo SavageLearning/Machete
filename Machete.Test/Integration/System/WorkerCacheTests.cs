@@ -42,7 +42,6 @@ namespace Machete.Test.Integration.System
         public void TestInitialize()
         {
             frb = new FluentRecordBase();
-            frb.AddServLookup();
             dOptions = new viewOptions
             {
                 CI = new CultureInfo("en-US", false),
@@ -65,8 +64,8 @@ namespace Machete.Test.Integration.System
             frb.AddWorker(status: Worker.iActive, skill1: 62, memberexpirationdate: DateTime.Now.AddDays(-1));
             var _w = frb.ToWorker();
             //Act
-            frb.ToServWorker().ExpireMembers();
-            IEnumerable<Worker> result = frb.ToRepoWorker().GetAllQ().AsEnumerable()
+            frb.ToServ<IWorkerService>().ExpireMembers();
+            IEnumerable<Worker> result = frb.ToFactory().Get().Workers.AsEnumerable()
                 .Where(p => p.memberStatusID == Worker.iExpired && p.dwccardnum == _w.dwccardnum);
             //Assert
             Assert.AreEqual(1, result.Count(), "Failed to expire members");
@@ -81,8 +80,8 @@ namespace Machete.Test.Integration.System
             frb.AddWorker(status: Worker.iInactive, skill1: 62, memberexpirationdate: DateTime.Now.AddDays(-1));
             var _w = frb.ToWorker();
             //Act
-            frb.ToServWorker().ExpireMembers();
-            IEnumerable<Worker> result = frb.ToRepoWorker().GetAllQ().AsEnumerable()
+            frb.ToServ<IWorkerService>().ExpireMembers();
+            IEnumerable<Worker> result = frb.ToFactory().Get().Workers.AsEnumerable()
                 .Where(p => p.memberStatusID == Worker.iExpired && p.dwccardnum == _w.dwccardnum);
             //Assert
             Assert.AreNotEqual(0, Worker.iInactive, "Worker Inactive constant set to zero");
@@ -98,8 +97,8 @@ namespace Machete.Test.Integration.System
                 memberexpirationdate: DateTime.Now.AddDays(1));
             var _w = frb.ToWorker();
             //Act
-            frb.ToServWorker().ReactivateMembers();
-            IEnumerable<Worker> result = frb.ToRepoWorker().GetAllQ().AsEnumerable()
+            frb.ToServ<IWorkerService>().ReactivateMembers();
+            IEnumerable<Worker> result = frb.ToFactory().Get().Workers.AsEnumerable()
                 .Where(p => p.memberStatusID == Worker.iActive && p.dwccardnum == _w.dwccardnum);
             //Assert
             Assert.AreEqual(1, result.Count(), "Failed to reactivate members");
@@ -114,8 +113,8 @@ namespace Machete.Test.Integration.System
                 memberexpirationdate: DateTime.Now.AddDays(1));
             var _w = frb.ToWorker();
             //Act
-            frb.ToServWorker().ReactivateMembers();
-            IEnumerable<Worker> result = frb.ToRepoWorker().GetAllQ().AsEnumerable()
+            frb.ToServ<IWorkerService>().ReactivateMembers();
+            IEnumerable<Worker> result = frb.ToFactory().Get().Workers.AsEnumerable()
                 .Where(p => p.memberStatusID == Worker.iSanctioned && p.dwccardnum == _w.dwccardnum);
             //Assert
             Assert.AreEqual(1, result.Count(), "Failed to reactivate members");
@@ -130,8 +129,8 @@ namespace Machete.Test.Integration.System
                     memberexpirationdate: DateTime.Now.AddDays(1));
             var _w = frb.ToWorker();
             //Act
-            frb.ToServWorker().ReactivateMembers();
-            IEnumerable<Worker> result = frb.ToRepoWorker().GetAllQ().AsEnumerable()
+            frb.ToServ<IWorkerService>().ReactivateMembers();
+            IEnumerable<Worker> result = frb.ToFactory().Get().Workers.AsEnumerable()
                 .Where(p => p.memberStatusID == Worker.iSanctioned && p.dwccardnum == _w.dwccardnum);
             //Assert
             Assert.AreEqual(1, result.Count(), "Failed to reactivate members");

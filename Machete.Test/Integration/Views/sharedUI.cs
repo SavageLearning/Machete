@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Machete.Data;
+//using Machete.Service;
 using Machete.Test.Integration;
 //using Machete.Domain;
 using Machete.Web.ViewModel;
@@ -536,7 +537,7 @@ namespace Machete.Test.Selenium.View
             WaitForElement(By.Id("WO" + wo.ID + "-waCreateBtn")).Click();
             Thread.Sleep(1000);
             wa.ID = getSelectedTabRecordID("WA");
-            wa.pseudoID = frb.ToServWorkAssignment().Get(wa.ID).pseudoID;
+            wa.pseudoID = frb.ToServ<Machete.Service.IWorkAssignmentService>().Get(wa.ID).pseudoID;
             wa.tablabel = "Assignment #: " + System.String.Format("{0,5:D5}-{1,2:D2}", wo.paperOrderNum, wa.pseudoID);
             WaitForElement(By.Id(wa.idPrefix + "EditTab"));
             WaitThenClickElement(By.Id("walt-" + wo.ID));

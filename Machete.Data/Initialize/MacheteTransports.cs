@@ -1,4 +1,4 @@
-using Machete.Domain;
+﻿using Machete.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +21,7 @@ namespace Machete.Data
                             select [key], text_EN, text_ES, selected, sortorder, active, datecreated, dateupdated, Createdby, Updatedby
                             from dbo.Lookups
                             where category = 'transportmethod'");
-                    c.Commit();
+                c.SaveChanges();
                 } else {
                     c.Database.ExecuteSqlCommand(@"insert into TransportProviders
                         ( [key], text_EN, text_ES, defaultAttribute, sortorder, active, datecreated, dateupdated, Createdby, Updatedby )
@@ -52,7 +52,7 @@ namespace Machete.Data
                         });
                     }
                 }
-                c.Commit();
+                c.SaveChanges();
             }
 
         }

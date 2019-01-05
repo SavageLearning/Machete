@@ -1,4 +1,4 @@
-using Machete.Web.Helpers;
+﻿using Machete.Web.Helpers;
 using System;
 using System.ComponentModel.DataAnnotations;
 // ReSharper disable UnusedAutoPropertyAccessor.Global

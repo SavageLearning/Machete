@@ -52,7 +52,7 @@ namespace Machete.Test.Integration.Data
             var worker = frb.AddWorkerSignin().ToWorker();
             var signin = frb.ToWorkerSignin();
             // Act
-            var q = frb.ToRepoWorkerSignin().GetAllQ();
+            var q = frb.ToFactory().Get().WorkerSignins.AsQueryable();
             q = q.Where(r => r.dwccardnum == signin.dwccardnum
                           && DbFunctions.DiffDays(r.dateforsignin, signin.dateforsignin) == 0 ? true : false);           
             WorkerSignin result = q.FirstOrDefault();
@@ -74,7 +74,7 @@ namespace Machete.Test.Integration.Data
             var count = cache.Count();
             // Act
             Machete.Data.MacheteReportDefinitions.Initialize(context);
-            var result = frb.ToRepoReports().GetAllQ().Count();
+            var result = frb.ToFactory().Get().ReportDefinitions.Count();
             // Assert
             Assert.AreEqual(count, result, "static cache and DB report definitions' count not equal");
         }

@@ -32,7 +32,6 @@ namespace Machete.Test.Integration.Services
             //
             //Arrange
             var wo = frb.CloneOnlineOrder();
-            var serv = frb.ToServOnlineOrders();
             var map = frb.ToApiMapper();
             //
             //Act
@@ -50,7 +49,7 @@ namespace Machete.Test.Integration.Services
             // Arrange
             var e = frb.ToEmployer();
             var wo = frb.CloneDomainWorkOrder();
-            var tpServ = frb.ToServTransportProvider();
+            var tpServ = frb.ToServ<ITransportProvidersService>();
 
             wo.zipcode = "98118";
             wo.EmployerID = e.ID;
@@ -60,7 +59,7 @@ namespace Machete.Test.Integration.Services
             var wa = frb.CloneDomainWorkAssignment();
             wa.transportCost = 5; wa.ID = 1;
             wo.workAssignments.Add(wa);
-            var serv = frb.ToServOnlineOrders();
+            var serv = frb.ToServ<IOnlineOrdersService>();
 
             // 
             // Act
@@ -80,14 +79,14 @@ namespace Machete.Test.Integration.Services
             // Arrange
             var e = frb.ToEmployer();
             var wo = frb.CloneDomainWorkOrder();
-            var tpServ = frb.ToServTransportProvider();
+            var tpServ = frb.ToServ<ITransportProvidersService>();
 
             wo.zipcode = "98118";
             wo.EmployerID = e.ID;
             var ll = tpServ.GetMany(a => a.key == "transport_bus").SingleOrDefault();
             wo.transportProviderID = ll.ID;
             wo.workAssignments = new List<WorkAssignment>();
-            var serv = frb.ToServOnlineOrders();
+            var serv = frb.ToServ<IOnlineOrdersService>();
 
             // 
             // Act
@@ -103,7 +102,7 @@ namespace Machete.Test.Integration.Services
             // Arrange
             var e = frb.ToEmployer();
             var wo = frb.CloneDomainWorkOrder();
-            var tpServ = frb.ToServTransportProvider();
+            var tpServ = frb.ToServ<ITransportProvidersService>();
 
             wo.zipcode = "98118";
             wo.EmployerID = e.ID;
@@ -113,7 +112,7 @@ namespace Machete.Test.Integration.Services
             var wa = frb.CloneDomainWorkAssignment();
             wa.transportCost = 0;
             wo.workAssignments.Add(wa);
-            var serv = frb.ToServOnlineOrders();
+            var serv = frb.ToServ<IOnlineOrdersService>();
 
             // 
             // Act
@@ -130,7 +129,7 @@ namespace Machete.Test.Integration.Services
             // Arrange
             var e = frb.ToEmployer();
             var wo = frb.CloneDomainWorkOrder();
-            var tpServ = frb.ToServTransportProvider();
+            var tpServ = frb.ToServ<ITransportProvidersService>();
 
             wo.zipcode = "12345";
             wo.EmployerID = e.ID;
@@ -140,7 +139,7 @@ namespace Machete.Test.Integration.Services
             var wa = frb.CloneDomainWorkAssignment();
             wa.transportCost = 5;
             wo.workAssignments.Add(wa);
-            var serv = frb.ToServOnlineOrders();
+            var serv = frb.ToServ<IOnlineOrdersService>();
 
             // 
             // Act
@@ -157,7 +156,7 @@ namespace Machete.Test.Integration.Services
             // Arrange
             var e = frb.ToEmployer();
             var wo = frb.CloneDomainWorkOrder();
-            var tpServ = frb.ToServTransportProvider();
+            var tpServ = frb.ToServ<ITransportProvidersService>();
 
             wo.zipcode = "98118"; // affects transport cost 
             wo.EmployerID = e.ID;
@@ -174,7 +173,7 @@ namespace Machete.Test.Integration.Services
             wa.transportCost = 0; wa.ID = 3;
             wo.workAssignments.Add(wa);
 
-            var serv = frb.ToServOnlineOrders();
+            var serv = frb.ToServ<IOnlineOrdersService>();
 
             // 
             // Act
@@ -194,7 +193,7 @@ namespace Machete.Test.Integration.Services
             // Arrange
             var e = frb.ToEmployer();
             var wo = frb.CloneDomainWorkOrder();
-            var tpServ = frb.ToServTransportProvider();
+            var tpServ = frb.ToServ<ITransportProvidersService>();
 
             wo.zipcode = "98118"; // affects transport cost 
             wo.EmployerID = e.ID;
@@ -211,7 +210,7 @@ namespace Machete.Test.Integration.Services
             wa.transportCost = 0; wa.ID = 2;
             wo.workAssignments.Add(wa);
 
-            var serv = frb.ToServOnlineOrders();
+            var serv = frb.ToServ<IOnlineOrdersService>();
 
             // 
             // Act
@@ -225,7 +224,7 @@ namespace Machete.Test.Integration.Services
         {
             // arrange
             var wo = frb.ToWorkOrder();
-            var serv = frb.ToServOnlineOrders();
+            var serv = frb.ToServ<IOnlineOrdersService>();
             // act
             var result = serv.Get(wo.ID);
             // 
