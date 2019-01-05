@@ -1,5 +1,4 @@
-﻿using System.Data.Common;
-using System.Data.Entity.Infrastructure.Interception;
+using System.Data.Common;
 using System.Diagnostics;
 
 namespace Machete.Data.Logging

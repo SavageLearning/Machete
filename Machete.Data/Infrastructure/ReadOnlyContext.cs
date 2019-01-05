@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 
 namespace Machete.Data.Infrastructure
 {
@@ -12,43 +13,47 @@ namespace Machete.Data.Infrastructure
     }
     public class ReadOnlyContext : Disposable, IReadOnlyContext
     {
-        private string connectionString;
-        private BindingFlags bindFlags;
-        private FieldInfo field;
+        private readonly string _connString;
+        private readonly BindingFlags _bindFlags;
+        private FieldInfo _field;
 
-        // this class cannot be instantiated without a connection string
+        // this class cannot be instantiated without a connection string;
         // the purpose is to make the person who implements it think about
         // which connection string should be used (i.e., the readonly one).
         // not validating the connection string here, because this class
         // should have no knowledge of connection strings.
-        public ReadOnlyContext(string connectionString)
+        public ReadOnlyContext(string connString)
         {
-            this.bindFlags = BindingFlags.Instance
-                           | BindingFlags.Public
-                           | BindingFlags.NonPublic
-                           | BindingFlags.Static;
-            this.field = typeof(SqlConnection).GetField("ObjectID", bindFlags);
-            this.connectionString = connectionString;
+            _bindFlags = BindingFlags.Instance
+                       | BindingFlags.Public
+                       | BindingFlags.NonPublic
+                       | BindingFlags.Static;
+            _field = typeof(SqlConnection).GetField("ObjectID", _bindFlags);
+            _connString = connString;
         }
 
         // we don't want the base get() because it allows you to pass in
         // nothing and get MacheteConnection(), which uses "macheteContext"
         public MacheteContext Get()
         {
-            if (String.IsNullOrEmpty(connectionString))
+            if (String.IsNullOrEmpty(_connString))
             {
-                throw new ArgumentNullException(paramName: "connectionString", message: "An instance of MacheteContext was requested but no connection string was provided.");
+                throw new ArgumentNullException(
+                    paramName: "_connString",
+                    message: "An instance of MacheteContext was requested but no connection string was provided.");
             }
-            else
-            {
-                return new MacheteContext(connectionString);
-            }
+
+            var optionsBuilder = new DbContextOptionsBuilder<MacheteContext>();
+            optionsBuilder.UseSqlServer(_connString, b =>
+                b.MigrationsAssembly("Machete.Data.Migrations"));
+            var options = optionsBuilder.Options;
+            return new MacheteContext(options);
         }
 
         public List<string> ExecuteSql(MacheteContext context, string query)
         {
             var errors = new List<string>();
-            var connection = (context as System.Data.Entity.DbContext).Database.Connection;
+            var connection = (context as Microsoft.EntityFrameworkCore.DbContext).Database.GetDbConnection();
 
             using (var command = connection.CreateCommand())
             {

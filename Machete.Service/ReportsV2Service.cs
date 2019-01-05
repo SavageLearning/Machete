@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Machete.Data;
 using Machete.Data.Helpers;
 using Machete.Data.Infrastructure;
@@ -8,7 +8,7 @@ using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;

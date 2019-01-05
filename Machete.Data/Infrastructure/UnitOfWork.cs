@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     UnitOfWork.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -23,7 +23,7 @@
 #endregion
 
 using System;
-using System.Data.Entity.Validation;
+//using System.Data.Entity.Validation; // LEGACY, pre-dotnetCore
 using System.Linq;
 using System.Text;
 
@@ -58,7 +58,6 @@ namespace Machete.Data.Infrastructure
         {
             DataContext.Commit();
         }
-
         public void Commit()
         {
             DataContext.Commit();

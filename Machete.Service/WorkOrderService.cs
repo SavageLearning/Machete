@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     WorkOrderService.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -30,7 +30,6 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data.Entity;
 using System.Linq;
 
 namespace Machete.Service
@@ -51,8 +50,6 @@ namespace Machete.Service
         WorkOrder Create(WorkOrder wo, string userName, ICollection<WorkAssignment> was = null);
     }
 
-    // Business logic for WorkOrder record management
-    // Ïf I made a non-web app, would I still need the code? If yes, put in here.
     public class WorkOrderService : ServiceBase<WorkOrder>, IWorkOrderService
     {
         private readonly IWorkAssignmentService waServ;
@@ -62,12 +59,20 @@ namespace Machete.Service
         private readonly ILookupRepository lRepo;
         private readonly IConfigService cfg;
         private readonly ITransportProvidersService tpServ;
+
         /// <summary>
-        /// Constructor
+        /// Business logic object for WorkOrder record management. Contains logic specific
+        /// to processing work orders, and not necessarily related to a web application.
         /// </summary>
         /// <param name="repo"></param>
         /// <param name="waServ">Work Assignment service</param>
+        /// <param name="tpServ"></param>
+        /// <param name="wrServ"></param>
+        /// <param name="wServ"></param>
+        /// <param name="lRepo"></param>
         /// <param name="uow">Unit of Work</param>
+        /// <param name="map"></param>
+        /// <param name="cfg"></param>
         public WorkOrderService(IWorkOrderRepository repo, 
                                 IWorkAssignmentService waServ,
                                 ITransportProvidersService tpServ,
@@ -97,8 +102,8 @@ namespace Machete.Service
         public IEnumerable<WorkOrder> GetActiveOrders(DateTime date, bool assignedOnly)
         {
             IQueryable<WorkOrder> query = repo.GetAllQ();
-                            query = query.Where(wo => wo.statusID == WorkOrder.iActive && 
-                                           DbFunctions.DiffDays(wo.dateTimeofWork, date) == 0 ? true : false)
+                            query = query.Where(wo => wo.statusID == WorkOrder.iActive 
+                                                   && wo.dateTimeofWork.Date == date.Date)
                                     .AsQueryable();
             List<WorkOrder> list = query.ToList();
             List<WorkOrder> final = list.ToList();
@@ -159,7 +164,7 @@ namespace Machete.Service
             if (o.onlineSource == true) IndexViewBase.filterOnlineSource(o, ref q);
             if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
             //
-            IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, o.CI.TwoLetterISOLanguageName, ref q);
+            IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, /*o.CI.TwoLetterISOLanguageName*/"en", ref q);
             //
             result.filteredCount = q.Count();
             result.query = q.ProjectTo<DTO.WorkOrdersList>(map.ConfigurationProvider)
@@ -192,7 +197,7 @@ namespace Machete.Service
             else query = repo.GetAllQ();
             var group_query = from wo in query
                             group wo by new { 
-                                dateSoW = DbFunctions.TruncateTime(wo.dateTimeofWork),                                              
+                                dateSoW = wo.dateTimeofWork.Date,                                              
                                 wo.statusID
                             } into dayGroup
                             select new WorkOrderSummary()
@@ -266,23 +271,24 @@ namespace Machete.Service
 
         public void Save(WorkOrder workOrder, List<WorkerRequest> wrList, string user)
         {
+            // TODO get this working again
             // Stale requests to remove
-            foreach (var rem in workOrder.workerRequests.Except<WorkerRequest>(wrList, new WorkerRequestComparer()).ToArray())
-            {
-                var request = wrServ.GetByWorkerID(workOrder.ID, rem.WorkerID);
-                wrServ.Delete(request.ID, user);
-                workOrder.workerRequests.Remove(rem);
-            }
+//            foreach (var rem in workOrder.workerRequests.Except<WorkerRequest>(wrList, new WorkerRequestComparer()).ToArray())
+//            {
+//                var request = wrServ.GetByWorkerID(workOrder.ID, rem.WorkerID);
+//                wrServ.Delete(request.ID, user);
+//                workOrder.workerRequests.Remove(rem);
+//            }
 
             // New requests to add
-            foreach (var add in wrList.Except<WorkerRequest>(workOrder.workerRequests, new WorkerRequestComparer()))
-            {
-                add.workOrder = workOrder;
-                add.workerRequested = wServ.Get(add.WorkerID);
-                add.updatedByUser(user);
-                add.createdByUser(user);
-                workOrder.workerRequests.Add(add);
-            }
+//            foreach (var add in wrList.Except<WorkerRequest>(workOrder.workerRequests, new WorkerRequestComparer()))
+//            {
+//                add.workOrder = workOrder;
+//                add.workerRequested = wServ.Get(add.WorkerID);
+//                add.updatedByUser(user);
+//                add.createdByUser(user);
+//                workOrder.workerRequests.Add(add);
+//            }
 
             Save(workOrder, user);
         }

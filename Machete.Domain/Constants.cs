@@ -1,4 +1,4 @@
-﻿//
+//
 // The constants here are strings that are used both in the database and the application
 // as identifiers of system crtical values. These structs encapsulate key strings that machete
 // depends on for proper functionality.

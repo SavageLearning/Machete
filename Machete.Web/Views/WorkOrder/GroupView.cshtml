@@ -1,4 +1,4 @@
-﻿@model Machete.Web.ViewModel.WorkOrderGroupPrintView
+@model Machete.Web.ViewModel.WorkOrderGroupPrintView
 @using Machete.Web.ViewModel           
 @using Machete.Web.Resources
 @using Machete.Web.Helpers
@@ -12,7 +12,7 @@ else
 {
 foreach (Machete.Web.ViewModel.WorkOrder order in Model.orders)
 {
-    @Html.Partial("View", order);
+    @await Html.PartialAsync("View", order);
     <div style="page-break-before: always;">
     </div>
 }

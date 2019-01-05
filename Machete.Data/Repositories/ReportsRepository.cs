@@ -1,11 +1,11 @@
-﻿using Machete.Data.Helpers;
+using Machete.Data.Helpers;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
@@ -29,7 +29,6 @@ namespace Machete.Data
     {
         private IReadOnlyContext readOnlyContext;
 
-        // leaving for now for testing purposes...
         public ReportsRepository(IDatabaseFactory dbFactory) : base(dbFactory) { }
 
         public ReportsRepository(IDatabaseFactory dbFactory, IReadOnlyContext readOnlyContext) : base(dbFactory) {
@@ -40,7 +39,8 @@ namespace Machete.Data
         public List<SimpleDataRow> getSimpleAggregate(int id, DateTime beginDate, DateTime endDate)
         {
             var rdef = dbset.Single(a => a.ID == id);
-            return dbFactory.Get().Database.SqlQuery<SimpleDataRow>(rdef.sqlquery,
+            return dbFactory.Get().Query<SimpleDataRow>().FromSql(rdef.sqlquery,
+            //return db.Get().Database.SqlQuery<SimpleDataRow>(rdef.sqlquery,
                 new SqlParameter { ParameterName = "beginDate", Value = beginDate },
                 new SqlParameter { ParameterName = "endDate", Value = endDate })
                 .ToList();
@@ -51,8 +51,9 @@ namespace Machete.Data
             var rdef = dbset.Single(a => a.ID == id);
             var meta = SqlServerUtils.getMetadata(DataContext, rdef.sqlquery);
             var queryType = buildQueryType(meta);
-            Task<List<object>> raw = dbFactory.Get().Database.SqlQuery(
-                queryType, 
+            Task<List<object>> raw = dbFactory.Get().Query<dynamic>().FromSql(
+            //Task<List<object>> raw = db.Get().Database.SqlQuery(
+                //queryType, 
                 rdef.sqlquery,
                 new SqlParameter { ParameterName = "beginDate", Value = o.beginDate },
                 new SqlParameter { ParameterName = "endDate", Value = o.endDate },
@@ -69,7 +70,7 @@ namespace Machete.Data
         {
             // https://stackoverflow.com/documentation/epplus/8223/filling-the-document-with-data
             DataTable dt = new DataTable();
-            var cnxn = DataContext.Database.Connection.ConnectionString;
+            var cnxn = DataContext.Database.GetDbConnection().ConnectionString;
             using (SqlDataAdapter adapter = new SqlDataAdapter(query, cnxn))
             {
                 adapter.Fill(dt);
@@ -125,8 +126,9 @@ namespace Machete.Data
         public static TypeBuilder CreateTypeBuilder(
                         string assemblyName, string moduleName, string typeName)
         {
-            TypeBuilder typeBuilder = AppDomain
-                .CurrentDomain
+            //TypeBuilder typeBuilder = AppDomain
+            //    .CurrentDomain
+            var typeBuilder = AssemblyBuilder
                 .DefineDynamicAssembly(new AssemblyName(assemblyName),
                                        AssemblyBuilderAccess.Run)
                 .DefineDynamicModule(moduleName)
@@ -189,7 +191,6 @@ namespace Machete.Data
             propertyBuilder.SetSetMethod(setterMethod);
         }
         #endregion
-
         public List<string> validate(string query)
         {
             var context = readOnlyContext.Get();

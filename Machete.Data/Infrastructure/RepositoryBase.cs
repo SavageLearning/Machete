@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     RepositoryBase.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -23,7 +23,7 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
 namespace Machete.Data.Infrastructure
@@ -58,8 +58,8 @@ namespace Machete.Data.Infrastructure
         // private -- [ method-modifier ]
         //             decorates a method, specifies its accessibility
         //             Access limited to this class
-        protected MacheteContext dataContext;
-        private IDbSet<T> _dbset;
+        private MacheteContext dataContext;
+        private DbSet<T> _dbset; // IDbSet (Framework)
         // protected -- [ method-modifier ]
         //                  Access limited to this class or classes derived from this class
         protected RepositoryBase(IDatabaseFactory databaseFactory)
@@ -83,11 +83,8 @@ namespace Machete.Data.Infrastructure
                 }
                 return dataContext;
             }
-
-
         }
-
-        protected IDbSet<T> dbset
+        protected DbSet<T> dbset
         {
             get
             {
@@ -106,32 +103,33 @@ namespace Machete.Data.Infrastructure
         //              compile-time type of the instance determines implem. to invoke             
         public virtual T Add(T entity)
         {
-            return dbset.Add(entity);           
+            var poofball = _dbset.Add(entity).Entity;
+            return poofball;
         }
       
         public virtual void Delete(T entity)
         {
-            dbset.Remove(entity);
+            _dbset.Remove(entity);
         }
         public void Delete(Func<T, Boolean> where)
         {
-            IEnumerable<T> objects = dbset.Where<T>(where).AsEnumerable();
+            IEnumerable<T> objects = _dbset.Where<T>(where).AsEnumerable();
             foreach (T obj in objects)
-                dbset.Remove(obj);
+                _dbset.Remove(obj);
         } 
         public virtual T GetById(int id)
         {
-            return dbset.Find(id);
+            return _dbset.Find(id);
         }
 
         public virtual IQueryable<T> GetAllQ()
         {
-            return dbset.AsNoTracking().AsQueryable();
+            return _dbset.AsNoTracking().AsQueryable();
         }
 
         public virtual IQueryable<T> GetManyQ(Func<T, bool> where)
         {
-            return dbset.Where(where).AsQueryable();
+            return _dbset.Where(where).AsQueryable();
         }
     }
 }

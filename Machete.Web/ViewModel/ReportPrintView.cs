@@ -1,4 +1,4 @@
-﻿using Machete.Service;
+using Machete.Service;
 using System;
 
 namespace Machete.Web.ViewModel

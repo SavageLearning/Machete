@@ -1,4 +1,4 @@
-﻿using Machete.Web.Helpers;
+using Machete.Web.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -243,7 +243,7 @@ namespace Machete.Web.ViewModel
     //                    {
     //                        WID = w.workerAssigned != null ? (int?)w.workerAssigned.dwccardnum : null,
     //                        name = w.workerAssigned != null ? w.workerAssigned.Person.fullName() : null,
-    //                        skill = lcache.textByID(w.skillID, CI.TwoLetterISOLanguageName),
+    //                        skill = lcache.textByID(w.skillID, currentCulture.TwoLetterISOLanguageName),
     //                        hours = w.hours,
     //                        wage = w.hourlyWage
     //} : null

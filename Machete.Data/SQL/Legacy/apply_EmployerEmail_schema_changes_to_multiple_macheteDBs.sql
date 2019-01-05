@@ -1,4 +1,4 @@
-﻿--use [machete-wjp]
+--use [machete-wjp]
 --use SQLCMD -D instead
 CREATE TABLE [dbo].[Emails] (
     [ID] [int] NOT NULL IDENTITY,

@@ -1,9 +1,6 @@
-﻿using AutoMapper;
-using Machete.Web.Resources;
+﻿using Machete.Web.Resources;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Globalization;
 
 namespace Machete.Web.Maps
 {
@@ -23,7 +20,7 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.idString, opt => opt.Ignore())
                 .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/Worker/Edit/" + Convert.ToString(d.ID)))
                 .ForMember(v => v.tablabel, opt => opt.MapFrom(d => d.Person.firstname1 + ' ' + d.Person.lastname1))
-                .ForMember(v => v.Person, opt => opt.Ignore())
+                //.ForMember(v => v.Person, opt => opt.Ignore())
                 ;
             CreateMap<Service.DTO.WorkerList, ViewModel.WorkerList>()
                 .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/Worker/Edit/" + Convert.ToString(d.ID)))
@@ -33,7 +30,7 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.dwccardnum, opt => opt.MapFrom(d => Convert.ToString(d.dwccardnum)))
                 .ForMember(v => v.active, opt => opt.MapFrom(d => d.active ?? false ? Shared.True : Shared.False))
                 .ForMember(v => v.memberStatus, opt => opt.MapFrom(d => getCI() == "ES" ? d.memberStatusES : d.memberStatusEN))
-                .ForMember(v => v.memberexpirationdate, opt => opt.MapFrom(d => Convert.ToString(d.memberexpirationdate)))
+                .ForMember(v => v.memberexpirationdate, opt => opt.MapFrom(d => Convert.ToString(d.memberexpirationdate, CultureInfo.InvariantCulture)))
                 ;
         }
     }

@@ -1,4 +1,4 @@
-﻿IF NOT EXISTS (SELECT 1 FROM dbo.Lookups WHERE category='activityType' AND [key]='Organizing Meeting')
+IF NOT EXISTS (SELECT 1 FROM dbo.Lookups WHERE category='activityType' AND [key]='Organizing Meeting')
 BEGIN INSERT INTO dbo.Lookups (category, [key], text_EN, text_ES, speciality, selected, datecreated, dateupdated)
 VALUES ('activityType', 'Organizing Meeting', 'Organizing Meeting', 'Reunión de Organizadores', 0, 0, GETDATE(), GETDATE()) END
 

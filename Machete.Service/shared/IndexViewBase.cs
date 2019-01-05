@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     IndexViewBase.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/25 
@@ -26,11 +26,10 @@ using Machete.Data.Infrastructure;
 using Machete.Domain;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.SqlServer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer;
 using System.Linq;
 using System.Text.RegularExpressions;
-
 
 namespace Machete.Service
 {
@@ -45,7 +44,7 @@ namespace Machete.Service
         #region SIGNINS
         public static void diffDays<T>(viewOptions o, ref IQueryable<T> q) where T : Signin
         {
-            q = q.Where(p => DbFunctions.DiffDays(p.dateforsignin, o.date) == 0 ? true : false);
+            q = q.Where(p => DbFunctions.DiffDays(p.dateforsignin, (DateTime)o.date) == 0);
         }
         public static void search(viewOptions o, ref IQueryable<WorkerSignin> q)
         {
@@ -53,7 +52,7 @@ namespace Machete.Service
                             wsi.worker.Person.firstname1.Contains(o.sSearch) ||
                             wsi.worker.Person.firstname2.Contains(o.sSearch) ||
                             wsi.worker.Person.lastname1.Contains(o.sSearch) ||
-                            wsi.worker.Person.lastname2.Contains(o.sSearch) //||
+                            wsi.worker.Person.lastname2.Contains(o.sSearch)
                             );
         }
         public static void search<T>(viewOptions o, ref IEnumerable<T> e, IEnumerable<Worker> wcache) where T : Signin
@@ -97,12 +96,12 @@ namespace Machete.Service
                                 wsi => new
                                 {
                                     K1 = (int)wsi.WorkerID,
-                                    K2 = (DateTime)DbFunctions.TruncateTime(wsi.dateforsignin)
+                                    K2 = wsi.dateforsignin.Date
                                 },
                                 wr => new
                                 {
                                     K1 = wr.WorkerID,
-                                    K2 = (DateTime)DbFunctions.TruncateTime(wr.workOrder.dateTimeofWork)
+                                    K2 = wr.workOrder.dateTimeofWork.Date
                                 },
                                 (wsi, wr) => wsi);
                     break;
@@ -145,13 +144,14 @@ namespace Machete.Service
             if (o.date.Value.DayOfWeek == DayOfWeek.Saturday)
             {
                 sunday = o.date.Value.AddDays(1);
-                q = q.Where(p => DbFunctions.DiffDays(p.workOrder.dateTimeofWork, o.date) == 0 ? true : false ||
-                    DbFunctions.DiffDays(p.workOrder.dateTimeofWork, sunday) == 0 ? true : false
-                    );
+                q = q.Where(p => 
+                    DbFunctions.DiffDays(p.workOrder.dateTimeofWork, (DateTime)o.date) == 0
+                 || DbFunctions.DiffDays(p.workOrder.dateTimeofWork, sunday) == 0
+                );
             }
             else
             {
-                q = q.Where(p => DbFunctions.DiffDays(p.workOrder.dateTimeofWork, o.date) == 0 ? true : false);
+                q = q.Where(p => DbFunctions.DiffDays(p.workOrder.dateTimeofWork, (DateTime)o.date) == 0);
             }
         }
         public static void WOID(viewOptions o, ref IQueryable<WorkAssignment> q)
@@ -543,7 +543,7 @@ namespace Machete.Service
         {
             // Shows classes within 30min of start and up to 30min after end
             q = q.Where(p => DbFunctions.DiffMinutes(date, p.dateStart) <= 30 &&
-             DbFunctions.DiffMinutes(date, p.dateEnd) >= -30 ? true : false);
+                             DbFunctions.DiffMinutes(date, p.dateEnd) >= -30);
         }
         /// <summary>
         /// 

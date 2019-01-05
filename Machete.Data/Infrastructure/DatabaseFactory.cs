@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     DatabaseFactory.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -23,9 +23,8 @@
 #endregion
 using System;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Reflection;
-using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace Machete.Data.Infrastructure
 {
@@ -40,36 +39,46 @@ namespace Machete.Data.Infrastructure
     //
     public class DatabaseFactory : Disposable, IDatabaseFactory
     {
-        string connString;
+        DbContextOptions<MacheteContext> options;
+        // ReSharper disable once InconsistentNaming
         private MacheteContext macheteContext;
-        private BindingFlags bindFlags = BindingFlags.Instance |
-             BindingFlags.Public |
-             BindingFlags.NonPublic |
-             BindingFlags.Static;
-        private FieldInfo field;
-        public DatabaseFactory() 
-        {
-            field = typeof(SqlConnection).GetField("ObjectID", bindFlags);
-        }
+        private const BindingFlags BindFlags = BindingFlags.Instance 
+                                             | BindingFlags.Public
+                                             | BindingFlags.NonPublic
+                                             | BindingFlags.Static;
 
         public DatabaseFactory(string connString)
         {
-            field = typeof(SqlConnection).GetField("ObjectID", bindFlags);
-            this.connString = connString;
+            var caller = Assembly.GetCallingAssembly();
+
+            if (!caller.FullName.StartsWith("Machete.Test"))
+            {
+                throw new UnauthorizedAccessException("This constructor can no longer retrieve a context for any class but the test class.");
+            }
+            
+            typeof(SqlConnection).GetField("ObjectID", BindFlags);
+            
+            var builder = new DbContextOptionsBuilder<MacheteContext>();
+            if (string.IsNullOrEmpty(connString) || connString == "Data Source=machete.db")
+                builder.UseSqlite("Data Source=machete.db", with =>
+                    with.MigrationsAssembly("Machete.Data"));
+            else
+                builder.UseSqlServer(connString, with =>
+                    with.MigrationsAssembly("Machete.Data"));
+            options = builder.Options;
+        }
+
+        public DatabaseFactory(DbContextOptions<MacheteContext> options)
+        {
+            typeof(SqlConnection).GetField("ObjectID", BindFlags);
+            this.options = options;
         }
 
         public MacheteContext Get()
-        {
+        {            
             if (macheteContext == null) 
             {
-                if (connString == null)
-                {
-                    macheteContext = new MacheteContext();
-                }
-                else
-                {
-                    macheteContext = new MacheteContext(connString);
-                }
+                macheteContext = new MacheteContext(options);
             }
             log_connection_count("DatabaseFactory.Get");
             return macheteContext;
@@ -77,14 +86,16 @@ namespace Machete.Data.Infrastructure
 
         private void log_connection_count(string prefix)
         {
-            var sb = new StringBuilder();
-            var conn1 = (macheteContext as System.Data.Entity.DbContext).Database.Connection;
-            var objid1 = field.GetValue(conn1);
-            sb.AppendFormat("-----------{0} # [{1}], Conn: {2}",
-                prefix,
-                objid1.ToString(),
-                connString);
-            Debug.WriteLine(sb.ToString());
+            //var sb = new StringBuilder();
+            // ReSharper disable once RedundantCast
+            // ReSharper disable once RedundantNameQualifier
+            //var conn1 = (macheteContext as Microsoft.EntityFrameworkCore.DbContext).Database.GetDbConnection();
+            //var objid1 = field.GetValue(conn1); //TODO uncomment
+            //sb.AppendFormat("-----------{0} # [{1}], Conn: {2}",
+            //    prefix,
+            //    objid1.ToString(),
+            //    connString);
+            //Debug.WriteLine(sb.ToString());
         }
         //public void Set(MacheteContext context)
         //{

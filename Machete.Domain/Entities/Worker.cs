@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     Worker.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -97,7 +97,6 @@ namespace Machete.Domain
         public string emcontUSArelation { get; set; }
         [StringLength(14)]
         public string emcontUSAphone { get; set; }
-        // TODO: require unique number when EF supports it
         [Required]
         [RegularExpression("^[0-9]{5,5}$")]
         public int dwccardnum { get; set; }

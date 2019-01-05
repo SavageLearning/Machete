@@ -1,4 +1,4 @@
-﻿@model Machete.Web.ViewModel.Worker
+@model Machete.Web.ViewModel.Worker
 @using Machete.Web.Resources
 @using Machete.Web.Helpers
 
@@ -16,7 +16,7 @@
     @*<input type="button" value="@Workers.printlink" class="formButton" id="viewWorker-@(Model.ID)" />*@
     <input type="submit" value="@Workers.editsubmit" class="formButton saveBtn" id="@(idPrefix)SaveButton"/>
     
-    if (Html.IsInRole(Html.Role_AM()))
+    if (Html.IsInRole(new[] { "Administrator", "Manager" }))
     {
         <input id="deleteWorkerButton-@(Model.ID)" type="button" value="@Workers.deletesubmit" 
                 class="formButton deleteButton" />
@@ -27,7 +27,7 @@
 
 }
 
-@if (Html.IsInRole(Html.Role_AM()))
+@if (Html.IsInRole(new[] { "Administrator", "Manager" }))
 {
     using (Html.BeginForm("Delete", "Worker", FormMethod.Post,
                             new { @class = "edittab-form DeletePost", @id = "deleteWorker-" + Model.ID }))
@@ -36,8 +36,7 @@
     }
 }
 
-@Html.Partial("WorkerWAIndex", Model)
-
+@await Html.PartialAsync("WorkerWAIndex", Model)
 <script type="text/javascript">
     $(document).ready(function () {
         var personPartsTab = $('#@(parentPrefix)personPartsTabs');

@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     HomeController.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -21,32 +21,21 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+
 using Machete.Web.Helpers;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Web.Controllers
 {
     [ElmahHandleError]
     public class HomeController : Controller
     {
-        [AllowAnonymous]
+        [Authorize] // if unauthenticated, bounce back to login until we figure it out
         public ActionResult Index()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                if (User.IsInRole("Hirer"))
-                {
-                    return Redirect("/V2/Onlineorders");
-                }
-                return View();
-            }
-            return RedirectToAction("Login", "Account");
-        }
-
-        [Authorize(Roles = "Manager, Administrator, PhoneDesk, User, Teacher, Check-in")]
-        public ActionResult Changes()
-        {
-            return PartialView();
+            if (User.IsInRole("Hirer")) return Redirect("/V2/Onlineorders");
+            return View();
         }
 
         [Authorize(Roles = "Manager, Administrator, PhoneDesk, User, Teacher, Check-in")]
@@ -69,16 +58,6 @@ namespace Machete.Web.Controllers
 
         [Authorize(Roles = "Manager, Administrator, PhoneDesk, User, Teacher, Check-in")]
         public ActionResult Docs()
-        {
-            return PartialView();
-        }
-        [Authorize(Roles = "Manager, Administrator, PhoneDesk, User, Teacher, Check-in")]
-        public ActionResult Reports()
-        {
-            return PartialView();
-        }
-        [AllowAnonymous]
-        public ActionResult NotFound()
         {
             return PartialView();
         }

@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     ErrorController.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -21,7 +21,8 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System.Web.Mvc;
+
+using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Web.Controllers
 {
@@ -32,12 +33,12 @@ namespace Machete.Web.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            return View("~/Views/Shared/Error.cshtml");
         }
         public ActionResult Http404(string url)
         {
             Response.StatusCode = 404;
-            Response.TrySkipIisCustomErrors = true;
+            //Response.TrySkipIisCustomErrors = true;
             ViewData["url"] = url;
             return View();
         }

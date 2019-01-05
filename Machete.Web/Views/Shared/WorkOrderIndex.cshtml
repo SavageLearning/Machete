@@ -1,12 +1,18 @@
-﻿@model Machete.Web.ViewModel.Employer
-@using Machete.Web.Helpers
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.Localization
+@model Machete.Web.ViewModel.Employer
 
 @using Machete.Web.Resources
+
 @{
-    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    var httpContext = ViewContext.HttpContext;
+    var currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
+    var currentUrl = UriHelper.BuildRelative(httpContext.Request.PathBase, httpContext.Request.Path, httpContext.Request.QueryString);
+
     string recType = "WO";
     string idPrefix = recType + Model.ID + "-";
 }
+
 <div id="workOrderTabs_@(Model.ID)" >
     <ul>
         <li><a href="#@(idPrefix)workOrderList" id="workOrderListTab_@(Model.ID)" class="ListTab">@WorkOrders.listlink</a> </li>
@@ -36,7 +42,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-                $('#employerSelectDialog').hide();
+        $('#employerSelectDialog').hide();
         $('#employerSelectTable').hide();
 
         ////////////////////////////////////////////////////////////////
@@ -46,8 +52,8 @@
         $('#workOrderTabs_@(Model.ID)').mUI('createTabs', {
             prefix: "ui-tabs-workorder-e_@(Model.ID)-",
             formLevel: 2,
-            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
-            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)",
+            changeConfirm: "@Shared.changeConfirm",
+            changeTitle: "@Shared.changeTitle",
             updateDatatable: true
         });
         ////////////////////////////////////////////////////////////////
@@ -68,19 +74,19 @@
                 "bServerSide": true,
                 "sAjaxSource": "/WorkOrder/AjaxHandler",
                 "bProcessing": true,
-                "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+                "oLanguage": datatable_lang_@(currentCulture.TwoLetterISOLanguageName),
                 "aoColumns": [
-                                { "mDataProp": "tabref", "bSearchable": false, "bSortable": false, "bVisible": false },
-                                { "mDataProp": "tablabel", "bSearchable": false, "bSortable": false, "bVisible": false },
-                                { "mDataProp": "EID", "bSearchable": false, "bSortable": false, "bVisible": false },
-                                { "mDataProp": "WOID" },
-                                { "mDataProp": "dateTimeofWork" },
-                                { "mDataProp": "status" },
-                                { "mDataProp": "WAcount" },
-                                { "mDataProp": "contactName" },
-                                { "mDataProp": "workSiteAddress1" },
-                                { "mDataProp": "dateupdated" },
-                                { "mDataProp": "updatedby" }
+                    { "mDataProp": "tabref", "bSearchable": false, "bSortable": false, "bVisible": false },
+                    { "mDataProp": "tablabel", "bSearchable": false, "bSortable": false, "bVisible": false },
+                    { "mDataProp": "EID", "bSearchable": false, "bSortable": false, "bVisible": false },
+                    { "mDataProp": "WOID" },
+                    { "mDataProp": "dateTimeofWork" },
+                    { "mDataProp": "status" },
+                    { "mDataProp": "WAcount" },
+                    { "mDataProp": "contactName" },
+                    { "mDataProp": "workSiteAddress1" },
+                    { "mDataProp": "dateupdated" },
+                    { "mDataProp": "updatedby" }
                 ],
                 "aoSearchCols" :  [null, null, { "sSearch": "@(Model.ID)" }, null, null, null, null, null, null],
                 "fnServerDataExtra": function() { return [{ name: "showOrdersWorkers", value: true }]},
@@ -116,11 +122,11 @@
             var aData = oTable.fnGetData( nTr );
             var wkrList = aData['workers'];
             var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
-            sOut += '<thead><tr><th>@Machete.Web.Resources.Worker.dwccardnum</th>';
-            sOut += '<th>@Machete.Web.Resources.WorkAssignments.fullname</th>';
-            sOut += '<th>@Machete.Web.Resources.WorkAssignments.skills</th>';
-            sOut += '<th>@Machete.Web.Resources.WorkAssignments.hours</th>';
-            sOut += '<th>@Machete.Web.Resources.WorkAssignment.hourlyWage</th>';
+            sOut += '<thead><tr><th>@Worker.dwccardnum</th>';
+            sOut += '<th>@WorkAssignments.fullname</th>';
+            sOut += '<th>@WorkAssignments.skills</th>';
+            sOut += '<th>@WorkAssignments.hours</th>';
+            sOut += '<th>@WorkAssignment.hourlyWage</th>';
             sOut += '</tr></thead>';
             sOut += '<tbody>';
             for (var i in wkrList)

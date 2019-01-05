@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
 using System;

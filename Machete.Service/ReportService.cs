@@ -1,9 +1,12 @@
-﻿using Machete.Data;
+using Machete.Data;
 using Machete.Domain;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer;
 using System.Linq;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
 
 namespace Machete.Service
 {
@@ -20,6 +23,7 @@ namespace Machete.Service
         IEnumerable<NewWorkerData> NewWorkerController(DateTime beginDate, DateTime endDate, string reportType);
     }
 
+    [SuppressMessage("ReSharper", "ReplaceWithSingleCallToCount")]
     public class ReportService : IReportService
     {
         protected readonly IWorkOrderRepository woRepo;
@@ -67,7 +71,7 @@ namespace Machete.Service
             query = wsiQ
                 .Where(whr => whr.dateforsignin >= beginDate
                            && whr.dateforsignin <= endDate)
-                .GroupBy(gb => DbFunctions.TruncateTime(gb.dateforsignin))
+                .GroupBy(gb => gb.dateforsignin.Date)
                 .Select(g => new ReportUnit
                 {
                     date = g.Key,
@@ -99,7 +103,7 @@ namespace Machete.Service
                     firstSignin = group.Min(m => m.dateforsignin)
                 })
                 .Where(whr => whr.firstSignin >= beginDate)
-                .GroupBy(gb => DbFunctions.TruncateTime(gb.firstSignin))
+                .GroupBy(gb => gb.firstSignin.Date)
                 .Select(g => new ReportUnit
                 {
                     date = g.Key,
@@ -123,9 +127,9 @@ namespace Machete.Service
 
 
             query = waQ
-                .Where(whr => DbFunctions.TruncateTime(whr.workOrder.dateTimeofWork) >= beginDate
-                           && DbFunctions.TruncateTime(whr.workOrder.dateTimeofWork) <= endDate)
-                .GroupBy(gb => DbFunctions.TruncateTime(gb.workOrder.dateTimeofWork))
+                .Where(whr => whr.workOrder.dateTimeofWork.Date >= beginDate
+                           && whr.workOrder.dateTimeofWork.Date <= endDate)
+                .GroupBy(gb => gb.workOrder.dateTimeofWork.Date)
                 .Select(g => new ReportUnit
                 {
                     date = g.Key,
@@ -148,9 +152,9 @@ namespace Machete.Service
             var woQ = woRepo.GetAllQ();
 
 
-            query = woQ.Where(whr => DbFunctions.TruncateTime(whr.dateTimeofWork) == beginDate
+            query = woQ.Where(whr => whr.dateTimeofWork.Date == beginDate
                                   && whr.statusID == WorkOrder.iCancelled)
-                .GroupBy(gb => DbFunctions.TruncateTime(gb.dateTimeofWork))
+                .GroupBy(gb => gb.dateTimeofWork.Date)
                 .Select(g => new ReportUnit
                 {
                     date = g.Key,
@@ -183,7 +187,7 @@ namespace Machete.Service
                     wr => new { waid = (int)wr.WorkOrderID, waw = (int?)wr.WorkerID },
                     (wa, wr) => new
                     {
-                        dtow = DbFunctions.TruncateTime(wa.workOrder.dateTimeofWork),
+                        dtow = wa.workOrder.dateTimeofWork.Date,
                         workerAssignedID = wa.workerAssignedID,
                         dwcList = wa.workerAssigned.typeOfWorkID == loD ? (wr.FirstOrDefault().WorkerID == wa.workerAssigned.ID ? 0 : 1) : 0,
                         hhhList = wa.workerAssigned.typeOfWorkID == loH ? (wr.FirstOrDefault().WorkerID == wa.workerAssigned.ID ? 0 : 1) : 0,
@@ -230,17 +234,20 @@ namespace Machete.Service
                     (wa, wo) => new
                     {
                         wa,
-                        woDate = DbFunctions.TruncateTime(wo.dateTimeofWork)
+                        woDate = wo.dateTimeofWork.Date
                     })
                 .Where(whr => whr.woDate >= beginDate
                            && whr.woDate <= endDate)
                 .GroupBy(gb => gb.woDate)
                 .Select(wec => new AverageWageModel
                           {
-                              date = wec.Key ?? DateTime.Now,
+                              date = wec.Key,
                               hours = wec.Sum(wo => wo.wa.hours),
                               wages = wec.Sum(wo => wo.wa.hourlyWage * wo.wa.hours),
-                              avg = wec.Sum(wo => wo.wa.hours) == 0 ? 0 : wec.Sum(wo => wo.wa.hourlyWage * wo.wa.hours) / wec.Sum(wo => wo.wa.hours)
+                              avg = wec.Sum(wo => wo.wa.hours) == 0 
+                                  ? 0 
+                                  : wec.Sum(wo => wo.wa.hourlyWage * wo.wa.hours) 
+                                    / wec.Sum(wo => wo.wa.hours)
                           }
                      );
 
@@ -268,7 +275,7 @@ namespace Machete.Service
                     (wa, wo) => new
                     {
                         wa,
-                        workDate = DbFunctions.TruncateTime(wo.dateTimeofWork)
+                        workDate = wo.dateTimeofWork.Date
                     })
                 .Join(lQ,
                     wawo => wawo.wa.skillID,
@@ -306,7 +313,7 @@ namespace Machete.Service
                     l => l.ID,
                     (wa, l) => new
                     {
-                        dtow = DbFunctions.TruncateTime(wa.workOrder.dateTimeofWork),
+                        dtow = wa.workOrder.dateTimeofWork.Date,
                         zip = wa.workOrder.zipcode,
                         enText = l.text_EN
                     })
@@ -368,7 +375,7 @@ namespace Machete.Service
                     && whr.workOrder.dateTimeofWork <= endDate)
 	            .GroupBy(g => g.workerAssigned.dwccardnum)
 	            .Select(a => new {
-		            date = a.Min(x => DbFunctions.TruncateTime(x.workOrder.dateTimeofWork)),
+		            date = a.Min(x => x.workOrder.dateTimeofWork.Date),
 		            undup = true
 	            })
 	            .GroupBy(gb => gb.date)
@@ -382,7 +389,7 @@ namespace Machete.Service
                     && whr.workOrder.dateTimeofWork <= endDate)
                 .GroupBy(g => new
                     {
-                        dtow = DbFunctions.TruncateTime(g.workOrder.dateTimeofWork),
+                        dtow = g.workOrder.dateTimeofWork.Date,
                     })
                 .Select(c => new
                     {
@@ -430,7 +437,7 @@ namespace Machete.Service
                         name = lj.text_EN,
                         type = aj.Activity.typeID,
                         person = aj.person,
-                        date = DbFunctions.TruncateTime(aj.Activity.dateStart)
+                        date = aj.Activity.dateStart.Date
                     })
                 .Join(lQ,
                     aj => aj.type,
@@ -477,8 +484,9 @@ namespace Machete.Service
                 {
                     dwc = asi.dwccardnum,
                     name = look.text_EN,
-                    date = DbFunctions.TruncateTime(asi.Activity.dateStart),
-                    mins = (DbFunctions.DiffHours(asi.Activity.dateEnd, asi.Activity.dateStart) * 60) + DbFunctions.DiffMinutes(asi.Activity.dateEnd, asi.Activity.dateStart)
+                    date = asi.Activity.dateStart.Date,
+                    mins = 60 * asi.Activity.dateEnd.Subtract(asi.Activity.dateStart).Hours
+                              + asi.Activity.dateEnd.Subtract(asi.Activity.dateStart).Minutes
                 })
                 .Where(whr => whr.name.Contains("English"))
                 .GroupBy(gb => gb.dwc)

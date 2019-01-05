@@ -1,7 +1,7 @@
-﻿using Machete.Data.Infrastructure;
+using Machete.Data.Infrastructure;
 using Machete.Domain;
 using System;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Collections.Generic;
 

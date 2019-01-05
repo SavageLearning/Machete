@@ -1,113 +1,121 @@
-﻿@model Machete.Web.ViewModel.Config
-@using Machete.Web.Helpers
-@using Machete.Web.Resources
-@{
-    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
-    string lang = CI.TwoLetterISOLanguageName;
-    string recType = "config";
-    string recTypeID = recType + Model.ID;
-    string idPrefix = recTypeID + "-";
-}
-@Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID" })
-<div class="tb-table">
-    <div>
-        <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.active)
-            @Html.mUIDropDownYesNoFor(m => m.active, Model.def.yesnoSelectList(),
-                                    new { @tabindex = "0", @class = "configEditor", id = idPrefix + "active" })
-        </div>
-    <div>
-        <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.category)
-            @Html.mUITableDropDownListFor(model => model.category, Model.def.configCategories(),
-                            new { @tabindex = "1", @class = "configEditor", @id = idPrefix + "category" })
-            @Html.mUITableLabelFor(model => model.selected)
-            @Html.mUIDropDownYesNoFor(m => m.selected, Model.def.yesnoSelectList(),
-                                    new { @tabindex = "3", @class = "configEditor", id = idPrefix + "selected" })
-        </div>
-        <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.text_EN)
-            @Html.mUITableTextBoxFor(model => model.text_EN,
-                                    new { @tabindex = "2", @class = "configEditor", @id = idPrefix + "text_EN" })
-            @Html.mUITableLabelFor(model => model.text_ES)
-            @Html.mUITableTextBoxFor(m => m.text_ES,
-                                            new { @tabindex = "4", @class = "configEditor", id = idPrefix + "text_ES" })
-        </div>
-    </div>
-    <div id="@(idPrefix)skillRows">
-        <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.subcategory)
-            @Html.mUITableTextBoxFor(model => model.subcategory,
-                                    new { @tabindex = "10", @class = "configEditor skillConfig", @id = idPrefix + "subcategory" })
-            @Html.mUITableLabelFor(model => model.level)
-            @Html.mUITableDropDownListFor(m => m.level, Model.def.skillLevels(),
-                                    new { @tabindex = "15", @class = "configEditor skillConfig", id = idPrefix + "level" })
-        </div>
-        <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.wage)
-            @Html.mUITableTextBoxFor(model => model.wage,
-                                             new { @tabindex = "11", @class = "configEditor skillConfig", @id = idPrefix + "wage" })
-            @Html.mUITableLabelFor(model => model.minHour)
-            @Html.mUITableDropDownListFor(m => m.minHour, Model.def.hours(),
-                                             new { @tabindex = "16", @class = "configEditor skillConfig", id = idPrefix + "minHour" })
-        </div>
-        <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.fixedJob)
-            @Html.mUIDropDownYesNoFor(model => model.fixedJob, Model.def.yesnoSelectList(),
-                         new { @tabindex = "12", @class = "configEditor skillConfig", @id = idPrefix + "fixedJob" })
-            @Html.mUITableLabelFor(model => model.sortorder)
-            @Html.mUITableDropDownListFor(m => m.sortorder, Model.def.hours(),
-                         new { @tabindex = "17", @class = "configEditor skillConfig", id = idPrefix + "sortorder" })
-        </div>
-        <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.typeOfWorkID)
-            @Html.mUITableDropDownListFor(model => model.typeOfWorkID, Model.def.getSelectList(Machete.Domain.LCategory.worktype),
-                         new { @tabindex = "13", @class = "configEditor skillConfig", @id = idPrefix + "typeOfWorkID" })
-            @Html.mUITableLabelFor(model => model.speciality)
-            @Html.mUIDropDownYesNoFor(m => m.speciality, Model.def.yesnoSelectList(),
-                         new { @tabindex = "18", @class = "configEditor skillConfig", id = idPrefix + "speciality" })
-        </div>
-        <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.ltrCode)
-            @Html.mUITableTextBoxFor(model => model.ltrCode,
-                         new { @tabindex = "14", @class = "configEditor skillConfig", @id = idPrefix + "ltrCode" })
-            @Html.mUITableLabelFor(model => model.minimumCost)
-            @Html.mUITableTextBoxFor(model => model.minimumCost,
-                         new { @tabindex = "19", @class = "configEditor skillConfig", @id = idPrefix + "minimumCost" })
-        </div>
-        <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.skillDescriptionEn)
-            @Html.mUITableTextBoxFor(model => model.skillDescriptionEn,
-                         new { @tabindex = "15", @class = "configEditor skillConfig", @id = idPrefix + "skillDescriptionEn" })
-            @Html.mUITableLabelFor(model => model.skillDescriptionEs)
-            @Html.mUITableTextBoxFor(model => model.skillDescriptionEs,
-                         new { @tabindex = "20", @class = "configEditor skillConfig", @id = idPrefix + "skillDescriptionEs" })
-        </div>
-        <div id="@(idPrefix)emailTemplateRows">
-            <div class="tb-row">
-                @Html.mUITableLabelFor(model => model.emailTemplate)
-                @Html.TextAreaFor(model => model.emailTemplate, new { tabindex = "30", @class="email-field configEditor emailTemplateConfig" , id = idPrefix + "emailTemplate"})
-                @Html.ValidationMessageFor(model => model.emailTemplate)
-            </div>
-        </div>
-    </div>
-</div>
-@Html.Partial("ManagerInfo")
-
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        var selectDropDown = $('#@(idPrefix + "category")');
-        selectDropDown.mUI('configEnableOnValue', [
-            {
-                enableOnValue: '@(Machete.Domain.LCategory.skill)',
-                targets: $('#@(idPrefix)skillRows'),
-                validators: $('[id|=@(recTypeID)].skillConfig')
-            }, {
-                enableOnValue: '@(Machete.Domain.LCategory.emailTemplate)',
-                targets: $('#@(idPrefix)emailTemplateRows'),
-                                validators: $('[id|=@(recTypeID)].emailTemplateConfig')
-            }
-        ]);
-    });
-</script>
+@* @using Machete.Domain *@
+@* @using Microsoft.AspNetCore.Http.Extensions *@
+@* @using Microsoft.AspNetCore.Localization *@
+@* *@
+@* @model Machete.Web.ViewModel.Config *@
+@* *@
+@* @{ *@
+@*     var httpContext = ViewContext.HttpContext; *@
+@*     var currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture; *@
+@*     var currentUrl = UriHelper.BuildRelative(httpContext.Request.PathBase, httpContext.Request.Path, httpContext.Request.QueryString); *@
+@* *@
+@*     string lang = currentCulture.TwoLetterISOLanguageName; *@
+@*     string recType = "config"; *@
+@*     string recTypeID = recType + Model.ID; *@
+@*     string idPrefix = recTypeID + "-"; *@
+@* } *@
+@* *@
+@* @Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID" }) *@
+@* *@
+@* <div class="tb-table"> *@
+@*     <div> *@
+@*         <div class="tb-row"> *@
+@*             @Html.mUITableLabelFor(model => model.active) *@
+@*             @Html.mUIDropDownYesNoFor(m => m.active, Model.def.yesnoSelectList(), *@
+@*                                     new { tabindex = "0", @class = "configEditor", id = idPrefix + "active" }) *@
+@*         </div> *@
+@*     <div> *@
+@*         <div class="tb-row"> *@
+@*             @Html.mUITableLabelFor(model => model.category) *@
+@*             @Html.mUITableDropDownListFor(model => model.category, Model.def.configCategories(), *@
+@*                             new { tabindex = "1", @class = "configEditor", id = idPrefix + "category" }) *@
+@*             @Html.mUITableLabelFor(model => model.selected) *@
+@*             @Html.mUIDropDownYesNoFor(m => m.selected, Model.def.yesnoSelectList(), *@
+@*                                     new { tabindex = "3", @class = "configEditor", id = idPrefix + "selected" }) *@
+@*         </div> *@
+@*         <div class="tb-row"> *@
+@*             @Html.mUITableLabelFor(model => model.text_EN) *@
+@*             @Html.mUITableTextBoxFor(model => model.text_EN, *@
+@*                                     new { tabindex = "2", @class = "configEditor", id = idPrefix + "text_EN" }) *@
+@*             @Html.mUITableLabelFor(model => model.text_ES) *@
+@*             @Html.mUITableTextBoxFor(m => m.text_ES, *@
+@*                                             new { tabindex = "4", @class = "configEditor", id = idPrefix + "text_ES" }) *@
+@*         </div> *@
+@*     </div> *@
+@*     <div id="@(idPrefix)skillRows"> *@
+@*         <div class="tb-row"> *@
+@*             @Html.mUITableLabelFor(model => model.subcategory) *@
+@*             @Html.mUITableTextBoxFor(model => model.subcategory, *@
+@*                                     new { tabindex = "10", @class = "configEditor skillConfig", id = idPrefix + "subcategory" }) *@
+@*             @Html.mUITableLabelFor(model => model.level) *@
+@*             @Html.mUITableDropDownListFor(m => m.level, Model.def.skillLevels(), *@
+@*                                     new { tabindex = "15", @class = "configEditor skillConfig", id = idPrefix + "level" }) *@
+@*         </div> *@
+@*         <div class="tb-row"> *@
+@*             @Html.mUITableLabelFor(model => model.wage) *@
+@*             @Html.mUITableTextBoxFor(model => model.wage, *@
+@*                                              new { tabindex = "11", @class = "configEditor skillConfig", id = idPrefix + "wage" }) *@
+@*             @Html.mUITableLabelFor(model => model.minHour) *@
+@*             @Html.mUITableDropDownListFor(m => m.minHour, Model.def.hours(), *@
+@*                                              new { tabindex = "16", @class = "configEditor skillConfig", id = idPrefix + "minHour" }) *@
+@*         </div> *@
+@*         <div class="tb-row"> *@
+@*             @Html.mUITableLabelFor(model => model.fixedJob) *@
+@*             @Html.mUIDropDownYesNoFor(model => model.fixedJob, Model.def.yesnoSelectList(), *@
+@*                          new { tabindex = "12", @class = "configEditor skillConfig", id = idPrefix + "fixedJob" }) *@
+@*             @Html.mUITableLabelFor(model => model.sortorder) *@
+@*             @Html.mUITableDropDownListFor(m => m.sortorder, Model.def.hours(), *@
+@*                          new { tabindex = "17", @class = "configEditor skillConfig", id = idPrefix + "sortorder" }) *@
+@*         </div> *@
+@*         <div class="tb-row"> *@
+@*             @Html.mUITableLabelFor(model => model.typeOfWorkID) *@
+@*             @Html.mUITableDropDownListFor(model => model.typeOfWorkID, Model.def.getSelectList(LCategory.worktype), *@
+@*                          new { tabindex = "13", @class = "configEditor skillConfig", id = idPrefix + "typeOfWorkID" }) *@
+@*             @Html.mUITableLabelFor(model => model.speciality) *@
+@*             @Html.mUIDropDownYesNoFor(m => m.speciality, Model.def.yesnoSelectList(), *@
+@*                          new { tabindex = "18", @class = "configEditor skillConfig", id = idPrefix + "speciality" }) *@
+@*         </div> *@
+@*         <div class="tb-row"> *@
+@*             @Html.mUITableLabelFor(model => model.ltrCode) *@
+@*             @Html.mUITableTextBoxFor(model => model.ltrCode, *@
+@*                          new { tabindex = "14", @class = "configEditor skillConfig", id = idPrefix + "ltrCode" }) *@
+@*             @Html.mUITableLabelFor(model => model.minimumCost) *@
+@*             @Html.mUITableTextBoxFor(model => model.minimumCost, *@
+@*                          new { tabindex = "19", @class = "configEditor skillConfig", id = idPrefix + "minimumCost" }) *@
+@*         </div> *@
+@*         <div class="tb-row"> *@
+@*             @Html.mUITableLabelFor(model => model.skillDescriptionEn) *@
+@*             @Html.mUITableTextBoxFor(model => model.skillDescriptionEn, *@
+@*                          new { tabindex = "15", @class = "configEditor skillConfig", id = idPrefix + "skillDescriptionEn" }) *@
+@*             @Html.mUITableLabelFor(model => model.skillDescriptionEs) *@
+@*             @Html.mUITableTextBoxFor(model => model.skillDescriptionEs, *@
+@*                          new { tabindex = "20", @class = "configEditor skillConfig", id = idPrefix + "skillDescriptionEs" }) *@
+@*         </div> *@
+@*         <div id="@(idPrefix)emailTemplateRows"> *@
+@*             <div class="tb-row"> *@
+@*                 @Html.mUITableLabelFor(model => model.emailTemplate) *@
+@*                 @Html.TextAreaFor(model => model.emailTemplate, new { tabindex = "30", @class="email-field configEditor emailTemplateConfig" , id = idPrefix + "emailTemplate"}) *@
+@*                 @Html.ValidationMessageFor(model => model.emailTemplate) *@
+@*             </div> *@
+@*         </div> *@
+@*     </div> *@
+@* </div> *@
+@* @await Html.PartialAsync("ManagerInfo") *@
+@* *@
+@* *@
+@* <script type="text/javascript"> *@
+@*     $(document).ready(function () { *@
+@*         var selectDropDown = $('#@(idPrefix + "category")'); *@
+@*         selectDropDown.mUI('configEnableOnValue', [ *@
+@*             { *@
+@*                 enableOnValue: '@(LCategory.skill)', *@
+@*                 targets: $('#@(idPrefix)skillRows'), *@
+@*                 validators: $('[id|=@(recTypeID)].skillConfig') *@
+@*             }, { *@
+@*                 enableOnValue: '@(LCategory.emailTemplate)', *@
+@*                 targets: $('#@(idPrefix)emailTemplateRows'), *@
+@*                                 validators: $('[id|=@(recTypeID)].emailTemplateConfig') *@
+@*             } *@
+@*         ]); *@
+@*     }); *@
+@* </script> *@

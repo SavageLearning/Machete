@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Web.Controllers
 {
@@ -12,7 +9,7 @@ namespace Machete.Web.Controllers
         // GET: V2
         public ActionResult Index()
         {
-            return View("Index","_angularLayout", new { });
+            return View(new { });
         }
     }
 }

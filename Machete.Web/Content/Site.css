@@ -20,7 +20,7 @@ input:-ms-input-placeholder {
 body {
     background-color: #414D5B;
     font-size: 75%;
-    font-family: Verdana, Tahoma, Arial, "Helvetica Neue", Helvetica, Sans-Serif;
+    font-family: Verdana, Tahoma, Arial, "Helvetica Neue", Helvetica, Sans-Serif, sans-serif;
     margin: 0;
     padding: 0;
     color: #607286;
@@ -104,7 +104,7 @@ page width. Or, you can specify an exact pixel width. */
 
 #header {
     position: relative;
-    margin-bottom: 0px;
+    margin-bottom: 0;
     color: #000;
     padding: 0;
 }
@@ -139,7 +139,7 @@ page width. Or, you can specify an exact pixel width. */
 /* TAB MENU   
 ----------------------------------------------------------*/
 #menulinkhome {
-    background: url(/Content/machete_1_close_crop.png) no-repeat top left;
+    background: url(machete_1_close_crop.png) no-repeat top left;
     display: block;
     width: 202px;
     height: 69px;
@@ -312,7 +312,7 @@ table {
 }
 
 div#title {
-    background-image: url(/Content/machete_1_close_crop.png);
+    background-image: url(machete_1_close_crop.png);
     display: block;
     float: left;
     text-align: left;
@@ -435,14 +435,13 @@ div.recordButtons {
 }
 
     .tb-label.mui-home-news {
-        font: 100%;
+        font-size: 100%;
         padding-right: 15px;
-        border: 3px;
-        border-color: black;
+        border: 3px black;
     }
 
 .tb-field.mui-home-news {
-    font: 90%;
+    font-size: 90%;
     padding-bottom: 8px;
 }
 
@@ -626,8 +625,7 @@ div.mui-event-image-row {
 }
 /* Events: div for each image in the event */
 div.mui-event-image-item img, .mui-event-image-item {
-    margin: 5px;
-    margin-left: 10px;
+    margin: 5px 5px 5px 10px;
     vertical-align: top;
 }
 /* Events: table next to the images, one table for each image */
@@ -639,7 +637,7 @@ div.mui-event-image-text-table {
 /* Events: table next to the images, label */
 div.mui-event-image-text-row-label {
     width: 7em;
-    margin: 0em 0 0 0;
+    margin: 0 0 0 0;
     padding: 1px;
     text-align: right;
     font-size: 90%;

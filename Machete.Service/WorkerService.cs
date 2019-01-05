@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     WorkerService.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -101,7 +101,7 @@ namespace Machete.Service
             record.Person = pRepo.GetById(record.ID);
             updateComputedFields(ref record);
             var result = base.Create(record, user);
-            //uow.Commit();
+            uow.Commit();
             return result;
         }
 

@@ -1,13 +1,13 @@
-﻿@model Machete.Web.ViewModel.WorkAssignment
+@model Machete.Web.ViewModel.WorkAssignment
 @using Machete.Web.Helpers           
 @using Machete.Web.Resources
 @{
-    string recType = "WA";
-    string woRecType = "WO";
-    string idPrefix = recType + Model.ID + "-";
-    string woPrefix = woRecType + Model.workOrderID + "-"; 
-    int editDisable = 0;
-    if (!Html.IsInRole(Html.Role_AM()) && (Html.IsInRole(Html.Role_AMP()) && Model.workOrder.dateTimeofWork < DateTime.Today))
+    const string recType = "WA";
+    const string woRecType = "WO";
+    var idPrefix = recType + Model.ID + "-";
+    var woPrefix = woRecType + Model.workOrderID + "-"; 
+    var editDisable = 0;
+    if (!Html.IsInRole("Administrator", "Manager") && (Html.IsInRole("Administrator", "Manager", "PhoneDesk") && Model.workOrder_DateTimeOfWork < DateTime.Today))
     {
         editDisable = 1;
     }
@@ -15,16 +15,15 @@
 @using (Html.BeginForm("Edit", "WorkAssignment", FormMethod.Post,
                         new { @class = "edittab-form EditPost", @id = idPrefix +"waForm" }))
 {
-    @*<input type="button" value="@WorkAssignments.viewlink" class="formButton" id="view-@(Model.ID)" />*@
-    if ((Html.IsInRole(Html.Role_AMP()) && Model.workOrder.dateTimeofWork >= DateTime.Today) || Html.IsInRole(Html.Role_AM()))
+    if ((Html.IsInRole("Administrator", "Manager", "PhoneDesk") && Model.workOrder_DateTimeOfWork >= DateTime.Today) || Html.IsInRole("Administrator", "Manager"))
     {
     <input type="submit" value="@WorkAssignments.editsubmit" class="formButton saveBtn" id="waEditSubmitBtn-@(Model.ID)"/>
     <input type="button" value="@WorkAssignments.dupsubmit" class="formButton" id="duplicate-@(Model.ID)" />
     }
 
-    if ((Html.IsInRole(Html.Role_AMP()) &&
-        Model.workOrder.dateTimeofWork >= DateTime.Today) ||
-    Html.IsInRole(Html.Role_AM())
+    if ((Html.IsInRole("Administrator", "Manager", "PhoneDesk") &&
+        Model.workOrder_DateTimeOfWork >= DateTime.Today) ||
+    Html.IsInRole("Administrator", "Manager")
     )
     {
         <input id="deleteWorkAssignmentButton-@(Model.ID)" type="button" value="@WorkAssignments.deletesubmit" 
@@ -42,9 +41,9 @@
     @Html.HiddenFor(model => model.ID);
 }
 
-@if ((Html.IsInRole(Html.Role_AMP()) &&
-        Model.workOrder.dateTimeofWork >= DateTime.Today) ||
-    Html.IsInRole(Html.Role_AM())
+@if ((Html.IsInRole("Administrator", "Manager", "PhoneDesk") &&
+        Model.workOrder_DateTimeOfWork >= DateTime.Today) ||
+    Html.IsInRole("Administrator", "Manager")
     )
 {
     using (Html.BeginForm("Delete", "WorkAssignment", FormMethod.Post,

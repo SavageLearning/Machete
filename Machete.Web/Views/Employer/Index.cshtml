@@ -1,15 +1,22 @@
-﻿@using Machete.Web.Helpers
-@using Machete.Web.Resources
+@using Machete.Web.Helpers
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.Localization
+
+@using Machete.Web.Resources;
 
 @{
-    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    var httpContext = ViewContext.HttpContext;
+    var currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
+    var currentUrl = UriHelper.BuildRelative(httpContext.Request.PathBase, httpContext.Request.Path, httpContext.Request.QueryString);
+
     string recType = "employer";
 }
+
 <div id="employerTabs" class="ExclusiveTab">
     <ul>
         <li><a href="#employerList" id="employerListTab" class="ListTab">@Employers.listlink</a> </li>
 
-        @if (Html.IsRoleAllowed("Employer.CreateNew.ShowTab"))
+        @if (Html.IsInRole("Administrator", "Manager", "PhoneDesk"))
         {
             <li><a href="/Employer/Create" id="employerCreateTab" class="CreateTab">@Employers.createlink</a></li>
         }
@@ -57,7 +64,7 @@
         </thead>
     </table>
 </div>
-@Html.Partial("WorkerIndex")
+@await Html.PartialAsync("WorkerIndex")
 <script type="text/javascript">
     $(document).ready(function () {
         $('.formButton').button();
@@ -81,7 +88,7 @@
                 "bServerSide": true,
                 "sAjaxSource": "/Employer/AjaxHandler",
                 "bProcessing": true,
-                "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+                "oLanguage": datatable_lang_@(currentCulture.TwoLetterISOLanguageName),
                 "aoColumns": [                           //dataTable column definition
                                 {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
                                 {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
@@ -140,7 +147,7 @@
             "bAutoWidth": false,
             "bServerSide": true,
             "sAjaxSource": "/Employer/AjaxHandler",
-            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "oLanguage": datatable_lang_@(currentCulture.TwoLetterISOLanguageName),
             "bProcessing": true,
             "aoColumns": [
                             {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },

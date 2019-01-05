@@ -1,34 +1,29 @@
-﻿using Machete.Web.Helpers;
+using Machete.Web.Helpers;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Machete.Web.ViewModel
 {
     public class WorkAssignment : Record
     {
-        public IDefaults def { get; set; }
-
-        public string tabref { get; set; }
-        public string tablabel { get; set; }
-
         public WorkAssignment()
         {
             idString = "WA";
         }
-        //public int ID { get; set; }        
+
+        public IDefaults def { get; set; }
+        public string tabref { get; set; }
+        public string tablabel { get; set; }
         public int? workerAssignedID { get; set; }
-        public virtual Worker workerAssigned { get; set; }
-
+        public bool isWorkerAssigned { get; set; }
+        public int? assignedWorkerDwccardnum { get; set; }
+        public string assignedWorkerFullname { get; set; }
         public int workOrderID { get; set; }
-        public virtual WorkOrder workOrder { get; set; }
-
+        public DateTime workOrder_DateTimeOfWork { get; set; }
         public int? workerSigninID { get; set; }
-        public virtual WorkerSignin workerSiginin { get; set; }
-
         public bool active { get; set; }
+
         // This is relative to the work order...WA1, WA2, WA3...
         [LocalizedDisplayName("pseudoID", NameResourceType = typeof(Resources.WorkOrder))]
         public int? pseudoID { get; set; }
@@ -92,17 +87,13 @@ namespace Machete.Web.ViewModel
         [StringLength(500, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Employer))]
         public string workerRatingComments { get; set; }
 
-
         [LocalizedDisplayName("weightLifted", NameResourceType = typeof(Resources.WorkAssignment))]
         public bool? weightLifted { get; set; }
-
         public string fullWAID { get; set; }
 
         public double minEarnings { get; set; }
         public double maxEarnings { get; set; }
         public double? transportCost { get; set; }
-
-
     }
 
     public class WorkAssignmentsList
@@ -130,8 +121,5 @@ namespace Machete.Web.ViewModel
         public string timeofwork { get; set; }      // Dispatch
         public string asmtStatus { get; set; }      // SharedWAI, WorkerWAI, Dispatch
         public string[] requestedList { get; set; } // Dispatch 
-
-
-
     }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace Machete.Web.Maps
+﻿namespace Machete.Web.Maps
 {
     public class WorkerRequestProfile : MacheteProfile
     {

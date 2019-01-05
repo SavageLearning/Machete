@@ -1,11 +1,17 @@
-﻿@model Machete.Web.ViewModel.WorkOrder
+@model Machete.Web.ViewModel.WorkOrder
+
 @using Machete.Web.Helpers
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.Localization
 
 @using Machete.Web.Resources
-@using Machete.Service
+
 @{
-    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    var httpContext = ViewContext.HttpContext;
+    var currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
+    var currentUrl = UriHelper.BuildRelative(httpContext.Request.PathBase, httpContext.Request.Path, httpContext.Request.QueryString);
 }
+
 <div id="workAssignTabs-wo-@(Model.ID)">
     <ul>
         <li>
@@ -13,7 +19,7 @@
                 class="workAssignListTab ListTab" 
                 id="walt-@(Model.ID)">@WorkAssignments.listlink</a> 
         </li>
-        @if ((Html.IsInRole(Html.Role_AMP()) && Model.dateTimeofWork >= DateTime.Today) || Html.IsInRole(Html.Role_AM()))
+        @if (Html.IsInRole(new[]{"Administrator", "Manager", "PhoneDesk"}) && Model.dateTimeofWork >= DateTime.Today || Html.IsInRole(new[] { "Administrator", "Manager" }))
         {
             <li>
                 <a href="/WorkAssignment/Create?WorkOrderID=@(Model.ID)&_description=@(Model.description)" 
@@ -58,8 +64,8 @@
             prefix: "ui-tabs-workAssign-wo-@(Model.ID)-", 
             defaultTab: 1,
             formLevel: 3,
-            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
-            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)",
+            changeConfirm: "@Shared.changeConfirm",
+            changeTitle: "@Shared.changeTitle",
             updateDatatable: true
         });
         ////////////////////////////////////////////////////////////////
@@ -80,7 +86,7 @@
                 "bAutoWidth": false,
                 "bServerSide": true,
                 "sAjaxSource": "/WorkAssignment/AjaxHandler",
-                "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+                "oLanguage": datatable_lang_@(currentCulture.TwoLetterISOLanguageName),
                 "bProcessing": true,
                 "aoColumns": [
                                 { "mDataProp": "tabref", "bSearchable": false, "bSortable": false, "bVisible": false },

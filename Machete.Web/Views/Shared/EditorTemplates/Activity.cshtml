@@ -1,70 +1,98 @@
-﻿@model Machete.Web.ViewModel.Activity
-@using Machete.Web.ViewModel
+@using Machete.Domain
 @using Machete.Web.Helpers
-@using Machete.Web.Resources
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.Localization
+@model Machete.Web.ViewModel.Activity
+
+@using Machete.Web.Resources;
 
 @{
-    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    var httpContext = ViewContext.HttpContext;
+    var currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
+    var currentUrl = UriHelper.BuildRelative(httpContext.Request.PathBase, httpContext.Request.Path, httpContext.Request.QueryString);
+
     string recType = "activity";
     string idPrefix = recType + Model.ID + "-";
 }
 @Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID", id = idPrefix + "ID" })
-@Html.HiddenFor(model => model.firstID, new { @class = "hiddenRecID", id = Model.firstID.ToString() + "isFirstID" })
+@Html.HiddenFor(model => model.firstID, new { @class = "hiddenRecID", id = Model.firstID + "isFirstID" })
 <div class="tb-table" style="float: left;">
     <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.typeID)
-        @Html.mUIDropDownListFor(model => model.typeID, Model.def.getSelectList(Machete.Domain.LCategory.activityType),
-                new { tabindex = "1", id = idPrefix + "type" })
+        <div class="tb-label">
+            @Html.LabelFor(model => model.typeID)
+        </div>
+        <div class="tb-field">
+            @Html.DropDownListFor(model => model.typeID,
+                new SelectList(Model.def.getSelectList(LCategory.activityType), "Value", "Text", Model),
+                Shared.choose, new { tabindex = "1", id = idPrefix + "type" })
+            @Html.ValidationMessageFor(model => model.typeID);
+        </div>
     </div>
     <div class="tb-row" id="className">
-        @Html.mUITableLabelFor(model => model.nameID)
-        @Html.mUIDropDownListFor(model => model.nameID, Model.def.getSelectList(Machete.Domain.LCategory.activityName),
-                new { tabindex = "1", id = idPrefix + "name" })
+        <div class="tb-label">
+            @Html.LabelFor(model => model.nameID)
+        </div>
+        <div class="tb-field">
+            @Html.DropDownListFor(model => model.nameID,
+                new SelectList(Model.def.getSelectList(LCategory.activityName), "Value", "Text", Model),
+                Shared.choose, new { tabindex = "1", id = idPrefix + "name" })
+            @Html.ValidationMessageFor(model => model.nameID);
+        </div>
     </div>
     <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.dateStart)
+        <div class="tb-label">
+            @Html.LabelFor(model => model.dateStart)
+        </div>
         <div class="tb-field">
-            @Html.TextBox("dateStart", Html.Encode(System.String.Format("{0:g}",
-                                                                        Model.dateStart)),
-                                                     new { @id = idPrefix + "dateStart" })
+            @Html.TextBox("dateStart", Html.Encode(String.Format("{0:g}",
+                Model.dateStart)),
+                new { id = idPrefix + "dateStart" })
             @Html.ValidationMessageFor(model => model.dateStart)
         </div>
     </div>
     <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.dateEnd)
+        <div class="tb-label">
+            @Html.LabelFor(model => model.dateEnd)
+        </div>
         <div class="tb-field">
-            @Html.TextBox("dateEnd", Html.Encode(System.String.Format("{0:g}",
-                                                                                 Model.dateEnd)),
-                                                     new { @id = idPrefix + "dateEnd" })
+            @Html.TextBox("dateEnd", Html.Encode(String.Format("{0:g}",
+                Model.dateEnd)),
+                new { id = idPrefix + "dateEnd" })
             @Html.ValidationMessageFor(model => model.dateEnd)
         </div>
     </div>
-    @if (Html.IsInRole(Html.Role_T()) && !Html.IsInRole(Html.Role_AM()))
+    @if (Html.IsInRole("Teacher") && !Html.IsInRole("Administrator", "Manager"))
     {
         Model.recurring = false;
     }
     else
     {
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.recurring)
+            <div class="tb-label">
+                @Html.LabelFor(model => model.recurring)
+            </div>
             <div class="tb-field">
                 @Html.CheckBox("recurring")
             </div>
         </div>
     }
     <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.teacher)
+        <div class="tb-label">
+            @Html.LabelFor(model => model.teacher)
+        </div>
         <div class="tb-field">
             @Html.DropDownListFor(model => model.teacher,
-                    new SelectList(Model.def.getTeachers(), Model.teacher),
-                    @Machete.Web.Resources.Shared.choose,
-                    new { tabindex = "1", id = idPrefix + "teacher" })
+                new SelectList(Model.def.getTeachers(), Model.teacher),
+                Shared.choose,
+                new { tabindex = "1", id = idPrefix + "teacher" })
         </div>
     </div>
 </div>
 <div class="tb-table" style="float: left;">
     <div class="tb-row">
-        @Html.mUITableDescLabelFor(model => model.notes)
+        <div class="tb-label desc-label">
+            @Html.LabelFor(model => model.notes)
+        </div>
         <div class="tb-field desc-field">
             @Html.TextAreaFor(model => model.notes, new { tabindex = "3", @class = "desc-field", id = idPrefix + "notes" })
             @Html.ValidationMessageFor(model => model.notes)
@@ -72,17 +100,15 @@
     </div>
 </div>
 <div style="clear: left;"></div>
-@Html.Partial("ManagerInfo", Model)
-
-
+@await Html.PartialAsync("ManagerInfo", Model)
 
 <script type="text/javascript">
     $(document).ready(function () {
         $('#@(idPrefix)type').change(
             function () {
                 if (
-                    $('#@(idPrefix)type option:selected').val() == "@(Model.def.byKeys(Machete.Domain.LCategory.activityType, Machete.Domain.LActType.Assembly))" || 
-                    $('#@(idPrefix)type option:selected').val() == "@(Model.def.byKeys(Machete.Domain.LCategory.activityType, Machete.Domain.LActType.OrgMtg))"
+                    $('#@(idPrefix)type option:selected').val() == "@(Model.def.byKeys(LCategory.activityType, LActType.Assembly))" || 
+                    $('#@(idPrefix)type option:selected').val() == "@(Model.def.byKeys(LCategory.activityType, LActType.OrgMtg))"
                    )
                 {
                     $('#@(idPrefix)name').attr('disabled', 'disabled');

@@ -1,46 +1,56 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
+using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Machete.Data
+namespace Machete.Data.Initialize
 {
     public static class MacheteUsers
     {
-
-        public static void Initialize(MacheteContext DB)
+        public static async void Initialize(IServiceProvider serviceProvider)
         {
-            IdentityResult ir;
-
-            var rm = new RoleManager<IdentityRole>
-               (new RoleStore<IdentityRole>(DB));
-            ir = rm.Create(new IdentityRole("Administrator"));
-            ir = rm.Create(new IdentityRole("Manager"));
-            ir = rm.Create(new IdentityRole("Check-in"));
-            ir = rm.Create(new IdentityRole("PhoneDesk"));
-            ir = rm.Create(new IdentityRole("Teacher"));
-            ir = rm.Create(new IdentityRole("User"));
-            ir = rm.Create(new IdentityRole("Hirer")); // This role is used exclusively for the online hiring interface
-
-            var um = new UserManager<MacheteUser>(
-                new UserStore<MacheteUser>(DB));
-            var admin = new MacheteUser()
+            using (var scope = serviceProvider.CreateScope())
             {
-                UserName = "jadmin",
-                IsApproved = true,
-                Email = "jciispam@gmail.com"
-            };
-            var user = new MacheteUser()
-            {
-                UserName = "juser",
-                IsApproved = true,
-                Email = "user@there.org"
-            };
-            ir = um.Create(admin, "ChangeMe");
-            ir = um.AddToRole(admin.Id, "Administrator"); //Default Administrator, edit to change
-            ir = um.AddToRole(admin.Id, "Teacher"); //Required to make tests work
-            ir = um.Create(user, "ChangeMe");
-            ir = um.AddToRole(admin.Id, "User"); //Default Administrator, edit to change
-            DB.Commit();
+                var context = scope.ServiceProvider.GetService<MacheteContext>();
+                var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
+                var userManager = scope.ServiceProvider.GetService<UserManager<MacheteUser>>();
+
+                string[] roles = {"Administrator", "Manager", "Check-in", "PhoneDesk", "Teacher", "User", "Hirer"};
+                string[] adminRoles = {"Administrator", "Teacher", "User"};
+
+                var macheteUsers = new List<MacheteUser>
+                {
+                    new MacheteUser
+                    {
+                        UserName = "jadmin",
+                        IsApproved = true,
+                        Email = "jciispam@gmail.com"
+                    },
+                    new MacheteUser
+                    {
+                        UserName = "juser",
+                        IsApproved = true,
+                        Email = "user@there.org"
+                    }
+                };
+
+                foreach (var role in roles)
+                    await roleManager.CreateAsync(new IdentityRole(role));
+
+                foreach (var user in macheteUsers)
+                {
+                    var hasher = new PasswordHasher<MacheteUser>();
+                    user.PasswordHash = hasher.HashPassword(user, "ChangeMe");
+                    await userManager.CreateAsync(user);
+                }
+
+                var adminUser = await userManager.FindByEmailAsync("jciispam@gmail.com");
+                var regularUser = await userManager.FindByEmailAsync("user@there.org");
+
+                await userManager.AddToRolesAsync(adminUser, adminRoles);
+
+                await context.SaveChangesAsync();
+            }
         }
-
     }
 }

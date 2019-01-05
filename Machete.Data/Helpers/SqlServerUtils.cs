@@ -1,11 +1,13 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Machete.Data.Helpers
 {
@@ -33,9 +35,9 @@ namespace Machete.Data.Helpers
 
         public static List<QueryMetadata> getMetadata(MacheteContext context, string fromQuery)
         {
-
             var param = new SqlParameter("@query", escapeQueryText(fromQuery));
-            var queryResult = context.Database.SqlQuery<QueryMetadata>(
+            
+            var queryResult = context.Query<QueryMetadata>().FromSql(
                 // https://docs.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-exec-describe-first-result-set-transact-sql
                 // http://stackoverflow.com/questions/13766564/finding-number-of-columns-returned-by-a-query
                 @"SELECT

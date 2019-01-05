@@ -1,4 +1,4 @@
-﻿
+
 select * from employers where datecreated < '2010-01-01' or dateupdated < '2010-01-01'
 select * from Employers where ID = 2638 or ID = 2986 or ID = 3762 or ID = 3763 or ID = 3764 or ID = 3774 or ID = 3780 
 --update Employers set dateupdated = '2012-12-08' where ID = 2638

@@ -1,9 +1,9 @@
-﻿@model Machete.Web.ViewModel.EmailView
+@model Machete.Web.ViewModel.EmailView
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
 @using Machete.Web.ViewModel
 
-@if (Html.IsInRole(Html.Role_AMPCU()) || Html.IsInRole(Html.Role_T()))
+@if (Html.IsInRole(new[]{"Administrator", "Manager", "PhoneDesk", "Check-in", "User"}) || Html.IsInRole(new[] { "Teacher" }))
 {
     using (Html.BeginForm("Edit", "Email", FormMethod.Post,
                             new { @class = "edittab-form EditPost", 
@@ -14,7 +14,7 @@
             { 
                 <input type="button" id="@(Model.idPrefix)SendBtn" class="formButton" value="@Emails.sendEmail" />
             }
-            if (Html.IsInRole(Html.Role_AM()))
+            if (Html.IsInRole(new[] { "Administrator", "Manager" }))
             {
             <input id="@(Model.idPrefix)deleteBtn" type="button" value="@Emails.deletesubmit" 
                     class="formButton deleteButton" />
@@ -24,7 +24,7 @@
         @Html.EditorForModel(Model)
     }
 
-    if (Html.IsInRole(Html.Role_AM()))
+    if (Html.IsInRole(new[] { "Administrator", "Manager" }))
     {
         //
         // Only Managers can delete email records.

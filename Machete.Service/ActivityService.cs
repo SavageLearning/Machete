@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     ActivityService.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/12/29 

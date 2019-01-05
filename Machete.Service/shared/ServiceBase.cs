@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     ServiceBase.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -101,7 +101,7 @@ namespace Machete.Service
         //{
         //    return repo.Get(where);
         //}
-        /// <summary>`
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="record"></param>

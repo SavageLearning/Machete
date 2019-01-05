@@ -1,4 +1,4 @@
-﻿using Machete.Data;
+using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
 using System;
@@ -51,7 +51,6 @@ namespace Machete.Service
             if (woid != null)
             {
                 WorkOrder wo = _woServ.Get((int)woid);
-                newEmail.WorkOrders = new Collection<WorkOrder>();
                 newEmail.WorkOrders.Add(wo);
             }
             uow.Commit();

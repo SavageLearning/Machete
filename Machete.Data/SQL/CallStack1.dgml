@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <DirectedGraph DataVirtualized="True" Layout="Sugiyama" xmlns="http://schemas.microsoft.com/vs/2009/dgml">
   <Nodes>
     <Node Id="(@1 Namespace=Machete.Web Type=MvcApplication Member=(Name=Application_AcquireRequestState OverloadingParameters=[(@2 @3 Type=Object),(@2 @3 Type=EventArgs)]))" Category="CodeSchema_Method" Bounds="306.98,57.6475,211.216666666667,25.96" CodeSchemaProperty_IsProtected="True" CommonLabel="Application_AcquireRequestState" FunctionTypeFlags="Method" Label="Application_AcquireRequestState" Language="{B5E9BD34-6D3E-4B5D-925E-8A43B79820B4}" SourceLocation="(Assembly=file:///c:/Users/Chaim/Documents/GitHub/Machete/Machete.Web/Global.asax.cs StartLineNumber=75 StartCharacterOffset=0 EndLineNumber=75 EndCharacterOffset=0)">

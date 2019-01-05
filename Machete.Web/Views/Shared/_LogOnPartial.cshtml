@@ -1,35 +1,35 @@
-﻿@using Microsoft.AspNet.Identity
+@using System.Security.Claims
 @using Machete.Web.Helpers
-@if (Request.IsAuthenticated)
+@using Machete.Web.Resources
+
+@{
+var userIdentity = new ClaimsIdentity("Cookies");
+}
+
+@if (userIdentity.IsAuthenticated)
 {
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
         @Html.AntiForgeryToken()
         <!-- Greeting announcing signed in user -->
-        <text>@Machete.Web.Resources.ValidationStrings.Welcome <b>@User.Identity.GetUserName()</b>
-        [ @if(Html.IsInRole(Html.Role_AM())) 
+        <text>@ValidationStrings.Welcome <b>@userIdentity.Name</b>
+        [ @if(Html.IsInRole(new[] { "Administrator", "Manager" })) 
             { 
                 @* Settings console *@
-                @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.Settings, "Index", "Account") 
+                @Html.ActionLink(ValidationStrings.Settings, "Index", "Account")
             }
             else 
             { 
                 @* Settings console *@
-                if(!Html.IsInRole(Html.Role_H())) 
+                if(!Html.IsInRole(new[] { "Hirer" })) 
                 {
                     @* User account console *@
-                    @Html.ActionLink("Manage", "Manage", "Account") 
+                    @Html.ActionLink("Manage", "Manage", "Account")
                 }
             } ]
-        [ @if(Html.IsInRole(Html.Role_H())) 
-            {
-                @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.LogOff, "LogOff", "HirerAccount")
-            }
-            else
-            {
-                @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.LogOff, "LogOff", "Account") 
-            } ]
-        </text>
-    }
+
+        @Html.ActionLink(ValidationStrings.LogOff, "LogOff", "Account")
+
+        </text>}
 
 }

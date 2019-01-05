@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     AllRepositories.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -24,7 +24,7 @@
 using Machete.Data.Infrastructure;
 using Machete.Domain;
 using System.Collections.Generic;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text;
 
@@ -147,7 +147,7 @@ namespace Machete.Data
             sb.AppendFormat("select * from Emails e  with (UPDLOCK) where e.statusID = {0} or ", Email.iReadyToSend);
             sb.AppendFormat("(e.statusID = {0} and e.transmitAttempts < {1})", Email.iTransmitError, Email.iTransmitAttempts);
             var set = (DbSet<Email>)dbset;
-            return set.SqlQuery(sb.ToString()).AsEnumerable();
+            return set.FromSql(sb.ToString()).AsEnumerable();
         }
     }
     /// <summary>
@@ -261,13 +261,14 @@ namespace Machete.Data
                     select o;
             return q.FirstOrDefault();
         }
-
         public IEnumerable<string> GetTeachers()
         {
-            // TODO will break if Identity roles go away
             var teacherID = dbFactory.Get().Roles.First(r => r.Name == "Teacher").Id;
-            return dbFactory.Get().Users.Where(u => u.Roles.Any(r => r.RoleId == teacherID))
-              .Select(x => x.UserName).Distinct().ToList();
+            return dbFactory.Get().Users
+                .Where(u => u.Roles.Any(r => r.Id == teacherID))
+                .Select(x => x.UserName)
+                .Distinct()
+                .ToList();
         }
     }
 

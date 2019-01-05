@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     LookupService.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/25 

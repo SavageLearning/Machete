@@ -1,9 +1,6 @@
-﻿using AutoMapper;
-using Machete.Web.Resources;
+﻿using Machete.Web.Resources;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Globalization;
 
 namespace Machete.Web.Maps
 {
@@ -34,26 +31,8 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.recordid, opt => opt.MapFrom(d => Convert.ToString(d.ID)))
                 .ForMember(v => v.workerStatus, opt => opt.MapFrom(d => getCI() == "ES" ? d.memberStatusES : d.memberStatusEN))
 
-                .ForMember(v => v.dateupdated, opt => opt.MapFrom(d => Convert.ToString(d.dateupdated)))
+                .ForMember(v => v.dateupdated, opt => opt.MapFrom(d => Convert.ToString(d.dateupdated, CultureInfo.InvariantCulture)))
                 ;
         }
     }
-    //var result = from p in list.query
-    //             select new
-    //             {
-    //                 tabref = "/Person/Edit/" + Convert.ToString(p.ID),
-    //                 tablabel = p.firstname1 + ' ' + p.lastname1,
-    //                 dwccardnum = p.Worker == null ? "" : p.Worker.dwccardnum.ToString(),
-    //                 active = p.active ? Shared.True : Shared.False,
-    //                 status = p.active,
-    //                 workerStatus = p.Worker == null ? "Not a worker" : lcache.textByID(p.Worker.memberStatus, CI.TwoLetterISOLanguageName),
-    //                 firstname1 = p.firstname1,
-    //                 firstname2 = p.firstname2,
-    //                 lastname1 = p.lastname1,
-    //                 lastname2 = p.lastname2,
-    //                 phone = p.phone,
-    //                 dateupdated = Convert.ToString(p.dateupdated),
-    //                 Updatedby = p.Updatedby,
-    //                 recordid = Convert.ToString(p.ID)
-    //             };
 }

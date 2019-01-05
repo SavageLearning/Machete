@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     WorkerSignin.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -29,6 +29,9 @@ namespace Machete.Domain
 {
     public class WorkerSignin : Signin 
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public new int ID { get; set; }
         public int? WorkAssignmentID { get; set; }
         public DateTime? lottery_timestamp { get; set; }
         public int? lottery_sequence { get; set; }

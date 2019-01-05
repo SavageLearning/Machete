@@ -1,4 +1,4 @@
-﻿using Machete.Data.Helpers;
+using Machete.Data.Helpers;
 using Machete.Domain;
 using Newtonsoft.Json;
 using System;
@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Machete.Data
 {
@@ -1540,7 +1541,8 @@ where jobcount is not null or actcount is not null or eslcount is not null
             _cache.ForEach(u => {
                 try
                 {
-                    context.ReportDefinitions.First(a => a.name == u.name);
+	                if (context.Database.GetDbConnection().GetType().Name == "SqlServerConnection")
+                      context.ReportDefinitions.First(a => a.name == u.name);
                 }
                 catch
                 {

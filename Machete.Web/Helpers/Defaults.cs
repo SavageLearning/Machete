@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     Defaults.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -21,15 +21,15 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using Machete.Data.Infrastructure;
-using Machete.Domain;
-using Machete.Service;
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
-using System.Web.Mvc;
+using Machete.Domain;
+using Machete.Service;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Machete.Web.Helpers
 {
@@ -61,7 +61,6 @@ namespace Machete.Web.Helpers
         List<SelectListItem> yesnoSelectList();
         IEnumerable<string> getTeachers();
         string getConfig(string key);
-
     }
 
     public class Defaults : IDefaults
@@ -136,11 +135,11 @@ namespace Machete.Web.Helpers
                 "Value", "Text", LCategory.activityName);
 
             yesnoEN = new List<SelectListItem>();
-            yesnoEN.Add(new SelectListItem() { Selected = false, Text = "No", Value = "false" });
-            yesnoEN.Add(new SelectListItem() { Selected = false, Text = "Yes", Value = "true" });
+            yesnoEN.Add(new SelectListItem { Selected = false, Text = "No", Value = "false" });
+            yesnoEN.Add(new SelectListItem { Selected = false, Text = "Yes", Value = "true" });
             yesnoES = new List<SelectListItem>();
-            yesnoES.Add(new SelectListItem() { Selected = false, Text = "No", Value = "false" });
-            yesnoES.Add(new SelectListItem() { Selected = false, Text = "Sí", Value = "true" });
+            yesnoES.Add(new SelectListItem { Selected = false, Text = "No", Value = "false" });
+            yesnoES.Add(new SelectListItem { Selected = false, Text = "Sí", Value = "true" });
         }
         public CultureInfo getCI()
         {
@@ -176,13 +175,12 @@ namespace Machete.Web.Helpers
         // create multi-lingual yes/no strings
         public string getBool(bool val)
         {
-            if (Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant() == "es")
-            {
-                if (val) return "sí"; 
-                else return "no";
-            }
-            if (val) return "yes";
-            else return "no";
+            if (val) return 
+                string.Equals(Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant(), "es")
+                ? "sí"
+                : "yes";
+            
+            return "no";
         }
         public string getBool(bool? val)
         {            
@@ -195,47 +193,35 @@ namespace Machete.Web.Helpers
         /// <returns></returns>
         public int getDefaultID(string type)
         {
-            int count;
-            count = lServ.GetMany(s => s.selected == true &&
-                            s.category == type)
-                .Count();
-            if (count > 0)
-            {
-                return lServ.GetMany(s => s.selected == true &&
-                                        s.category == type)
-                            .FirstOrDefault().ID;
+            var defaultID = lServ.GetMany(s => s.selected && s.category == type).ToList();
+            var count = defaultID.Count;
+            if (count > 0) {
+                return defaultID.First().ID;
+            } else {
+                return count;
             }
-            return count;
         }
 
         public double getDefaultSkillWage()
         {
-            double wage = 0.0;
-            int count = lServ.GetMany(s => s.selected == true &&
-                            s.category == LCategory.skill && s.active == true)
-                .Count();
+            var wage = 0.0;
+            var defaultWage = lServ.GetMany(s => s.selected && s.category == LCategory.skill && s.active).ToList();
+            var count = defaultWage.Count();
             if (count > 0)
             {
-                return lServ.GetMany(s => s.selected == true &&
-                                        s.category == LCategory.skill && s.active == true)
-                            .FirstOrDefault().wage ?? 0.0;
+                return defaultWage.First().wage ?? 0.0;
+            } else {
+                return wage;
             }
-            return wage;
         }
 
         public int getDefaultSkillHours()
         {
-            int hours = 0;
-            int count = lServ.GetMany(s => s.selected == true &&
-                            s.category == LCategory.skill && s.active == true)
-                .Count();
-            if (count > 0)
-            {
-                return lServ.GetMany(s => s.selected == true &&
-                                        s.category == LCategory.skill && s.active == true)
-                            .FirstOrDefault().minHour ?? 0;
-            }
-            return hours;
+            var lookupHours = lServ.GetMany(s => s.selected && s.category == LCategory.skill && s.active).ToList();
+            var count = lookupHours.Count;
+            if (count > 0) {
+                return lookupHours.First().minHour ?? 0;
+            } else { return 0; }
         }
 
         public string getConfig(string key)
@@ -248,22 +234,21 @@ namespace Machete.Web.Helpers
             return lServ.GetTeachers();
         }
         /// <summary>
-        /// Get the SelectList for the group
+        /// Get the SelectList for the specified lookup/category type.
         /// </summary>
-        /// <param name="locale"></param>
+        /// <param name="type">The type of the SelectList to be retrieved</param>
         /// <returns></returns>
         public SelectList getSelectList(string type)
         {
             var locale = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant();
             string field;
-            SelectList list;
             if (locale == "ES") field = "text_ES";
             else field = "text_EN";
-            list = new SelectList(lServ.GetMany(s => s.category == type && s.active == true),
-                                    "ID",
-                                    field,
-                                    getDefaultID(type));
-            if (list == null) throw new ArgumentNullException("Get returned no lookups");
+            var list = new SelectList(lServ.GetMany(s => s.category == type && s.active),
+                "ID",
+                field,
+                getDefaultID(type));
+            if (list == null) throw new NullReferenceException("getSelectList() returned no lookups in Default.cs");
             return list;
         }
 
@@ -280,12 +265,12 @@ namespace Machete.Web.Helpers
             if (locale == "ES") field = "text_ES";
             else field = "text_EN";
             // NOTE: transportation methods hard-coded to support Casa Latina
-            var defaultTP = tpServ.GetMany(a => a.defaultAttribute == true).FirstOrDefault().ID;
-            list = new SelectList(tpServ.GetMany(a => a.active == true),
+            var defaultTP = tpServ.GetMany(a => a.defaultAttribute).FirstOrDefault().ID;
+            list = new SelectList(tpServ.GetMany(a => a.active),
                                     "ID",
                                     field,
                                     defaultTP);
-            if (list == null) throw new ArgumentNullException("Get returned no lookups");
+            if (list == null) throw new NullReferenceException("Get returned no lookups, Defaults.cs getTransportationMethodList()");
             return list;
         }
 
@@ -306,13 +291,12 @@ namespace Machete.Web.Helpers
         /// <summary>
         /// get the List of skills. used in Worker.cshtml & WorkAssignment.cshtml
         /// </summary>
-        /// <param name="locale"></param>
         /// <param name="specializedOnly">only return specialized entries</param>
         /// <returns></returns>
         public List<SelectListItemEx> getSkill(bool specializedOnly)
         {
             var locale = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant();
-            IEnumerable<Lookup> prelist = lServ.GetMany(s => s.category == LCategory.skill && s.active == true);
+            IEnumerable<Lookup> prelist = lServ.GetMany(s => s.category == LCategory.skill && s.active);
             Func<Lookup, string> textFunc; //anon function
             if (prelist == null) throw new ArgumentNullException("No skills returned");
             if (specializedOnly)
@@ -320,7 +304,7 @@ namespace Machete.Web.Helpers
                 //TODO: Selection of ES/EN not scalable on i18n. Kludge.
                 textFunc = (ll => "[" + ll.ltrCode + ll.level + "] " + (locale == "es" ? ll.text_ES : ll.text_EN));
                 Func<Lookup, string> sortFunc = (ll => locale == "es" ? ll.text_ES : ll.text_EN); //created new sortFunc to sort only by skill text and not by concatenated ltrCode + skills 
-                prelist = prelist.Where(s => s.speciality == true).OrderBy(s => sortFunc(s)); //LINQ & FUNC
+                prelist = prelist.Where(s => s.speciality).OrderBy(s => sortFunc(s)); //LINQ & FUNC
             }
             else
             {
@@ -346,14 +330,14 @@ namespace Machete.Web.Helpers
         public List<SelectListItemEx> getEmployerSkill()
         {
             var locale = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant();
-            IEnumerable<Lookup> prelist = lServ.GetMany(s => s.category == LCategory.skill && s.active == true);
+            IEnumerable<Lookup> prelist = lServ.GetMany(s => s.category == LCategory.skill && s.active);
             Func<Lookup, string> textFunc; //anon function
             if (prelist == null) throw new ArgumentNullException("No skills returned");
  
             //TODO: Selection of ES/EN not scalable on i18n. Kludge.
             textFunc = (ll => "[" + ll.ltrCode + ll.level + "] " + (locale == "es" ? ll.text_ES : ll.text_EN));
             Func<Lookup, string> sortFunc = (ll => locale == "es" ? ll.text_ES : ll.text_EN); //created new sortFunc to sort only by skill text and not by concatenated ltrCode + skills 
-            prelist = prelist.Where(s => s.speciality == true).OrderBy(s => sortFunc(s)); //LINQ & FUNC
+            prelist = prelist.Where(s => s.speciality).OrderBy(s => sortFunc(s)); //LINQ & FUNC
             // TODO: (above) filter by employerView (not speciality)
             // TODO: return typeOfWorkID & description
             return new List<SelectListItemEx>(prelist
@@ -381,9 +365,9 @@ namespace Machete.Web.Helpers
             textFunc = (ll => (locale == "es" ? ll.text_ES : ll.text_EN));
             Func<Lookup, string> sortFunc = (ll => locale == "es" ? ll.text_ES : ll.text_EN); //created new sortFunc to sort only by skill text and not by concatenated ltrCode + skills 
 
-            IEnumerable<Lookup> prelist = lServ.GetMany(s => s.category == LCategory.skill && s.active == true)
+            IEnumerable<Lookup> prelist = lServ.GetMany(s => s.category == LCategory.skill && s.active)
                                                 .OrderBy(s => sortFunc(s)); //LINQ & FUNC
-            if (prelist == null) throw new ArgumentNullException("No skills returned");
+            if (prelist == null) throw new NullReferenceException("No skills returned; Defaults.cs, getOnlineEmployerSkill()");
 
             return new List<SelectListEmployerSkills>(prelist
                     .Select(x => new SelectListEmployerSkills

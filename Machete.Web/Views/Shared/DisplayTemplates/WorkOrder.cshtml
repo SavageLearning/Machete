@@ -1,11 +1,15 @@
-﻿@model Machete.Web.ViewModel.WorkOrder
-@using Machete.Web.Helpers
-@using Machete.Web.Resources
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.Localization
+@model Machete.Web.ViewModel.WorkOrder
+
+@using Machete.Web.Resources;
 
 @Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID" })
 @Html.HiddenFor(model => model.EmployerID)
 @{
-    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];    
+    var httpContext = ViewContext.HttpContext;
+    var currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
+    var currentUrl = UriHelper.BuildRelative(httpContext.Request.PathBase, httpContext.Request.Path, httpContext.Request.QueryString);
 }
 <div class="tb-table">
     <div class="tb-row">
@@ -86,17 +90,17 @@
             @(Model.transportMethod)
         </div>
         <div class="tb-field">
-            @System.String.Format("{0:c}",Model.transportFee)    +
+            @String.Format("{0:c}",Model.transportFee) +
         </div>
         <div class="tb-field">
-            @System.String.Format("{0:c}",Model.transportFeeExtra)    = 
+            @String.Format("{0:c}",Model.transportFeeExtra) = 
         </div>        
         <div class="tb-field">
-            @System.String.Format("{0:c}", Model.transportFee + Model.transportFeeExtra)   
+            @String.Format("{0:c}", Model.transportFee + Model.transportFeeExtra)
         </div>
     </div>    
 
-    @if (Model.englishRequired == true)
+    @if (Model.englishRequired)
     {
         <div class="tb-row">
             <div class="tb-label">
