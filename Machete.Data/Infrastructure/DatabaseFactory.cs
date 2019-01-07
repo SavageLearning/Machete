@@ -48,7 +48,6 @@ namespace Machete.Data.Infrastructure
                                              | BindingFlags.Public
                                              | BindingFlags.NonPublic
                                              | BindingFlags.Static;
-        private static FieldInfo field => null;
 
         public DatabaseFactory(string connString)
         {
@@ -90,12 +89,12 @@ namespace Machete.Data.Infrastructure
         private void log_connection_count(string prefix)
         {
             var sb = new StringBuilder();
-            var conn1 = (macheteContext).Database.GetDbConnection();
-            var objid1 = field.GetValue(conn1);
+            var dbConnection = (macheteContext).Database.GetDbConnection();
+            var objectID = dbConnection.GetType().GetField("Object ID", BindFlags);
             sb.AppendFormat("-----------{0} # [{1}], Conn: {2}",
                 prefix,
-                objid1.ToString(),
-                conn1.ConnectionString);
+                objectID,
+                dbConnection.ConnectionString);
             Debug.WriteLine(sb.ToString());
         }
 
