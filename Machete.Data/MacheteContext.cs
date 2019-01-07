@@ -26,11 +26,15 @@ using Machete.Domain;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using System.Linq;
+using System.Text;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Activity = Machete.Domain.Activity;
 // ReSharper disable RedundantArgumentDefaultValue
+// ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Machete.Data
 
@@ -63,29 +67,27 @@ namespace Machete.Data
         public DbSet<TransportRule> TransportRules { get; set; }
         public DbSet<TransportCostRule> TransportCostRules { get; set; }
         public DbSet<ScheduleRule> ScheduleRules { get; set; }
+        
         public override int SaveChanges()
         {
-            try
-            {
-                return base.SaveChanges();
-            }
-
-            catch (DbEntityValidationException dbEx)
-            {
+            // https://github.com/aspnet/EntityFrameworkCore/issues/3680#issuecomment-155502539
+            var validationErrors = ChangeTracker
+                .Entries<IValidatableObject>()
+                .SelectMany(entities => entities.Entity.Validate(null)) // may have to make a validation context?
+                .Where(result => result != ValidationResult.Success);
+            
+            if (validationErrors.Any()) {
                 var details = new StringBuilder();
-                var preface = String.Format("DbEntityValidation Error: ");
+                var preface = "DbEntityValidation Error: ";
                 Trace.TraceInformation(preface);
                 details.AppendLine(preface);
-                foreach (var validationErrors in dbEx.EntityValidationErrors)
-                {
-                    foreach (var validationError in validationErrors.ValidationErrors)
-                    {
-                        var tempstr = String.Format("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage);
-                        details.AppendLine(tempstr);
-                        Trace.TraceInformation(tempstr);
-                    }
+
+                foreach (var validationError in validationErrors) {
+                    var line = $"Property: {validationError.MemberNames} Error: {validationError.ErrorMessage}";
+                    details.AppendLine(line);
+                    Trace.TraceInformation(line);
                 }
-                
+
                 throw new Exception(details.ToString());
             }
 
@@ -93,11 +95,6 @@ namespace Machete.Data
         }
 
         public bool IsDead { get; set; }
-        //protected override void Dispose(bool disposing)
-        //{
-        //    IsDead = true;
-        //    base.Dispose(disposing);
-        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

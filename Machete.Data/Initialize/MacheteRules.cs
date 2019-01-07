@@ -126,7 +126,7 @@ namespace Machete.Data.Initialize
                     createdby = "Init T. Script",
                     updatedby = "Init T. Script"
                 });
-                c.SaveChanges();
+                context.SaveChanges();
             }
         }
     }

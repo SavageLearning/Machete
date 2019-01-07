@@ -23,12 +23,12 @@
 #endregion
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Machete.Service
 {
@@ -108,18 +108,18 @@ namespace Machete.Service
 
         public void AssignList(int personID, List<int> actList, string user)
         {
-            foreach (int aID in actList)
+            foreach (int activityID in actList)
             {
-                Activity act = dbset.Find(aID);
+                Activity act = dbset.Find(activityID);
                 if (act == null) throw new Exception("Activity from list is null");
-                int matches = db.Set<ActivitySignin>()
-                    .Where(az => az.activityID == aID && az.personID == personID).Count();
+                int matches = db
+                    .Set<ActivitySignin>().Count(az => az.activityID == activityID && az.personID == personID);
 
                 if (matches == 0)
                 {
                     asServ.CreateSignin(new ActivitySignin
                     {
-                        activityID = aID,
+                        activityID = activityID,
                         personID = personID,
                         dateforsignin = act.dateStart
                     }, user);
@@ -129,13 +129,13 @@ namespace Machete.Service
 
         public void UnassignList(int personID, List<int> actList, string user)
         {
-            foreach (int aID in actList)
+            foreach (int activityID in actList)
             {
-                Activity act = dbset.Find(aID);
+                Activity act = dbset.Find(activityID);
                 if (act == null) throw new Exception("Activity from list is null");
 
-                ActivitySignin asi = db.Set<ActivitySignin>()
-                    .Where(az => az.activityID.Equals(aID) && az.personID.Equals(personID)).FirstOrDefault();
+                ActivitySignin asi = db
+                    .Set<ActivitySignin>().FirstOrDefault(az => az.activityID.Equals(activityID) && az.personID.Equals(personID));
 
 
                 if (asi == null) throw new NullReferenceException("ActivitySignin.GetByPersonID returned null");
