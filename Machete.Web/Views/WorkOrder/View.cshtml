@@ -1,4 +1,4 @@
-@using Microsoft.AspNetCore.Http.Extensions
+﻿@using Microsoft.AspNetCore.Http.Extensions
 @using Microsoft.AspNetCore.Localization
 @model Machete.Web.ViewModel.WorkOrder
 
@@ -47,7 +47,7 @@
     <div class="tb-field">
         @foreach (var req in Model.workerRequests)
         {
-            @String.Format(req.workerRequested.dwccardnum + "--" + req.workerRequested.Person.fullName)
+            @String.Format(req.workerRequested.dwccardnum + "--" + req.workerRequested.fullName) // TODO verify
             <br />
         }
     </div>

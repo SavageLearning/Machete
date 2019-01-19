@@ -194,10 +194,8 @@ namespace Machete.Data.Initialize
             };
         //
         //
-        public static void Initialize(MacheteContext context)
-        {
-            _cache.ForEach(u =>
-            {
+        public static void Initialize(MacheteContext context) {
+            _cache.ForEach(u => {
                 u.datecreated = DateTime.Now;
                 u.dateupdated = DateTime.Now;
                 u.createdby = "Init T. Script";

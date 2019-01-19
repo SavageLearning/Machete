@@ -84,7 +84,7 @@ namespace Machete.Test.Integration.Service
             _w.height = "short"; //EF should keep _w and result the same
             //
             //Act
-            frb.ToServWorker().Save(_w, "UnitTest");
+            frb.ToServ<IWorkerService>().Save(_w, "UnitTest");
             //
             //Assert
             Assert.IsNotNull(_w.ID, "Worker.ID is Null");

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Machete.Domain;
 using Microsoft.EntityFrameworkCore;
@@ -126,7 +126,7 @@ namespace Machete.Data.Initialize
                     createdby = "Init T. Script",
                     updatedby = "Init T. Script"
                 });
-                context.Commit();
+                context.SaveChanges();
             }
         }
     }

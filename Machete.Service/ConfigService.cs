@@ -32,20 +32,20 @@ namespace Machete.Service
         public override Config Create(Config record, string user)
         {
             var result = base.Create(record, user);
-            uow.Commit();
+            uow.SaveChanges();
             return result;
         }
 
         public override void Save(Config record, string user)
         {
             base.Save(record, user);
-            uow.Commit();
+            uow.SaveChanges();
         }
 
         public override void Delete(int id, string user)
         {
             base.Delete(id, user);
-            uow.Commit();
+            uow.SaveChanges();
         }
 
         public string getConfig(string key)

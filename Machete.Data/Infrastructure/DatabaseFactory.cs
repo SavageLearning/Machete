@@ -1,4 +1,4 @@
-#region COPYRIGHT
+﻿#region COPYRIGHT
 // File:     DatabaseFactory.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -23,7 +23,9 @@
 #endregion
 using System;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Reflection;
+using System.Text;
 using Microsoft.EntityFrameworkCore;
 
 namespace Machete.Data.Infrastructure
@@ -37,9 +39,9 @@ namespace Machete.Data.Infrastructure
     }
     //
     //
-    public class DatabaseFactory : Disposable, IDatabaseFactory
+    public class DatabaseFactory : IDatabaseFactory
     {
-        DbContextOptions<MacheteContext> options;
+        readonly DbContextOptions<MacheteContext> options;
         // ReSharper disable once InconsistentNaming
         private MacheteContext macheteContext;
         private const BindingFlags BindFlags = BindingFlags.Instance 
@@ -86,26 +88,20 @@ namespace Machete.Data.Infrastructure
 
         private void log_connection_count(string prefix)
         {
-            //var sb = new StringBuilder();
-            // ReSharper disable once RedundantCast
-            // ReSharper disable once RedundantNameQualifier
-            //var conn1 = (macheteContext as Microsoft.EntityFrameworkCore.DbContext).Database.GetDbConnection();
-            //var objid1 = field.GetValue(conn1); //TODO uncomment
-            //sb.AppendFormat("-----------{0} # [{1}], Conn: {2}",
-            //    prefix,
-            //    objid1.ToString(),
-            //    connString);
-            //Debug.WriteLine(sb.ToString());
+            var sb = new StringBuilder();
+            var dbConnection = (macheteContext).Database.GetDbConnection();
+            var objectID = dbConnection.GetType().GetField("Object ID", BindFlags);
+            sb.AppendFormat("-----------{0} # [{1}], Conn: {2}",
+                prefix,
+                objectID,
+                dbConnection.ConnectionString);
+            Debug.WriteLine(sb.ToString());
         }
-        //public void Set(MacheteContext context)
-        //{
-        //    dataContext = context;
-        //}
-        protected override void DisposeCore()
+
+        public void Dispose()
         {
             if (macheteContext != null)
             {
-
                 log_connection_count("DatabaseFactory.DisposeCore");
                 macheteContext.Dispose();
                 macheteContext = null;

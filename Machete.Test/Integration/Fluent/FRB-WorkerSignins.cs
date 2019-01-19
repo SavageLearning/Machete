@@ -6,50 +6,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Practices.Unity;
 
 namespace Machete.Test.Integration
 {
     public partial class FluentRecordBase : IDisposable
     {
-        private WorkerSigninRepository _repoWSI;
-        private WorkerSigninService _servWSI;
+        private IWorkerSigninService _servWSI;
         private WorkerSignin _wsi;
-
-
-        public FluentRecordBase AddRepoWorkerSignin()
-        {
-            if (_dbFactory == null) AddDBFactory();
-
-            _repoWSI = new WorkerSigninRepository(_dbFactory);
-            return this;
-        }
-
-        public WorkerSigninRepository ToRepoWorkerSignin()
-        {
-            if (_repoWSI == null) AddRepoWorkerSignin();
-            return _repoWSI;
-        }
-
-        public FluentRecordBase AddServWorkerSignin()
-        {
-            //
-            // DEPENDENCIES
-            if (_repoWSI == null) AddRepoWorkerSignin();
-            if (_servW == null) AddServWorker();
-            if (_servL == null) AddServImage();
-            if (_servAS == null) AddServWorkerRequest();
-            if (_uow == null) AddUOW();
-            if (_webMap == null) AddMapper();
-            if (_servC == null) AddServConfig();
-            _servWSI = new WorkerSigninService(_repoWSI, _servW, _servI, _servWR, _uow, _webMap, _servC);
-            return this;
-        }
-
-        public WorkerSigninService ToServWorkerSignin()
-        {
-            if (_servWSI == null) AddServWorkerSignin();
-            return _servWSI;
-        }
 
         public FluentRecordBase AddWorkerSignin(
             Worker worker = null
@@ -59,7 +23,7 @@ namespace Machete.Test.Integration
         {
             //
             // DEPENDENCIES
-            if (_servWSI == null) AddServWorkerSignin();
+            _servWSI = container.Resolve<IWorkerSigninService>();
             if (worker != null) _w = worker;
             if (_w == null) AddWorker();
             //

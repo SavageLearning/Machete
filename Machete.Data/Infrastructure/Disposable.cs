@@ -1,4 +1,4 @@
-#region COPYRIGHT
+﻿#region COPYRIGHT
 // File:     Disposable.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -29,6 +29,8 @@ namespace Machete.Data.Infrastructure
     {
         private bool isDisposed;
 
+        // ~ is the destructor
+        // https://stackoverflow.com/questions/188688/what-does-the-tilde-before-a-function-name-mean-in-c
         ~Disposable()
         {
             Dispose(false);

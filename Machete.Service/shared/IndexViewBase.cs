@@ -647,20 +647,22 @@ namespace Machete.Service
         /// <param name="personID"></param>
         /// <param name="q"></param>
         /// <param name="asRepo"></param>
-        public static void getUnassociated(int personID, ref IQueryable<Activity> q, IRepository<Activity> arepo, IActivitySigninRepository asRepo)
+        public static void getUnassociated(int personID, ref IQueryable<Activity> q, MacheteContext db)
         {
+            var aRepo = db.Set<Activity>().AsNoTracking().AsQueryable();
+            var asRepo = db.Set<ActivitySignin>().AsNoTracking().AsQueryable();
             //
             //SELECT extent1.* FROM  [dbo].[Activities] AS [Extent1]
             //LEFT OUTER JOIN [dbo].[ActivitySignins] AS [Extent2] ON 
             //        ([Extent1].[ID] = [Extent2].[activityID]) AND 
             //        ([Extent2].[WorkerID] = <personID> )
             //WHERE [Extent2].[activityID] IS NULL
-            q = from b in arepo.GetAllQ()
+            q = from b in aRepo
                 join aa in
                     // joins activities (a) to activity signins (az) 
                     // where az.personID
                     (from a in q
-                     join az in asRepo.GetAllQ() on a.ID equals az.activityID into grouped
+                     join az in asRepo on a.ID equals az.activityID into grouped
                      from az2 in grouped.DefaultIfEmpty()
                      where az2.personID == personID
                      select a)
@@ -675,10 +677,11 @@ namespace Machete.Service
         /// <param name="personID"></param>
         /// <param name="q"></param>
         /// <param name="asRepo"></param>
-        public static void getAssociated(int personID, ref IQueryable<Activity> q, IActivitySigninRepository asRepo)
+        public static void getAssociated(int personID, ref IQueryable<Activity> q, MacheteContext db)
         {
+            var asRepo = db.Set<ActivitySignin>().AsNoTracking().AsQueryable();
             q = from a in q
-                join az in asRepo.GetAllQ() on a.ID equals az.activityID into g
+                join az in asRepo on a.ID equals az.activityID into g
                 from f in g.DefaultIfEmpty()
                 where f.personID == personID
                 select a;

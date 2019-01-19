@@ -1,4 +1,4 @@
-#region COPYRIGHT
+﻿#region COPYRIGHT
 // File:     ServiceBase.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -44,7 +44,7 @@ namespace Machete.Service
         void Delete(int id, string user);
         void Save(T record, string user);
         int TotalCount();
-        IRepository<T> GetRepo();
+        //IRepository<T> GetRepo();
     }
     /// <summary>
     /// 
@@ -111,7 +111,7 @@ namespace Machete.Service
         {
             record.createdByUser(user);
             T created = repo.Add(record);
-            uow.Save();
+            uow.SaveChanges();
             log(record.ID, user, logPrefix + " created");
             return created;
         }
@@ -124,7 +124,7 @@ namespace Machete.Service
         {
             T record = repo.GetById(id);
             repo.Delete(record);
-            uow.Save();
+            uow.SaveChanges();
             log(id, user, logPrefix + " deleted");
         }
         /// <summary>
@@ -135,7 +135,7 @@ namespace Machete.Service
         public virtual void Save(T record, string user)
         {
             record.updatedByUser(user);
-            uow.Save();
+            uow.SaveChanges();
             log(record.ID, user, logPrefix + " edited");
         }
         /// <summary>

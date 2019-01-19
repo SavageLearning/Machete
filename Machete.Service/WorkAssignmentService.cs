@@ -174,7 +174,7 @@ namespace Machete.Service
             // update timestamps and save
             asmt.updatedByUser(user);
             signin.updatedByUser(user);
-            unitOfWork.Commit();
+            unitOfWork.SaveChanges();
             log(asmt.ID, user, "WSIID:" + signin.ID + " Assign successful");
             return true;
         }
@@ -280,7 +280,7 @@ namespace Machete.Service
             {
                 // clear any orphan assignment
                 wa.workerAssignedID = null;
-                unitOfWork.Commit();
+                unitOfWork.SaveChanges();
                 return;
             }
             //
@@ -300,7 +300,7 @@ namespace Machete.Service
             {
                 //Something matches its link. My link to something assumed bad.
                 wa.workerSigninID = null;
-                unitOfWork.Commit();
+                unitOfWork.SaveChanges();
                 return;
             }
             else throw new MacheteIntegrityException("Unassign found chain of mislinked records, starting with WAID " + wa.ID.ToString());
@@ -359,7 +359,7 @@ namespace Machete.Service
             {
                 //Something matches its link. My link to something assumed bad. 
                 wsi.WorkAssignmentID = null;
-                unitOfWork.Commit();
+                unitOfWork.SaveChanges();
                 return;
             }
             else throw new MacheteIntegrityException("Unassign found chain of mislinked records, starting with WSIID " + wsi.ID.ToString());
@@ -384,7 +384,7 @@ namespace Machete.Service
             asmt.workerAssignedID = null;
             asmt.updatedByUser(user);
             signin.updatedByUser(user);
-            unitOfWork.Commit();
+            unitOfWork.SaveChanges();
             log(asmt.ID, user, "WSIID:" + signin.ID + " Unassign successful");
         }
         public override WorkAssignment Create(WorkAssignment record, string user)
@@ -411,7 +411,7 @@ namespace Machete.Service
             wa.updatedByUser(user);
             updateComputedValues(ref wa);
             log(wa.ID, user, "WorkAssignment edited");
-            unitOfWork.Commit();
+            unitOfWork.SaveChanges();
         }
 
         public override void Save(WorkAssignment asmt, string user)

@@ -1,4 +1,4 @@
-#region COPYRIGHT
+﻿#region COPYRIGHT
 // File:     WorkOrderService.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -163,7 +163,7 @@ namespace Machete.Service
             if (o.status != null) IndexViewBase.filterStatus(o, ref q);
             if (o.onlineSource == true) IndexViewBase.filterOnlineSource(o, ref q);
             if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
-            //
+            // TODO restore CultureInfo
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, /*o.CI.TwoLetterISOLanguageName*/"en", ref q);
             //
             result.filteredCount = q.Count();
@@ -235,7 +235,7 @@ namespace Machete.Service
                     wo.workerRequests.Add(workerRequest);
                 }
             }
-            uow.Save(); 
+            uow.SaveChanges(); 
             if (wo.paperOrderNum == null || wo.paperOrderNum == 0)
             {
                 wo.paperOrderNum = wo.ID;
@@ -250,7 +250,7 @@ namespace Machete.Service
                 }
             }
 
-            uow.Commit();
+            uow.SaveChanges();
 
             _log(workOrder.ID, user, "WorkOrder created");
             return wo;

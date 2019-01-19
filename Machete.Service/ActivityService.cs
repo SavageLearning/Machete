@@ -23,12 +23,12 @@
 #endregion
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Machete.Service
 {
@@ -41,52 +41,53 @@ namespace Machete.Service
     /// <summary>
     /// 
     /// </summary>
-    public class ActivityService : ServiceBase<Activity>, IActivityService
+    public class ActivityService : ServiceBase2<Activity>, IActivityService
     {
         private IActivitySigninService asServ;
-        private ILookupService lServ;
         private readonly IMapper map;
-        public ActivityService(IActivityRepository repo,
+        public ActivityService(IDatabaseFactory db,
             IActivitySigninService asServ,
-            ILookupService lServ,
-            IUnitOfWork uow,
-            IMapper map) : base(repo, uow)
+            IMapper map) : base(db)
         {
             this.logPrefix = "Activity";
-            this.lServ = lServ;
             this.map = map;
             this.asServ = asServ;
+   
         }
 
         public override Activity Create(Activity record, string user)
         {
-            updateCalculatedFields(ref record);
-            return base.Create(record, user);
+            updateComputedFields(ref record);
+            var result = base.Create(record, user);
+            db.SaveChanges();
+            db.Dispose();
+            return result;
         }
 
         public override void Save(Activity record, string user)
         {
-            updateCalculatedFields(ref record);
+            updateComputedFields(ref record);
             base.Save(record, user);
         }
-        private void updateCalculatedFields(ref Activity record)
+
+        private void updateComputedFields(ref Activity record)
         {
-            record.nameEN = lServ.textByID(record.nameID, "EN");
-            record.nameES = lServ.textByID(record.nameID, "ES");
-            record.typeEN = lServ.textByID(record.typeID, "EN");
-            record.typeES = lServ.textByID(record.typeID, "ES");
+            record.nameEN = lookupTextByID(record.nameID, "EN");
+            record.nameES = lookupTextByID(record.nameID, "ES");
+            record.typeEN = lookupTextByID(record.typeID, "EN");
+            record.typeES = lookupTextByID(record.typeID, "ES");
         }
 
         public dataTableResult<DTO.ActivityList> GetIndexView(viewOptions o)
         {
             var result = new dataTableResult<DTO.ActivityList>();
-            IQueryable<Activity> q = repo.GetAllQ();
-            var asRepo = (IActivitySigninRepository)asServ.GetRepo();
+            IQueryable<Activity> q = dbset.AsNoTracking();
+            
 
             if (o.personID > 0 && o.attendedActivities == false)
-                IndexViewBase.getUnassociated(o.personID, ref q, repo, asRepo);
+                IndexViewBase.getUnassociated(o.personID, ref q, db);
             if (o.personID > 0 && o.attendedActivities == true)
-                IndexViewBase.getAssociated(o.personID, ref q, asRepo);
+                IndexViewBase.getAssociated(o.personID, ref q, db);
             if (!o.authenticated)
             {
                 if (o.date == null) o.date = DateTime.Now;
@@ -97,7 +98,7 @@ namespace Machete.Service
 
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
             result.filteredCount = q.Count();
-            result.totalCount = repo.GetAllQ().Count();
+            result.totalCount = TotalCount();
             result.query = q.ProjectTo<DTO.ActivityList>(map.ConfigurationProvider)
                 .Skip(o.displayStart)
                 .Take(o.displayLength)
@@ -107,17 +108,18 @@ namespace Machete.Service
 
         public void AssignList(int personID, List<int> actList, string user)
         {
-            foreach (int aID in actList)
+            foreach (int activityID in actList)
             {
-                Activity act = repo.GetById(aID);
+                Activity act = dbset.Find(activityID);
                 if (act == null) throw new Exception("Activity from list is null");
-                int matches = asServ.GetManyByPersonID(aID, personID).Count();
+                int matches = db
+                    .Set<ActivitySignin>().Count(az => az.activityID == activityID && az.personID == personID);
 
                 if (matches == 0)
                 {
                     asServ.CreateSignin(new ActivitySignin
                     {
-                        activityID = aID,
+                        activityID = activityID,
                         personID = personID,
                         dateforsignin = act.dateStart
                     }, user);
@@ -127,11 +129,15 @@ namespace Machete.Service
 
         public void UnassignList(int personID, List<int> actList, string user)
         {
-            foreach (int aID in actList)
+            foreach (int activityID in actList)
             {
-                Activity act = repo.GetById(aID);
+                Activity act = dbset.Find(activityID);
                 if (act == null) throw new Exception("Activity from list is null");
-                ActivitySignin asi = asServ.GetByPersonID(aID, personID);
+
+                ActivitySignin asi = db
+                    .Set<ActivitySignin>().FirstOrDefault(az => az.activityID.Equals(activityID) && az.personID.Equals(personID));
+
+
                 if (asi == null) throw new NullReferenceException("ActivitySignin.GetByPersonID returned null");
                 asServ.Delete(asi.ID, user);
             }
