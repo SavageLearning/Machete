@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Machete.Api.ViewModel;
+using Machete.Api.ViewModels;
 using Newtonsoft.Json;
 
 namespace Machete.Api.Maps
@@ -18,6 +19,5 @@ namespace Machete.Api.Maps
             CreateMap<WorkAssignment, Domain.WorkAssignment>()
                 .ForMember(v => v.weightLifted, opt => opt.MapFrom(d => d.requiresHeavyLifting));
         }
-
     }
 }

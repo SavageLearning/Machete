@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Web;
+using Machete.Api.ViewModels;
 
 namespace Machete.Api.ViewModel
 {

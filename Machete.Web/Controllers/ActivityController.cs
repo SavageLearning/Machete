@@ -24,7 +24,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -47,7 +46,6 @@ namespace Machete.Web.Controllers
         private readonly IActivityService serv;
         private readonly IMapper map;
         private readonly IDefaults def;
-        private CultureInfo CI;
 
         public ActivityController(
             IActivityService aServ, 
@@ -61,7 +59,6 @@ namespace Machete.Web.Controllers
         protected override void Initialize(ActionContext requestContext)
         {
             base.Initialize(requestContext);
-            CI = Session["Culture"];
         }
         /// <summary>
         /// 
@@ -74,7 +71,6 @@ namespace Machete.Web.Controllers
             if (User.IsInRole("Administrator") || User.IsInRole("Manager"))
                 model.authenticated = 1;
             else model.authenticated = 0;
-            model.CI = Session["Culture"];
             return View(model);
         }
 
@@ -88,8 +84,6 @@ namespace Machete.Web.Controllers
         {
             //Get all the records
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
-            vo.CI = CI;
-            
             var userIdentity = new ClaimsIdentity("Cookies");
             if (!userIdentity.IsAuthenticated) vo.authenticated = false;
             dataTableResult<ActivityList> list = serv.GetIndexView(vo);
@@ -124,9 +118,8 @@ namespace Machete.Web.Controllers
         /// <summary>
         /// POST: /Activity/Create
         /// </summary>
-        /// <param name="activity"></param>
+        /// <param name="activ"></param>
         /// <param name="userName"></param>
-        /// <returns></returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, Teacher")]
         public async Task<JsonResult> Create(Activity activ, string userName)

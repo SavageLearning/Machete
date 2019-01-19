@@ -23,21 +23,19 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using NLog;
 
+// ReSharper disable once CheckNamespace
 namespace Machete.Web.Controllers
 {
     public class MacheteController : Controller
     {
         private readonly Logger _log = LogManager.GetCurrentClassLogger();
         private readonly LogEventInfo _levent = new LogEventInfo(LogLevel.Debug, "Controller", "");
-        public MacheteSessionState Session;
         
         /// <summary>
         /// Unified exception handling for controllers. NLog and json response.
@@ -87,17 +85,6 @@ namespace Machete.Web.Controllers
         protected virtual void Initialize(ActionContext requestContext)
         {
             throw new NotImplementedException();
-        }
-    }
-
-    public class MacheteSessionState
-    {
-        private readonly IDictionary<string, CultureInfo> salad = new Dictionary<string, CultureInfo>();
-
-        public CultureInfo this[string culture]
-        {
-            get => salad[culture];
-            set => salad[culture] = value;
         }
     }
 

@@ -1,10 +1,10 @@
 @model Machete.Web.ViewModel.WorkAssignmentIndex
+
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
-
-@using Machete.Service
 @using Microsoft.AspNetCore.Http.Extensions
 @using Microsoft.AspNetCore.Localization
+
 @{
     var httpContext = ViewContext.HttpContext;
     var currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
@@ -83,7 +83,7 @@
                             </tr>
                         </thead>
                     </table>
-                </div>
+                </div> 
             </div>
 
             <div id="assignmentTab" class="tb-cell">
@@ -197,7 +197,7 @@ $(document).ready(function () {
                 lotteryField.append('<a class="moveup_Lottery" title="Move Up" href="/WorkerSignin/moveUp/'
                     + aData['recordid'] + '"><img src="/Content/images/arrow-up-2.png" /></a>');
             }
-            if (aData['WAID'] > 0) { // green -- WA record associated with WSI record
+            if (aData['waid'] > 0) { // green -- WA record associated with WSI record
                 $(nRow).addClass('statusGreen');
             }
             return nRow;
@@ -263,7 +263,7 @@ $(document).ready(function () {
                 {"mDataProp": "lotterySequence"},
                 {"mDataProp": "program"},
                 {"mDataProp": "fullname"},
-                {"mDataProp": "WAID"}
+                {"mDataProp": "waid"}
             ],
             "fnServerDataExtra": function () {
                 return [
@@ -274,7 +274,7 @@ $(document).ready(function () {
                 ]
             },
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                if (aData['WAID'] > 0) { // green
+                if (aData['waid'] > 0) { // green
                     $(nRow).addClass('statusGreen');
                 }
                 return nRow;
@@ -303,8 +303,8 @@ $(document).ready(function () {
             "aoColumns": [
                             { "mDataProp": "assignedWorker", "bVisible": false, "bSortable": true},
                             { "mDataProp": "requestedList", "bVisible": false, "bSortable": false},
-                            { "mDataProp": "WAID", "bVisible": false, "bSortable": false },
-                            { "mDataProp": "WOID", "bVisible": true, "bSortable": true },
+                            { "mDataProp": "waid", "bVisible": false, "bSortable": false },
+                            { "mDataProp": "woid", "bVisible": true, "bSortable": true },
                             { "mDataProp": "timeofwork"},
                             { "mDataProp": "englishlevel"},
                             { "mDataProp": "skill"},

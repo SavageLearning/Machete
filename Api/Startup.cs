@@ -1,47 +1,40 @@
-﻿using Elmah.Contrib.WebApi;
-using IdentityServer3.AccessTokenValidation;
-using Machete.Service;
-using Microsoft.Owin;
-using Microsoft.Owin.Cors;
-using Owin;
-using System.Configuration;
-using System.Web.Http;
-using System.Web.Http.Dependencies;
-using System.Web.Http.ExceptionHandling;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
-[assembly: OwinStartupAttribute(typeof(Machete.Api.Startup))]
 namespace Machete.Api
 {
     public class Startup
     {
-        public void Configuration(IAppBuilder app)
+        public Startup(IConfiguration configuration)
         {
-            // Allow all origins
-            app.UseCors(CorsOptions.AllowAll);
-            // Wire token validation
-            app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
+            Configuration = configuration;
+        }
+
+        public IConfiguration Configuration { get; }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            if (env.IsDevelopment())
             {
-                Authority = ConfigurationManager.AppSettings["IdentityProvider"], 
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseHsts();
+            }
 
-                // For access to the introspection endpoint
-                ClientId = ConfigurationManager.AppSettings["IdentityClientId"],
-                ClientSecret = ConfigurationManager.AppSettings["IdentityClientSecret"],
-                
-                RequiredScopes = new[] { "api", "profile", "email" }
-            });
-
-            // Wire Web API
-            var config = new HttpConfiguration();
-
-            config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            config.DependencyResolver = new UnityResolver(UnityConfig.Get());
-            //config.Filters.Add(new AuthorizeAttribute());
-            //config.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling
-            //            = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-            WebApiConfig.Register(config);
-            app.UseWebApi(config);
-            var lserv = (LookupService)config.DependencyResolver.GetService(typeof(ILookupService));
-            lserv.populateStaticIds();
+            app.UseHttpsRedirection();
+            app.UseMvc();
         }
     }
 }

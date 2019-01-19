@@ -1,6 +1,29 @@
+#region COPYRIGHT
+// File:     ActivityController.cs
+// Author:   Savage Learning, LLC.
+// Created:  2012/06/17 
+// License:  GPL v3
+// Project:  Machete.Web
+// Contact:  savagelearning
+// 
+// Copyright 2011 Savage Learning, LLC., all rights reserved.
+// 
+// This source file is free software, under either the GPL v3 license or a
+// BSD style license, as supplied with this software.
+// 
+// This source file is distributed in the hope that it will be useful, but 
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+// or FITNESS FOR A PARTICULAR PURPOSE. See the license files for details.
+//  
+// For details please refer to: 
+// http://www.savagelearning.com/ 
+//    or
+// http://www.github.com/jcii/machete/
+// 
+#endregion
 
 using System;
-using System.Globalization;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Machete.Data;
@@ -11,7 +34,6 @@ using Machete.Web.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 using DbFunctions = Machete.Service.DbFunctions;
@@ -24,24 +46,25 @@ namespace Machete.Web.Controllers
     {
         private readonly Logger _logger = LogManager.GetCurrentClassLogger();
         readonly LogEventInfo _levent = new LogEventInfo(LogLevel.Debug, "AccountController", "");
-        private UserManager<MacheteUser> UserManager { get; set; }
-        private SignInManager<MacheteUser> SignInManager { get; }
         private readonly MacheteContext _context;
         private const int PasswordExpirationInMonths = 6; // this constant represents number of months where users passwords expire 
-        
-        private readonly IHtmlLocalizer<AccountController> _localizer;
 
         public AccountController(
             UserManager<MacheteUser> userManager,
             SignInManager<MacheteUser> signInManager,
-            IHtmlLocalizer<AccountController> localizer,
+            RoleManager<IdentityRole> roleManager,
             MacheteContext context)
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            _roleManager = roleManager;
             _context = context;
-            _localizer = localizer;
         }
+
+        // TODO naming _
+        private UserManager<MacheteUser> UserManager { get; }
+        private SignInManager<MacheteUser> SignInManager { get; }
+        private RoleManager<IdentityRole> _roleManager { get; }
 
         // URL: /Account/Index
         [Authorize(Roles = "Manager, Administrator")]
@@ -73,19 +96,16 @@ namespace Machete.Web.Controllers
         {
             ViewBag.ReturnUrl = returnUrl;
 
-            //var userIdentity = new ClaimsIdentity("​​ApplicationCookie");
             if (!User.Identity.IsAuthenticated)
-            {
-                var model = new LoginViewModel();
-                model.Action = "ExternalLogin";
-                model.ReturnUrl = returnUrl;
-                return View(model);
+                return View(new LoginViewModel {Action = "ExternalLogin", ReturnUrl = returnUrl});
+
+            // Employers could still have a link to the old page, so redirect them
+            if (User.IsInRole("Hirer")) {
+                if (Url.IsLocalUrl("/V2/Onlineorders")) return Redirect("/V2/Onlineorders");
+                return RedirectToAction("Index", "Home");
             }
 
-            // Employers could still login to the old page, so redirect
-            if (!User.IsInRole("Hirer"))
-                return RedirectToAction("Index", "Home");
-            return RedirectToLocal("/V2/Onlineorders");
+            return RedirectToAction("Index", "Home");
         }
 
         // POST: /Account/LoginPost
@@ -98,13 +118,14 @@ namespace Machete.Web.Controllers
             {
                 var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
                 
-                if (result != null && result.Succeeded)
+                if (result?.Succeeded == true)
                 {
                     _levent.Level = LogLevel.Info;
                     _levent.Message = "Logon successful";
                     _levent.Properties["username"] = model.UserName;
                     _logger.Log(_levent);
-                    return RedirectToLocal(returnUrl);
+                    if (Url.IsLocalUrl(returnUrl)) return Redirect(returnUrl); // V2
+                    return RedirectToAction("Index", "Home");
                 }
 
                 ModelState.AddModelError("", ValidationStrings.invalidLogin);
@@ -120,35 +141,31 @@ namespace Machete.Web.Controllers
         [AllowAnonymous]
         public async Task<JsonResult> IsPasswordExpiredAsync(string username)
         {
-            var isExpired = false;
+            bool isExpired = false;
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByNameAsync(username);
                 if (user != null)
-                {
                     isExpired = user.LastPasswordChangedDate <= DateTime.Today.AddMonths(-PasswordExpirationInMonths);
-                }
             }
 
-            return Json(new {pwdExpired = isExpired});
+            return Json(new { pwdExpired = isExpired });
         }
 
         [AllowAnonymous]
         public async Task<JsonResult> ChangeExpiredPasswordAsync(string username, string password, string newpassword)
         {
-            // TODO: internationalize string
             var message = "Could not update password";
             var status = false;
 
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindByNameAsync(username);//, password);
+                var user = await UserManager.FindByNameAsync(username);
                 if (user != null)
                 {
                     var result = await UserManager.ChangePasswordAsync(user, password, newpassword);
                     if (result.Succeeded)
                     {
-                        // TODO: internationalize string
                         message = "Password successfully updated.";
                         status = true;
 
@@ -166,7 +183,6 @@ namespace Machete.Web.Controllers
             return Json(new { succeeded = status, message });
         }
 
-        //
         // GET: /Account/Register
         [AllowAnonymous]
         public ActionResult Register()
@@ -174,7 +190,6 @@ namespace Machete.Web.Controllers
             return View();
         }
 
-        //
         // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
@@ -192,7 +207,10 @@ namespace Machete.Web.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            AddErrors(result);
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(error.Code, error.Description);
+            }
 
             // If we got this far, something failed, redisplay form
             return View(model);
@@ -202,7 +220,6 @@ namespace Machete.Web.Controllers
             .Select(p => p.ApplicationId)
             .First();
 
-        //
         // POST: /Account/Disassociate
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -224,94 +241,89 @@ namespace Machete.Web.Controllers
             return RedirectToAction("Manage", new { Message = message });
         }
 
-        //
         // GET: /Account/Manage
         [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, Teacher")]
         public async Task<ActionResult> Manage(ManageMessageId? message)
         {
-            ViewBag.StatusMessage =
-                message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
-                : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
-                : message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
-                : message == ManageMessageId.Error ? "An error has occurred."
-                : "";
-            
-            var user = await UserManager.GetUserAsync(HttpContext.User);
-            ViewBag.HasLocalPassword = HasPassword(user);
-            ViewBag.ReturnUrl = Url.Action("Manage");
-            if (user == null)
-            {
-                return StatusCode(404);
+            switch (message) {
+                case ManageMessageId.ChangePasswordSuccess:
+                    ViewBag.StatusMessage = "Your password has been changed.";
+                    break;
+                case ManageMessageId.SetPasswordSuccess:
+                    ViewBag.StatusMessage = "Your password has been set.";
+                    break;
+                case ManageMessageId.RemoveLoginSuccess:
+                    ViewBag.StatusMessage = "The external login was removed.";
+                    break;
+                case ManageMessageId.Error:
+                    ViewBag.StatusMessage = "An error has occurred.";
+                    break;
+                default:
+                    ViewBag.StatusMessage = "";
+                    break;
             }
-            var model = new ManageUserViewModel();
-            model.Action = "LinkLogin";
-            model.ReturnUrl = "Manage";
-            var old = ModelState["OldPassword"];
-            old?.Errors.Clear();
-            var blah = ModelState["NewPassword"];
-            blah?.Errors.Clear();
+
+            var user = await UserManager.GetUserAsync(HttpContext.User);
+            if (user == null) return StatusCode(404);
+            ViewBag.HasLocalPassword = user.PasswordHash != null;
+            ViewBag.ReturnUrl = Url.Action("Manage");
+
+            var model = new ManageUserViewModel { Action = "LinkLogin", ReturnUrl = "Manage" };
+            
+            ModelState["OldPassword"]?.Errors.Clear();
+            ModelState["NewPassword"]?.Errors.Clear();
+            
             return View(model);
         }
 
-        //
         // POST: /Account/Manage
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, Teacher")]
         public async Task<ActionResult> Manage(ManageUserViewModel model)
         {
+            if (!ModelState.IsValid) return View(model);
+            
             var user = await UserManager.GetUserAsync(HttpContext.User);
-            var hasPassword = HasPassword(user);
+            var hasPassword = user.PasswordHash != null;
             ViewBag.HasLocalPassword = hasPassword;
             ViewBag.ReturnUrl = Url.Action("Manage");
+            IdentityResult result;
+            ManageMessageId success;
+            
             if (hasPassword)
             {
-                if (ModelState.IsValid)
-                {
-                    var result = await UserManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
-                    if (result.Succeeded)
-                    {
-                        user.LastPasswordChangedDate = DateTime.Today;
-                        _context.Entry(user).State = EntityState.Modified;
-                        await _context.SaveChangesAsync();
-                        return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
-                    }
-
-                    AddErrors(result);
-                }
-            }
-            else
-            {
+                result = await UserManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+                user.LastPasswordChangedDate = DateTime.Today;
+                _context.Entry(user).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                success = ManageMessageId.ChangePasswordSuccess;
+            } else {
                 // User does not have a password so remove any validation errors caused by a missing OldPassword field
                 var state = ModelState["OldPassword"];
                 state?.Errors.Clear();
-
-                if (!ModelState.IsValid) return View(model);
-                var result = await UserManager.AddPasswordAsync(user, model.NewPassword);
-                if (result.Succeeded)
-                {
-                    return RedirectToAction("Manage", new { Message = ManageMessageId.SetPasswordSuccess });
-                }
-
-                AddErrors(result);
+                result = await UserManager.AddPasswordAsync(user, model.NewPassword);
+                success = ManageMessageId.SetPasswordSuccess;
             }
+
+            if (result.Succeeded) {
+                return RedirectToAction("Manage", new { Message = success });
+            }
+
+            foreach (var error in result.Errors)
+                ModelState.AddModelError(error.Code, error.Description);
 
             // If we got this far, something failed, redisplay form
             return View(model);
         }
 
+        // GET: /Account/Edit
         [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult Edit(string id, ManageMessageId? Message = null)
+        public ActionResult Edit(string id)
         {
-            MacheteUser user = _context.Users.First(u => u.Id == id);
-            if (user == null)
-            {
-                return StatusCode(404);
-            }
-
-            EditUserViewModel model = new EditUserViewModel(user);
-
-            return View(model);
+            var user = _context.Users.First(u => u.Id == id);
+            if (user == null) return StatusCode(404);
+            return View(new EditUserViewModel(user));
         }
 
         [HttpPost]
@@ -322,10 +334,7 @@ namespace Machete.Web.Controllers
             if (ModelState.IsValid)
             {
                 var user = _context.Users.First(u => u.Id == model.Id);
-                string name = model.FirstName.Trim() + "." + model.LastName.Trim();
-                // Update the user data:
-                //user.FirstName = model.FirstName; //We can't have FirstName and
-                //user.LastName = model.LastName;   //LastName without refactor
+                var name = model.FirstName.Trim() + "." + model.LastName.Trim();
                 user.UserName = name;
                 user.LoweredUserName = name.ToLower();
                 user.Email = model.Email.Trim();
@@ -333,8 +342,10 @@ namespace Machete.Web.Controllers
                 user.IsApproved = model.IsApproved;
                 user.IsLockedOut = model.IsLockedOut;
                 var state = ModelState["NewPassword"];
-                bool changePassword = state.AttemptedValue != "";
-                bool hasPassword = HasPassword(user);
+                bool changePassword = !string.IsNullOrEmpty(state.AttemptedValue);
+                bool hasPassword = user.PasswordHash != null;
+                
+                // TODO this is unnecessarily complicated
                 if (changePassword && hasPassword)
                 {
                     var remove = await UserManager.RemovePasswordAsync(user);
@@ -383,12 +394,8 @@ namespace Machete.Web.Controllers
         public ActionResult Delete(string id = null)
         {
             var user = _context.Users.First(u => u.Id == id);
-            var model = new EditUserViewModel(user);
-            if (user == null)
-            {
-                return StatusCode(404);
-            }
-            return View(model);
+            if (user == null) return StatusCode(404);
+            return View(new EditUserViewModel(user));
         }
 
         [HttpPost, ActionName("Delete")]
@@ -405,12 +412,12 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult UserRoles(string id)
         {
-            var user = _context.Users.First(u => u.Id == id);
-            var model = new SelectUserRolesViewModel(user, _context);
-
-            return View(model);
+            var userBeingModified = _context.Users.First(u => u.Id == id);
+            List<IdentityRole> allRoles = _roleManager.Roles.ToList();
+            return View(new SelectUserRolesViewModel(userBeingModified, allRoles, UserManager));
         }
 
+        // note to self 2019-01-18; this part is working, don't touch it.
         [HttpPost]
         [Authorize(Roles = "Administrator, Manager")]
         [ValidateAntiForgeryToken]
@@ -418,71 +425,42 @@ namespace Machete.Web.Controllers
         {
             if (!ModelState.IsValid) return View();
 
+            var userBeingModified = await UserManager.FindByNameAsync(model.UserName);
+            
             foreach (var role in model.Roles)
             {
                 // Only administrators can provide administrator access
-                var user = await UserManager.FindByNameAsync(model.UserName);
-                
-                bool isAdminRestricted = !User.IsInRole("Administrator") && role.RoleName == "Administrator" ? true : false;
-                bool isUserInRole = await UserManager.IsInRoleAsync(user, role.RoleName);
+                if (!User.IsInRole("Administrator") && role.RoleName == "Administrator")
+                    continue;
 
-                // If role is deselected & user is assigned to this role - remove role from user
-                // TODO: provide error reporting - must be an administrator to modify administrator accounts
-                if (!isAdminRestricted)
+                bool userIsInRole = await UserManager.IsInRoleAsync(userBeingModified, role.RoleName);
+                
+                if ((role.Selected && userIsInRole) || (!role.Selected && !userIsInRole)) // then we don't care
+                    continue;
+
+                var result = new IdentityResult();
+                
+                if (role.Selected && !userIsInRole)
+                    result = await UserManager.AddToRoleAsync(userBeingModified, role.RoleName);
+                
+                if (!role.Selected && userIsInRole)
+                    result = await UserManager.RemoveFromRoleAsync(userBeingModified, role.RoleName);
+                
+                if (!result.Succeeded)
                 {
-                    var result = new IdentityResult();
-                    if (!role.Selected && isUserInRole)
-                    {
-                        result = await UserManager.RemoveFromRoleAsync(user, role.RoleName);
-                    }
-                    else if (role.Selected && !isUserInRole)
-                    {
-                        result = await UserManager.AddToRoleAsync(user, role.RoleName);
-                    }
-                    if (!result.Succeeded)
-                    {
-                        throw new Exception("AccountController, UserRoles method, `result` failed: " + result.Errors);
-                    }
+                    throw new Exception("AccountController, UserRoles method, `result` failed: " + result.Errors);
                 }
             }
-            // Display user account index view
-            return RedirectToAction("index");
-            // Re-display current user roles view
+
+            return RedirectToAction("Index");
         }
 
-        //
         // GET: /Account/LogOff
         [AllowAnonymous]
-        public ActionResult LogOff()
+        public async Task<ActionResult> LogOff()
         {
-            SignInManager.SignOutAsync();
+            await SignInManager.SignOutAsync();
             return RedirectToAction("Login", "Account");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && UserManager != null)
-            {
-                UserManager.Dispose();
-                UserManager = null;
-            }
-            base.Dispose(disposing);
-        }
-
-        // Used for XSRF protection when adding external logins
-
-        private void AddErrors(IdentityResult result)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(error.Code, error.Description);
-            }
-        }
-
-        private bool HasPassword(MacheteUser user)
-        {
-            // Return whether user has a password hash
-            return user.PasswordHash != null;
         }
 
         public enum ManageMessageId
@@ -491,23 +469,6 @@ namespace Machete.Web.Controllers
             SetPasswordSuccess,
             RemoveLoginSuccess,
             Error
-        }
-
-        private ActionResult RedirectToLocal(string returnUrl)
-        {
-            if (Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-
-            return RedirectToAction("Index", "Home");
-        }
-
-        // Change Culture (DEPRECATED)
-        public ActionResult ChangeCulture(string lang, string returnUrl)
-        {
-            Session["Culture"] = new CultureInfo(lang);
-            return Redirect(returnUrl);
         }
     }
 }

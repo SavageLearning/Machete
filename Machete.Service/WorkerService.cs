@@ -101,7 +101,7 @@ namespace Machete.Service
             record.Person = pRepo.GetById(record.ID);
             updateComputedFields(ref record);
             var result = base.Create(record, user);
-            uow.Commit();
+            uow.SaveChanges();
             return result;
         }
 

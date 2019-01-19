@@ -6,10 +6,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
+using Machete.Api.Attributes;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Api.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class TransportProvidersController : MacheteApiController
     {
         private readonly ITransportProvidersService serv;
@@ -22,8 +25,8 @@ namespace Machete.Api.Controllers
         }
 
         // GET: api/TransportRule
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Any })]
-        public IHttpActionResult Get()
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Any })]
+        public ActionResult Get()
         {
             try
             {
@@ -31,26 +34,26 @@ namespace Machete.Api.Controllers
                     .Select(e => 
                     map.Map<Domain.TransportProvider, ViewModel.TransportProvider>(e))
                     .AsEnumerable();
-                return Json(new { data = result });
+                return new JsonResult(new { data = result });
             }
             catch (Exception ex)
             {
-                return Json(ex);
+                return new JsonResult(ex);
             }
         }
 
         // GET: api/TransportProvider/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Any })]
-        public IHttpActionResult Get(int id)
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Any })]
+        public ActionResult Get(int id)
         {
             var result = map.Map<Domain.TransportProvider, ViewModel.TransportProvider>(serv.Get(id));
             if (result == null) return NotFound();
 
-            return Json(new { data = result });
+            return new JsonResult(new { data = result });
         }
 
         // POST: api/TransportProvider
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Manager })]
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Manager })]
         public void Post([FromBody]ViewModel.TransportProvider value)
         {
             var domain = map.Map<ViewModel.TransportProvider, Domain.TransportProvider>(value);
@@ -58,7 +61,7 @@ namespace Machete.Api.Controllers
         }
 
         // PUT: api/TransportProvider/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Manager })]
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Manager })]
         public void Put(int id, [FromBody]ViewModel.TransportProvider value)
         {
             var domain = serv.Get(value.id);
@@ -68,7 +71,7 @@ namespace Machete.Api.Controllers
         }
 
         // DELETE: api/TransportProvider/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
         public void Delete(int id)
         {
         }
@@ -76,10 +79,10 @@ namespace Machete.Api.Controllers
         //
         // TransportProvider Availabilities
 
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Any })]
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Any })]
         [Route("api/transportproviders/{tpid}/availabilities")]
         [HttpGet]
-        public IHttpActionResult ARGet(int tpid)
+        public ActionResult ARGet(int tpid)
         {
             try
             {
@@ -87,19 +90,19 @@ namespace Machete.Api.Controllers
                     .Select(e =>
                     map.Map<Domain.TransportProviderAvailability, TransportProviderAvailability>(e))
                     .AsEnumerable();
-                return Json(new { data = result });
+                return new JsonResult(new { data = result });
             }
             catch (Exception ex)
             {
-                return Json(ex);
+                return new JsonResult(ex);
             }
         }
 
         // POST: api/TransportProvider/{tpid}/AvailabilityRules
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
         [Route("api/transportproviders/{tpid}/availabilities")]
         [HttpPost]
-        public IHttpActionResult ARPost(int tpid, [FromBody]TransportProviderAvailability value)
+        public ActionResult ARPost(int tpid, [FromBody]TransportProviderAvailability value)
         {
             var domain = map.Map<TransportProviderAvailability, Domain.TransportProviderAvailability>(value);
 
@@ -107,16 +110,15 @@ namespace Machete.Api.Controllers
             {
                 var entity = serv.CreateAvailability(tpid, domain, userEmail);
                 var result = map.Map<Domain.TransportProviderAvailability, TransportProviderAvailability>(entity);
-                return Json(new { data = result });
+                return new JsonResult(new { data = result });
 
             }
             catch (Exception e)
             {
-                throw new HttpResponseException(
-                    new HttpResponseMessage(HttpStatusCode.InternalServerError) {
-                        Content = new StringContent(e.Message),
-                        ReasonPhrase = "Create new availability failed"
-                    });
+                return StatusCode((int)HttpStatusCode.InternalServerError, new {
+                    Content = new StringContent(e.Message),
+                    ReasonPhrase = "Create new availability failed"
+                });
             }
         }
     }

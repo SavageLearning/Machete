@@ -6,10 +6,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
+using Machete.Api.Attributes;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Api.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class TransportRulesController : MacheteApiController
     {
         private readonly ITransportRuleService serv;
@@ -22,8 +25,8 @@ namespace Machete.Api.Controllers
         }
 
         // GET: api/TransportRule
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Employer })]
-        public IHttpActionResult Get()
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Employer })]
+        public ActionResult Get()
         {
 
             try
@@ -31,11 +34,11 @@ namespace Machete.Api.Controllers
                 var result = serv.GetAll()
                     .Select(e => map.Map<Domain.TransportRule, ViewModel.TransportRule>(e))
                     .AsEnumerable();
-                return Json(new { data = result });
+                return new JsonResult(new { data = result });
             }
             catch (Exception ex)
             {
-                return Json(ex);
+                return new JsonResult(ex);
             }
         }
 

@@ -3,7 +3,7 @@
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
 // License:  GPL v3
-// Project:  Machete.Test
+// Project:  Machete.Test.Old
 // Contact:  savagelearning
 // 
 // Copyright 2011 Savage Learning, LLC., all rights reserved.
@@ -26,6 +26,7 @@ using Machete.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Globalization;
+using Machete.Test.Integration.Fluent;
 
 namespace Machete.Test.Integration.Domain
 {

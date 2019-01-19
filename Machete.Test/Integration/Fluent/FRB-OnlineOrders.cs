@@ -1,16 +1,7 @@
-﻿using Machete.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Practices.Unity;
-
-namespace Machete.Test.Integration
+﻿namespace Machete.Test.Integration.Fluent
 {
-    public partial class FluentRecordBase : IDisposable
+    public partial class FluentRecordBase
     {
-
         public Api.ViewModel.WorkOrder CloneOnlineOrder()
         {
             var wo = (Api.ViewModel.WorkOrder)Records.onlineOrder.Clone();

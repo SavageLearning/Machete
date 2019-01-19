@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "UserRoles";
 }
+
 <div class="account-background">
     <h2>Roles for @Html.DisplayFor(model => model.FirstName) @Html.DisplayFor(model => model.LastName)</h2>
     <hr />
@@ -26,12 +27,8 @@
 
             <table>
                 <tr>
-                    <th>
-                        Select
-                    </th>
-                    <th>
-                        Role
-                    </th>
+                    <th>Select</th>
+                    <th>Role</th>
                 </tr>
                 @Html.EditorFor(model => model.Roles)
             </table>
@@ -45,4 +42,8 @@
             </div>
         </div>
     }
+    
+    <div style="clear: left;">
+        @Html.ActionLink("Back to List", "Index")
+    </div>
 </div>

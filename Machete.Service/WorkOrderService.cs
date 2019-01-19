@@ -271,24 +271,23 @@ namespace Machete.Service
 
         public void Save(WorkOrder workOrder, List<WorkerRequest> wrList, string user)
         {
-            // TODO get this working again
             // Stale requests to remove
-//            foreach (var rem in workOrder.workerRequests.Except<WorkerRequest>(wrList, new WorkerRequestComparer()).ToArray())
-//            {
-//                var request = wrServ.GetByWorkerID(workOrder.ID, rem.WorkerID);
-//                wrServ.Delete(request.ID, user);
-//                workOrder.workerRequests.Remove(rem);
-//            }
+            foreach (var rem in workOrder.workerRequests.Except(wrList, new WorkerRequestComparer()).ToArray())
+            {
+                var request = wrServ.GetByWorkerID(workOrder.ID, rem.WorkerID);
+                wrServ.Delete(request.ID, user);
+                workOrder.workerRequests.Remove(rem);
+            }
 
             // New requests to add
-//            foreach (var add in wrList.Except<WorkerRequest>(workOrder.workerRequests, new WorkerRequestComparer()))
-//            {
-//                add.workOrder = workOrder;
-//                add.workerRequested = wServ.Get(add.WorkerID);
-//                add.updatedByUser(user);
-//                add.createdByUser(user);
-//                workOrder.workerRequests.Add(add);
-//            }
+            foreach (var add in wrList.Except(workOrder.workerRequests, new WorkerRequestComparer()))
+            {
+                add.workOrder = workOrder;
+                add.workerRequested = wServ.Get(add.WorkerID);
+                add.updatedByUser(user);
+                add.createdByUser(user);
+                workOrder.workerRequests.Add(add);
+            }
 
             Save(workOrder, user);
         }

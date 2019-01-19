@@ -210,7 +210,7 @@ namespace Machete.Service
             var wsi = IsSignedIn(dwccardnum, dateforsignin);
             if (wsi != null) return wsi;
 
-            var signin = new Domain.WorkerSignin();
+            var signin = new WorkerSignin();
             signin.WorkerID = wfound.ID;
             signin.dwccardnum = dwccardnum;
             signin.dateforsignin = new DateTime(dateforsignin.Year, dateforsignin.Month, dateforsignin.Day,
@@ -222,16 +222,15 @@ namespace Machete.Service
             return Create(signin, user);
         }
 
-        public Domain.WorkerSignin IsSignedIn(int dwccardnum, DateTime dateforsignin)
+        public WorkerSignin IsSignedIn(int dwccardnum, DateTime dateforsignin)
         {
             // get uses FirstOrDefault(), which returns null for default
             // the GetAllQ is necessary to access the IQueryable object;
             // the IQueryable is necessary to use the DbFunctions, which 
             // sends the date comparison to the DB
-            var result = repo.GetAllQ().Where(t =>
-                             t.dateforsignin.Date == dateforsignin.Date &&
-                            t.dwccardnum == dwccardnum).FirstOrDefault();
-            return result;
+            return repo.GetAllQ()
+                .FirstOrDefault(t => 
+                    t.dateforsignin.Date == dateforsignin.Date && t.dwccardnum == dwccardnum);
         }
     }
 }

@@ -1,18 +1,36 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Machete.Service;
 using Machete.Service.DTO;
-using OfficeOpenXml;
 using System;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Web.Http;
+using Machete.Api.Attributes;
+using Microsoft.AspNetCore.Mvc;
 
+// ReSharper disable UnusedMember.Global
 namespace Machete.Api.Controllers
 {
-    public class ExportsController : ApiController
+    public enum ValidTableNames {
+        Activities,
+        ActivitySignins,
+        Emails,
+        Employers,
+        Events,
+        Lookups,
+        Persons,
+        ReportDefinitions,
+        WorkAssignments,
+        WorkerRequests,
+        Workers,
+        WorkerSignins,
+        WorkOrders
+    }
+    
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ExportsController : ControllerBase
     {
         private readonly IReportsV2Service serv;
         private readonly IMapper map;
@@ -24,10 +42,10 @@ namespace Machete.Api.Controllers
 
         //  GET api/<controller>
         // [Authorize(Roles = "Administrator, Manager")]
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
-        public IHttpActionResult Get()
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        public ActionResult Get()
         {
-            var tables = new string[] {
+            var tables = new[] {
                 "Activities",
                 "ActivitySignins",
                 "Emails",
@@ -44,20 +62,19 @@ namespace Machete.Api.Controllers
             };
             var result = tables.Select(a => new { name = a });
 
-            return Json(new { data = result });
+            return new JsonResult(new { data = result });
         }
         //[Authorize(Roles = "Administrator, Manager")]
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
-        public IHttpActionResult Get(string id)
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        public ActionResult Get(string tableName)
         {
-
-            var result = serv.getColumns(id);
-            // TODO Use Automapper to return column deserialized
-            return Json(new { data = result });
+            Enum.TryParse<ValidTableNames>(tableName, out var name); // validate that we've only received a table name
+            var result = serv.getColumns(tableName);
+            return new JsonResult(new { data = result });
         }
 
         //[Authorize(Roles = "Administrator")]
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
         // https://stackoverflow.com/questions/36274985/how-to-map-webapi-routes-correctly
         // http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api#restful
         // https://docs.microsoft.com/en-us/aspnet/web-api/overview/formats-and-model-binding/parameter-binding-in-aspnet-web-api
@@ -67,9 +84,7 @@ namespace Machete.Api.Controllers
         [HttpGet, Route("{ZZtablename}/execute")]
         public HttpResponseMessage Execute(string ZZtablename, string filterField, DateTime? beginDate, DateTime? endDate)
         {
-            var includeOptions = this.Request.GetQueryNameValuePairs()
-                .ToDictionary(kv => kv.Key, kv => kv.Value,
-                            StringComparer.OrdinalIgnoreCase);
+            var includeOptions = Request.Query.ToDictionary(kv => kv.Key, kv => kv.Value.ToString()); // TODO so sketch
             includeOptions.Remove("filterField");
             includeOptions.Remove("beginDate");
             includeOptions.Remove("endDate");
@@ -97,14 +112,14 @@ namespace Machete.Api.Controllers
 
         // PUT api/values/5
         //[Authorize(Roles = "Administrator")]
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
         public void Put(int id, [FromBody]string value)
         {
         }
 
         // DELETE api/values/5
         //[Authorize(Roles = "Administrator")]
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
         public void Delete(int id)
         {
         }

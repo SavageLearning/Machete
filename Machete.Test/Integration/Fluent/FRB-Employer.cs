@@ -1,28 +1,22 @@
-﻿using Machete.Data;
+﻿using System;
 using Machete.Domain;
 using Machete.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Practices.Unity;
+using Microsoft.Extensions.DependencyInjection;
+using ViewModel = Machete.Web.ViewModel;
 
-namespace Machete.Test.Integration
+namespace Machete.Test.Integration.Fluent
 {
-    public partial class FluentRecordBase : IDisposable
+    public partial class FluentRecordBase
     {
         private IEmployerService _servE;
         private Employer _emp;
 
-        public FluentRecordBase AddEmployer(
-            DateTime? datecreated = null,
-            DateTime? dateupdated = null
-        )
+        public void AddEmployer(DateTime? datecreated = null,
+            DateTime? dateupdated = null)
         {
             //
             // DEPENDENCIES
-            _servE = container.Resolve<IEmployerService>();
+            _servE = container.GetRequiredService<IEmployerService>();
             //
             // ARRANGE
             _emp = (Employer)Records.employer.Clone();
@@ -31,7 +25,6 @@ namespace Machete.Test.Integration
             //
             // ACT
             _servE.Create(_emp, _user);
-            return this;
         }
 
         public Employer ToEmployer()
@@ -40,10 +33,10 @@ namespace Machete.Test.Integration
             return _emp;
         }
 
-        public Web.ViewModel.Employer CloneEmployer()
+        public ViewModel.Employer CloneEmployer()
         {
-            AddMapper();
-            var e = _webMap.Map<Machete.Domain.Employer, Web.ViewModel.Employer>((Employer)Records.employer.Clone());
+            ToWebMapper();
+            var e = _webMap.Map<Employer, ViewModel.Employer>((Employer)Records.employer.Clone());
             e.name = RandomString(10);
             e.email = "changeme@gmail.com";
             return e;

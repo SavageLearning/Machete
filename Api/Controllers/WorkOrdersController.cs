@@ -3,14 +3,18 @@ using Machete.Service;
 using DTO = Machete.Service.DTO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Http;
 using Newtonsoft.Json;
 using Machete.Api.ViewModel;
 using System.Security.Claims;
+using Machete.Api.Attributes;
 using Machete.Domain;
+
+using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Api.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class WorkOrdersController : MacheteApiController
     {
         private readonly IWorkOrderService serv;
@@ -27,8 +31,8 @@ namespace Machete.Api.Controllers
 
 
         // GET api/values
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
-        public IHttpActionResult Get()
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
+        public ActionResult Get()
         {
             var vo = new viewOptions();
             vo.displayLength = 10;
@@ -39,19 +43,19 @@ namespace Machete.Api.Controllers
                 .Select(
                     e => map.Map<DTO.WorkOrdersList, ViewModel.WorkOrder>(e)
                 ).AsEnumerable();            
-            return Json(new { data =  result });
+            return new JsonResult(new { data =  result });
         }
 
         // GET api/values/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
-        public IHttpActionResult Get(int id)
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
+        public ActionResult Get(int id)
         {
             var result = map.Map<Domain.WorkOrder, ViewModel.WorkOrder>(serv.Get(id));
-            return Json(new { data = result });
+            return new JsonResult(new { data = result });
         }
 
         // POST api/values
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
         public void Post([FromBody]ViewModel.WorkOrder order)
         {
             var domain = map.Map<ViewModel.WorkOrder, Domain.WorkOrder>(order);
@@ -59,7 +63,7 @@ namespace Machete.Api.Controllers
         }
 
         // PUT api/values/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
         public void Put(int id, [FromBody]ViewModel.WorkOrder order)
         {
             var domain = serv.Get(order.id);
@@ -69,7 +73,7 @@ namespace Machete.Api.Controllers
         }
 
         // DELETE api/values/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
         public void Delete(int id)
         {
         }

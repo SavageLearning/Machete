@@ -3,7 +3,7 @@
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
 // License:  GPL v3
-// Project:  Machete.Test
+// Project:  Machete.Test.Old
 // Contact:  savagelearning
 // 
 // Copyright 2011 Savage Learning, LLC., all rights reserved.
@@ -21,20 +21,23 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
-using Machete.Data.Infrastructure;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Controllers;
 using Machete.Web.Helpers;
+using Machete.Web.Maps;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Web.Mvc;
-using System.Web.Routing;
+using ViewModel = Machete.Web.ViewModel;
 
-namespace Machete.Test.Unit.Controller
+namespace Machete.Test.UnitTests.Controllers
 {
     /// <summary>
     /// Summary description for PersonControllerUnitTests
@@ -43,168 +46,172 @@ namespace Machete.Test.Unit.Controller
     [TestClass]
     public class PersonTests
     {
-        Mock<IPersonService> _serv;
-        Mock<IDatabaseFactory> dbfactory;
-        Mock<IDefaults> def;
-        Mock<IMapper> map;
-        PersonController _ctrlr;
-        FormCollection fakeform;
+        public PersonTests() { }
+        
+        Mock<IPersonService> _service;
+        Mock<IDefaults> _defaults;
+        IMapper _mapper;
+        PersonController _controller;
+        private ViewModel.Person _personView;
+        private Person _person;
+        private Mock<IModelBindingAdaptor> _adaptor;
+        private int _testid;
+        private Person _fakeperson;
+        private Person _savedperson;
+        public PersonTests(Person savedperson)
+        {
+            _savedperson = savedperson;
+        }
 
         [TestInitialize]
         public void TestInitialize()
         {
-            _serv = new Mock<IPersonService>();
-            dbfactory = new Mock<IDatabaseFactory>();
-            def = new Mock<IDefaults>();
-            map = new Mock<IMapper>();
-            _ctrlr = new PersonController(_serv.Object, def.Object, map.Object);
-            _ctrlr.SetFakeControllerContext();
-            fakeform = new FormCollection();
-            fakeform.Add("ID", "12345");
-            fakeform.Add("firstname1", "Ronald");
-            fakeform.Add("lastname1", "Reagan");
-            // TODO: Include Lookups in Dependency Injection, remove initialize statements
+            _service = new Mock<IPersonService>();
+            _defaults = new Mock<IDefaults>();
+            _adaptor = new Mock<IModelBindingAdaptor>();
+            
+            _person = new Person {
+                firstname1 = "Ronald",
+                lastname1 = "Reagan",
+                ID = 12345
+            };
+            _personView = new ViewModel.Person {
+                firstname1 = "Ronald",
+                lastname1 = "Reagan"
+            };
+            
+            _testid = 4242;
+            _fakeperson = new Person {
+                ID = _testid,
+                firstname1 = "blah",
+                lastname1 = "UnitTest",
+                gender = 47
+            };
+            _savedperson = _fakeperson;
+
+            _service.Setup(service => service.Create(_person, "UnitTest")).Returns(_person);
+            _service.Setup(service => service.Get(_testid)).Returns(_fakeperson);
+            _service.Setup(service => service.Save(It.IsAny<Person>(), It.IsAny<string>()))
+                 .Callback((Person p, string str) => { });
+            _service.Setup(service => service.Save(_person, "UnitTest"));
+            _service.Setup(service => service.Get(12345)).Returns(_person);
+            _service.Setup(service => service.Save(_fakeperson, "UnitTest"))
+                .Callback((Person person, string str) => { person = _savedperson; });
+            
+            var mapperConfig = new MvcMapperConfiguration().Config;
+            _mapper = mapperConfig.CreateMapper();
+            
+            _adaptor.Setup(dependency => 
+                    dependency.TryUpdateModelAsync(It.IsAny<MacheteController>(), It.IsAny<Person>()))
+                .Returns(Task.FromResult(true));
+            
+            _controller = new PersonController(_service.Object, _defaults.Object, _mapper, _adaptor.Object);
         }
         //
         //   Testing /Index functionality
         //
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
-        public void index_get_returns_ActionResult()
+        public async Task index_get_returns_ActionResult()
         {
             //Arrange
+            
             //Act
-            var result = (ViewResult)_ctrlr.Index();
+            var result = await _controller.Index() as ViewResult;
             //Assert
             Assert.IsInstanceOfType(result, typeof(ActionResult));
         }
-        //
+
         //   Testing /Create functionality
-        //
-        #region createtests
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
-        public void create_get_returns_person()
+        public async Task create_get_returns_person()
         {
             //Arrange
-            var p = new Machete.Web.ViewModel.Person();
-            map.Setup(x => x.Map<Domain.Person, Machete.Web.ViewModel.Person>(It.IsAny<Domain.Person>()))
-                .Returns(p);
+            
             //Act
-            var result = (PartialViewResult)_ctrlr.Create();
+            var result = await _controller.Create() as PartialViewResult;
             //Assert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Web.ViewModel.Person));
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(ViewModel.Person));
         }
-        [Ignore]
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
-        public void create_post_valid_returns_JSON()
+        public async Task create_valid_post_returns_json()
         {
             //Arrange
-            var person = new Person();
-            _serv.Setup(p => p.Create(person, "UnitTest")).Returns(person);
-            _ctrlr.ValueProvider = fakeform.ToValueProvider();
+
             //Act
-            var result = (JsonResult)_ctrlr.Create(person, "UnitTest");
+            var result = await _controller.Create(_person, "UnitTest") as JsonResult;
+            
             //Assert
-            IDictionary<string, object> data = new RouteValueDictionary(result.Data);
+            Assert.IsNotNull(result);
+            IDictionary<string, object> data = new RouteValueDictionary(result.Value);
             Assert.AreEqual(12345, data["iNewID"]);
             Assert.AreEqual("Ronald Reagan", data["sNewLabel"]);
             Assert.AreEqual("/Person/Edit/12345", data["sNewRef"]);
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
-        [ExpectedException(typeof(InvalidOperationException),
-            "An invalid UpdateModel was inappropriately allowed.")]
-        public void create_post_invalid_throws_exception()
+        [ExpectedException(typeof(InvalidOperationException), "An invalid UpdateModel was inappropriately allowed.")]
+        public async Task create_post_invalid_throws_exception()
         {
             //Arrange
-            var person = new Person();
-            _serv.Setup(p => p.Create(person, "UnitTest")).Returns(person);
-            fakeform.Remove("firstname1");
-            _ctrlr.ValueProvider = fakeform.ToValueProvider();
+            var person = new Person { firstname1 = null };
+            _controller.ModelState.AddModelError("firstname1", "Required");
+
             //Act
-            _ctrlr.Create(person, "UnitTest");
+            await _controller.Create(person, "UnitTest");
+            
             //Assert
         }
-        #endregion
-        //
+
         //   Testing /Edit functionality
-        //
         #region edittests
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
-        public void edit_get_returns_person()
+        public async Task edit_get_returns_person()
         {
             //Arrange
-            var pp = new Machete.Web.ViewModel.Person();
-            map.Setup(x => x.Map<Domain.Person, Machete.Web.ViewModel.Person>(It.IsAny<Domain.Person>()))
-                .Returns(pp);
-            _serv = new Mock<IPersonService>();
-            int testid = 4242;
-            Person fakeperson = new Person();
-            _serv.Setup(p => p.Get(testid)).Returns(fakeperson);
-            var _ctrlr = new PersonController(_serv.Object, def.Object, map.Object);
+            _service.Setup(p => p.Get(_testid)).Returns(_person);
+            
             //Act
-            var result = (PartialViewResult)_ctrlr.Edit(testid);
+            var result = await _controller.Edit(_testid) as PartialViewResult;
+            
             //Assert
+            Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result.ViewData.Model, typeof(Web.ViewModel.Person));
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
-        public void edit_post_valid_updates_model_returns_JSON()
+        public async Task edit_post_valid_updates_model_returns_JSON()
         {
             //Arrange
-            _serv = new Mock<IPersonService>();
-            int testid = 4242;
-            FormCollection fakeform = new FormCollection();
-            fakeform.Add("ID", testid.ToString());
-            fakeform.Add("firstname1", "blah");     //Every required field must be populated,
-            fakeform.Add("lastname1", "UnitTest");  //or result will be null.
-            fakeform.Add("gender", "47");
-            Person fakeperson = new Person();
-            Person savedperson = new Person();
-            string user = "";
-            _serv.Setup(p => p.Get(testid)).Returns(fakeperson);
-            _serv.Setup(x => x.Save(It.IsAny<Person>(),
-                                          It.IsAny<string>())
-                                         ).Callback((Person p, string str) =>
-                                                {
-                                                    savedperson = p;
-                                                    user = str;
-                                                });
-            var _ctrlr = new PersonController(_serv.Object, def.Object, map.Object);
-            _ctrlr.SetFakeControllerContext();
-            _ctrlr.ValueProvider = fakeform.ToValueProvider();
+            
             //Act
-            var result = _ctrlr.Edit(testid, "UnitTest") as JsonResult;
+            var result = await _controller.Edit(_testid, "UnitTest") as JsonResult;
+            
             //Assert
-            IDictionary<string, object> data = new RouteValueDictionary(result.Data);
+            Assert.IsNotNull(result);
+            IDictionary<string, object> data = new RouteValueDictionary(result.Value);
             Assert.AreEqual("OK", data["status"]);
-            Assert.AreEqual(fakeperson, savedperson);
-            Assert.AreEqual(savedperson.firstname1, "blah");
-            Assert.AreEqual(savedperson.lastname1, "UnitTest");
-            Assert.AreEqual(savedperson.gender, 47);
+            Assert.AreEqual(_fakeperson, _savedperson);
+            Assert.AreEqual("blah", _savedperson.firstname1);
+            Assert.AreEqual("UnitTest", _savedperson.lastname1);
+            Assert.AreEqual(47, _savedperson.gender);
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
-        [ExpectedException(typeof(InvalidOperationException),
-            "An invalid UpdateModel was inappropriately allowed.")]
-        public void edit_post_invalid_throws_exception()
+        [ExpectedException(typeof(InvalidOperationException), "An invalid UpdateModel was inappropriately allowed.")]
+        public async Task edit_post_invalid_throws_exception()
         {
             //Arrange
             var person = new Person();
-            int testid = 12345;
-            //
-            // Mock service and setup SavePerson mock
-            _serv.Setup(p => p.Save(person, "UnitTest"));
-            _serv.Setup(p => p.Get(testid)).Returns(person);
-            //
-            // Mock HttpContext so that ModelState and FormCollection work
-            fakeform.Remove("firstname1");
-            _ctrlr.ValueProvider = fakeform.ToValueProvider();
-            //
+            _service.Setup(service => service.Save(person, "UnitTest"));
+            _service.Setup(service => service.Get(12345)).Returns(person);
+            _controller.ModelState.AddModelError("TestError", "foo");
+
             //Act
-            _ctrlr.Edit(testid, "UnitTest");
+            await _controller.Edit(12345, "UnitTest");
+            
             //Assert
-            //IDictionary<string, object> data = new RouteValueDictionary(result.Data);
-            //Assert.AreEqual("Controller UpdateModel failure on recordtype: person", data["status"]);
         }
         #endregion
 
@@ -213,19 +220,16 @@ namespace Machete.Test.Unit.Controller
         //
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
-        public void delete_post_returns_JSON()
+        public async Task delete_post_returns_JSON()
         {
             //Arrange
-            _serv = new Mock<IPersonService>();
-            int testid = 4242;
-            FormCollection fakeform = new FormCollection();
-            var _ctrlr = new PersonController(_serv.Object, def.Object, map.Object);
-            _ctrlr.SetFakeControllerContext();
-            _ctrlr.ValueProvider = fakeform.ToValueProvider();
+                        
             //Act
-            JsonResult result = _ctrlr.Delete(testid, "UnitTest") as JsonResult;
+            var result = await _controller.Delete(_testid, "UnitTest") as JsonResult;
+ 
             //Assert
-            IDictionary<string, object> data = new RouteValueDictionary(result.Data);
+            Assert.IsNotNull(result);
+            IDictionary<string, object> data = new RouteValueDictionary(result.Value);
             Assert.AreEqual("OK", data["status"]);
             Assert.AreEqual(4242, data["deletedID"]);            
         }

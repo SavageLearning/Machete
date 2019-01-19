@@ -23,7 +23,6 @@
 #endregion
 
 using System;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -44,7 +43,6 @@ namespace Machete.Web.Controllers
         private readonly IImageService iServ;
         private readonly IMapper map;
         private readonly IDefaults def;
-        CultureInfo CI;
         //
         //
         public EventController(IEventService eventService, 
@@ -57,11 +55,7 @@ namespace Machete.Web.Controllers
             this.map = map;
             this.def = def;
         }
-        protected override void Initialize(ActionContext requestContext)
-        {
-            base.Initialize(requestContext);
-            CI = Session["Culture"];
-        }
+
         //
         //
         [Authorize(Roles = "Manager, Administrator")]
@@ -69,7 +63,6 @@ namespace Machete.Web.Controllers
         {            
             //Get all the records
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
-            vo.CI = CI;
             dataTableResult<EventList> list = serv.GetIndexView(vo);
             //return what's left to datatables
             var result = list.query

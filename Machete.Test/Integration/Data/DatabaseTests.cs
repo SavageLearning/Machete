@@ -22,12 +22,14 @@
 // 
 #endregion
 using Machete.Domain;
-using Machete.Test.Integration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Machete.Data;
+using Machete.Data.Initialize;
+using Machete.Test.Integration.Fluent;
+using Microsoft.Extensions.DependencyInjection;
+using DbFunctions = Machete.Service.DbFunctions;
 
 namespace Machete.Test.Integration.Data
 {
@@ -40,7 +42,7 @@ namespace Machete.Test.Integration.Data
         public void Initialize()
         {
             frb = new FluentRecordBase();
-            frb.AddDBFactory(connStringName: "MacheteConnection");
+            //frb._dbContext = frb.container.GetRequiredService<MacheteContext>();
         }
         /// <summary>
         /// Used with SQL Profiler to see what SQL is produced
@@ -52,9 +54,9 @@ namespace Machete.Test.Integration.Data
             var worker = frb.AddWorkerSignin().ToWorker();
             var signin = frb.ToWorkerSignin();
             // Act
-            var q = frb.ToFactory().Get().WorkerSignins.AsQueryable();
+            var q = frb.ToFactory().WorkerSignins.AsQueryable();
             q = q.Where(r => r.dwccardnum == signin.dwccardnum
-                          && DbFunctions.DiffDays(r.dateforsignin, signin.dateforsignin) == 0 ? true : false);           
+                             && DbFunctions.DiffDays(r.dateforsignin, signin.dateforsignin) == 0);           
             WorkerSignin result = q.FirstOrDefault();
             // Assert
             Assert.IsNotNull(result.ID);
@@ -68,13 +70,15 @@ namespace Machete.Test.Integration.Data
         public void MacheteReportDefinitions_Initialize_counts_match()
         {
             // Arrange - load test records
-            var context = frb.ToFactory().Get();
+            var context = frb.ToFactory();
             context.Database.ExecuteSqlCommand("TRUNCATE TABLE ReportDefinitions");
-            var cache = Machete.Data.MacheteReportDefinitions.cache;
-            var count = cache.Count();
+            var cache = MacheteReportDefinitions.cache;
+            var count = cache.Count;
+            
             // Act
-            Machete.Data.MacheteReportDefinitions.Initialize(context);
-            var result = frb.ToFactory().Get().ReportDefinitions.Count();
+            MacheteReportDefinitions.Initialize(context);
+            var result = frb.ToFactory().ReportDefinitions.Count();
+            
             // Assert
             Assert.AreEqual(count, result, "static cache and DB report definitions' count not equal");
         }

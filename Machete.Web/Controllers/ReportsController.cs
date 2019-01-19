@@ -1,4 +1,3 @@
-#region COPYRIGHT
 // File:     ReportsController.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -23,11 +22,9 @@
 //
 // forked at http://www.github.com/chaim1221/machete/
 // 
-#endregion
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using AutoMapper;
 using Machete.Service;
@@ -39,14 +36,12 @@ using String = System.String;
 
 namespace Machete.Web.Controllers
 {
-    #region public class ReportsController...
     [ElmahHandleError]
     public class ReportsController : MacheteController
     {
         private readonly IReportService repServ;
         private readonly IMapper map;
         private readonly IDefaults def;
-        CultureInfo CI;
 
         public ReportsController(IReportService repServ,
             IDefaults def,
@@ -57,39 +52,17 @@ namespace Machete.Web.Controllers
             this.def = def;
         }
 
-        /// <summary>
-        /// Initialize the controller context for the reports.
-        /// </summary>
-        /// <param name="requestContext">RequestContext</param>
-        protected override void Initialize(ActionContext requestContext)
-        {
-            base.Initialize(requestContext);
-            CI = Session["Culture"];
-        }
-
-    #endregion
-        #region Index
-
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Index()
         {
             return View();
         }
-        #endregion
 
-        #region PartialViews
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Summary()
         {
             return PartialView();
         }
-
-        // TODO where is this view?
-//        [Authorize(Roles = "Administrator, Manager")]
-//        public ActionResult Orders()
-//        {
-//            return PartialView();
-//        }
 
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Employers()
@@ -108,10 +81,6 @@ namespace Machete.Web.Controllers
         {
             return PartialView();
         }
-       
-        #endregion
-
-        #region ExternalViews
 
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult PrintView(DateTime date, string typeOfReport)
@@ -121,10 +90,7 @@ namespace Machete.Web.Controllers
             view.typeOfReport = typeOfReport;
             return View(view);
         }
-        #endregion
 
-        #region AjaxHandlers
-        #region Summary (Orders) Reports
         /// <summary>
         /// Daily, Casa Latina == dcl. This is a daily report for Machete, different than the Work Order
         /// Status summary, and part of the summary reports.
@@ -177,7 +143,7 @@ namespace Machete.Web.Controllers
             DateTime weekDate;
             DateTime beginDate;
             DateTime endDate;
-            dataTableResult<WeeklySumData> wec;
+            dataTableResult<WeeklySummaryData> wec;
 
             // jQuery passes in parameters that must be mapped to viewOptions
             weekDate = voDate(param);
@@ -225,7 +191,7 @@ namespace Machete.Web.Controllers
             DateTime monthDate;
             DateTime beginDate;
             DateTime endDate;
-            dataTableResult<MonthlySumData> mwd;
+            dataTableResult<MonthlySummaryData> mwd;
 
             monthDate = voDate(param);
             beginDate = new DateTime(monthDate.Year, monthDate.Month, 1, 0, 0, 0);
@@ -316,9 +282,7 @@ namespace Machete.Web.Controllers
                 aaData = result
             });
         }
-        #endregion
 
-        #region Activities Reports
         [Authorize(Roles = "Administrator, Manager")]
         public JsonResult AjaxWeekAct(jQueryDataTableParam param)
         {
@@ -458,9 +422,7 @@ namespace Machete.Web.Controllers
                 aaData = result
             });
         }
-        #endregion
 
-        #region Worker Reports
         [Authorize(Roles = "Administrator, Manager")]
         public JsonResult AjaxWeekWkr(jQueryDataTableParam param)
         {
@@ -558,9 +520,7 @@ namespace Machete.Web.Controllers
                 aaData = result
             });
         }
-        #endregion
 
-        #region Employer Reports
         [Authorize(Roles = "Administrator, Manager")]
         public JsonResult AjaxWeekEmp(jQueryDataTableParam param)
         {
@@ -665,7 +625,6 @@ namespace Machete.Web.Controllers
                 aaData = result
             });
         }
-        #endregion
 
         private DateTime voDate(jQueryDataTableParam param)
         {
@@ -673,11 +632,8 @@ namespace Machete.Web.Controllers
             if (vo.date != null) return DateTime.Parse(vo.date.ToString());
             return DateTime.Now;
         }
-        #endregion
 
-        #region DataTablesStuff
         // The following methods organize the above service-layer views for return to Ajax/DataTables and the GUI.
-        #region For Summary Reports
         private dataTableResult<DailySumData> DaySumView(DateTime date)
         {
             IEnumerable<DailySumData> query;
@@ -686,17 +642,17 @@ namespace Machete.Web.Controllers
             return result; // ...for DataTables.
         }
 
-        private dataTableResult<WeeklySumData> WeekSumView(DateTime beginDate, DateTime endDate)
+        private dataTableResult<WeeklySummaryData> WeekSumView(DateTime beginDate, DateTime endDate)
         {
-            IEnumerable<WeeklySumData> query;
+            IEnumerable<WeeklySummaryData> query;
             query = repServ.WeeklySumController(beginDate, endDate);
             var result = GetDataTableResult(query);
             return result;
         }
 
-        private dataTableResult<MonthlySumData> monthSumView(DateTime beginDate, DateTime endDate)
+        private dataTableResult<MonthlySummaryData> monthSumView(DateTime beginDate, DateTime endDate)
         {
-            IEnumerable<MonthlySumData> query;
+            IEnumerable<MonthlySummaryData> query;
             query = repServ.MonthlySumController(beginDate, endDate);
             var result = GetDataTableResult(query);
             return result;
@@ -709,8 +665,7 @@ namespace Machete.Web.Controllers
             var result = GetDataTableResult(query);
             return result;
         }
-        #endregion
-        #region For Activity Reports
+
         private dataTableResult<ActivityData> ActivityView(DateTime beginDate, DateTime endDate, string reportType)
         {
             IEnumerable<ActivityData> query;
@@ -726,7 +681,7 @@ namespace Machete.Web.Controllers
             var result = GetDataTableResult(query);
             return result;
         }
-        #endregion
+
         private dataTableResult<NewWorkerData> NewWorkerView(DateTime beginDate, DateTime endDate, string reportType)
         {
             IEnumerable<NewWorkerData> query;
@@ -751,7 +706,5 @@ namespace Machete.Web.Controllers
             result.totalCount = query.Count();
             return result;
         }
-
-        #endregion
     }
 }

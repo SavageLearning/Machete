@@ -7,12 +7,15 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Results;
+using Machete.Api.Attributes;
 using DTO = Machete.Service.DTO;
+
+using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Api.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class EmployersController : MacheteApiController
     {
         private readonly IEmployerService serv;
@@ -31,8 +34,9 @@ namespace Machete.Api.Controllers
 
         // GET api/values
         // TODO Add real permissions
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Employer })]
-        public IHttpActionResult Get()
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Employer })]
+        [HttpGet]
+        public ActionResult Get()
         {
             var vo = new viewOptions();
             vo.displayLength = 10;
@@ -42,22 +46,23 @@ namespace Machete.Api.Controllers
                 .Select(
                     e => map.Map<DTO.EmployersList, ViewModel.EmployersList>(e)
                 ).AsEnumerable();
-            return Json(new { data =  result });
+            return new JsonResult(new { data =  result });
         }
 
         // GET api/values/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Manager, CV.Phonedesk })]
-        public IHttpActionResult Get(int id)
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Manager, CV.Phonedesk })]
+        [HttpGet]
+        public ActionResult Get(int id)
         {
             var result = map.Map<Domain.Employer, ViewModel.Employer>(serv.Get(id));
             if (result == null) return NotFound();
 
-            return Json(new { data = result });
+            return new JsonResult(new { data = result });
         }
 
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Manager, CV.Phonedesk, CV.Employer })]
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Manager, CV.Phonedesk, CV.Employer })]
         [HttpGet, Route("api/employer/profile")]
-        public IHttpActionResult ProfileGet()
+        public ActionResult ProfileGet()
         {
             Domain.Employer e;
             try
@@ -66,7 +71,7 @@ namespace Machete.Api.Controllers
             }
             catch (Exception ex)
             {
-                return InternalServerError(ex);
+                return StatusCode(500, ex);
             }
 
             if (e == null) return NotFound();
@@ -80,7 +85,7 @@ namespace Machete.Api.Controllers
             }
             if (e.onlineSigninID != userSubject) return Conflict();
             var result = map.Map<Domain.Employer, ViewModel.Employer>(e);
-            return Json(new { data = result });
+            return new JsonResult(new { data = result });
         }
 
         [NonAction]
@@ -102,14 +107,12 @@ namespace Machete.Api.Controllers
             return e;
             // if we haven't found by userSubject, and userEmail is null, assume it's a 
             // legacy account. Legacy accounts have self-attested emails for userNames
-
-
         }
-
 
         // POST api/values
         // This action method is for ANY employer
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Manager, CV.Phonedesk })]
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Manager, CV.Phonedesk })]
+        [HttpPost]
         public void Post([FromBody]ViewModel.Employer employer)
         {
             var domain = map.Map<ViewModel.Employer, Domain.Employer>(employer);
@@ -118,9 +121,9 @@ namespace Machete.Api.Controllers
 
         // For an employer creating his/her own record
         [HttpPost]
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Employer })]
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Employer })]
         [Route("api/employer/profile")]
-        public IHttpActionResult ProfilePost([FromBody]ViewModel.Employer employer)
+        public ActionResult ProfilePost([FromBody]ViewModel.Employer employer)
         {
             Domain.Employer e = null;
             e = findEmployerBy();
@@ -138,13 +141,14 @@ namespace Machete.Api.Controllers
             }
             catch
             {
-                return InternalServerError();
+                return StatusCode(500);
             }
             return Ok();
         }
 
         // For editing any employer record
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Manager, CV.Phonedesk })]
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Manager, CV.Phonedesk })]
+        [HttpPut]
         public void Put(int id, [FromBody]ViewModel.Employer employer)
         {
             var domain = serv.Get(employer.id);
@@ -154,9 +158,9 @@ namespace Machete.Api.Controllers
 
         // for an employer editing his/her own employer record
         [HttpPut]
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Employer })]
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Employer })]
         [Route("api/employer/profile")]
-        public IHttpActionResult ProfilePut([FromBody]ViewModel.Employer employer)
+        public ActionResult ProfilePut([FromBody]ViewModel.Employer employer)
         {
             bool newEmployer = false;
             Domain.Employer e = null;
@@ -181,15 +185,17 @@ namespace Machete.Api.Controllers
                 result = serv.Get(e.ID);
             }
             var mapped = map.Map<Domain.Employer, ViewModel.Employer>(result);
-            return Json(new { data = mapped });
+            return new JsonResult(new { data = mapped });
 
         }
 
         // DELETE api/values/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
-        public void Delete(int id)
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
+        [HttpDelete]
+        public ActionResult Delete(int id)
         {
             // TODO: Make a soft delete; never really delete record
+            return StatusCode(501);
         }
     }
 }

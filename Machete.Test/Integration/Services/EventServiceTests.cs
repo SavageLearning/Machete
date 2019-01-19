@@ -1,9 +1,10 @@
-﻿using Machete.Service;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Globalization;
+using Machete.Service;
+using Machete.Test.Integration.Fluent;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Machete.Test.Integration.Service
+namespace Machete.Test.Integration.Services
 {
     [TestClass]
     public class EventTests

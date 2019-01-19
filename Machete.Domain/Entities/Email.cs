@@ -120,10 +120,10 @@ namespace Machete.Domain
     public class JoinWorkOrderEmail : Record
     {
         public int WorkOrderID { get; set; }
-        public WorkOrder WorkOrder { get; set; }
+        public virtual WorkOrder WorkOrder { get; set; }
 
         public int EmailID { get; set; }
-        public Email Email { get; set; }
+        public virtual Email Email { get; set; }
 
     }
 }

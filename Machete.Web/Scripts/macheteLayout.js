@@ -92,7 +92,7 @@ function jqrfyTable(o) {
         } else {
             return nRow;
         }
-    }
+    };
 
     myOptions.fnServerData = function (sSource, aoData, fnCallback) {
         var aoDataConcatenated = aoData;
@@ -144,10 +144,11 @@ function jqrfyTable(o) {
     //
     if (!dblclickevent) {
         dblclickevent = function (event) {
-            console.log("default dblclick event");
-            var exclusiveTab = $(event.target).closest('.ui-tabs').hasClass('ExclusiveTab');
+            console.log("default dblclick event: macheteLayout");
+            var exclusiveTab = $(event.target).closest('.ui-tabs').hasClass('ExclusiveTab'); // "true"
             var myTr = $(event.target).closest('tr');
-            //
+            //console.log("myTr:", myTr);
+            
             // add new tab
             add_rectab({
                 tabref: $(myTr).attr('edittabref'),

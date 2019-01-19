@@ -3,7 +3,7 @@
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
 // License:  GPL v3
-// Project:  Machete.Test
+// Project:  Machete.Test.Old
 // Contact:  savagelearning
 // 
 // Copyright 2011 Savage Learning, LLC., all rights reserved.
@@ -21,191 +21,175 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+
+using System;
+using System.Threading.Tasks;
 using AutoMapper;
-using Machete.Data.Infrastructure;
 using Machete.Domain;
 using Machete.Service;
-using Machete.Web;
 using Machete.Web.Controllers;
 using Machete.Web.Helpers;
-using Machete.Web.ViewModel;
+using Machete.Web.Maps;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
-using System.Web.Mvc;
 
-namespace Machete.Test.Unit.Controller
+namespace Machete.Test.UnitTests.Controllers
 {
-    /// <summary>
-    /// Summary description for EmployerControllerUnitTests
-    /// </summary>
-
     [TestClass]
-    public class EmployerTests
+    public class EmployerControllerTests
     {
-        Mock<IEmployerService> serv;
-        Mock<IWorkOrderService> woServ;
-        Mock<IDatabaseFactory> dbfactory;
+        Mock<IEmployerService> _serv;
         IMapper map;
-        Mock<IDefaults> def;
-        EmployerController ctrlr;
-        FormCollection form;
-        const int Testid = 4242;
+        Mock<IDefaults> _defaults;
+        EmployerController _controller;
+        private Mock<IModelBindingAdaptor> _adaptor;
+        private Employer _savedemployer;
+        private Employer _fakeemployer;
+        const int testId = 4242;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            Domain.WorkOrder.iPending = 123;
-            serv = new Mock<IEmployerService>();
-            woServ = new Mock<IWorkOrderService>();
-            dbfactory = new Mock<IDatabaseFactory>();
-            def = new Mock<IDefaults>();
-            map = new MapperConfig().getMapper();
-           
+            _serv = new Mock<IEmployerService>();
+            _defaults = new Mock<IDefaults>();
+            _adaptor = new Mock<IModelBindingAdaptor>();
 
-            ctrlr = new EmployerController(serv.Object, def.Object, map);
-            ctrlr.SetFakeControllerContext();
-            form = new FormCollection
-                       {
-                           {"ID", "12345"},
-                           {"name", "blah"},
-                           {"address1", "UnitTest"},
-                           {"city", "footown"},
-                           {"state", "WA"},
-                           {"phone", "123-456-7890"},
-                           {"zipcode", "1234567890"}
-                       };
+            var mapperConfig = new MvcMapperConfiguration().Config;
+            map = mapperConfig.CreateMapper();
+
+            _adaptor.Setup(dependency => 
+                    dependency.TryUpdateModelAsync(It.IsAny<MacheteController>(), It.IsAny<Employer>()))
+                .Returns(Task.FromResult(true));
+            
+            _fakeemployer = new Employer {
+                ID = 12345,
+                name = "blah",
+                address1 = "UnitTest",
+                city = "footown",
+                state = "WA",
+                phone = "123-456-7890",
+                zipcode = "1234567890"
+            };
+            _savedemployer = new Employer();
+            _serv.Setup(p => p.Get(testId)).Returns(_fakeemployer);
+            _serv.Setup(x => x.Save(It.Is<Employer>(employer => employer.name == "blah"), It.IsAny<string>()))
+                 .Callback((Employer p, string str) => { _savedemployer = p; });
+            
+            _controller = new EmployerController(_serv.Object, _defaults.Object, map, _adaptor.Object);
         }
-        //
-        //   Testing /Index functionality
-        //
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
-        public void index_get_returns_enumerable_list()
+        public async Task index_get_returns_enumerable_list()
         {
             //Arrange
+            
             //Act
-            var result = (ViewResult)ctrlr.Index();
+            var result = await _controller.Index() as ViewResult;
+            
             //Assert
             Assert.IsInstanceOfType(result, typeof(ViewResult));
         }
-        //
-        //   Testing /Create functionality
-        //
-        #region createtests
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
-        public void create_get_returns_employer()
+        public async Task create_get_returns_employer()
         {
             //Arrange
+            
             //Act
-            var result = (PartialViewResult)ctrlr.Create();
+            var result = await _controller.Create() as PartialViewResult;
+            
             //Assert
+            Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result.ViewData.Model, typeof(Web.ViewModel.Employer));
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
-        public void create_valid_post_returns_json()
+        public async Task create_valid_post_returns_json()
         {
             //Arrange
-            var employer = new Domain.Employer {ID = 4242, name = "unit test"};
-            serv.Setup(p => p.Create(employer, "UnitTest")).Returns(employer);
-            ctrlr.ValueProvider = form.ToValueProvider();
+            var employer = new Employer { ID = 12345, name = "blah" };
+            _serv.Setup(p => p.Create(employer, "UnitTest")).Returns(employer);
+            
             //Act
-            var result = ctrlr.Create(employer, "UnitTest");
+            var result = await _controller.Create(employer, "UnitTest");
+
             //Assert
             Assert.IsInstanceOfType(result, typeof(JsonResult));
             Assert.AreEqual("{ sNewRef = /Employer/Edit/12345, sNewLabel = blah, iNewID = 12345, jobSuccess = True }", 
-                            result.Data.ToString());
+                            result.Value.ToString());
         }
 
+        // Passing an invalid model isn't a valid approach, since model binding isn't running
+        // https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/testing?view=aspnetcore-2.2
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
-        [ExpectedException(typeof(InvalidOperationException),
-            "An invalid UpdateModel was inappropriately allowed.")]
-        public void create_post_invalid_throws_exception()
+        [ExpectedException(typeof(InvalidOperationException), "An invalid UpdateModel was inappropriately allowed.")]
+        public async Task create_post_invalid_throws_exception()
         {
             //Arrange
-            var employer = new Domain.Employer();
-            form.Remove("name");
-
-            serv = new Mock<IEmployerService>();
-            serv.Setup(p => p.Create(employer, "UnitTest")).Returns(employer);
-            woServ = new Mock<IWorkOrderService>();
-            ctrlr = new EmployerController(serv.Object, def.Object, map);
-            ctrlr.SetFakeControllerContext();
-            ctrlr.ValueProvider = form.ToValueProvider();
-            JsonResult result = ctrlr.Create(employer, "UnitTest");
-            Assert.IsNotNull(result);
-
-        }
-        #endregion
-        //
-        //   Testing /Edit functionality
-        //
-        #region edittests
-        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
-        public void EmployerController_edit_get_returns_employer()
-        {
-            //Arrange
-            serv = new Mock<IEmployerService>();
-            var fakeemployer = new Domain.Employer();
-            serv.Setup(p => p.Get(Testid)).Returns(fakeemployer);
-            woServ = new Mock<IWorkOrderService>();
-            ctrlr = new EmployerController(serv.Object, def.Object, map);
+            var employer = new Employer { ID = testId, name = string.Empty };
+            _serv.Setup(p => p.Create(employer, "UnitTest")).Returns(employer);
+            _controller = new EmployerController(_serv.Object, _defaults.Object, map, _adaptor.Object);
+            _controller.ModelState.AddModelError("name", "Required");
+            
             //Act
-            var result = ctrlr.Edit(Testid) as PartialViewResult;
+            var result = await _controller.Create(employer, "UnitTest");
+            
+            //Assert
+            Assert.IsNotNull(result);
+        }
+
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
+        public async Task EmployerController_edit_get_returns_employer()
+        {
+            //Arrange
+            _serv = new Mock<IEmployerService>();
+            _serv.Setup(p => p.Get(testId)).Returns(new Employer());
+                        
+            var mapperConfig = new MvcMapperConfiguration().Config;
+            var mapper = mapperConfig.CreateMapper();
+            
+            _controller = new EmployerController(_serv.Object, _defaults.Object, mapper, _adaptor.Object);
+            //Act
+            var result = await _controller.Edit(testId) as PartialViewResult;
             //Assert
             Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result.ViewData.Model, typeof(Web.ViewModel.Employer));
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
-        public void EmployerController_edit_post_valid_updates_model_returns_json()
+        public async Task EmployerController_edit_post_valid_updates_model_returns_json()
         {
             //Arrange
-            const int testid = 4242;
-            var fakeemployer = new Domain.Employer();
-            var savedemployer = new Domain.Employer();
-            serv.Setup(p => p.Get(testid)).Returns(fakeemployer);
-            serv.Setup(x => x.Save(It.IsAny<Domain.Employer>(),
-                                          It.IsAny<string>())
-                                         ).Callback((Domain.Employer p, string str) =>
-                                         {
-                                             savedemployer = p;
-                                         });
-            ctrlr.ValueProvider = form.ToValueProvider();
+            
             //Act
-            var result = ctrlr.Edit(testid, form, "UnitTest");
+            var result = await _controller.Edit(testId, "UnitTest");
+            
             //Assert
             Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result, typeof(JsonResult));
-            Assert.AreEqual("{ jobSuccess = True }", result.Data.ToString());
-            Assert.AreEqual(fakeemployer, savedemployer);
-            Assert.AreEqual(savedemployer.name, "blah");
-            Assert.AreEqual(savedemployer.address1, "UnitTest");
-            Assert.AreEqual(savedemployer.city, "footown");
+            Assert.AreEqual("{ jobSuccess = True }", result.Value.ToString());
+            Assert.AreEqual(_fakeemployer, _savedemployer);
+            Assert.AreEqual("blah", _savedemployer.name);
+            Assert.AreEqual("UnitTest", _savedemployer.address1);
+            Assert.AreEqual("footown", _savedemployer.city);
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
-        [ExpectedException(typeof(InvalidOperationException),
-            "An invalid UpdateModel was inappropriately allowed.")]
-        public void EmployerController_edit_post_invalid_throws_exception()
+        [ExpectedException(typeof(InvalidOperationException), "An invalid UpdateModel was inappropriately allowed.")]
+        public async Task EmployerController_edit_post_invalid_throws_exception()
         {
             //Arrange
-            var employer = new Domain.Employer();
-            //
-            // Mock service and setup SaveEmployer mock
-            serv.Setup(p => p.Save(employer, "UnitTest"));
-            serv.Setup(p => p.Get(Testid)).Returns(employer);
-            //
-            // Mock HttpContext so that ModelState and FormCollection work
-            form.Remove("phone");
-            ctrlr.ValueProvider = form.ToValueProvider();
-            //
+            var employer = new Employer();
+            _serv.Setup(p => p.Save(employer, "UnitTest"));
+            _serv.Setup(p => p.Get(testId)).Returns(employer);
+            _controller.ModelState.AddModelError("TestError", "foo");
+
             //Act
-            //_ctrlr.ModelState.AddModelError("TestError", "foo");
-            ctrlr.Edit(Testid, form, "UnitTest");
+            await _controller.Edit(testId, "UnitTest");
+            
             //Assert
         }
-        #endregion
 
         //
         // Testing /Delete functionality
@@ -213,17 +197,14 @@ namespace Machete.Test.Unit.Controller
         public void delete_post_returns_json()
         {
             //Arrange
-            serv = new Mock<IEmployerService>();
-            var fakeform = new FormCollection();
-            woServ = new Mock<IWorkOrderService>();
-            ctrlr = new EmployerController(serv.Object, def.Object, map);
-            ctrlr.SetFakeControllerContext();
-            ctrlr.ValueProvider = fakeform.ToValueProvider();
+            _serv = new Mock<IEmployerService>();
+            _controller = new EmployerController(_serv.Object, _defaults.Object, map, _adaptor.Object);
+            
             //Act
-            var result = ctrlr.Delete(Testid, "UnitTest");
+            var result = _controller.Delete(testId, "UnitTest");
             //Assert
             Assert.AreEqual("{ status = OK, jobSuccess = True, deletedID = 4242 }", 
-                            result.Data.ToString());
+                            result.Value.ToString());
         }
     }
 }

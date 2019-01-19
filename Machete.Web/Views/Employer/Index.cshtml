@@ -80,7 +80,7 @@
                 //"iDisplaylength": 15,
                 "bPaginate": true,
                 "bLengthChange": true,
-                "aaSorting": [[9, 'desc']],
+                "aaSorting": [[ 9, 'desc' ]],
                 "bFilter": true,
                 "bSort": true,
                 "bInfo": true,
@@ -89,17 +89,17 @@
                 "sAjaxSource": "/Employer/AjaxHandler",
                 "bProcessing": true,
                 "oLanguage": datatable_lang_@(currentCulture.TwoLetterISOLanguageName),
-                "aoColumns": [                           //dataTable column definition
-                                {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
-                                {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
-                                {"mDataProp": "active" },
-                                {"mDataProp": "name" },
-                                {"mDataProp": "address1" },
+                "aoColumns": [
+                                { "mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                                { "mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                                { "mDataProp": "active" },
+                                { "mDataProp": "name" },
+                                { "mDataProp": "address1" },
                                 { "mDataProp": "city" },
                                 { "mDataProp": "zipcode" },
                                 { "mDataProp": "phone" },
                                 { "mDataProp": "cellphone" },
-                                {"mDataProp": "dateupdated" },
+                                { "mDataProp": "dateupdated" },
                                 { "mDataProp": "updatedby", "bSortable": false },
                                 { "mDataProp": "onlineSource", "bSearchable": false, "bSortable": true, "bVisible": true }
                             ]
@@ -150,21 +150,21 @@
             "oLanguage": datatable_lang_@(currentCulture.TwoLetterISOLanguageName),
             "bProcessing": true,
             "aoColumns": [
-                            {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
-                            {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
-                            {"mDataProp": "active" },
-                            {"mDataProp": "name" },
-                            {"mDataProp": "address1" },
+                            { "mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                            { "mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                            { "mDataProp": "active" },
+                            { "mDataProp": "name" },
+                            { "mDataProp": "address1" },
                             { "mDataProp": "city" },
                             { "mDataProp": "zipcode" },
                             { "mDataProp": "phone" },
                             { "mDataProp": "cellphone" },
-                            {"mDataProp": "dateupdated" },
-                            {"mDataProp": "updatedby", "bSortable": false }
+                            { "mDataProp": "dateupdated" },
+                            { "mDataProp": "updatedby", "bSortable": false }
             ],
             // callback populates html attr with row data from JSON
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                $(nRow).attr('recordid', aData['EID']);
+                $(nRow).attr('recordid', aData['eid']);
                 return nRow;
             }
         }).fnSetFilteringDelay(250);
@@ -180,7 +180,7 @@
             title: '@WorkOrders.empChgConfirmSubmit'
         });
         $('#employerSelectDialog').hide();
-        $('#employerSelectTable').hide()
+        $('#employerSelectTable').hide();
         return true;
     });
 </script>

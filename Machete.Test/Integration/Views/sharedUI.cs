@@ -1,20 +1,19 @@
 ﻿using AutoMapper;
 using Machete.Data;
-//using Machete.Service;
 using Machete.Test.Integration;
-//using Machete.Domain;
 using Machete.Web.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using System;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
-
+using Machete.Data.Initialize;
+using Machete.Test.Integration.Fluent;
 
 namespace Machete.Test.Selenium.View
 {

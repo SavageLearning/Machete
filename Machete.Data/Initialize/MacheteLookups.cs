@@ -192,8 +192,12 @@ namespace Machete.Data.Initialize
                 new Lookup { ID=286,category = LCategory.farmLabor, text_EN="Seasonal Farm Worker", text_ES="Seasonal Farm Worker", selected=false },
                 new Lookup { ID=287,category = LCategory.training, text_EN="OSHA", text_ES="OSHA", selected=true },
             };
-        //
-        //
+
+        /// <summary>
+        /// Initialize the Machete Lookups (configuration values); this should only be called by MacheteConfiguration.
+        /// This represents an example of how to execute plain text SQL commands directly against the injected context.
+        /// </summary>
+        /// <param name="context">MacheteContext is injected, therefore disposal is handled by the container.</param>
         public static void Initialize(MacheteContext context) {
             _cache.ForEach(u => {
                 u.datecreated = DateTime.Now;

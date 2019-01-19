@@ -6,11 +6,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
+
+using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Api.Controllers
 {
-    public class LookupsController : ApiController
+    [Route("api/[controller]")]
+    [ApiController]
+    public class LookupsController : ControllerBase
     {
         private readonly ILookupService serv;
         private readonly IMapper map;
@@ -22,20 +25,20 @@ namespace Machete.Api.Controllers
         }
 
         // GET: api/Lookups
-        public IHttpActionResult Get()
+        public ActionResult Get()
         {
             var result = serv.GetMany(l => l.active == true)
                 .Select(e => map.Map<Domain.Lookup, Lookup>(e))
                 .AsEnumerable();
-            return Json(new { data = result });
+            return new JsonResult(new { data = result });
         }
 
-        public IHttpActionResult Get(string category)
+        public ActionResult Get(string category)
         {
             var result = serv.GetMany(w => w.category == category && w.active == true)
                 .Select(e => map.Map<Domain.Lookup, Lookup>(e))
                 .AsEnumerable();
-            return Json(new { data = result });
+            return new JsonResult(new { data = result });
         }
 
         // GET: api/Lookups/5

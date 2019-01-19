@@ -1,20 +1,20 @@
-﻿using Machete.Service;
-using DTO = Machete.Service.DTO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Machete.Service;
+using Machete.Test.Integration.Fluent;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using DTO = Machete.Service.DTO;
 
-namespace Machete.Test.Integration.Service
+namespace Machete.Test.Integration.Services
 {
     [TestClass]
     public class LookupTests
     {
         viewOptions dOptions;
         FluentRecordBase frb;
+        
         [ClassInitialize]
         public static void ClassInitialize(TestContext c)
         {

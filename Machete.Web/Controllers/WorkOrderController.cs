@@ -24,7 +24,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -47,7 +46,7 @@ namespace Machete.Web.Controllers
         private readonly IWorkOrderService woServ;
         private readonly IMapper map;
         private readonly IDefaults def;
-        CultureInfo CI;
+        private IModelBindingAdaptor _adaptor;
 
         /// <summary>
         /// The Work Order controller is responsible for handling all REST actions related to the
@@ -57,12 +56,15 @@ namespace Machete.Web.Controllers
         /// <param name="woServ">Work Order service</param>
         /// <param name="def">Default config values</param>
         /// <param name="map">AutoMapper service</param>
+        /// <param name="adaptor"></param>
         public WorkOrderController(IWorkOrderService woServ,
             IDefaults def,
-            IMapper map)
+            IMapper map,
+            IModelBindingAdaptor adaptor)
         {
             this.woServ = woServ;
             this.map = map;
+            _adaptor = adaptor;
             this.def = def;
         }
         /// <summary>
@@ -72,7 +74,7 @@ namespace Machete.Web.Controllers
         protected override void Initialize(ActionContext requestContext)
         {
             base.Initialize(requestContext);
-            CI = Session["Culture"];
+            //CI = Session["Culture"];
             ViewBag.def = def;
         }
         /// <summary>
@@ -139,7 +141,6 @@ namespace Machete.Web.Controllers
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
-            vo.CI =  CI;
             //Get all the records
             var dataTableResult = woServ.GetIndexView(vo);
             var result = dataTableResult.query
@@ -185,17 +186,19 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public async Task<ActionResult> Create(WorkOrder wo, string userName)
         {
-            if (await TryUpdateModelAsync(wo)) {
+            ModelState.ThrowIfInvalid();
+
+            var modelUpdated = await _adaptor.TryUpdateModelAsync(this, wo);
+            if (modelUpdated) {
                 var workOrder = woServ.Create(wo, userName);
 
-                // JSON object with new work order data
                 var result = map.Map<WorkOrder, ViewModel.WorkOrder>(workOrder);
                 return Json(new {
                     sNewRef = result.tabref,
                     sNewLabel = result.tablabel,
                     iNewID = result.ID
                 });
-            } else { return Json(new { status = "Not OK" }); } // TODO Chaim plz
+            } else { return StatusCode(500); }
         }
         /// <summary>
         /// GET: /WorkOrder/Edit/ID
@@ -236,16 +239,17 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public async Task<ActionResult> Edit(int id, string userName, List<WorkerRequest> workerRequestList)
         {
-            WorkOrder workOrder = woServ.Get(id);
-            if (await TryUpdateModelAsync(workOrder)) {
-
-            woServ.Save(workOrder, workerRequestList, userName);
-            return Json(new
-            {
-                status = "OK",
-                editedID = id
-            });
-            } else { return Json(new { status = "Not OK" }); } // TODO Chaim plz
+            ModelState.ThrowIfInvalid();
+            
+            var workOrder = woServ.Get(id);
+            var modelUpdated = await _adaptor.TryUpdateModelAsync(this, workOrder);
+            if (modelUpdated) {
+                woServ.Save(workOrder, workerRequestList, userName);
+                return Json(new {
+                    status = "OK",
+                    editedID = id
+                });
+            } else { return StatusCode(500); }
         }
         /// <summary>
         /// GET: /WorkOrder/View/ID

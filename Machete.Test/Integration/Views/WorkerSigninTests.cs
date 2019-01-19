@@ -3,7 +3,7 @@
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
 // License:  GPL v3
-// Project:  Machete.Test
+// Project:  Machete.Test.Old
 // Contact:  savagelearning
 // 
 // Copyright 2011 Savage Learning, LLC., all rights reserved.
@@ -30,9 +30,10 @@ using OpenQA.Selenium.Chrome;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text;
+using Machete.Web.Maps;
 
 namespace Machete.Test.Selenium.View
 {
@@ -59,12 +60,16 @@ namespace Machete.Test.Selenium.View
             string solutionDirectory = sharedUI.SolutionDirectory();
             //testdir = solutionDirectory + "\\Machete.test\\";
             testimagefile = solutionDirectory + "\\jimmy_machete.jpg";
-            map = new Machete.Web.MapperConfig().getMapper();
-
+            var mapperConfig = new MvcMapperConfiguration().Config;
+            map = mapperConfig.CreateMapper();
+            
             driver = new ChromeDriver(ConfigurationManager.AppSettings["CHROMEDRIVERPATH"]);
             baseURL = "http://localhost:4213/";
             ui = new sharedUI(driver, baseURL, map);
-            DB = new MacheteContext();
+
+            // fake
+            DbContextOptions<MacheteContext> config = new DbContextOptions<MacheteContext>();
+            DB = new MacheteContext(config);
             wsiSet = DB.Set<WorkerSignin>();
             wSet = DB.Set<Worker>();
             pSet = DB.Set<Person>();

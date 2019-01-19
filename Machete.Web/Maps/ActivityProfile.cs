@@ -46,7 +46,6 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.saturday, opt => opt.Ignore())
                 .ForMember(v => v.def, opt => opt.Ignore())
                 .ForMember(v => v.stopDate, opt => opt.Ignore())
-
                 ;
         }
     }

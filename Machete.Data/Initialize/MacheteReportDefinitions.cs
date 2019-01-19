@@ -1,23 +1,22 @@
-using Machete.Data.Helpers;
-using Machete.Domain;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Machete.Domain;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
-namespace Machete.Data
+namespace Machete.Data.Initialize
 {
     public static class MacheteReportDefinitions
     {
 
-        public static List<ReportDefinition> cache { get { return _cache; } }
+        public static List<ReportDefinition> cache => _cache;
 
         private static List<ReportDefinition> _cache = new List<ReportDefinition>
         {
-            #region Report definitions
+            #region REPORT DEFINITIONS
             // DispatchesByJob
             new ReportDefinition {
                 name = "DispatchesByJob",
@@ -1527,39 +1526,70 @@ where jobcount is not null or actcount is not null or eslcount is not null
             }           
             #endregion  
         };
+        
         public static void Initialize(MacheteContext context)
         {
-            var inputsStub = new
-            {
-                // TODO make model class
-                beginDate = true,
-                beginDateDefault = DateTime.Parse("1/1/2016"),
-                endDate = true,
-                endDateDefault = DateTime.Parse("1/1/2017"),
-                memberNumber = false
-            };
-            _cache.ForEach(u => {
+	        _cache.ForEach(u => {
                 try
                 {
-	                if (context.Database.GetDbConnection().GetType().Name == "SqlServerConnection")
-                      context.ReportDefinitions.First(a => a.name == u.name);
+	                // TODO rewrite, use .Contains() instead of expecting to throw
+	                if (context.Database.GetDbConnection().GetType().Name == "SqlConnection") // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+		                context.ReportDefinitions.First(a => a.name == u.name);
                 }
                 catch
                 {
                     u.datecreated = DateTime.Now;
                     u.dateupdated = DateTime.Now;
                     u.createdby = "Init T. Script";
-                    u.updatedby = "Init T. Script";
-                    u.columnsJson = SqlServerUtils.getUIColumnsJson(context, u.sqlquery);
+                    u.updatedby = "Init T. Script"; // this next part is a little bit of a mess, but it is only run once during initialization.
+                    u.columnsJson = MacheteAdoContext.getUIColumnsJson(u.sqlquery, context.Database.GetDbConnection().ConnectionString);
                     if (u.inputsJson == null)
                     {
-                        u.inputsJson = JsonConvert.SerializeObject(inputsStub);
+                        u.inputsJson = JsonConvert.SerializeObject(new
+                        {
+	                        beginDate = true,
+	                        beginDateDefault = DateTime.Parse("1/1/2016"),
+	                        endDate = true,
+	                        endDateDefault = DateTime.Parse("1/1/2017"),
+	                        memberNumber = false
+                        });
                     }
                     context.ReportDefinitions.Add(u);
+                    context.SaveChanges();
                 }
             });
-            context.SaveChanges();
+	        
+	        AddDBReadOnlyUser(context);
+        }
+        
+        private static void AddDBReadOnlyUser(MacheteContext context)
+        {
+	        using (var connection = context.Database.GetDbConnection())
+	        {
+		        connection.Open();
+		        using (var command = connection.CreateCommand()) {
+                    
+			        command.CommandText = "sp_executesql";
+			        command.CommandType = CommandType.StoredProcedure;
+			        var param = command.CreateParameter();
+			        param.ParameterName = "@statement";
+			        param.Value = @"
+CREATE LOGIN readonlyLogin WITH PASSWORD='@testPassword1'
+CREATE USER readonlyUser FROM LOGIN readonlyLogin
+EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
+                    ";
+			        command.Parameters.Add(param);
+			        try {
+				        command.ExecuteNonQuery();
+			        } catch (SqlException ex) {
+				        var userAlreadyExists = ex.Errors[0].Number.Equals(15025);
+				        if (!userAlreadyExists)
+					        throw ex;
+			        } // finally {
+			        // context.Close();
+			        // }
+		        }
+	        }
         }
     }
-
 }

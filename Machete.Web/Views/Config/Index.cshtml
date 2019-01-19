@@ -13,7 +13,6 @@
     string recType = "config";
 }
 
-
 <div id="configTabs" class="ExclusiveTab">
     <ul>
         <li><a href="#configList" id="configListTab" class="ListTab">@Configs.listlink</a> </li>
@@ -21,7 +20,8 @@
     </ul>
     <div id="configList">
         @Html.Label("Category")
-        @Html.DropDownList("category", (SelectList)ViewBag.configCategories)
+        @Html.DropDownList("category", ViewBag.configCategories as IEnumerable<SelectListItem>)
+        <button id="goButton">Go</button>
         <table id="configTable" class="display">
             <thead>
                 <tr>
@@ -41,50 +41,52 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#configTable').mUI('createTable', {
-        tab: $('#configTabs'),
-        options: {
-            "bPaginate": true,
-            "bLengthChange": true,
-            "aaSorting": [[8, 'desc']],
-            "bFilter": true,
-            "bSort": true,
-            "bInfo": true,
-            "bAutoWidth": false,
-            "bServerSide": true,
-            "sAjaxSource": "/Lookup/AjaxHandler", 
-            "oLanguage": datatable_lang_@(currentCulture.TwoLetterISOLanguageName),
-            "bProcessing": true,
-            "aoColumns": [
-                {"mDataProp": "tabref", "bSearchable": false, "bSortable": false, "bVisible": false },
-                {"mDataProp": "tablabel", "bSearchable": false, "bSortable": false, "bVisible": false },
-                {"mDataProp": "category" },
-                {"mDataProp": "selected" },
-                {"mDataProp": "text_EN" },
-                {"mDataProp": "text_ES" },
-                {"mDataProp": "subcategory" },
-                {"mDataProp": "level" },
-                {"mDataProp": "ltrCode" }
-            ],
-            "fnServerDataExtra": function () {
-                return [
-                    { "name": "category", "value": $('#category').val() }
-                ]
+        var oTable = jqrfyTable({
+            table: $('#configTable'),
+            tab: $('#configTabs'),
+            options: {
+                "bPaginate": true,
+                "bLengthChange": true,
+                "aaSorting": [[ 8, 'desc' ]],
+                "bFilter": true,
+                "bSort": true,
+                "bInfo": true,
+                "bAutoWidth": false,
+                "bServerSide": true,
+                "sAjaxSource": "/Lookup/AjaxHandler",
+                "oLanguage": datatable_lang_@(currentCulture.TwoLetterISOLanguageName),
+                "bProcessing": true,
+                "aoColumns": [
+                    {"mDataProp": "tabref", "bSearchable": false, "bSortable": false, "bVisible": false },
+                    {"mDataProp": "tablabel", "bSearchable": false, "bSortable": false, "bVisible": false },
+                    {"mDataProp": "category" },
+                    {"mDataProp": "selected" },
+                    {"mDataProp": "text_EN" },
+                    {"mDataProp": "text_ES" },
+                    {"mDataProp": "subcategory" },
+                    {"mDataProp": "level" },
+                    {"mDataProp": "ltrCode" }
+                ],
+                "fnServerDataExtra": function () {
+                    return [
+                        { "name": "category", "value": $('#category').val() }
+                    ];
+                }
             },
-        }, 
-        dblClickEvent: null, 
-        tabLabel: "@(recType)"
-        });
+            dblClickEvent: null,
+            tabLabel: "@(recType)"
+            });
         $('#configTable_filter input').attr('ID','configSearchBox');
         $('#configTabs').mUI("createTabs", {
             prefix: "ui-tabs-config-",
             formLevel: 1,
-            changeConfirm: "@Shared.changeConfirm",
-            changeTitle: "@Shared.changeTitle",
+            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)",
             updateDatatable: true
         });
-        $('#category').click(function(e) {
+        $('#goButton').click(function(e) {
 //            e.preventDefault();
+            console.log('clicked');
             $("#configTable").dataTable().fnDraw();
         });
     });

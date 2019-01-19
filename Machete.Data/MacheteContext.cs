@@ -22,6 +22,7 @@
 // 
 
 #endregion
+
 using Machete.Domain;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System;
@@ -29,12 +30,24 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using Machete.Data.Dynamic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Activity = Machete.Domain.Activity;
+
+#region SHUTUP RESHARPER
+// The purpose of suppressing so many inspections in this case is so that I can
+// visually verify the integrity of the file when there are changes.
+//
 // ReSharper disable RedundantArgumentDefaultValue
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
+// ReSharper disable SuggestBaseTypeForParameter
+// ReSharper disable PossibleMultipleEnumeration
+// ReSharper disable InvertIf
+// ReSharper disable AssignNullToNotNullAttribute
+#endregion
 
 namespace Machete.Data
 
@@ -42,11 +55,10 @@ namespace Machete.Data
     // http://stackoverflow.com/questions/22105583/why-is-asp-net-identity-identitydbcontext-a-black-box
     public class MacheteContext : IdentityDbContext<MacheteUser>
     {
-        public MacheteContext(DbContextOptions<MacheteContext> options) : base(options)
-        {
-            
-        }
-        //Machete here defines the database to use, by convention.
+        public MacheteContext(DbContextOptions<MacheteContext> options) : base(options) { }
+        
+        // Machete here defines the data context to use by EF Core convention.
+        // Entity Framework will not retrieve or modify types not expressed here.
         public DbSet<Person> Persons { get; set; }
         public DbSet<Worker> Workers { get; set; }
         public DbSet<WorkAssignment> WorkAssignments { get; set; }
@@ -67,13 +79,13 @@ namespace Machete.Data
         public DbSet<TransportRule> TransportRules { get; set; }
         public DbSet<TransportCostRule> TransportCostRules { get; set; }
         public DbSet<ScheduleRule> ScheduleRules { get; set; }
-        
+
         public override int SaveChanges()
         {
             // https://github.com/aspnet/EntityFrameworkCore/issues/3680#issuecomment-155502539
             var validationErrors = ChangeTracker
                 .Entries<IValidatableObject>()
-                .SelectMany(entities => entities.Entity.Validate(null)) // may have to make a validation context?
+                .SelectMany(entities => entities.Entity.Validate(null))
                 .Where(result => result != ValidationResult.Success);
             
             if (validationErrors.Any()) {
@@ -98,39 +110,40 @@ namespace Machete.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder); // call the other builders (below):
+            // Implement base OnModelCreating functionality before adding our own. Functionally, this does nothing.
+            // https://stackoverflow.com/a/39577004/2496266
+            base.OnModelCreating(modelBuilder);
             
             // ENTITIES //
             modelBuilder.ApplyConfiguration(new PersonBuilder());
             modelBuilder.ApplyConfiguration(new WorkerBuilder());
-            modelBuilder.Configurations<WorkerSignin>().Add(typeof(WorkerSigninBuilder));
-            modelBuilder.Configurations<Event>().Add(typeof(EventBuilder));
-            modelBuilder.Configurations<JoinEventImage>().Add(typeof(JoinEventImageBuilder));
-            modelBuilder.Configurations<JoinWorkOrderEmail>().Add(typeof(JoinWorkOrderEmailBuilder));
-            modelBuilder.Configurations<ActivitySignin>().Add(typeof(ActivitySigninBuilder));
-            modelBuilder.Configurations<Activity>().Add(typeof(ActivityBuilder));
-            modelBuilder.Configurations<Email>().Add(typeof(EmailBuilder));
-            modelBuilder.Configurations<TransportProvider>().Add(typeof(TransportProviderBuilder));
-            modelBuilder.Configurations<TransportProviderAvailability>()
-                        .Add(typeof(TransportProvidersAvailabilityBuilder));
-            modelBuilder.Configurations<TransportRule>().Add(typeof(TransportRuleBuilder));
-            modelBuilder.Configurations<TransportCostRule>().Add(typeof(TransportCostRuleBuilder));
-            modelBuilder.Configurations<ScheduleRule>().Add(typeof(ScheduleRuleBuilder));
-            modelBuilder.Configurations<Employer>().Add(typeof(EmployerBuilder));
-            modelBuilder.Configurations<WorkOrder>().Add(typeof(WorkOrderBuilder));
-            modelBuilder.Configurations<WorkAssignment>().Add(typeof(WorkAssignmentBuilder));
-            modelBuilder.Configurations<ReportDefinition>().Add(typeof(ReportDefinitionBuilder));
+            modelBuilder.ApplyConfiguration(new WorkerSigninBuilder());
+            modelBuilder.ApplyConfiguration(new EventBuilder());
+            modelBuilder.ApplyConfiguration(new JoinEventImageBuilder());
+            modelBuilder.ApplyConfiguration(new JoinWorkOrderEmailBuilder());
+            modelBuilder.ApplyConfiguration(new ActivitySigninBuilder());
+            modelBuilder.ApplyConfiguration(new ActivityBuilder());
+            modelBuilder.ApplyConfiguration(new EmailBuilder());
+            modelBuilder.ApplyConfiguration(new TransportProviderBuilder());
+            modelBuilder.ApplyConfiguration(new TransportProvidersAvailabilityBuilder());
+            modelBuilder.ApplyConfiguration(new TransportRuleBuilder());
+            modelBuilder.ApplyConfiguration(new TransportCostRuleBuilder());
+            modelBuilder.ApplyConfiguration(new ScheduleRuleBuilder());
+            modelBuilder.ApplyConfiguration(new EmployerBuilder());
+            modelBuilder.ApplyConfiguration(new WorkOrderBuilder());
+            modelBuilder.ApplyConfiguration(new WorkAssignmentBuilder());
+            modelBuilder.ApplyConfiguration(new ReportDefinitionBuilder());
             
             // VIEWS //
             modelBuilder.Query<QueryMetadata>();
         }
     }
 
-    public class JoinWorkOrderEmailBuilder
+    public class JoinWorkOrderEmailBuilder : IEntityTypeConfiguration<JoinWorkOrderEmail>
     {
-        public JoinWorkOrderEmailBuilder(EntityTypeBuilder<JoinWorkOrderEmail> entity)
+        public void Configure(EntityTypeBuilder<JoinWorkOrderEmail> builder)
         {
-            entity.HasKey(k => new {k.EmailID, k.WorkOrderID});
+            builder.HasKey(k => new {k.EmailID, k.WorkOrderID});
         }
     }
 
@@ -142,20 +155,10 @@ namespace Machete.Data
             builder.Property(p => p.ID)
                 .ValueGeneratedOnAdd();
             
-// Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 19: 'FOREIGN KEY constraint failed'.
             builder.HasOne(p => p.Worker)
                 .WithOne(w => w.Person)
-                .HasForeignKey<Worker>(w => w.ID) //main.Persons.FK_Persons_Workers_ID (wrong)
+                .HasForeignKey<Worker>(w => w.ID)
                 .OnDelete(DeleteBehavior.Cascade);
-
-//// The child/dependent side could not be determined for the one-to-one relationship ...configure the foreign key property.
-//            builder.HasOne(p => p.Worker)
-//                .WithOne(w => w.Person)
-////                .IsRequired(false) // same
-////              .HasForeignKey<Worker>(w => w.ID) //main.Persons.FK_Persons_Workers_ID
-//                .OnDelete(DeleteBehavior.Cascade);
-            
-            //builder.ToTable("Persons");
         }
     }
 
@@ -163,12 +166,6 @@ namespace Machete.Data
     {
         public void Configure(EntityTypeBuilder<Worker> builder)
         {
-//            builder.HasKey(k => k.ID);
-
-//// FOREIGN KEY constraint failed
-//            builder.HasOne(w => w.Person)
-//                .WithOne(p => p.Worker)//.IsRequired(false);
-//                .HasForeignKey<Person>(p => p.ID); //main.Persons.FK_Persons_Workers_ID
             builder.HasMany(s => s.workersignins)
                 .WithOne(s => s.worker).IsRequired(false)
                 .HasForeignKey(s => s.WorkerID);
@@ -178,117 +175,101 @@ namespace Machete.Data
         }
     }
 
-    public class ReportDefinitionBuilder
+    public class ReportDefinitionBuilder : IEntityTypeConfiguration<ReportDefinition>
     {
-        public ReportDefinitionBuilder(EntityTypeBuilder<ReportDefinition> entity)
+        public void Configure(EntityTypeBuilder<ReportDefinition> builder)
         {
-            entity.HasKey(k => k.ID);
+            builder.HasKey(k => k.ID);
         }
     }
 
-    public class WorkerSigninBuilder
+    public class WorkerSigninBuilder : IEntityTypeConfiguration<WorkerSignin>
     {
-        public WorkerSigninBuilder(EntityTypeBuilder<WorkerSignin> entity)
+        public void Configure(EntityTypeBuilder<WorkerSignin> builder)
         {
-            entity.HasKey(k => k.ID);
-            entity.Property(x => x.ID);
-            // EF6; see ActivitySignin class for EF7 decorator
-            // https://stackoverflow.com/questions/36155429/auto-increment-on-partial-primary-key-with-entity-framework-core
-            //entity.HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity); 
-            // Or try this:
-            //entity.Property(x => x.ID)
-            //    .ValueGeneratedOnAdd();
-
-            // EF6; unnecessary, EF7
-            // https://stackoverflow.com/questions/46290086/how-to-map-entities-with-inheritance-entity-framework-core-2-0
-            //entity.Map(m =>
-            //{
-            //    m.MapInheritedProperties();
-            //    m.ToTable("WorkerSignins");
-            //});
+            builder.HasKey(k => k.ID);
+            builder.Property(x => x.ID);
         }
     }
 
-    public class EmployerBuilder
+    public class EmployerBuilder : IEntityTypeConfiguration<Employer>
     {
-        public EmployerBuilder(EntityTypeBuilder<Employer> entity)
+        public void Configure(EntityTypeBuilder<Employer> builder)
         {
-            entity.HasKey(e => e.ID); //being explicit for EF
-            entity.HasMany(e => e.WorkOrders) //define the parent
-                .WithOne(w => w.Employer).IsRequired(true) //Virtual property definition
-                .HasForeignKey(wo => wo.EmployerID) //DB foreign key definition
+            builder.HasKey(e => e.ID);
+            builder.HasMany(e => e.WorkOrders)             //define the parent
+                .WithOne(w => w.Employer).IsRequired(true) //define the virtual property
+                .HasForeignKey(wo => wo.EmployerID)        //define the foreign key relationship
                 .OnDelete(DeleteBehavior.Cascade);
-            entity.ToTable("Employers");
+            builder.ToTable("Employers");
         }
     }
 
-    public class EmailBuilder
+    public class EmailBuilder : IEntityTypeConfiguration<Email>
     {
-        public EmailBuilder(EntityTypeBuilder<Email> entity)
+        public void Configure(EntityTypeBuilder<Email> builder)
         {
-            entity.HasKey(e => e.ID);
+            builder.HasKey(e => e.ID);
         }
     }
 
-    public class WorkOrderBuilder
+    public class WorkOrderBuilder : IEntityTypeConfiguration<WorkOrder>
     {
-        public WorkOrderBuilder(EntityTypeBuilder<WorkOrder> entity)
+        public void Configure(EntityTypeBuilder<WorkOrder> builder)
         {
-            entity.HasKey(k => k.ID);
-            entity.HasOne(p => p.Employer)
+            builder.HasKey(k => k.ID);
+            builder.HasOne(p => p.Employer)
                 .WithMany(e => e.WorkOrders)
                 .HasForeignKey(e => e.EmployerID)
                 .IsRequired(true);
-            entity.ToTable("WorkOrders");
+            builder.ToTable("WorkOrders");
         }
     }
 
-    public class WorkAssignmentBuilder
+    public class WorkAssignmentBuilder : IEntityTypeConfiguration<WorkAssignment>
     {
-        public WorkAssignmentBuilder(EntityTypeBuilder<WorkAssignment> entity)
+        public void Configure(EntityTypeBuilder<WorkAssignment> builder)
         {
-            entity.HasKey(k => k.ID);
-            entity.HasOne(k => k.workOrder)
+            builder.HasKey(k => k.ID);
+            builder.HasOne(k => k.workOrder)
                 .WithMany(a => a.workAssignments)
                 .HasForeignKey(a => a.workOrderID)
                 .IsRequired(true);
-            entity.ToTable("WorkAssignments");
+            builder.ToTable("WorkAssignments");
         }
     }
 
-    public class EventBuilder
+    public class EventBuilder : IEntityTypeConfiguration<Event>
     {
-        public EventBuilder(EntityTypeBuilder<Event> entity)
+        public void Configure(EntityTypeBuilder<Event> builder)
         {
-            entity.HasKey(k => k.ID);
-            entity.HasOne(k => k.Person)
+            builder.HasKey(k => k.ID);
+            builder.HasOne(k => k.Person)
                 .WithMany(e => e.Events)
                 .HasForeignKey(k => k.PersonID)
                 .IsRequired(true);
         }
     }
 
-    public class JoinEventImageBuilder
+    public class JoinEventImageBuilder : IEntityTypeConfiguration<JoinEventImage>
     {
-        public JoinEventImageBuilder(EntityTypeBuilder<JoinEventImage> entity)
+        public void Configure(EntityTypeBuilder<JoinEventImage> builder)
         {
-            entity.HasKey(k => k.ID);
-            entity.HasOne(k => k.Event)
-                //.HasRequired(k => k.event)
+            builder.HasKey(k => k.ID);
+            builder.HasOne(k => k.Event)
                 .WithMany(d => d.JoinEventImages)
                 .HasForeignKey(k => k.EventID)
                 .IsRequired(true);
-            entity.HasOne(k => k.Image).WithOne().IsRequired(true);
-                //.HasRequired(k => k.image);
+            builder.HasOne(k => k.Image).WithOne().IsRequired(true);
         }
     }
 
-    public class ActivityBuilder
+    public class ActivityBuilder : IEntityTypeConfiguration<Activity>
     {
-        public ActivityBuilder(EntityTypeBuilder<Activity> entity)
+        public void Configure(EntityTypeBuilder<Activity> builder)
         {
-            entity.HasKey(k => k.ID);
-            entity.HasMany(e => e.Signins)
+            builder.HasKey(k => k.ID);
+            builder.HasMany(e => e.Signins)
                 .WithOne(w => w.Activity)
                 .IsRequired(true)
                 .HasForeignKey(k => k.activityID)
@@ -296,81 +277,67 @@ namespace Machete.Data
         }
     }
 
-    public class ActivitySigninBuilder
+    public class ActivitySigninBuilder : IEntityTypeConfiguration<ActivitySignin>
     {
-        public ActivitySigninBuilder(EntityTypeBuilder<ActivitySignin> entity)
+        public void Configure(EntityTypeBuilder<ActivitySignin> builder)
         {
-            entity.HasKey(k => k.ID);
-            entity.Property(x => x.ID);
-            // EF6; see ActivitySignin class for EF7 decorator
-            // https://stackoverflow.com/questions/36155429/auto-increment-on-partial-primary-key-with-entity-framework-core
-            //entity.HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity); 
-            // Or try this:
-            //entity.Property(x => x.ID)
-            //    .ValueGeneratedOnAdd();
-
-            // EF6; unnecessary, EF7
-            // https://stackoverflow.com/questions/46290086/how-to-map-entities-with-inheritance-entity-framework-core-2-0
-            //entity.Map(m =>
-            //{
-            //    m.MapInheritedProperties();
-            //    m.ToTable("ActivitySignins");
-            //});
+            builder.HasKey(k => k.ID);
+            builder.Property(x => x.ID);
         }
     }
 
-    public class TransportProviderBuilder
+    public class TransportProviderBuilder : IEntityTypeConfiguration<TransportProvider>
     {
-        public TransportProviderBuilder(EntityTypeBuilder<TransportProvider> entity)
+        public void Configure(EntityTypeBuilder<TransportProvider> builder)
         {
-            entity.HasKey(k => k.ID);
-            entity.HasMany(e => e.AvailabilityRules) //define the parent
-                .WithOne(w => w.Provider).IsRequired(true) //Virtual property definition
-                .HasForeignKey(w => w.transportProviderID) //DB foreign key definition
+            builder.HasKey(k => k.ID);
+            builder.HasMany(e => e.AvailabilityRules)      // define the parent.
+                .WithOne(w => w.Provider).IsRequired(true) // define the EF Core virtual property.
+                .HasForeignKey(w => w.transportProviderID) // define the foreign key constraint.
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }
 
-    public class TransportProvidersAvailabilityBuilder
+    public class TransportProvidersAvailabilityBuilder : IEntityTypeConfiguration<TransportProviderAvailability>
     {
-        public TransportProvidersAvailabilityBuilder(EntityTypeBuilder<TransportProviderAvailability> entity)
+        public void Configure(EntityTypeBuilder<TransportProviderAvailability> builder)
         {
-            entity.HasKey(k => k.ID);
-            entity.HasOne(p => p.Provider)
+            builder.HasKey(k => k.ID);
+            builder.HasOne(p => p.Provider)
                 .WithMany(e => e.AvailabilityRules)
                 .HasForeignKey(e => e.transportProviderID);
         }
     }
 
-    public class TransportRuleBuilder
+    public class TransportRuleBuilder : IEntityTypeConfiguration<TransportRule>
     {
-        public TransportRuleBuilder(EntityTypeBuilder<TransportRule> entity)
+        public void Configure(EntityTypeBuilder<TransportRule> builder)
         {
-            entity.HasKey(k => k.ID);
-            entity.HasMany(c => c.costRules)
+            builder.HasKey(k => k.ID);
+            builder.HasMany(c => c.costRules)
                 .WithOne(r => r.transportRule).IsRequired(true)
                 .HasForeignKey(k => k.transportRuleID)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }
 
-    public class TransportCostRuleBuilder
+    public class TransportCostRuleBuilder : IEntityTypeConfiguration<TransportCostRule>
     {
-        public TransportCostRuleBuilder(EntityTypeBuilder<TransportCostRule> entity)
+        public void Configure(EntityTypeBuilder<TransportCostRule> builder)
         {
-            entity.HasKey(k => k.ID);
-            entity.HasOne(k => k.transportRule)
+            builder.HasKey(k => k.ID);
+            builder.HasOne(k => k.transportRule)
                 .WithMany(c => c.costRules)
                 .HasForeignKey(k => k.transportRuleID)
                 .IsRequired(true);
         }
     }
 
-    public class ScheduleRuleBuilder
+    public class ScheduleRuleBuilder : IEntityTypeConfiguration<ScheduleRule>
     {
-        public ScheduleRuleBuilder(EntityTypeBuilder<ScheduleRule> entity)
+        public void Configure(EntityTypeBuilder<ScheduleRule> builder)
         {
-            entity.HasKey(k => k.ID);
+            builder.HasKey(k => k.ID);
         }
     }
 
@@ -381,9 +348,9 @@ namespace Machete.Data
             return model.Entity<T>();
         }
 
-        public static object Add(this EntityTypeBuilder entity, Type type)
+        public static void Add(this EntityTypeBuilder entity, Type type)
         {
-            return Activator.CreateInstance(type, entity);
+            Activator.CreateInstance(type, entity);
         }
     }
 }

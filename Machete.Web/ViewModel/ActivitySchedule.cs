@@ -56,52 +56,52 @@ namespace Machete.Web.ViewModel
 
         public int firstID { get; set; }
                 
-        [LocalizedDisplayName("name", NameResourceType = typeof(Resources.ActivitySchedule))]
+        [Helpers.LocalizedDisplayName("name", NameResourceType = typeof(Resources.ActivitySchedule))]
         [Required(ErrorMessageResourceName = "namerequired", ErrorMessageResourceType = typeof(Resources.ActivitySchedule))]
         public int name { get; set; } // lookup
         
-        [LocalizedDisplayName("type", NameResourceType = typeof(Resources.ActivitySchedule))]
+        [Helpers.LocalizedDisplayName("type", NameResourceType = typeof(Resources.ActivitySchedule))]
         [Required(ErrorMessageResourceName = "typerequired", ErrorMessageResourceType = typeof(Resources.ActivitySchedule))]
         public int type { get; set; }
 
-        [LocalizedDisplayName("dateStart", NameResourceType = typeof(Resources.ActivitySchedule))]
+        [Helpers.LocalizedDisplayName("dateStart", NameResourceType = typeof(Resources.ActivitySchedule))]
         [Required(ErrorMessageResourceName = "dateStartrequired", ErrorMessageResourceType = typeof(Resources.ActivitySchedule))]
         public DateTime dateStart { get; set; }
 
-        [LocalizedDisplayName("dateEnd", NameResourceType = typeof(Resources.ActivitySchedule))]
+        [Helpers.LocalizedDisplayName("dateEnd", NameResourceType = typeof(Resources.ActivitySchedule))]
         [Required(ErrorMessageResourceName = "dateEndrequired", ErrorMessageResourceType = typeof(Resources.ActivitySchedule))]
         public DateTime dateEnd { get; set; }
 
-        [LocalizedDisplayName("teacher", NameResourceType = typeof(Resources.ActivitySchedule))]
+        [Helpers.LocalizedDisplayName("teacher", NameResourceType = typeof(Resources.ActivitySchedule))]
         [Required(ErrorMessageResourceName = "teacherrequired", ErrorMessageResourceType = typeof(Resources.ActivitySchedule))]
         public string teacher { get; set; }
         
-        [LocalizedDisplayName("notes", NameResourceType = typeof(Resources.ActivitySchedule))]
+        [Helpers.LocalizedDisplayName("notes", NameResourceType = typeof(Resources.ActivitySchedule))]
         [StringLength(4000, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.ActivitySchedule))]
         public string notes { get; set; }
 
-        [LocalizedDisplayName("sunday", NameResourceType = typeof(Resources.ActivitySchedule))]
+        [Helpers.LocalizedDisplayName("sunday", NameResourceType = typeof(Resources.ActivitySchedule))]
         public bool sunday { get; set; }
         
-        [LocalizedDisplayName("monday", NameResourceType = typeof(Resources.ActivitySchedule))]
+        [Helpers.LocalizedDisplayName("monday", NameResourceType = typeof(Resources.ActivitySchedule))]
         public bool monday { get; set; }
         
-        [LocalizedDisplayName("tuesday", NameResourceType = typeof(Resources.ActivitySchedule))]
+        [Helpers.LocalizedDisplayName("tuesday", NameResourceType = typeof(Resources.ActivitySchedule))]
         public bool tuesday { get; set; }
 
-        [LocalizedDisplayName("wednesday", NameResourceType = typeof(Resources.ActivitySchedule))]
+        [Helpers.LocalizedDisplayName("wednesday", NameResourceType = typeof(Resources.ActivitySchedule))]
         public bool wednesday { get; set; }
 
-        [LocalizedDisplayName("thursday", NameResourceType = typeof(Resources.ActivitySchedule))]
+        [Helpers.LocalizedDisplayName("thursday", NameResourceType = typeof(Resources.ActivitySchedule))]
         public bool thursday { get; set; }
         
-        [LocalizedDisplayName("friday", NameResourceType = typeof(Resources.ActivitySchedule))]
+        [Helpers.LocalizedDisplayName("friday", NameResourceType = typeof(Resources.ActivitySchedule))]
         public bool friday { get; set; }
 
-        [LocalizedDisplayName("saturday", NameResourceType = typeof(Resources.ActivitySchedule))]
+        [Helpers.LocalizedDisplayName("saturday", NameResourceType = typeof(Resources.ActivitySchedule))]
         public bool saturday { get; set; }
 
-        [LocalizedDisplayName("stopDate", NameResourceType = typeof(Resources.ActivitySchedule))]
+        [Helpers.LocalizedDisplayName("stopDate", NameResourceType = typeof(Resources.ActivitySchedule))]
         [Required(ErrorMessageResourceName = "dateEndrequired", ErrorMessageResourceType = typeof(Resources.ActivitySchedule))]
         public DateTime stopDate { get; set; }
     }

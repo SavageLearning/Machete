@@ -21,11 +21,12 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+
 using System;
 using System.ComponentModel;
 using System.Reflection;
 
-namespace Machete.Web
+namespace Machete.Web.Helpers
 {
     public class LocalizedDisplayNameAttribute : DisplayNameAttribute
     {

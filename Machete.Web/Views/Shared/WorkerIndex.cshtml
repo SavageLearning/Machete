@@ -47,7 +47,7 @@
             "aoColumns": [
                 { "mDataProp": "tabref","bSearchable": false, "bSortable": false, "bVisible": false },
                 { "mDataProp": "tablabel","bSearchable": false, "bSortable": false, "bVisible": false },
-                { "mDataProp": "WID", "bSearchable": false, "bSortable": false, "bVisible": false },
+                { "mDataProp": "wid", "bSearchable": false, "bSortable": false, "bVisible": false },
                 { "mDataProp": "memberStatusID", "bSearchable": false, "bSortable": false, "bVisible": false },
                 { "mDataProp": "dwccardnum" },
                 { "mDataProp": "memberStatus" },
@@ -59,7 +59,7 @@
             ],
             // callback populates html attr with row data from JSON
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                $(nRow).attr('recordid', aData['WID']);
+                $(nRow).attr('recordid', aData['wid']);
                 switch (aData['memberStatusID'])
                 {
                     case "@(Machete.Domain.Worker.iActive)": $(nRow).addClass('statusBlue'); break;

@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Machete.Data;
-using Machete.Data.Infrastructure;
+using Machete.Web.Helpers;
 using Machete.Web.Resources;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace Machete.Web.ViewModel
 {
@@ -31,39 +30,28 @@ namespace Machete.Web.ViewModel
         public DateTime LastLoginDate { get; set; }
     }
 
-    public class ExternalLoginConfirmationViewModel
-    {
-        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
-        [LocalizedDisplayName("firstname", NameResourceType = typeof(ValidationStrings))]
-        public string FirstName { get; set; } // Note: not in db - how is this used?
-
-        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
-        [LocalizedDisplayName("lastname", NameResourceType = typeof(ValidationStrings))]
-        public string LastName { get; set; } // Note: not in db - how is this used?
-    }
-
     public class ManageUserViewModel
     {
         [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         [DataType(DataType.Password)]
         [LocalizedDisplayName("PasswordCurrent", NameResourceType = typeof(ValidationStrings))]
-        public string OldPassword { get; set; } // Note: not in db - how is this used?
+        public string OldPassword { get; set; }
 
         [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         [StringLength(100, ErrorMessageResourceName = "stringLengthMax", ErrorMessageResourceType = typeof(ValidationStrings))] // 100 char max
         [RegularExpression(@"^.{6,}$", ErrorMessageResourceName = "passwordLengthMin", ErrorMessageResourceType = typeof(ValidationStrings))] // 6 char min
         [DataType(DataType.Password)]
         [LocalizedDisplayName("PasswordNew", NameResourceType = typeof(ValidationStrings))]
-        public string NewPassword { get; set; } // Note: not in db - how is this used?
+        public string NewPassword { get; set; }
        
         [DataType(DataType.Password)]
         [LocalizedDisplayName("PasswordConfirm", NameResourceType = typeof(ValidationStrings))]
         [Compare("NewPassword", ErrorMessageResourceName = "PasswordCompare", ErrorMessageResourceType = typeof(ValidationStrings))]
-        public string ConfirmPassword { get; set; } // Note: not in db - how is this used?
+        public string ConfirmPassword { get; set; }
 
-        public string Action { get; set; } // Note: not in db - how is this used?
+        public string Action { get; set; }
 
-        public string ReturnUrl { get; set; } // Note: not in db - how is this used?
+        public string ReturnUrl { get; set; }
     }
 
 
@@ -78,14 +66,14 @@ namespace Machete.Web.ViewModel
         [StringLength(100, ErrorMessageResourceName = "stringLengthMax", ErrorMessageResourceType = typeof(ValidationStrings))] // 100 char max
         [RegularExpression(@"^.{6,}$", ErrorMessageResourceName = "passwordLengthMin", ErrorMessageResourceType = typeof(ValidationStrings))] // 6 char min
         [LocalizedDisplayName("password", NameResourceType = typeof(ValidationStrings))]
-        public string Password { get; set; } // Note: not in db - how is this used?
+        public string Password { get; set; }
 
         [LocalizedDisplayName("rememberme", NameResourceType = typeof(ValidationStrings))]
-        public bool RememberMe { get; set; } // Note: not in db - how is this used?
+        public bool RememberMe { get; set; }
 
-        public string Action { get; set; } // Note: not in db - how is this used?
+        public string Action { get; set; }
 
-        public string ReturnUrl { get; set; } // Note: not in db - how is this used?
+        public string ReturnUrl { get; set; }
     }
 
     // View Model used for Machete worker center members to sign up
@@ -96,20 +84,20 @@ namespace Machete.Web.ViewModel
         [RegularExpression(@"^.{6,}$", ErrorMessageResourceName = "passwordLengthMin", ErrorMessageResourceType = typeof(ValidationStrings))] // 6 char min
         [DataType(DataType.Password)]
         [LocalizedDisplayName("password", NameResourceType = typeof(ValidationStrings))]
-        public string Password { get; set; } // Note: not in db - how is this used?
+        public string Password { get; set; }
 
         [DataType(DataType.Password)]
         [LocalizedDisplayName("PasswordConfirm", NameResourceType = typeof(ValidationStrings))]
         [Compare("Password", ErrorMessageResourceName = "PasswordCompare", ErrorMessageResourceType = typeof(ValidationStrings))]
-        public string ConfirmPassword { get; set; } // Note: not in db - how is this used?
+        public string ConfirmPassword { get; set; }
 
         [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         [LocalizedDisplayName("firstname", NameResourceType = typeof(ValidationStrings))]
-        public string FirstName { get; set; } // Note: not in db - how is this used?
+        public string FirstName { get; set; }
 
         [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         [LocalizedDisplayName("lastname", NameResourceType = typeof(ValidationStrings))]
-        public string LastName { get; set; } // Note: not in db - how is this used?
+        public string LastName { get; set; }
 
         [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         [DataType(DataType.EmailAddress, ErrorMessageResourceName = "emailValidation", ErrorMessageResourceType = typeof(ValidationStrings))]
@@ -160,11 +148,11 @@ namespace Machete.Web.ViewModel
 
         [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         [LocalizedDisplayName("firstname", NameResourceType = typeof(ValidationStrings))]
-        public string FirstName { get; set; } // Note: not in db - how is this used?
+        public string FirstName { get; set; }
 
         [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         [LocalizedDisplayName("lastname", NameResourceType = typeof(ValidationStrings))]
-        public string LastName { get; set; } // Note: not in db - how is this used?
+        public string LastName { get; set; }
 
         [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         [DataType(DataType.EmailAddress, ErrorMessageResourceName = "emailValidation", ErrorMessageResourceType = typeof(ValidationStrings))]
@@ -179,61 +167,46 @@ namespace Machete.Web.ViewModel
         [RegularExpression(@"^.{6,}$", ErrorMessageResourceName = "passwordLengthMin", ErrorMessageResourceType = typeof(ValidationStrings))] // 6 char min
         [DataType(DataType.Password)]
         [LocalizedDisplayName("password", NameResourceType = typeof(ValidationStrings))]
-        public string NewPassword { get; set; } // Note: not in db - how is this used?
+        public string NewPassword { get; set; }
 
         [DataType(DataType.Password)]
         [LocalizedDisplayName("PasswordConfirm", NameResourceType = typeof(ValidationStrings))]
         [Compare("NewPassword", ErrorMessageResourceName = "PasswordCompare", ErrorMessageResourceType = typeof(ValidationStrings))]
-        public string ConfirmPassword { get; set; } // Note: not in db - how is this used?
+        public string ConfirmPassword { get; set; }
 
-        public string Id { get; set; }
+        public string Id { get; }
 
-        public string ErrorMessage { get; set; } // Note: not in db - how is this used?
+        public string ErrorMessage { get; set; }
     }
 
 
     public class SelectUserRolesViewModel
     {
-        public SelectUserRolesViewModel()
+        public SelectUserRolesViewModel() { }
+        
+        // Enable initialization with an instance of ApplicationUser:
+        public SelectUserRolesViewModel(MacheteUser userBeingModified,
+            IEnumerable<IdentityRole> allRoles,
+            UserManager<MacheteUser> userManager)
         {
             Roles = new List<SelectRoleEditorViewModel>();
-        }
-
-        // Enable initialization with an instance of ApplicationUser:
-        public SelectUserRolesViewModel(MacheteUser user, MacheteContext dbFactory)
-            : this()
-        {
-            UserName = user.UserName;
-            string[] firstLast = user.UserName.Split('.');
+            UserName = userBeingModified.UserName;
+            string[] firstLast = userBeingModified.UserName.Split('.');
             FirstName = firstLast[0];
-            if (firstLast.Length > 1)
-            {
-                LastName = firstLast[1];
-            }
-            else
-            {
-                LastName = "";
-            }
+            LastName = firstLast.Length > 1 ? firstLast[1] : "";
 
-            UserId = user.Id;
+            UserId = userBeingModified.Id;
 
             // ReSharper disable once SuggestVarOrType_Elsewhere
             // Add all available roles to the list of EditorViewModels:
-            DbSet<IdentityRole> allRoles = dbFactory.Roles;
             foreach (var role in allRoles)
             {
                 // An EditorViewModel will be used by Editor Template:
-                var rvm = new SelectRoleEditorViewModel(role);
-                Roles.Add(rvm);
-            }
-
-            // Set the Selected property to true for those roles for 
-            // which the current user is a member:
-            foreach (var userRole in user.Roles)
-            {
-                SelectRoleEditorViewModel checkUserRole =
-                    Roles.Find(r => r.RoleId == userRole.Id);
-                checkUserRole.Selected = true;
+                var selectableRole = new SelectRoleEditorViewModel(role);
+                var isInRole = userManager.IsInRoleAsync(userBeingModified, selectableRole.RoleName);
+                isInRole.Wait(); // I'm sorry
+                if (isInRole.Result) selectableRole.Selected = true;
+                Roles.Add(selectableRole);
             }
         }
 
@@ -254,7 +227,8 @@ namespace Machete.Web.ViewModel
     // Used to display a single role with a checkbox, within a list structure:
     public class SelectRoleEditorViewModel
     {
-        public SelectRoleEditorViewModel() {}
+        public SelectRoleEditorViewModel() { }
+        
         public SelectRoleEditorViewModel(IdentityRole role)
         {
             RoleName = role.Name;
@@ -265,6 +239,6 @@ namespace Machete.Web.ViewModel
 
         [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         public string RoleName { get; set; }
-        public string RoleId { get; set; }
+        public string RoleId { get; }
     }
 }

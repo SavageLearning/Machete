@@ -78,11 +78,11 @@
                 "aoColumns": [
                     { "mDataProp": "tabref", "bSearchable": false, "bSortable": false, "bVisible": false },
                     { "mDataProp": "tablabel", "bSearchable": false, "bSortable": false, "bVisible": false },
-                    { "mDataProp": "EID", "bSearchable": false, "bSortable": false, "bVisible": false },
-                    { "mDataProp": "WOID" },
+                    { "mDataProp": "eid", "bSearchable": false, "bSortable": false, "bVisible": false },
+                    { "mDataProp": "woid" },
                     { "mDataProp": "dateTimeofWork" },
                     { "mDataProp": "status" },
-                    { "mDataProp": "WAcount" },
+                    { "mDataProp": "wAcount" },
                     { "mDataProp": "contactName" },
                     { "mDataProp": "workSiteAddress1" },
                     { "mDataProp": "dateupdated" },
@@ -91,7 +91,7 @@
                 "aoSearchCols" :  [null, null, { "sSearch": "@(Model.ID)" }, null, null, null, null, null, null],
                 "fnServerDataExtra": function() { return [{ name: "showOrdersWorkers", value: true }]},
                 "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                    if (aData['workers'] != null && aData['WAcount'] > 0) {                    
+                    if (aData['workers'] != null && aData['wAcount'] > 0) {                    
                         $('td:eq(3)', nRow).prepend('<img src="/Content/dataTables/details_open.png">');
                     }                
                     return nRow;
@@ -131,8 +131,8 @@
             sOut += '<tbody>';
             for (var i in wkrList)
             {
-                var wkr = wkrList[i];
-                sOut += '<tr><td>'+wkr.WID+'</td><td>'+wkr.name+'</td><td>'+wkr.skill+'</td><td>'+wkr.hours+'</td><td>'+wkr.wage+'</td></tr>';
+                var wkr = wkrList[i];// below; was: WID
+                sOut += '<tr><td>'+wkr.wid+'</td><td>'+wkr.name+'</td><td>'+wkr.skill+'</td><td>'+wkr.hours+'</td><td>'+wkr.wage+'</td></tr>';
             }
             sOut += '</tbody></table>';     
             return sOut;

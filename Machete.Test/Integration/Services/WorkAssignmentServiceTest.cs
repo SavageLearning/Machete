@@ -3,7 +3,7 @@
 //// Author:   Savage Learning, LLC.
 //// Created:  2012/06/17 
 //// License:  GPL v3
-//// Project:  Machete.Test
+//// Project:  Machete.Test.Old
 //// Contact:  savagelearning
 //// 
 //// Copyright 2011 Savage Learning, LLC., all rights reserved.
@@ -28,7 +28,7 @@
 //using System.Globalization;
 //using System.Linq;
 
-//namespace Machete.Test.Integration.Service
+//namespace Machete.Test.Old.Integration.Service
 //{
 //    [TestClass]
 //    public class WorkAssignmentTests

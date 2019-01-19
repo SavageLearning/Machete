@@ -2,18 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Http;
+using BraintreeHttp;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Api.Controllers
 {
-    public class ErrorController : ApiController
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ErrorController : ControllerBase
     {
         [HttpGet, HttpPost, HttpPut, HttpDelete, HttpHead, HttpOptions]
         [AllowAnonymous]
-        public IHttpActionResult NotFound(string path)
+        public ActionResult NotFound(string path)
         {
-            // log error to ELMAH
-            Elmah.ErrorSignal.FromCurrentContext().Raise(new HttpException(404, "404 Not Found: /" + path));
+            //TODO log error to ELMAH
+            //ErrorSignal.FromCurrentContext().Raise(new HttpException(404, "404 Not Found: /" + path));
 
             // return 404
             return NotFound();

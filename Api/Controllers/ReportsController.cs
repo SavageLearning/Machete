@@ -6,10 +6,13 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
+using Machete.Api.Attributes;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Api.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class ReportsController : MacheteApiController
     {
         private readonly IReportsV2Service serv;
@@ -22,44 +25,44 @@ namespace Machete.Api.Controllers
 
         // GET api/<controller>
         //[Authorize(Roles = "Administrator, Manager")]
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
 
-        public IHttpActionResult Get()
+        public ActionResult Get()
         {
             var result = serv.getList()
                 .Select(a => map.Map<Domain.ReportDefinition, ReportDefinition>(a));
 
-            return Json( new { data = result } );
+            return new JsonResult( new { data = result } );
         }
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
-        public IHttpActionResult Get(string id)
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        public ActionResult Get(string id)
         {
 
             var result = serv.Get(id);
             // TODO Use Automapper to return column deserialized
-            return Json(new { data = result });
+            return new JsonResult(new { data = result });
         }
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
-        public IHttpActionResult Get(string id, DateTime? beginDate, DateTime? endDate)
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        public ActionResult Get(string id, DateTime? beginDate, DateTime? endDate)
         {
             return Get(id, beginDate, endDate, null);
         }
 
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
-        public IHttpActionResult Get(string id, DateTime? beginDate)
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        public ActionResult Get(string id, DateTime? beginDate)
         {
             return Get(id, beginDate, null, null);
         }
 
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
 
-        public IHttpActionResult Get(string id, int? memberNumber)
+        public ActionResult Get(string id, int? memberNumber)
         {
             return Get(id, null, null, memberNumber);
         }
 
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
-        public IHttpActionResult Get(string id, DateTime? beginDate, DateTime? endDate, int? memberNumber)
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        public ActionResult Get(string id, DateTime? beginDate, DateTime? endDate, int? memberNumber)
         {
             var result = serv.getQuery(
                 new Service.DTO.SearchOptions {
@@ -68,49 +71,47 @@ namespace Machete.Api.Controllers
                     beginDate = beginDate,
                     dwccardnum = memberNumber
                 });
-            return Json(new { data = result });
+            return new JsonResult(new { data = result });
         }
 
         // POST api/values
         [HttpPost]
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
-        public IHttpActionResult Post(ReportQuery data)
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        public ActionResult Post(ReportQuery data)
         {
             string query = data.query;
             if (string.IsNullOrEmpty(query)) {
                 if (query == string.Empty) { // query is blank
-                    return StatusCode(HttpStatusCode.NoContent);
+                    return StatusCode((int)HttpStatusCode.NoContent);
                 } else { // query is null; query cannot be null
-                    return StatusCode(HttpStatusCode.BadRequest);
+                    return StatusCode((int)HttpStatusCode.BadRequest);
                 }
             }
             try {
                 var validationMessages = serv.validateQuery(query);
                 if (validationMessages.Count == 0) {
                     // "no modification needed"; http speak good human
-                    return StatusCode(HttpStatusCode.NotModified);
+                    return StatusCode((int)HttpStatusCode.NotModified);
                 } else {
                     // 200; we wanted validation messages, and got them.
-                    return Json(new { data = validationMessages });
+                    return new JsonResult(new { data = validationMessages });
                 }
             } catch (Exception ex) {
                 // SQL errors are expected but they will be returned as strings (200).
                 // in this case, something happened that we were not expecting; return 500.
                 var message = ex.Message;
-                var statusCode = HttpStatusCode.InternalServerError;
-                var error = Request.CreateErrorResponse(statusCode, message);
-                return ResponseMessage(error);
+                return StatusCode((int)HttpStatusCode.InternalServerError, message);
             }
         }
 
         // PUT api/values/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
         public void Put(int id, [FromBody]string value)
         {
         }
 
         // DELETE api/values/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
         public void Delete(int id)
         {
         }

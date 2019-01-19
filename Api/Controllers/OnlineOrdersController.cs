@@ -13,14 +13,16 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Threading;
-using System.Web.Http;
-using System.Web.Http.Controllers;
-using PayPal.Api;
+using PayPal.Core;
 using Machete.Domain;
 using System.Globalization;
+using Machete.Api.Attributes;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Api.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class OnlineOrdersController : MacheteApiController
     {
         private readonly IOnlineOrdersService serv;
@@ -50,7 +52,7 @@ namespace Machete.Api.Controllers
             this.cServ = cServ;
         }
 
-        protected override void Initialize(HttpControllerContext controllerContext)
+        protected new void Initialize(ControllerContext controllerContext)
         {
             // base executes first to populate userSubject
             base.Initialize(controllerContext);
@@ -58,9 +60,7 @@ namespace Machete.Api.Controllers
             employer = eServ.Get(guid: userSubject);
             if (employer == null)
             {
-                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotFound) {
-                    Content = new StringContent(string.Format("No employer record associated with claim {0}", userSubject)),
-                    ReasonPhrase = "Not found: employer record"});
+                throw new MacheteNullObjectException(string.Format("Not found: employer record; no employer record associated with claim {0}", userSubject));
             }
             paypalId = cServ.getConfig(Cfg.PaypalId);
             paypalSecret = cServ.getConfig(Cfg.PaypalSecret);
@@ -68,8 +68,8 @@ namespace Machete.Api.Controllers
         }
 
         // GET: api/OnlineOrders
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Employer })]
-        public IHttpActionResult Get()
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Employer })]
+        public ActionResult Get()
         {
             var vo = new viewOptions();
             vo.displayLength = 500; // TODO dumping on the client; will address Angular using search later
@@ -81,13 +81,13 @@ namespace Machete.Api.Controllers
                 .Select(
                     e => map.Map<Service.DTO.WorkOrdersList, ViewModel.WorkOrder>(e)
                 ).AsEnumerable();
-            return Json(new { data = result });
+            return new JsonResult(new { data = result });
         }
 
         // GET: api/OnlineOrders/5
         [Route("api/onlineorders/{orderID}")]
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Employer })]
-        public IHttpActionResult Get(int orderID)
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Employer })]
+        public ActionResult Get(int orderID)
         {
             Domain.WorkOrder order = null;
             try
@@ -106,13 +106,13 @@ namespace Machete.Api.Controllers
             // TODO: Not mapping to view object throws JsonSerializationException, good to test error
             // handling with...(delay in error)
             var result = map.Map<Domain.WorkOrder, ViewModel.WorkOrder>(order);
-            return Json(new { data = result });
+            return new JsonResult(new { data = result });
         }
 
         // POST: api/OnlineOrders
         [HttpPost]
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Employer })]
-        public IHttpActionResult Post([FromBody]ViewModel.WorkOrder order)
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Employer })]
+        public ActionResult Post([FromBody]ViewModel.WorkOrder order)
         {
 
             var domain = map.Map<ViewModel.WorkOrder, Domain.WorkOrder>(order);
@@ -130,7 +130,7 @@ namespace Machete.Api.Controllers
                     Content = new StringContent(e.ErrorMessage),
                     ReasonPhrase = "Validation failed on workorder"
                 };
-                throw new HttpResponseException(res);
+                return BadRequest(res);
             } catch(InvalidOperationException e)
             {
                 var res = new HttpResponseMessage(HttpStatusCode.InternalServerError)
@@ -138,17 +138,17 @@ namespace Machete.Api.Controllers
                     Content = new StringContent(e.Message),
                     ReasonPhrase = "Invalid operation "
                 };
-                throw new HttpResponseException(res);
+                return BadRequest(res);
             }
             var result = map.Map<Domain.WorkOrder, ViewModel.WorkOrder>(newOrder);
-            return Json(new { data = result });
+            return new JsonResult(new { data = result });
         }
 
         // POST: api/onlineorders/{orderid}/paypalexecute
         [HttpPost]
         [Route("api/onlineorders/{orderID}/paypalexecute")]
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Employer })]
-        public IHttpActionResult PaypalExecute(int orderID, [FromBody]PaypalPayment data)
+        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Employer })]
+        public ActionResult PaypalExecute(int orderID, [FromBody]PaypalPayment data)
         {
             validatePaypalData(data);
             Domain.WorkOrder order = null;
@@ -170,13 +170,13 @@ namespace Machete.Api.Controllers
                 woServ.Save(order, userEmail);
             }
 
-            var result = postExecute(data);
-            var payment = JsonConvert.DeserializeObject<PayPal.Api.Payment>(result);
+            var result = postExecute(data); // TODO fix
+            //var payment = JsonConvert.DeserializeObject<PayPal.Api.Payment>(result);
             order.ppResponse = result;
-            order.ppState = payment.state;
-            order.ppFee = Double.Parse(payment.transactions.Single().amount.total);
+            //order.ppState = payment.state;
+            //order.ppFee = Double.Parse(payment.transactions.Single().amount.total);
             woServ.Save(order, userEmail);
-            return Json(payment);
+            return new JsonResult(new { thingIs = "You seriously need to fix this." });//payment);
         }
 
         [NonAction]
@@ -189,7 +189,7 @@ namespace Machete.Api.Controllers
                     Content = new StringContent(string.Format("PaypalID already set to {0}, conflicts with {1}", pp.payerID, wo.ppPayerID)),
                     ReasonPhrase = "PaypalID already set to a different ID"
                 };
-                throw new HttpResponseException(res);
+                throw new Exception(res.ToString());
             }
             if (wo.ppPaymentID != null && wo.ppPaymentID != pp.paymentID)
             {
@@ -198,7 +198,7 @@ namespace Machete.Api.Controllers
                     Content = new StringContent(string.Format("PaymentID already set to {0}, conflicts with {1}", pp.paymentID, wo.ppPaymentID)),
                     ReasonPhrase = "PaymentID already set to a different ID"
                 };
-                throw new HttpResponseException(res);
+                throw new Exception(res.ToString());
             }
 
             if (wo.ppPaymentToken != null && wo.ppPaymentToken != pp.paymentToken)
@@ -208,7 +208,7 @@ namespace Machete.Api.Controllers
                     Content = new StringContent(string.Format("PaymentToken already set to {0}, conflicts with {1}", pp.paymentToken, wo.ppPaymentToken)),
                     ReasonPhrase = "PaymentToken already set to a different ID"
                 };
-                throw new HttpResponseException(res);
+                throw new Exception(res.ToString());
             }
         }
 
@@ -220,7 +220,7 @@ namespace Machete.Api.Controllers
                 Content = new StringContent(string.Format("Order {0} not found for employer {1}", id, employer.ID)),
                 ReasonPhrase = "Workorder not found"
             };
-            throw new HttpResponseException(res);
+            throw new Exception(res.ToString());
         }
 
         [NonAction]
@@ -233,7 +233,7 @@ namespace Machete.Api.Controllers
                     Content = new StringContent(string.Format("Paypal data: {0}", JsonConvert.SerializeObject(pp))),
                     ReasonPhrase = "Incomplete Paypal data"
                 };
-                throw new HttpResponseException(res);
+                throw new Exception(res.ToString());
             }
         }
 
@@ -254,10 +254,10 @@ namespace Machete.Api.Controllers
             var result = client.Execute(request);
             if (result.StatusCode != HttpStatusCode.OK)
             {
-                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                throw new Exception(StatusCode(500, new 
                 {
                     ReasonPhrase = "Payment execute failed"
-                });
+                }).ToString()); // TODO make less ugly
             }
 
             return result.Content;
@@ -288,7 +288,7 @@ namespace Machete.Api.Controllers
             {
                 ReasonPhrase = "Failed to retrieve access token from Paypal"
             };
-            throw new HttpResponseException(res);
+            throw new Exception(res.ToString()); //TODO check
         }
     }
 

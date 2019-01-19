@@ -11,8 +11,8 @@ namespace Machete.Web.Maps
             CreateMap<Domain.WorkAssignment, ViewModel.WorkAssignment>()
                 .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/WorkAssignment/Edit/" + Convert.ToString(d.ID)))
                 .ForMember(v => v.tablabel, opt => opt.MapFrom(d =>
-                    Resources.WorkAssignments.tabprefix +
-                    System.String.Format("{0,5:D5}-{1,2:D2}", d.workOrder.paperOrderNum, d.pseudoID)))
+                    Resources.WorkAssignments.tabprefix
+                    + System.String.Format("{0,5:D5}-{1,2:D2}", d.workOrder.paperOrderNum, d.pseudoID)))
                 .ForMember(v => v.def, opt => opt.Ignore())
                 .ForMember(v => v.idString, opt => opt.Ignore())
                 .ForMember(v => v.isWorkerAssigned, opt => opt.MapFrom(d => d.workerAssigned == null ? false : true))

@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Machete.Domain\Machete.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Defaults" />
+  </ItemGroup>
+
 </Project>

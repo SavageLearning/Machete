@@ -22,8 +22,11 @@
 // 
 #endregion
 
+using System;
 using Machete.Web.Helpers;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Web.Controllers
@@ -60,6 +63,19 @@ namespace Machete.Web.Controllers
         public ActionResult Docs()
         {
             return PartialView();
+        }
+
+        // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/localization?view=aspnetcore-2.2#set-the-culture-programmatically
+        // https://github.com/aspnet/Docs/blob/master/aspnetcore/fundamentals/localization/sample/Localization/Controllers/HomeController.cs#L58
+        public IActionResult SetLanguage(string culture, string returnUrl)
+        {
+            Response.Cookies.Append(
+                CookieRequestCultureProvider.DefaultCookieName,
+                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+                new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+            );
+
+            return LocalRedirect(returnUrl);
         }
     }   
 }

@@ -10,6 +10,8 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using Machete.Web.Maps;
+using Machete.Test.Integration.Fluent;
 
 namespace Machete.Test.Selenium.View
 {
@@ -26,7 +28,8 @@ namespace Machete.Test.Selenium.View
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext)
         {
-            map = new Machete.Web.MapperConfig().getMapper();
+            var mapperConfig = new MvcMapperConfiguration().Config;
+            map = mapperConfig.CreateMapper();
             WebServer.StartIis();
         }
 
@@ -180,10 +183,10 @@ namespace Machete.Test.Selenium.View
 
             Random rand = new Random();
             int rowcount = 1;
-            var workers = frb.ToFactory().Get().Workers;
+            var workers = frb.ToFactory().Workers;
             Activity _act = (Activity)Records.activity.Clone();
             ActivitySignin _asi = (ActivitySignin)Records.activitysignin.Clone();
-            IEnumerable<int> cardlist = frb.ToFactory().Get().Workers.Select(q => q.dwccardnum).Distinct();
+            IEnumerable<int> cardlist = frb.ToFactory().Workers.Select(q => q.dwccardnum).Distinct();
             int firstCardNum = workers.First().dwccardnum;
 
             // Act

@@ -1,9 +1,10 @@
 @using System.Security.Claims
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
+@using Microsoft.AspNetCore.Http
 
 @{
-var userIdentity = new ClaimsIdentity("Cookies");
+var userIdentity = User.Identity;
 }
 
 @if (userIdentity.IsAuthenticated)
@@ -12,8 +13,10 @@ var userIdentity = new ClaimsIdentity("Cookies");
     {
         @Html.AntiForgeryToken()
         <!-- Greeting announcing signed in user -->
-        <text>@ValidationStrings.Welcome <b>@userIdentity.Name</b>
-        [ @if(Html.IsInRole(new[] { "Administrator", "Manager" })) 
+        <text>@ValidationStrings.Welcome, <b>@userIdentity.Name</b>!
+        <br />
+        [
+        @if(Html.IsInRole(new[] { "Administrator", "Manager" })) 
             { 
                 @* Settings console *@
                 @Html.ActionLink(ValidationStrings.Settings, "Index", "Account")
@@ -26,10 +29,10 @@ var userIdentity = new ClaimsIdentity("Cookies");
                     @* User account console *@
                     @Html.ActionLink("Manage", "Manage", "Account")
                 }
-            } ]
-
+            }
+        |
         @Html.ActionLink(ValidationStrings.LogOff, "LogOff", "Account")
-
-        </text>}
-
+        ]
+        </text>
+    }
 }

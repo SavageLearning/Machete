@@ -23,9 +23,7 @@
 #endregion
 
 using System;
-using System.Globalization;
 using System.Linq;
-using System.Security.Claims;
 using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
@@ -42,7 +40,6 @@ namespace Machete.Web.Controllers
         private readonly IActivitySigninService serv;
         private readonly IMapper map;
         private readonly IDefaults def;
-        private CultureInfo CI;
 
         public ActivitySigninController(
             IActivitySigninService serv, 
@@ -54,13 +51,8 @@ namespace Machete.Web.Controllers
             this.def = def;
         }
 
-        protected override void Initialize(ActionContext requestContext)
-        {
-            base.Initialize(requestContext);
-            CI = Session["Culture"];
-        }
         /// <summary>
-        /// 
+        /// GET /Activity/Index
         /// </summary>
         /// <returns></returns>
         [Authorize(Roles = "Manager, Administrator, Check-in, Teacher")]
@@ -68,26 +60,26 @@ namespace Machete.Web.Controllers
         {
             return View("~/Views/Shared/ActivitySigninIndex.cshtml");
         }
+
         /// <summary>
-        /// 
+        /// POST /Activity/Index
         /// </summary>
         /// <param name="dwccardnum"></param>
         /// <param name="activityID"></param>
-        /// <returns></returns>
+        /// <param name="userName"></param>
         [HttpPost]
+        [UserNameFilter]
         [Authorize(Roles = "Manager, Administrator, Check-in, Teacher")]
-        public ActionResult Index(int dwccardnum, int activityID)
+        public ActionResult Index(int dwccardnum, int activityID, string userName)
         {
-            // The card just swiped
             var _asi = new ActivitySignin();
             _asi.dateforsignin = DateTime.Now;
             _asi.activityID = activityID;
             _asi.dwccardnum = dwccardnum;
-            string imageRef = serv.getImageRef(dwccardnum);
-            var userIdentity = new ClaimsIdentity("Cookies");
 
-            Worker w = serv.CreateSignin(_asi, userIdentity.Name);
             //Get picture from checkin, show with next view
+            string imageRef = serv.getImageRef(dwccardnum);
+            Worker w = serv.CreateSignin(_asi, userName);
 
             return Json(new
             {
@@ -99,12 +91,7 @@ namespace Machete.Web.Controllers
                 expirationDate = w.memberexpirationdate
             });
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="userName"></param>
-        /// <returns></returns>
+
         [UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, Check-in, Teacher")]
         public ActionResult Delete(int id, string userName)
@@ -117,16 +104,11 @@ namespace Machete.Web.Controllers
                 deletedID = id
             });
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="param"></param>
-        /// <returns></returns>
+
         [Authorize(Roles = "Administrator, Manager, Check-in, Teacher")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
-            vo.CI = CI;
             dataTableResult<ActivitySigninList> list = serv.GetIndexView(vo);
             var result = list.query
                 .Select(
@@ -140,6 +122,5 @@ namespace Machete.Web.Controllers
                 aaData = result
             });
         }
-
     }
 }

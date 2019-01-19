@@ -23,7 +23,6 @@
 #endregion
 
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -35,6 +34,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Machete.Web.Controllers
@@ -45,7 +45,6 @@ namespace Machete.Web.Controllers
         private readonly ILookupService serv;
         private readonly IMapper map;
         private readonly IDefaults def;
-        CultureInfo CI;
         public LookupController(ILookupService serv,
             IDefaults def,
             IMapper map)
@@ -53,13 +52,8 @@ namespace Machete.Web.Controllers
             this.serv = serv;
             this.map = map;
             this.def = def;
-            ViewBag.configCategories = def.configCategories();
         }
-        protected override void Initialize(ActionContext requestContext)
-        {
-            base.Initialize(requestContext);
-            CI = Session["Culture"];
-        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -67,6 +61,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Index()
         {
+            ViewBag.configCategories = def.configCategories();
             return View("~/Views/Config/Index.cshtml");
         }
         [Authorize(Roles = "Administrator, Manager")]
@@ -74,7 +69,6 @@ namespace Machete.Web.Controllers
         {
             //Get all the records
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
-            vo.CI = CI;
             IEnumerable<LookupList> list = serv.GetIndexView(vo);
             var result = list
                 .Select(

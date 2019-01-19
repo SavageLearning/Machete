@@ -104,7 +104,7 @@ namespace Machete.Data.Infrastructure
         public virtual T Add(T entity)
         {
             var poofball = _dbset.Add(entity).Entity;
-            return poofball;
+            return poofball; // TODO Chaim plz
         }
       
         public virtual void Delete(T entity)

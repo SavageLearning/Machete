@@ -1,35 +1,24 @@
-﻿using Machete.Data;
-using Machete.Domain;
+﻿using Machete.Domain;
 using Machete.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Practices.Unity;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Machete.Test.Integration
+namespace Machete.Test.Integration.Fluent
 {
-    public partial class FluentRecordBase : IDisposable
+    public partial class FluentRecordBase
     {
         private ITransportRuleService _servTR;
         private TransportRule _tr;
-
-        public FluentRecordBase AddTransportRule(
-            )
+        
+        public void AddTransportRule()
         {
-            //
             // DEPENDENCIES
-            _servTR = container.Resolve<ITransportRuleService>();
+            _servTR = container.GetRequiredService<ITransportRuleService>();
 
-            //
             // ARRANGE
             _tr = (TransportRule)Records.transportRule.Clone();
 
-            //
             // ACT
             _servTR.Create(_tr, _user);
-            return this;
         }
 
         public TransportRule ToTransportRule()

@@ -229,13 +229,13 @@
     <value>Estado</value>
   </data>
   <data name="timeFlexible" xml:space="preserve">
-    <value>Es hora de inicio es flexible?</value>
+    <value>La hora del inicio es flexible?</value>
   </data>
   <data name="phoneformat" xml:space="preserve">
     <value>Por favor, utilice este formulario: ###-###-####</value>
   </data>
   <data name="paperOrderNum" xml:space="preserve">
-    <value>Alternativa (de papel) para ID</value>
+    <value>ID de la órden de papel</value>
   </data>
   <data name="paperOrderNumFormat" xml:space="preserve">
     <value>Este número debe ser de 5 dígitos, o en blanco</value>
@@ -244,34 +244,34 @@
     <value>Añadir</value>
   </data>
   <data name="requestRemove" xml:space="preserve">
-    <value>Remover</value>
+    <value>Borrar</value>
   </data>
   <data name="requestTitle" xml:space="preserve">
-    <value>Seleccionar un trabajador</value>
+    <value>Seleccione un trabajador</value>
   </data>
   <data name="workerRequests" xml:space="preserve">
-    <value>Peticiones de los trabajadores</value>
+    <value>Pedidas de ciertos trabajadores</value>
   </data>
   <data name="onlineSource" xml:space="preserve">
-    <value>Creado por formulario web pedido?</value>
+    <value>Creado por una órden en línea?</value>
   </data>
   <data name="transportTransactID" xml:space="preserve">
-    <value>Payment #</value>
+    <value>No. del pago</value>
   </data>
   <data name="transportTransactType" xml:space="preserve">
-    <value>Payment Type</value>
+    <value>Especie del pago</value>
   </data>
   <data name="workerCount" xml:space="preserve">
-    <value>Worker Count</value>
+    <value>Conteo de trabajadores</value>
   </data>
   <data name="addressWorkSite" xml:space="preserve">
-    <value>Address (Work Site)</value>
+    <value>Dirección del trabajo</value>
   </data>
   <data name="phoneWorkSite" xml:space="preserve">
-    <value>Phone (Work Site)</value>
+    <value>Teléfono del sitio de trabajo</value>
   </data>
   <data name="disclosureAgreement" xml:space="preserve">
-    <value>Disclosure Agreement Accepted</value>
+    <value>Acuerdo de Divulgación Firmado</value>
   </data>
   <data name="paypal" xml:space="preserve">
     <value>PayPal</value>

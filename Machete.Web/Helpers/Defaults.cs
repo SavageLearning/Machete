@@ -131,7 +131,7 @@ namespace Machete.Web.Helpers
                     LCategory.training,
                     LCategory.income
                 }
-                .Select(x => new SelectListItem { Value = x, Text = x}),
+                .Select(x => new SelectListItem { Value = x, Text = x }),
                 "Value", "Text", LCategory.activityName);
 
             yesnoEN = new List<SelectListItem>();

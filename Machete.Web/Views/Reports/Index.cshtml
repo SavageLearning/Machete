@@ -1,7 +1,7 @@
 @using Machete.Web.Resources
 @using Microsoft.AspNetCore.Http.Extensions
 @using Microsoft.AspNetCore.Localization
-<script src="Content/reports.js"></script>
+<script src="~/Content/reports.js"></script>
 
 @{
     var httpContext = ViewContext.HttpContext;
@@ -14,13 +14,11 @@
         <li><a href="#employersWrapper" id="employersTab">@Reports.employersTab</a></li>
         <li><a href="#workersWrapper" id="workersTab">@Reports.workersTab</a> </li>
         <li><a href="#activityWrapper" id="activityTab">@Reports.activitiesTab</a> </li>
-        @*<li><a href="#ssrsWrapper" id="ssrsTab">@Reports.ssrsTab</a> </li>*@
     </ul>
         @await Html.PartialAsync("Summary")
         @await Html.PartialAsync("Employers")
         @await Html.PartialAsync("Workers")
         @await Html.PartialAsync("Activities")
-        @*Html.Partial("SSRS")*@
 </div>
 @Html.AntiForgeryToken()
 <script type="text/javascript">
@@ -117,7 +115,7 @@
         // Yearly datepickerer
         //
         $('#ywdDate').change(function (event) { ywdNewTable(); });
-        $('#yearActDate').change(function (event) { yearActNewTable(); })
+        $('#yearActDate').change(function (event) { yearActNewTable(); });
         $('#yearWkrDate').change(function (event) { yearWkrNewTable(); });
         $('#yearEmpDate').change(function (event) { yearEmpNewTable(); });
 

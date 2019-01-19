@@ -1,34 +1,33 @@
-﻿using AutoMapper;
-using Machete.Domain;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using AutoMapper;
 using Machete.Service;
 using DTO = Machete.Service.DTO;
-using Machete.Web.Helpers;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web.Http;
+using Machete.Api.Attributes;
+using Machete.Api.ViewModel;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Api.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     [ElmahHandleError]
     [Authorize]
-    public class WorkAssignmentsController : ApiController
+    public class WorkAssignmentsController : ControllerBase
     {
         private readonly IWorkAssignmentService serv;
-        private readonly IWorkOrderService woServ;
         private readonly IMapper map;
-        private readonly IDefaults def;
 
         public WorkAssignmentsController(IWorkAssignmentService employerService, IWorkOrderService workorderService,
-            IDefaults def,
             IMapper map)
         {
             this.serv = employerService;
-            this.woServ = workorderService;
             this.map = map;
-            this.def = def;
         }
         // GET api/values
-        public IHttpActionResult Get()
+        public ActionResult Get()
         {
             var vo = new viewOptions();
             vo.displayLength = 10;
@@ -36,16 +35,16 @@ namespace Machete.Api.Controllers
             dataTableResult<DTO.WorkAssignmentsList> list = serv.GetIndexView(vo);
             var result = list.query
                 .Select(
-                    e => map.Map<DTO.WorkAssignmentsList, Web.ViewModel.Api.WorkAssignment>(e)
+                    e => map.Map<DTO.WorkAssignmentsList, Api.ViewModels.WorkAssignment>(e)
                 ).AsEnumerable();
-            return Json(new { data =  result });
+            return new JsonResult(new { data =  result });
         }
 
         // GET api/values/5
-        public IHttpActionResult Get(int id)
+        public ActionResult Get(int id)
         {
-            var result = map.Map<Domain.WorkAssignment, Web.ViewModel.Api.WorkAssignment>(serv.Get(id));
-            return Json(new { data = result });
+            var result = map.Map<Domain.WorkAssignment, Api.ViewModels.WorkAssignment>(serv.Get(id));
+            return new JsonResult(new { data = result });
         }
 
         // POST api/values

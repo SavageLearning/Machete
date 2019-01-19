@@ -11,7 +11,6 @@ namespace Machete.Web.Maps
     {
         public WorkOrderProfile()
         {
-
             CreateMap<WorkOrder, ViewModel.WorkOrder>()
                 .ForMember(v => v.tabref,               opt => opt.MapFrom(d => "/WorkOrder/Edit/" + Convert.ToString(d.ID)))
                 .ForMember(v => v.tablabel,             opt => opt.MapFrom(d =>
@@ -22,7 +21,9 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.WOID,                 opt => opt.MapFrom(d => string.Format("{0,5:D5}", d.paperOrderNum)))
                 .ForMember(v => v.dateTimeofWork,       opt => opt.MapFrom(d => Convert.ToString(d.dateTimeofWork, CultureInfo.InvariantCulture)))
                 .ForMember(v => v.dateupdatedstring,    opt => opt.MapFrom(d => string.Format("{0:MM/dd/yyyy HH:mm:ss}", d.dateupdated)))
-                .ForMember(v => v.onlineSource,         opt => opt.MapFrom(d => d.onlineSource ? Shared.True : Shared.False))
+                //.ForMember(v => v.onlineSource,         opt => opt.MapFrom(d => d.onlineSource ? Shared.True : Shared.False))
+                // I don't understand how the above ever worked, as the target ViewModel type is bool; so, just pass it over
+                .ForMember(v => v.onlineSource, opt => opt.MapFrom(d => d.onlineSource))
                 .ForMember(v => v.recordid,             opt => opt.MapFrom(d => Convert.ToString(d.ID)))
                 .ForMember(v => v.transportMethod,      opt => opt.MapFrom(d => getCI() == "ES" ? d.transportMethodES : d.transportMethodEN))
                 .ForMember(v => v.def, opt => opt.Ignore())

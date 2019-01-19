@@ -22,10 +22,8 @@
 // 
 #endregion
 
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Machete.Domain;
@@ -45,27 +43,21 @@ namespace Machete.Web.Controllers
         private readonly IImageService imageServ;
         private readonly IMapper map;
         private readonly IDefaults def;
-        CultureInfo CI;
+        private readonly IModelBindingAdaptor _adaptor;
 
-        public WorkerController(IWorkerService workerService, 
-                                IPersonService personService,
+        public WorkerController(IWorkerService workerService,
                                 IImageService  imageServ,
             IDefaults def,
-            IMapper map)
+            IMapper map,
+            IModelBindingAdaptor adaptor)
         {
             serv = workerService;
             this.imageServ = imageServ;
             this.map = map;
+            _adaptor = adaptor;
             this.def = def;
         }
-        protected override void Initialize(ActionContext requestContext)
-        {
-            base.Initialize(requestContext);
-            CI = Session["Culture"];
-            // TODO this needs to be scheduled elsewhere
-            //serv.ExpireMembers();
-            //serv.ReactivateMembers();
-        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -84,7 +76,6 @@ namespace Machete.Web.Controllers
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
-            vo.CI = CI;
             dataTableResult<WorkerList> list = serv.GetIndexView(vo);
             var result = list.query
             .Select(
@@ -98,23 +89,15 @@ namespace Machete.Web.Controllers
                 aaData = result
             });
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="wkr"></param>
-        /// <returns></returns>
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="ID"></param>
-        /// <returns></returns>
+        /// <summary />
+        /// <param name="id"></param>
         [Authorize(Roles = "PhoneDesk, Manager, Teacher, Administrator")] 
-        public ActionResult Create(int ID)
+        public ActionResult Create(int id)
         {
             // TODO handle exception of next worker number
             var nextnum = serv.GetNextWorkerNum();
             var w = map.Map<Worker, ViewModel.Worker>(new Worker {
-                ID = ID,
+                ID = id,
                 dwccardnum = nextnum
             });
             w.def = def;
@@ -132,9 +115,12 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "PhoneDesk, Manager, Teacher, Administrator")]
         public async Task<ActionResult> Create(Worker worker, string userName, IFormFile imagefile)
         {
-            if (await TryUpdateModelAsync(worker)) {
-                if (imagefile != null) await updateImage(worker, imagefile);
-                Worker newWorker = serv.Create(worker, userName);
+            ModelState.ThrowIfInvalid();
+
+            var modelIsValid = await _adaptor.TryUpdateModelAsync(this, worker);
+            if (modelIsValid) {
+                if (imagefile != null) await updateImage(worker, imagefile, userName);
+                var newWorker = serv.Create(worker, userName);
                 var result = map.Map<Worker, ViewModel.Worker>(newWorker);
                 return Json(new {
                     sNewRef = result.tabref,
@@ -160,27 +146,28 @@ namespace Machete.Web.Controllers
             m.def = def;
             return PartialView(m);
         }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="_model"></param>
         /// <param name="userName"></param>
         /// <param name="imagefile"></param>
         /// <returns></returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "PhoneDesk, Manager, Teacher, Administrator")]
-        public async Task<ActionResult> Edit(int id, Worker _model, string userName, IFormFile imagefile)
+        public async Task<ActionResult> Edit(int id, string userName, IFormFile imagefile)
         {
-            Worker worker = serv.Get(id);
-            if (await TryUpdateModelAsync(worker)) {
+            ModelState.ThrowIfInvalid();
             
-            if (imagefile != null) await updateImage(worker, imagefile);                
-            serv.Save(worker, userName);
-            return Json(new
-            {
-                jobSuccess = true
-            });
+            Worker worker = serv.Get(id);
+            if (await _adaptor.TryUpdateModelAsync(this, worker)) {
+
+                if (imagefile != null) await updateImage(worker, imagefile, userName);
+                serv.Save(worker, userName);
+                return Json(new {
+                    jobSuccess = true
+                });
             } else { return Json(new { jobSuccess = false }); }
         }
         /// <summary>
@@ -201,15 +188,17 @@ namespace Machete.Web.Controllers
                 deletedID = id
             });
         }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="worker"></param>
         /// <param name="imageFile"></param>
+        /// <param name="userName"></param>
         [Authorize(Roles = "PhoneDesk, Manager, Teacher, Administrator")]
-        private async Task updateImage(Worker worker, IFormFile imageFile)
+        [UserNameFilter]
+        private async Task updateImage(Worker worker, IFormFile imageFile, string userName)
         {
-            var userIdentity = new ClaimsIdentity("Cookies");
             if (worker == null) throw new MacheteNullObjectException("updateImage called with null worker");
             if (imageFile == null) throw new MacheteNullObjectException("updateImage called with null imagefile");
             if (worker.ImageID != null)
@@ -226,7 +215,7 @@ namespace Machete.Web.Controllers
                     image.ImageData = memoryStream.ToArray();
                 }
 
-                imageServ.Save(image, userIdentity.Name);
+                imageServ.Save(image, userName);
             }
             else
             {
@@ -241,7 +230,7 @@ namespace Machete.Web.Controllers
                     image.ImageData = memoryStream.ToArray();
                 }
                 
-                Image newImage = imageServ.Create(image, userIdentity.Name);
+                Image newImage = imageServ.Create(image, userName);
                 worker.ImageID = newImage.ID;
             }
         }

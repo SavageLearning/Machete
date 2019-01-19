@@ -11,21 +11,10 @@ namespace Machete.Data.Initialize
         public static void Initialize(MacheteContext context)
         {
             if (!context.TransportProviders.Any()) {
-                string lookups;
-                string transportProviders;
-                if (context.Database.GetDbConnection().GetType().Name == "SqlConnection") {
-                    lookups = @"dbo.Lookups";
-                    transportProviders = @"dbo.TransportProviders";
-                }
-                else {
-                    lookups = @"Lookups";
-                    transportProviders = "TransportProviders";
-                }
-
-                context.Database.ExecuteSqlCommand($@"insert into {transportProviders}
+                context.Database.ExecuteSqlCommand(@"insert into dbo.TransportProviders
                         ( [key], text_EN, text_ES, defaultAttribute, sortorder, active, datecreated, dateupdated, Createdby, Updatedby )
                             select [key], text_EN, text_ES, selected, sortorder, active, datecreated, dateupdated, Createdby, Updatedby
-                            from ${lookups}
+                            from dbo.Lookups
                             where category = 'transportmethod'");
                 
                 context.SaveChanges();

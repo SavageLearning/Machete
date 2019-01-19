@@ -90,12 +90,12 @@
             "aoColumns": [
                             { "mDataProp": "tabref", "bSearchable": false, "bSortable": false, "bVisible": false },
                             { "mDataProp": "tablabel", "bSearchable": false, "bSortable": false, "bVisible": false },
-                            { "mDataProp": "EID", "bSearchable": false, "bSortable": false, "bVisible": false },
-                            { "mDataProp": "WOID" },
+                            { "mDataProp": "eid", "bSearchable": false, "bSortable": false, "bVisible": false },
+                            { "mDataProp": "woid" },
                             { "mDataProp": "dateTimeofWork" },
                             { "mDataProp": "status" },
                             { "mDataProp": "transportMethod" },
-                            { "mDataProp": "WAcount" },
+                            { "mDataProp": "wAcount" },
                             { "mDataProp": "contactName" },
                             { "mDataProp": "workSiteAddress1" },
                             { "mDataProp": "zipcode" },
@@ -106,6 +106,7 @@
                         ],
             "aoSearchCols" :  [null, null, null, null, null, null, null, null, null, null, null, null],
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                console.log(aData);
                         $(nRow).attr("edittabref", aData["tabref"]);
                         $(nRow).attr("edittablabel", aData["tablabel"]);
                         switch (aData['displayState']) {

@@ -45,9 +45,9 @@ namespace Machete.Service
             {
                 SendSmtpSimple(email);
             }
-            Email newEmail;
-            newEmail = base.Create(email, userName);
-            //newEmail = Get(newEmail.ID);
+
+            var newEmail = base.Create(email, userName);
+
             if (woid != null)
             {
                 WorkOrder wo = _woServ.Get((int)woid);

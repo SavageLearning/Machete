@@ -8,21 +8,21 @@ namespace Machete.Web.ViewModel
 {
     public class EmailView : Record
     {
-        [LocalizedDisplayName("emailFrom", NameResourceType = typeof(Resources.Emails))]
+        [Helpers.LocalizedDisplayName("emailFrom", NameResourceType = typeof(Resources.Emails))]
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Emails))]
         public string emailFrom { get; set; }
         //
-        [LocalizedDisplayName("emailTo", NameResourceType = typeof(Resources.Emails))]
+        [Helpers.LocalizedDisplayName("emailTo", NameResourceType = typeof(Resources.Emails))]
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Emails))]
         [Required(ErrorMessageResourceName = "emailTo", ErrorMessageResourceType = typeof(Resources.Emails))]
         public string emailTo { get; set; }
         //
-        [LocalizedDisplayName("subject", NameResourceType = typeof(Resources.Emails))]
+        [Helpers.LocalizedDisplayName("subject", NameResourceType = typeof(Resources.Emails))]
         [StringLength(100, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Emails))]
         [Required(ErrorMessageResourceName = "subject", ErrorMessageResourceType = typeof(Resources.Emails))]
         public string subject { get; set; }
         //
-        [LocalizedDisplayName("body", NameResourceType = typeof(Resources.Emails))]
+        [Helpers.LocalizedDisplayName("body", NameResourceType = typeof(Resources.Emails))]
         [StringLength(8000, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Emails))]
         [Required(ErrorMessageResourceName = "body", ErrorMessageResourceType = typeof(Resources.Emails))]
         public string body { get; set; }

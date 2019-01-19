@@ -3,20 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Web;
-using System.Web.Http;
-using System.Web.Http.Controllers;
+using Machete.Api.Attributes;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Api.Controllers
 {
-    public abstract class MacheteApiController : ApiController
+    [Route("api/[controller]")]
+    [ApiController]
+    public abstract class MacheteApiController : ControllerBase
     {
         public string userSubject;
         public string userEmail;
-        protected override void Initialize(HttpControllerContext controllerContext)
+        protected void Initialize(ControllerContext controllerContext)
         {
             userSubject = subjectFromUser();
             userEmail = emailFromUser();
-            base.Initialize(controllerContext);
+            base.ControllerContext = controllerContext;
         }
         [NonAction]
         public string subjectFromUser()

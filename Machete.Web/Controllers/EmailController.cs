@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -23,7 +22,6 @@ namespace Machete.Web.Controllers
         private readonly IEmailService serv;
         private readonly IMapper map;
         private readonly IDefaults def;
-        private CultureInfo CI;
 
         public EmailController(
             IEmailService eServ, 
@@ -35,15 +33,7 @@ namespace Machete.Web.Controllers
             this.map = map;
             this.def = def;
         }
-        protected override void Initialize(ActionContext requestContext)
-        {
-            base.Initialize(requestContext);
-            CI = Session["Culture"];
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
+
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Index()
         {
@@ -59,7 +49,6 @@ namespace Machete.Web.Controllers
         {
             //Get all the records
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
-            vo.CI = CI;
             dataTableResult<Email> list = serv.GetIndexView(vo);
             return Json(new
             {
@@ -93,7 +82,7 @@ namespace Machete.Web.Controllers
         }
         private string _getTabLabel(Email email)
         {
-            return email == null ? null : email.subject;
+            return email?.subject;
         }
         /// <summary>
         /// GET: /Email/Create

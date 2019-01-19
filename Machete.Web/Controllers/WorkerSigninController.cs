@@ -23,7 +23,6 @@
 #endregion
 
 using System;
-using System.Globalization;
 using System.Linq;
 using AutoMapper;
 using Machete.Domain;
@@ -40,22 +39,14 @@ namespace Machete.Web.Controllers
     {
         private readonly IWorkerSigninService serv;
         private readonly IMapper map;
-        private readonly IDefaults def;
-        private CultureInfo CI;        
-        public WorkerSigninController(IWorkerSigninService workerSigninService, 
-            IDefaults def,
+
+        public WorkerSigninController(IWorkerSigninService workerSigninService,
             IMapper map)
         {
             serv = workerSigninService;
             this.map = map;
-            this.def = def;
         }
 
-        protected override void Initialize(ActionContext requestContext)
-        {
-            base.Initialize(requestContext);
-            CI = Session["Culture"];
-        }
         //
         // GET: /WorkerSignin/
         // Initial page creation
@@ -153,7 +144,6 @@ namespace Machete.Web.Controllers
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
-            vo.CI = CI;
             dataTableResult<WorkerSigninList> was = serv.GetIndexView(vo);
             var result = was.query
                 .Select(e => map.Map<WorkerSigninList, ViewModel.WorkerSigninList>(e))

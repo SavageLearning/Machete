@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using Machete.Web.Helpers;
 
 namespace Machete.Web.ViewModel
 {

@@ -285,7 +285,7 @@
             "aoColumns": [
                 { "mDataProp": "tabref","bSearchable": false, "bSortable": false, "bVisible": false },
                 { "mDataProp": "tablabel","bSearchable": false, "bSortable": false, "bVisible": false },
-                { "mDataProp": "WID","bSearchable": false, "bSortable": false, "bVisible": false },
+                { "mDataProp": "wid","bSearchable": false, "bSortable": false, "bVisible": false },
                 { "mDataProp": "dwccardnum" },
                 { "mDataProp": "active" },
                 { "mDataProp": "firstname1" },
@@ -296,7 +296,7 @@
             ],
             // callback populates html attr with row data from JSON            
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                $(nRow).attr('recordid', aData['WID']);
+                $(nRow).attr('recordid', aData['wid']);
                 //$(nRow).attr('edittablabel', aData[1]);                
                 return nRow;
             }         

@@ -103,7 +103,7 @@ namespace Machete.Service
                 //
                 // This assumes that the IDs are going to come in as 1,2,3,4...they're reset
                 // later on down in the code
-                var costRule = trRule.costRules.Where(c => wa.ID >= c.minWorker && wa.ID <= c.maxWorker).First();
+                var costRule = trRule.costRules.First(c => wa.ID >= c.minWorker && wa.ID <= c.maxWorker);
                 if (costRule == null)
                     throw new MacheteValidationException("No cost rule matching workAssignment ID");
 

@@ -48,9 +48,7 @@ namespace Machete.Service
 
     public class MacheteNullObjectException : MacheteServiceException
     {
-        new public string ErrorMessage { get { return base.Message.ToString(); } }
         public MacheteNullObjectException(string errorMessage) : base(errorMessage) { }
-        public MacheteNullObjectException(string errorMessage, Exception innerEx) : base(errorMessage, innerEx) { }
     }
 
     public class MacheteInvalidInputException : MacheteServiceException

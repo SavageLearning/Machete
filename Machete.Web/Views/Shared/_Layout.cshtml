@@ -28,8 +28,12 @@
                 @Html.ActionLink(Shared.hometab, "Index", "Home", null, new { id = "menulinkhome" })
             </div>
             <div id="logindisplay" class="print-off">
-                @await Html.PartialAsync("_LogOnPartial")
-                @await Html.PartialAsync("_CultureChooser")
+                <div style="display: inline-block; padding-right: 3em">
+                    @await Html.PartialAsync("_CultureChooser")
+                </div>
+                <div style="display: inline-block">
+                    @await Html.PartialAsync("_LogOnPartial")
+                </div>
             </div>
             <div id="menucontainer" class="print-off">
                 <ul id="menu">

@@ -1,16 +1,11 @@
-﻿using Machete.Data;
+﻿using System;
 using Machete.Domain;
 using Machete.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Practices.Unity;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Machete.Test.Integration
+namespace Machete.Test.Integration.Fluent
 {
-    public partial class FluentRecordBase : IDisposable
+    public partial class FluentRecordBase
     {
         private IWorkerSigninService _servWSI;
         private WorkerSignin _wsi;
@@ -23,7 +18,7 @@ namespace Machete.Test.Integration
         {
             //
             // DEPENDENCIES
-            _servWSI = container.Resolve<IWorkerSigninService>();
+            _servWSI = container.GetRequiredService<IWorkerSigninService>();
             if (worker != null) _w = worker;
             if (_w == null) AddWorker();
             //
@@ -40,7 +35,5 @@ namespace Machete.Test.Integration
             if (_wsi == null) AddWorkerSignin();
             return _wsi;
         }
-
-
     }
 }
