@@ -60,7 +60,6 @@ namespace Machete.Service
             updateComputedFields(ref record);
             var result = base.Create(record, user);
             db.SaveChanges();
-            db.Dispose();
             return result;
         }
 
@@ -68,6 +67,7 @@ namespace Machete.Service
         {
             updateComputedFields(ref record);
             base.Save(record, user);
+            db.SaveChanges();
         }
 
         private void updateComputedFields(ref Activity record)
