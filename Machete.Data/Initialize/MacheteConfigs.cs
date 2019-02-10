@@ -26,7 +26,8 @@ namespace Machete.Data
             new Config { key = Cfg.PaypalId,                      category = "PayPal", publicConfig = true, value = "id" },
             new Config { key = Cfg.PaypalUrl,                     category = "PayPal", publicConfig = true, value = "url" },
             new Config { key = Cfg.PaypalSecret,                  category = "PayPal", publicConfig = false, value = "secreet"},
-            new Config { key = Cfg.PaypalEnvironment,             category = "PayPal", publicConfig = true, value = "sandbox" }
+            new Config { key = Cfg.PaypalEnvironment,             category = "PayPal", publicConfig = true, value = "sandbox" },
+            new Config { key = Cfg.WorkCenterDescription,         category = "OnlineOrders", publicConfig = true, value = "<p>Casa Latina is nonprofit organization that empowers Latino immigrants through educational and economic opportunities. Our employment program connects immigrants with individuals and businesses looking for temporary labor. Our workers are skilled and dependable. From landscaping to dry walling to catering and housecleaning, if you can dream the project our workers can do it! <a href=\"http://casa-latina.org/get-involved/hire-worker \" target=\"_blank\">Learn more about Casa Latina</a>.</p>"}
         };
 
         public static void Initialize(MacheteContext context)

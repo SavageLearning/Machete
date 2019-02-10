@@ -14,7 +14,8 @@
       "Content/bundles/styles.js"
     ],
     "minify": {
-      "enabled": false
+      "enabled": false,
+      "renameLocals": true
     },
     "sourceMap": true
   },
@@ -28,7 +29,8 @@
       "Content/bundles/main.js"
     ],
     "minify": {
-      "enabled": false
+      "enabled": false,
+      "renameLocals": true
     },
     "sourceMap": true
   },
@@ -57,7 +59,7 @@
       "Scripts/macheteLayout.js",
       "Scripts/jquery.macheteUI-0.1.js",
       "Scripts/jquery.everytime-1.2.0.js",
-      "Scripts/jquery.dataTables.plugins.js"      
+      "Scripts/jquery.dataTables.plugins.js"
     ],
     "minify": {
       "enabled": true,

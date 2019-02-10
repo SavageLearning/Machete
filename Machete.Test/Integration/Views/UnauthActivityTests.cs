@@ -28,7 +28,7 @@ namespace Machete.Test.Selenium.View
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext)
         {
-            var mapperConfig = new MvcMapperConfiguration().Config;
+            var mapperConfig = new MapperConfiguration(config => { config.ConfigureMvc(); });
             map = mapperConfig.CreateMapper();
             WebServer.StartIis();
         }

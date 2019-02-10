@@ -31,7 +31,7 @@ namespace Machete.Test.Integration.Services
             var map = frb.ToApiMapper();
             
             //Act
-            var result = map.Map<Api.ViewModel.WorkOrder, WorkOrder>(wo);
+            var result = map.Map<Machete.Web.ViewModel.Api.WorkOrder, WorkOrder>(wo);
 
             //Assert
             Assert.IsNotNull(result, "DTO.WorkOrderList is Null");

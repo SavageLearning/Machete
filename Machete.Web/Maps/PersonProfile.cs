@@ -1,10 +1,12 @@
 ﻿using Machete.Web.Resources;
 using System;
 using System.Globalization;
+using AutoMapper;
+using static Machete.Web.Helpers.Extensions;
 
 namespace Machete.Web.Maps
 {
-    public class PersonProfile : MacheteProfile
+    public class PersonProfile : Profile
     {
         public PersonProfile()
         {

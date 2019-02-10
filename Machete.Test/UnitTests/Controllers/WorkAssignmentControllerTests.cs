@@ -65,7 +65,7 @@ namespace Machete.Test.UnitTests.Controllers
             _woServ = new Mock<IWorkOrderService>();
             _wsiServ = new Mock<IWorkerSigninService>();
             _def = new Mock<IDefaults>();
-            var mapperConfig = new MvcMapperConfiguration().Config;
+            var mapperConfig = new MapperConfiguration(config => { config.ConfigureMvc(); });
             _map = mapperConfig.CreateMapper();
             _adaptor = new Mock<IModelBindingAdaptor>();
 

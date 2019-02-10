@@ -28,13 +28,14 @@ using System.Data.SqlClient;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
-using Machete.Api.Maps;
 using Machete.Data;
 using Machete.Data.Repositories;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Web;
 using Machete.Web.Maps;
+using Machete.Web.Maps.Api;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -73,7 +74,9 @@ namespace Machete.Test.Integration.Fluent
                 .Build();
             
             string[] args = { "" };
-            var host = Program.CreateWebHostBuilder(args)
+            var host = WebHost
+                .CreateDefaultBuilder(args)
+                .UseStartup<Startup>()
                 .UseConfiguration(configuration)
                 .UseStartup<Startup>()
                 .ConfigureServices(services => {
@@ -413,8 +416,9 @@ namespace Machete.Test.Integration.Fluent
         {
             if (_webMap != null) return _webMap;
             
-            var mvcConfig = new MvcMapperConfiguration().Config;
-            _webMap = mvcConfig.CreateMapper();
+            var mapperConfig = new MapperConfiguration(config => { config.ConfigureMvc(); });
+            _webMap = mapperConfig.CreateMapper();
+            
             return _webMap;
         }
 
@@ -422,7 +426,7 @@ namespace Machete.Test.Integration.Fluent
         {
             if (_apiMap != null) return _apiMap;
 
-            var apiConfig = new ApiMapperConfiguration().Config;
+            var apiConfig = new MapperConfiguration(config => { config.ConfigureApi(); });
             _apiMap = apiConfig.CreateMapper();
 
             return _apiMap;

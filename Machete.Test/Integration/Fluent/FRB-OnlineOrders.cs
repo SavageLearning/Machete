@@ -2,9 +2,9 @@
 {
     public partial class FluentRecordBase
     {
-        public Api.ViewModel.WorkOrder CloneOnlineOrder()
+        public Machete.Web.ViewModel.Api.WorkOrder CloneOnlineOrder()
         {
-            var wo = (Api.ViewModel.WorkOrder)Records.onlineOrder.Clone();
+            var wo = (Machete.Web.ViewModel.Api.WorkOrder)Records.onlineOrder.Clone();
             wo.contactName = RandomString(10);
             return wo;
         }

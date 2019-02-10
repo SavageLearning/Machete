@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using Api.ViewModels;
 using AutoMapper;
-using Machete.Api.Controllers;
 using Machete.Service;
+using Machete.Web.Controllers.Api;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Machete.Web.Maps;
@@ -41,7 +40,7 @@ namespace Machete.Test.UnitTests.Controllers
             serv.SetupGetQuery(testStartDate, testEndDate);
             serv.SetupPost();
 
-            var mapperConfig = new MvcMapperConfiguration().Config;
+            var mapperConfig = new MapperConfiguration(config => { config.ConfigureMvc(); });
             map = mapperConfig.CreateMapper(); 
 
             controller = new ReportsController(serv.Object, map);
@@ -133,9 +132,9 @@ namespace Machete.Test.UnitTests.Controllers
     }
     public static class ReportsControllerTestHelpers
     {
-        public static ReportQuery AsReportQuery(this string operation)
+        public static Machete.Web.ViewModel.Api.ReportQuery AsReportQuery(this string operation)
         {
-            return new ReportQuery { query = operation };
+            return new Machete.Web.ViewModel.Api.ReportQuery { query = operation };
         }
 
         public static T AsCSharpObject<T>(this ActionResult result)

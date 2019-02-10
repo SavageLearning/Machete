@@ -30,7 +30,7 @@ namespace Machete.Test.Selenium.View
             string solutionDirectory = sharedUI.SolutionDirectory();
             //testdir = solutionDirectory + "\\Machete.test\\";
             testimagefile = solutionDirectory + "\\jimmy_machete.jpg";
-            var mapperConfig = new MvcMapperConfiguration().Config;
+            var mapperConfig = new MapperConfiguration(config => { config.ConfigureMvc(); });
             map = mapperConfig.CreateMapper();
             
             WebServer.StartIis();

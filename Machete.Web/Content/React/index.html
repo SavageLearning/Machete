@@ -1,0 +1,213 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="app.css" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="text/babel">
+
+axios.defaults.headers.common = {
+  "Content-Type": "application/json"
+};
+
+class ExternalLoginForm extends React.Component {
+  render() {
+    return (
+
+<div className='panel-container external-providers'>
+  <p>If you are a new employer, please use one of the following web services to authenticate.
+  If you have a legacy email and password account, you may also use it to authenticate.  
+  We are migrating to web services for authenticate because of the increased
+  security,  account management, and password reset options.</p>
+  <div className='panel'>
+    <div className='panel-heading'>
+      <h3 className='panel-title'>Web services available</h3>
+    </div>
+    <div className='panel-body'>
+      <ul className='list-inline'>
+        <li>
+          <a className='btn'>Sign in with Facebook</a>
+        </li>
+        <li>
+          <a className='btn'>Sign in with Google</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+    );
+  }
+}
+
+class LegacyLoginForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+       username: '',
+       password: '',
+       remember: false
+     };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({
+      [event.target.name]: event.target.type === 'checkbox' ? event.target.checked : event.target.value
+    });
+  }
+
+  handleError(error) {
+    if (error.response && error.response.status === 400) {
+      this.props.handler({ show: true, message: error.response.data.login_failure[0] });
+    } else if (error.response && error.response === 'not sent' ) {
+      this.props.handler({ show: true, message: 'Your request was not sent because this is an invalid request.'});
+    } else {
+      this.props.handler({ show: true, message: this.props.defaultMessage });
+    }
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+
+    var dictionary = {};
+    
+    var queryString = document.location.href.split('?')[1];
+    
+    if (queryString) {
+      var url = window.location.protocol + '//' + window.location.host + window.location.pathname;
+
+      var parts = queryString.split('&');
+      for (var i = 0; i < parts.length; i++) {
+        var p = parts[i];
+        // Step 2: Split Key/Value pair
+        var keyValuePair = p.split('=');
+
+        // Step 3: Add Key/Value pair to Dictionary object
+        var key = keyValuePair[0];
+        var value = keyValuePair[1];
+
+        // decode URI encoded string
+        value = decodeURIComponent(value);
+        value = value.replace(/\+/g, ' ');
+
+        dictionary[key] = value;
+      }
+
+      var data = JSON.stringify({
+        'username': this.state.username,
+        'password': this.state.password,
+        'remember': this.state.remember,
+        'redirect': dictionary['redirect_uri']
+      });
+
+      var config = {
+        headers: {
+          'Content-Type': 'application/json',
+          'cache-control': 'no-cache'
+        }
+      };
+
+      console.log('post: ', url);
+      axios.post(url, data, config).then((response) => {
+        console.log(response);
+        window.location.href = response.data;
+      }).catch((error) => this.handleError(error));
+    } else { this.handleError({ response: 'not sent' }) }
+  }
+
+  render() {
+    return (
+
+<div className='panel-container'>
+  <div className='panel'>
+    <div className='panel-heading'>
+      <h3 className='panel-title'>Legacy account</h3>
+    </div>
+    <div className='panel-body'>
+      <form onSubmit={this.handleSubmit}>
+        <div className='form-group'>
+          <label>
+            Username
+            <input name='username' type='text' value={this.state.username} onChange={this.handleChange} />
+          </label>
+        </div>
+        <div className='form-group'>
+          <label>
+            Password
+            <input name='password' type='password' value={this.state.password} onChange={this.handleChange} />
+          </label>
+        </div>
+        <div className='form-group'>
+          <label>
+            <input name='remember' type='checkbox' value={this.state.remember} onChange={this.handleChange} />
+            Remember My Login
+          </label>
+        </div>
+        <div className='form-group'>
+          <input type='submit' value='Login' />
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+    );
+  }
+}
+
+class Container extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { showError: false, errorMessage: 'Something went wrong. Please try again.' };
+    this.handler = this.handler.bind(this);
+  }
+
+  handler(error) {
+    this.setState({
+      showError: error.show,
+      errorMessage: error.message
+    });
+  }
+
+  render() {
+    return (
+
+<div className='container'>
+  <div className='navbar'>
+    <div className='navbar-header'>
+      <span className='navbar-brand'>Casa Latina</span>
+    </div>
+  </div>
+  <div className='page-login'>
+    <div className='page-header'>
+      <h1>Worker Requests</h1>
+      <h2>Please log in</h2>
+    </div>
+    <div className={this.state.showError ? 'row error-message' : 'row hide error-message'}>
+      <strong>Error: {this.state.errorMessage}</strong>
+    </div>
+    <div className='row'>
+      <ExternalLoginForm />
+      <LegacyLoginForm handler={this.handler} />
+    </div>
+  </div>
+</div>
+
+    );
+  }
+}
+
+const root = document.getElementById('root');
+const element = <Container />;
+ReactDOM.render(element, root);
+
+    </script>
+  </body>
+</html>

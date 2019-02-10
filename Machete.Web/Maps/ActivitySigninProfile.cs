@@ -1,8 +1,10 @@
 ﻿using System;
+using AutoMapper;
+using static Machete.Web.Helpers.Extensions;
 
 namespace Machete.Web.Maps
 {
-    public class ActivitySigninProfile : MacheteProfile
+    public class ActivitySigninProfile : Profile
     {
         public ActivitySigninProfile()
         {

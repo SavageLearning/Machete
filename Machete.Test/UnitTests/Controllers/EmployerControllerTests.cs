@@ -55,7 +55,7 @@ namespace Machete.Test.UnitTests.Controllers
             _defaults = new Mock<IDefaults>();
             _adaptor = new Mock<IModelBindingAdaptor>();
 
-            var mapperConfig = new MvcMapperConfiguration().Config;
+            var mapperConfig = new MapperConfiguration(config => { config.ConfigureMvc(); });
             map = mapperConfig.CreateMapper();
 
             _adaptor.Setup(dependency => 
@@ -146,7 +146,7 @@ namespace Machete.Test.UnitTests.Controllers
             _serv = new Mock<IEmployerService>();
             _serv.Setup(p => p.Get(testId)).Returns(new Employer());
                         
-            var mapperConfig = new MvcMapperConfiguration().Config;
+            var mapperConfig = new MapperConfiguration(config => { config.ConfigureMvc(); });
             var mapper = mapperConfig.CreateMapper();
             
             _controller = new EmployerController(_serv.Object, _defaults.Object, mapper, _adaptor.Object);

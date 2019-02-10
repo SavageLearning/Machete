@@ -63,7 +63,7 @@ namespace Machete.Test.Integration.Services
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
-        public void CountAssignments()
+        public void CountAssignments() // TODO this has a bug when run against a new db; compares <<null>> and <<0>>
         {
             //Arrange
             DateTime beginDate = DateTime.Today;

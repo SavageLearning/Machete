@@ -24,6 +24,7 @@
 
 using System;
 using System.Linq;
+using System.Threading;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -52,6 +53,12 @@ namespace Machete.Web.Helpers
             if (modelState.IsValid) return;
             var errors = modelState.Values.SelectMany(entry => entry.Errors).ToString();
             throw new InvalidOperationException(errors);
+        }
+        
+        public static string getCI()
+        {
+            var upperInvariant = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant();
+            return upperInvariant;
         }
     }
 }

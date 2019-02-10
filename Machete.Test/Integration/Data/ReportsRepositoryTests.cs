@@ -8,7 +8,7 @@ using Machete.Test.Integration.Fluent;
 namespace Machete.Test.Integration.Data
 {
     [TestClass]
-    public class ReportsRepositoryTests
+    public class ReportsRepositoryTests // TODO "duplicate value" bug??
     {
         private FluentRecordBase frb;
         private string connectionString { get; set; }

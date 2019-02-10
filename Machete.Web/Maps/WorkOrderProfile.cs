@@ -1,13 +1,15 @@
 using System;
 using System.Globalization;
+using AutoMapper;
 using Machete.Domain;
 using Machete.Service.DTO;
 using Machete.Web.Resources;
 using WorkOrder = Machete.Domain.WorkOrder;
+using static Machete.Web.Helpers.Extensions;
 
 namespace Machete.Web.Maps
 {
-    public class WorkOrderProfile : MacheteProfile
+    public class WorkOrderProfile : Profile
     {
         public WorkOrderProfile()
         {

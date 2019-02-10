@@ -1,6 +1,9 @@
-﻿namespace Machete.Web.Maps
+﻿using AutoMapper;
+using static Machete.Web.Helpers.Extensions;
+
+namespace Machete.Web.Maps
 {
-    public class WorkerRequestProfile : MacheteProfile
+    public class WorkerRequestProfile : Profile
     {
         public WorkerRequestProfile()
         {

@@ -60,7 +60,7 @@ namespace Machete.Test.Selenium.View
             string solutionDirectory = sharedUI.SolutionDirectory();
             //testdir = solutionDirectory + "\\Machete.test\\";
             testimagefile = solutionDirectory + "\\jimmy_machete.jpg";
-            var mapperConfig = new MvcMapperConfiguration().Config;
+            var mapperConfig = new MapperConfiguration(config => { config.ConfigureMvc(); });
             map = mapperConfig.CreateMapper();
             
             driver = new ChromeDriver(ConfigurationManager.AppSettings["CHROMEDRIVERPATH"]);
@@ -68,8 +68,8 @@ namespace Machete.Test.Selenium.View
             ui = new sharedUI(driver, baseURL, map);
 
             // fake
-            DbContextOptions<MacheteContext> config = new DbContextOptions<MacheteContext>();
-            DB = new MacheteContext(config);
+            DbContextOptions<MacheteContext> options = new DbContextOptions<MacheteContext>();
+            DB = new MacheteContext(options);
             wsiSet = DB.Set<WorkerSignin>();
             wSet = DB.Set<Worker>();
             pSet = DB.Set<Person>();

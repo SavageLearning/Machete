@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Globalization;
+using AutoMapper;
+using static Machete.Web.Helpers.Extensions;
 
 namespace Machete.Web.Maps
 {
-    public class ActivityProfile : MacheteProfile
+    public class ActivityProfile : Profile
     {
         public ActivityProfile()
         {
