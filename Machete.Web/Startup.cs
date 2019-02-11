@@ -111,16 +111,17 @@ namespace Machete.Web
             }); // <~ keep for JWT auth
 
             // for JWT auth, this will have to be reconfigured for "AllowAllOrigins" (included here, but commented out)
-            services.AddCors(options => options.AddPolicy("AllowCredentials", builder => {
-                    builder.AllowAnyHeader()
-                           .AllowAnyMethod()
-                           .AllowCredentials();
-                })
-//                                             .AddPolicy("AllowAllOrigins", builder => {
-//                    builder.AllowAnyOrigin()
-//                           .AllowAnyHeader()
-//                           .AllowAnyMethod();
+            services.AddCors(options => options
+//                                               .AddPolicy("AllowCredentials", builder => {
+//                    builder.AllowAnyHeader()
+//                           .AllowAnyMethod()
+//                           .AllowCredentials();
 //                })
+                                               .AddPolicy("AllowAllOrigins", builder => {
+                      builder.AllowAnyOrigin()
+                             .AllowAnyHeader()
+                             .AllowAnyMethod();
+                })
             );
 
             var mapperConfig = new MapperConfiguration(maps => {
