@@ -111,14 +111,13 @@ namespace Machete.Web
 
             // for JWT auth, this will have to be reconfigured for "AllowAllOrigins" (included here, but commented out)
             services.AddCors(options => {
-                options.AddPolicy(StartupConfiguration.AllowCredentials, builder =>
-                {
+                options.AddPolicy(StartupConfiguration.AllowCredentials, builder => {
                     builder.WithOrigins("https://localhost:4213", "https://localhost:4200")
                            .AllowAnyHeader()
                            .AllowAnyMethod()
                            .AllowCredentials();
                 });
-            });
+            });    
 
             var mapperConfig = new MapperConfiguration(maps => {
                 maps.ConfigureMvc();
@@ -241,7 +240,7 @@ namespace Machete.Web
                 MinimumSameSitePolicy = SameSiteMode.None
             });
 
-        app.UseAuthentication();
+            app.UseAuthentication();
 
             // note the separation here; keep these separate for future port to api-only project
             app.UseMvc(routes => {
