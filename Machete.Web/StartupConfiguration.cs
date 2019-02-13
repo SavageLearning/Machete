@@ -3,6 +3,9 @@ using System.Configuration;
 using System.Linq;
 using System.Reflection;
 using Machete.Data;
+using Machete.Data.Repositories;
+using Machete.Service;
+using Machete.Web.Helpers;
 using Machete.Web.Helpers.Api;
 using Machete.Web.Helpers.Api.Identity;
 using Machete.Web.ViewModel.Api.Identity;
@@ -33,6 +36,54 @@ namespace Machete.Web
 
             return webhost;
         }
+        
+        public static void ConfigureDi(this IServiceCollection services)
+        {
+            services.AddScoped<IActivityRepository, ActivityRepository>();
+            services.AddScoped<IActivitySigninRepository, ActivitySigninRepository>();
+            services.AddScoped<IConfigRepository, ConfigRepository>();
+            services.AddScoped<IEmailConfig, EmailConfig>();
+            services.AddScoped<IEmailRepository, EmailRepository>();
+            services.AddScoped<IEmployerRepository, EmployerRepository>();
+            services.AddScoped<IEventRepository, EventRepository>();
+            services.AddScoped<IImageRepository, ImageRepository>();
+            services.AddScoped<ILookupRepository, LookupRepository>();
+            services.AddScoped<IPersonRepository, PersonRepository>();
+            services.AddScoped<IReportsRepository, ReportsRepository>();
+            services.AddScoped<IWorkAssignmentRepository, WorkAssignmentRepository>();
+            services.AddScoped<IWorkerRepository, WorkerRepository>();
+            services.AddScoped<IWorkerRequestRepository, WorkerRequestRepository>();
+            services.AddScoped<IWorkerSigninRepository, WorkerSigninRepository>();
+            services.AddScoped<IWorkOrderRepository, WorkOrderRepository>();
+            services.AddScoped<ITransportRuleRepository, TransportRuleRepository>();
+            services.AddScoped<ITransportProvidersRepository, TransportProvidersRepository>();
+            services.AddScoped<ITransportProvidersAvailabilityRepository, TransportProvidersAvailabilityRepository>();
+
+            services.AddScoped<IActivityService, ActivityService>();
+            services.AddScoped<IActivitySigninService, ActivitySigninService>();
+            services.AddScoped<IConfigService, ConfigService>();
+            services.AddScoped<IEmployerService, EmployerService>();
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IEventService, EventService>();
+            services.AddScoped<IImageService, ImageService>();
+            services.AddScoped<ILookupService, LookupService>();
+            services.AddScoped<IOnlineOrdersService, OnlineOrdersService>();
+            services.AddScoped<IPersonService, PersonService>();
+            services.AddScoped<IReportService, ReportService>();
+            services.AddScoped<IReportsV2Service, ReportsV2Service>();
+            services.AddScoped<ITransportRuleService, TransportRuleService>();
+            services.AddScoped<ITransportProvidersService, TransportProvidersService>();
+            services.AddScoped<ITransportProvidersAvailabilityService, TransportProvidersAvailabilityService>();
+            services.AddScoped<IWorkAssignmentService, WorkAssignmentService>();
+            services.AddScoped<IWorkerRequestService, WorkerRequestService>();
+            services.AddScoped<IWorkerSigninService, WorkerSigninService>();
+            services.AddScoped<IWorkerService, WorkerService>();
+            services.AddScoped<IWorkOrderService, WorkOrderService>();
+
+            services.AddScoped<IDefaults, Defaults>();
+            services.AddScoped<IModelBindingAdaptor, ModelBindingAdaptor>();
+        }
+
 
         private static string GetControllerNames()
         {
@@ -136,5 +187,6 @@ namespace Machete.Web
             services.AddScoped<JwtIssuerOptions>(); // <~ this may need to go later in the pipeline.
         }
 
+        public static string AllowCredentials => "AllowCredentials";
     }
 }

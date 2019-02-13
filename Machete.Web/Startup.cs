@@ -62,10 +62,7 @@ namespace Machete.Web
 
             services.ConfigureJwt(_signingKey, Configuration.GetSection(nameof(JwtIssuerOptions)));
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme) //;
-                .AddCookie(options =>
-                    options.LoginPath = "/Account/Login"
-                );
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme);
 
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/localization?view=aspnetcore-2.2#configure-localization
             services.AddLocalization(options => options.ResourcesPath = "Resources");
@@ -104,25 +101,24 @@ namespace Machete.Web
                 //options.IdleTimeout = TimeSpan.FromSeconds(10); // for testing only
                 options.Cookie.HttpOnly = true; // prevent JavaScript access
                 options.Cookie.Expiration = TimeSpan.FromDays(150); // half a year?
-                // these paths are the defaults, declared explicitly
+                options.Cookie.SameSite = SameSiteMode.None;
+                
+                // these paths are the defaults, declared explicitly:
                 options.LoginPath = "/Account/Login";
                 options.AccessDeniedPath = "/Account/AccessDenied";
                 options.SlidingExpiration = true;
             }); // <~ keep for JWT auth
 
             // for JWT auth, this will have to be reconfigured for "AllowAllOrigins" (included here, but commented out)
-            services.AddCors(options => options
-//                                               .AddPolicy("AllowCredentials", builder => {
-//                    builder.AllowAnyHeader()
-//                           .AllowAnyMethod()
-//                           .AllowCredentials();
-//                })
-                                               .AddPolicy("AllowAllOrigins", builder => {
-                      builder.AllowAnyOrigin()
-                             .AllowAnyHeader()
-                             .AllowAnyMethod();
-                })
-            );
+            services.AddCors(options => {
+                options.AddPolicy(StartupConfiguration.AllowCredentials, builder =>
+                {
+                    builder.WithOrigins("https://localhost:4213", "https://localhost:4200")
+                           .AllowAnyHeader()
+                           .AllowAnyMethod()
+                           .AllowCredentials();
+                });
+            });
 
             var mapperConfig = new MapperConfiguration(maps => {
                 maps.ConfigureMvc();
@@ -140,49 +136,7 @@ namespace Machete.Web
             services.AddScoped<IDatabaseFactory, DatabaseFactory>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            services.AddScoped<IActivityRepository, ActivityRepository>();
-            services.AddScoped<IActivitySigninRepository, ActivitySigninRepository>();
-            services.AddScoped<IConfigRepository, ConfigRepository>();
-            services.AddScoped<IEmailConfig, EmailConfig>();
-            services.AddScoped<IEmailRepository, EmailRepository>();
-            services.AddScoped<IEmployerRepository, EmployerRepository>();
-            services.AddScoped<IEventRepository, EventRepository>();
-            services.AddScoped<IImageRepository, ImageRepository>();
-            services.AddScoped<ILookupRepository, LookupRepository>();
-            services.AddScoped<IPersonRepository, PersonRepository>();
-            services.AddScoped<IReportsRepository, ReportsRepository>();
-            services.AddScoped<IWorkAssignmentRepository, WorkAssignmentRepository>();
-            services.AddScoped<IWorkerRepository, WorkerRepository>();
-            services.AddScoped<IWorkerRequestRepository, WorkerRequestRepository>();
-            services.AddScoped<IWorkerSigninRepository, WorkerSigninRepository>();
-            services.AddScoped<IWorkOrderRepository, WorkOrderRepository>();
-            services.AddScoped<ITransportRuleRepository, TransportRuleRepository>();
-            services.AddScoped<ITransportProvidersRepository, TransportProvidersRepository>();
-            services.AddScoped<ITransportProvidersAvailabilityRepository, TransportProvidersAvailabilityRepository>();
-
-            services.AddScoped<IActivityService, ActivityService>();
-            services.AddScoped<IActivitySigninService, ActivitySigninService>();
-            services.AddScoped<IConfigService, ConfigService>();
-            services.AddScoped<IEmployerService, EmployerService>();
-            services.AddScoped<IEmailService, EmailService>();
-            services.AddScoped<IEventService, EventService>();
-            services.AddScoped<IImageService, ImageService>();
-            services.AddScoped<ILookupService, LookupService>();
-            services.AddScoped<IOnlineOrdersService, OnlineOrdersService>();
-            services.AddScoped<IPersonService, PersonService>();
-            services.AddScoped<IReportService, ReportService>();
-            services.AddScoped<IReportsV2Service, ReportsV2Service>();
-            services.AddScoped<ITransportRuleService, TransportRuleService>();
-            services.AddScoped<ITransportProvidersService, TransportProvidersService>();
-            services.AddScoped<ITransportProvidersAvailabilityService, TransportProvidersAvailabilityService>();
-            services.AddScoped<IWorkAssignmentService, WorkAssignmentService>();
-            services.AddScoped<IWorkerRequestService, WorkerRequestService>();
-            services.AddScoped<IWorkerSigninService, WorkerSigninService>();
-            services.AddScoped<IWorkerService, WorkerService>();
-            services.AddScoped<IWorkOrderService, WorkOrderService>();
-
-            services.AddScoped<IDefaults, Defaults>();
-            services.AddScoped<IModelBindingAdaptor, ModelBindingAdaptor>();
+            services.ConfigureDi();
 
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/localization?view=aspnetcore-2.2#use-a-custom-provider
             // They imply that this is only for "custom" providers but the RequestLocalizationOptions in Configure aren't populated
@@ -244,7 +198,8 @@ namespace Machete.Web
             // the preceding will attempt to guess the user's culture. For several reasons that's not what we want.
             // Ibid. #set-the-culture-programmatically
 
-            app.UseCors("AllowAllOrigins"); // TODO review
+            // This refers to the policies set in the services object. An invalid name will force the default policy.
+            app.UseCors(StartupConfiguration.AllowCredentials);
 
             app.UseHttpsRedirection();
 
@@ -258,17 +213,18 @@ namespace Machete.Web
                     Path.Combine(Directory.GetCurrentDirectory(), "Content")),
                 RequestPath = "/Content"
             });
-            
+
             // TODO favicon.ico is missing?
-            
+
             // begin React login page
-            var fileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Content", @"React"));
+            var fileProvider =
+                new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Identity"));
             var requestPath = new PathString("/id/login");
             app.UseDefaultFiles(new DefaultFilesOptions
             {
                 FileProvider = fileProvider,
                 RequestPath = requestPath,
-                DefaultFileNames = new[] { "index.html" }
+                DefaultFileNames = new[] {"index.html"}
             });
             app.UseStaticFiles(new StaticFileOptions
             {
@@ -276,14 +232,16 @@ namespace Machete.Web
                 RequestPath = requestPath
             });
             // end React login page
-            
+
             // uncomment if we should happen to add a wwwroot directory; e.g., if we want to refactor `Content`
             // app.UseDefaultFiles();
             // app.UseStaticFiles(); 
 
-            app.UseCookiePolicy();
+            app.UseCookiePolicy(new CookiePolicyOptions {
+                MinimumSameSitePolicy = SameSiteMode.None
+            });
 
-            app.UseAuthentication();
+        app.UseAuthentication();
 
             // note the separation here; keep these separate for future port to api-only project
             app.UseMvc(routes => {
