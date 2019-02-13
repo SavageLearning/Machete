@@ -111,24 +111,14 @@ namespace Machete.Web.Controllers.Api.Identity
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] CredentialsViewModel model)
         {
-            // Validation logic
             if (!ValidateLogin(model)) return BadRequest(ModelState);
 
             var result = await _signinManager.PasswordSignInAsync(model.UserName, model.Password, model.Remember, false);
 
-            if (result?.Succeeded != true)
-            {
-                ModelState.TryAddModelError("login_failure", "Invalid username or password.");
-                return BadRequest(ModelState);
-            }
+            if (result?.Succeeded == true) return await Task.FromResult(new OkResult());
 
-            // just trying to login
-            var v2AuthEndpoint = Routes.GetHostFrom(Request).V2AuthorizationEndpoint();
-            if (model.Redirect == v2AuthEndpoint) return await Task.FromResult(new OkObjectResult(model.Redirect));
-
-            // trying to hit another page and need to go back there; Angular will handle that
-            var redirectUri = $"{v2AuthEndpoint}?redirect_url={model.Redirect}";
-            return await Task.FromResult(new OkObjectResult(redirectUri));
+            ModelState.TryAddModelError("login_failure", "Invalid username or password.");
+            return BadRequest(ModelState);
         }
 
         private bool ValidateLogin(CredentialsViewModel creds)
