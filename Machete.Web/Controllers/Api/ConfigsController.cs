@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Web.Controllers.Api
 {
-    [Route("api/[controller]")]
+    [Route("api/configs")]
     [ApiController]
     public class ConfigsController : MacheteApiController
     {
@@ -24,6 +24,7 @@ namespace Machete.Web.Controllers.Api
         //[ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
         [AllowAnonymous]
         [HttpGet]
+        [Route("")]
         public ActionResult Get()
         {
             var result = _serv.GetMany(c => c.publicConfig == true);
@@ -32,7 +33,8 @@ namespace Machete.Web.Controllers.Api
 
         // GET: api/Configs/5
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("{id}")]
         public JsonResult Get(int id)
         {
             var result = _serv.Get(id);
@@ -41,21 +43,21 @@ namespace Machete.Web.Controllers.Api
 
         // POST: api/Configs
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
-        [HttpPost]
+        [HttpPost("")]
         public void Post([FromBody]string value)
         {
         }
 
         // PUT: api/Configs/5
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
-        [HttpPut]
+        [HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)
         {
         }
 
         // DELETE: api/Configs/5
-        [HttpDelete]
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
+        [HttpDelete("{id}")]
         public void Delete(int id)
         {
         }

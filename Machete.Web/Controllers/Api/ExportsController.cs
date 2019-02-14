@@ -28,7 +28,7 @@ namespace Machete.Web.Controllers.Api
         WorkOrders
     }
     
-    [Route("api/[controller]")]
+    [Route("api/exports")]
     [ApiController]
     public class ExportsController : ControllerBase
     {
@@ -43,6 +43,8 @@ namespace Machete.Web.Controllers.Api
         //  GET api/<controller>
         // [Authorize(Roles = "Administrator, Manager")]
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        [HttpGet]
+        [Route("")]
         public ActionResult Get()
         {
             var tables = new[] {
@@ -64,8 +66,11 @@ namespace Machete.Web.Controllers.Api
 
             return new JsonResult(new { data = result });
         }
+        
         //[Authorize(Roles = "Administrator, Manager")]
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        [HttpGet]
+        [Route("{tableName}")]
         public ActionResult Get(string tableName)
         {
             Enum.TryParse<ValidTableNames>(tableName, out var name); // validate that we've only received a table name
@@ -81,7 +86,8 @@ namespace Machete.Web.Controllers.Api
         //
         // The ZZtablename is a more unique namespace than ID; an ID is getting sent from the domain, which this method
         // has to comply with. ZZTablename is less likely to cause a collison.
-        [HttpGet, Route("{ZZtablename}/execute")]
+        [HttpGet]
+        [Route("{ZZtablename}/execute")]
         public HttpResponseMessage Execute(string ZZtablename, string filterField, DateTime? beginDate, DateTime? endDate)
         {
             var includeOptions = Request.Query.ToDictionary(kv => kv.Key, kv => kv.Value.ToString()); // TODO so sketch
@@ -113,6 +119,7 @@ namespace Machete.Web.Controllers.Api
         // PUT api/values/5
         //[Authorize(Roles = "Administrator")]
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        [HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)
         {
         }
@@ -120,6 +127,7 @@ namespace Machete.Web.Controllers.Api
         // DELETE api/values/5
         //[Authorize(Roles = "Administrator")]
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        [HttpDelete("{id}")]
         public void Delete(int id)
         {
         }

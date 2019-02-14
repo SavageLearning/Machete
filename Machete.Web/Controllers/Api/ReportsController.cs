@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Web.Controllers.Api
 {
-    [Route("api/[controller]")]
+    [Route("api/reports")]
     [ApiController]
     public class ReportsController : MacheteApiController
     {
@@ -23,7 +23,8 @@ namespace Machete.Web.Controllers.Api
         // GET api/<controller>
         //[Authorize(Roles = "Administrator, Manager")]
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
-
+        [HttpGet]
+        [Route("")]
         public ActionResult Get()
         {
             var result = serv.getList()
@@ -31,7 +32,10 @@ namespace Machete.Web.Controllers.Api
 
             return new JsonResult( new { data = result } );
         }
+        
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        [HttpGet]
+        [Route("{id}")]
         public ActionResult Get(string id)
         {
 
@@ -39,26 +43,34 @@ namespace Machete.Web.Controllers.Api
             // TODO Use Automapper to return column deserialized
             return new JsonResult(new { data = result });
         }
+        
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        [HttpGet]
+        [Route("{id}/{beginDate}/{endDate}")]
         public ActionResult Get(string id, DateTime? beginDate, DateTime? endDate)
         {
             return Get(id, beginDate, endDate, null);
         }
 
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        [HttpGet]
+        [Route("{id}/{beginDate}")]
         public ActionResult Get(string id, DateTime? beginDate)
         {
             return Get(id, beginDate, null, null);
         }
 
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
-
+        [HttpGet]
+        [Route("{id}/{memberNumber}")]
         public ActionResult Get(string id, int? memberNumber)
         {
             return Get(id, null, null, memberNumber);
         }
 
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        [HttpGet]
+        [Route("{id}/{beginDate}/{endDate}/{memberNumber}")]
         public ActionResult Get(string id, DateTime? beginDate, DateTime? endDate, int? memberNumber)
         {
             var result = serv.getQuery(
@@ -72,8 +84,8 @@ namespace Machete.Web.Controllers.Api
         }
 
         // POST api/values
-        [HttpPost]
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        [HttpPost("{data}")]
         public ActionResult Post(Machete.Web.ViewModel.Api.ReportQuery data)
         {
             string query = data.query;
@@ -103,12 +115,14 @@ namespace Machete.Web.Controllers.Api
 
         // PUT api/values/5
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        [HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)
         {
         }
 
         // DELETE api/values/5
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        [HttpDelete("{id}")]
         public void Delete(int id)
         {
         }

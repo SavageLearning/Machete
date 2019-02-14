@@ -7,11 +7,11 @@ using Machete.Service.DTO;
 using Machete.Web.Helpers.Api;
 using Microsoft.AspNetCore.Mvc;
 using DTO = Machete.Service.DTO;
-using Employer = Machete.Web.ViewModel.Api.Employer; // dear past Chaim: maybe not a great idea; dear future Chaim: TODO
+using Employer = Machete.Web.ViewModel.Api.Employer;
 
 namespace Machete.Web.Controllers.Api
 {
-    [Route("api/[controller]")]
+    [Route("api/employer")]
     [ApiController]
     public class EmployersController : MacheteApiController
     {
@@ -33,6 +33,7 @@ namespace Machete.Web.Controllers.Api
         // TODO Add real permissions
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Employer })]
         [HttpGet]
+        [Route("")]
         public ActionResult Get()
         {
             var vo = new viewOptions();
@@ -49,6 +50,7 @@ namespace Machete.Web.Controllers.Api
         // GET api/values/5
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Manager, CV.Phonedesk })]
         [HttpGet]
+        [Route("{id}")]
         public ActionResult Get(int id)
         {
             var result = map.Map<Domain.Employer, Employer>(serv.Get(id));
@@ -58,7 +60,8 @@ namespace Machete.Web.Controllers.Api
         }
 
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Manager, CV.Phonedesk, CV.Employer })]
-        [HttpGet, Route("api/employer/profile")]
+        [HttpGet]
+        [Route("profile")]
         public ActionResult ProfileGet()
         {
             Domain.Employer e;
@@ -109,7 +112,7 @@ namespace Machete.Web.Controllers.Api
         // POST api/values
         // This action method is for ANY employer
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Manager, CV.Phonedesk })]
-        [HttpPost]
+        [HttpPost("")]
         public void Post([FromBody]Employer employer)
         {
             var domain = map.Map<Employer, Domain.Employer>(employer);
@@ -117,9 +120,8 @@ namespace Machete.Web.Controllers.Api
         }
 
         // For an employer creating his/her own record
-        [HttpPost]
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Employer })]
-        [Route("api/employer/profile")]
+        [HttpPost("profile")]
         public ActionResult ProfilePost([FromBody]Employer employer)
         {
             Domain.Employer e = null;
@@ -145,7 +147,7 @@ namespace Machete.Web.Controllers.Api
 
         // For editing any employer record
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Manager, CV.Phonedesk })]
-        [HttpPut]
+        [HttpPut("{id}")]
         public void Put(int id, [FromBody]Employer employer)
         {
             var domain = serv.Get(employer.id);
@@ -154,9 +156,8 @@ namespace Machete.Web.Controllers.Api
         }
 
         // for an employer editing his/her own employer record
-        [HttpPut]
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Employer })]
-        [Route("api/employer/profile")]
+        [HttpPut("profile")]
         public ActionResult ProfilePut([FromBody]Employer employer)
         {
             bool newEmployer = false;
@@ -188,7 +189,7 @@ namespace Machete.Web.Controllers.Api
 
         // DELETE api/values/5
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
             // TODO: Make a soft delete; never really delete record

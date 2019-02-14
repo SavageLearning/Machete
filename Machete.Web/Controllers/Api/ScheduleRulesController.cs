@@ -9,7 +9,7 @@ using ScheduleRule = Machete.Web.ViewModel.Api.ScheduleRule;
 
 namespace Machete.Web.Controllers.Api
 {
-    [Route("api/[controller]")]
+    [Route("api/schedulerules")]
     [ApiController]
     public class ScheduleRulesController : MacheteApiController
     {
@@ -24,9 +24,9 @@ namespace Machete.Web.Controllers.Api
 
         // GET: api/ScheduleRules
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Employer })]
+        [HttpGet]
         public ActionResult Get()
         {
-
             try
             {
                 var result = serv.GetAll()
@@ -41,22 +41,27 @@ namespace Machete.Web.Controllers.Api
         }
 
         // GET: api/ScheduleRules/5
+        [HttpGet]
+        [Route("{id}")]
         public string Get(int id)
         {
             return "value";
         }
 
         // POST: api/ScheduleRules
+        [HttpPost("")]
         public void Post([FromBody]string value)
         {
         }
 
         // PUT: api/ScheduleRules/5
+        [HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)
         {
         }
 
         // DELETE: api/ScheduleRules/5
+        [HttpDelete("{id}")]
         public void Delete(int id)
         {
         }

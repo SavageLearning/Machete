@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Web.Controllers.Api
 {
-    [Route("api/[controller]")]
+    [Route("api/transportprovidersavailability")]
     [ApiController]
     public class TransportProvidersAvailabilityController : MacheteApiController
     {
@@ -23,9 +23,10 @@ namespace Machete.Web.Controllers.Api
 
         // GET: api/TransportRule
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Employer })]
+        [HttpGet]
+        [Route("")]
         public ActionResult Get()
         {
-
             try
             {
                 var result = serv.GetAll()
@@ -40,22 +41,27 @@ namespace Machete.Web.Controllers.Api
         }
 
         // GET: api/TransportRule/5
+        [HttpGet]
+        [Route("{id}")]
         public string Get(int id)
         {
             return "value";
         }
 
         // POST: api/TransportRule
+        [HttpPost("")]
         public void Post([FromBody]string value)
         {
         }
 
         // PUT: api/TransportRule/5
+        [HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)
         {
         }
 
         // DELETE: api/TransportRule/5
+        [HttpDelete("{id}")]
         public void Delete(int id)
         {
         }

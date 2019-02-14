@@ -3,15 +3,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Web.Controllers.Api
 {
-    [Route("api/[controller]")]
+    [Route("api/error")] // TODO is this doing anything?
     [ApiController]
     public class ErrorController : ControllerBase
     {
-        [HttpGet, HttpPost, HttpPut, HttpDelete, HttpHead, HttpOptions]
         [AllowAnonymous]
+        [HttpGet, HttpPost, HttpPut, HttpDelete, HttpHead, HttpOptions]
+        [Route("{path}")]
         public ActionResult NotFound(string path)
         {
-            //TODO log error to ELMAH
+            // TODO ELMAH
             //ErrorSignal.FromCurrentContext().Raise(new HttpException(404, "404 Not Found: /" + path));
 
             // return 404

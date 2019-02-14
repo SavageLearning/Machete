@@ -11,7 +11,7 @@ using TransportProvider = Machete.Web.ViewModel.Api.TransportProvider;
 
 namespace Machete.Web.Controllers.Api
 {
-    [Route("api/[controller]")]
+    [Route("api/transportproviders")]
     [ApiController]
     public class TransportProvidersController : MacheteApiController
     {
@@ -26,6 +26,8 @@ namespace Machete.Web.Controllers.Api
 
         // GET: api/TransportRule
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Any })]
+        [HttpGet]
+        [Route("")]
         public ActionResult Get()
         {
             try
@@ -44,6 +46,8 @@ namespace Machete.Web.Controllers.Api
 
         // GET: api/TransportProvider/5
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Any })]
+        [HttpGet]
+        [Route("{id}")]
         public ActionResult Get(int id)
         {
             var result = map.Map<Domain.TransportProvider, TransportProvider>(serv.Get(id));
@@ -54,6 +58,7 @@ namespace Machete.Web.Controllers.Api
 
         // POST: api/TransportProvider
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Manager })]
+        [HttpPost("")]
         public void Post([FromBody]TransportProvider value)
         {
             var domain = map.Map<TransportProvider, Domain.TransportProvider>(value);
@@ -62,6 +67,7 @@ namespace Machete.Web.Controllers.Api
 
         // PUT: api/TransportProvider/5
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Manager })]
+        [HttpPut("{id}")]
         public void Put(int id, [FromBody]TransportProvider value)
         {
             var domain = serv.Get(value.id);
@@ -72,6 +78,7 @@ namespace Machete.Web.Controllers.Api
 
         // DELETE: api/TransportProvider/5
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
+        [HttpDelete("{id}")]
         public void Delete(int id)
         {
         }
@@ -80,8 +87,8 @@ namespace Machete.Web.Controllers.Api
         // TransportProvider Availabilities
 
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Any })]
-        [Route("api/transportproviders/{tpid}/availabilities")]
         [HttpGet]
+        [Route("{tpid}/availabilities")]
         public ActionResult ARGet(int tpid)
         {
             try
@@ -100,8 +107,7 @@ namespace Machete.Web.Controllers.Api
 
         // POST: api/TransportProvider/{tpid}/AvailabilityRules
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
-        [Route("api/transportproviders/{tpid}/availabilities")]
-        [HttpPost]
+        [HttpPost("{tpid}/availabilities")]
         public ActionResult ARPost(int tpid, [FromBody]TransportProviderAvailability value)
         {
             var domain = map.Map<TransportProviderAvailability, Domain.TransportProviderAvailability>(value);

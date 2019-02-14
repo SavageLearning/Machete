@@ -15,7 +15,7 @@ using WorkOrder = Machete.Web.ViewModel.Api.WorkOrder;
 
 namespace Machete.Web.Controllers.Api
 {
-    [Route("api/[controller]")]
+    [Route("api/onlineorders")]
     [ApiController]
     public class OnlineOrdersController : MacheteApiController
     {
@@ -28,7 +28,7 @@ namespace Machete.Web.Controllers.Api
         private string paypalId;
         private string paypalSecret;
         private string paypalUrl;
-        private Domain.Employer employer;
+        private Employer employer;
 
         public OnlineOrdersController(
             IOnlineOrdersService serv, 
@@ -63,6 +63,8 @@ namespace Machete.Web.Controllers.Api
 
         // GET: api/OnlineOrders
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Employer })]
+        [HttpGet]
+        [Route("")]
         public ActionResult Get()
         {
             var vo = new viewOptions();
@@ -79,20 +81,18 @@ namespace Machete.Web.Controllers.Api
         }
 
         // GET: api/OnlineOrders/5
-        [Route("api/onlineorders/{orderID}")]
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Employer })]
+        [HttpGet]
+        [Route("api/onlineorders/{orderID}")]
         public ActionResult Get(int orderID)
         {
             Domain.WorkOrder order = null;
             try
             {
                 order = serv.Get(orderID);
+                if (order.EmployerID != employer.ID) throwInvalidOrder(orderID);
             }
             catch
-            {
-                throwInvalidOrder(orderID);
-            }
-            if (order.EmployerID != employer.ID)
             {
                 throwInvalidOrder(orderID);
             }
@@ -104,8 +104,8 @@ namespace Machete.Web.Controllers.Api
         }
 
         // POST: api/OnlineOrders
-        [HttpPost]
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Employer })]
+        [HttpPost("")]
         public ActionResult Post([FromBody]WorkOrder order)
         {
 
@@ -139,9 +139,9 @@ namespace Machete.Web.Controllers.Api
         }
 
         // POST: api/onlineorders/{orderid}/paypalexecute
-        [HttpPost]
-        [Route("api/onlineorders/{orderID}/paypalexecute")]
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Employer })]
+        [HttpPost]
+        [Route("{orderID}/paypalexecute")]
         public ActionResult PaypalExecute(int orderID, [FromBody]PaypalPayment data)
         {
             validatePaypalData(data);

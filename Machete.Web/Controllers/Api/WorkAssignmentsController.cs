@@ -8,7 +8,7 @@ using DTO = Machete.Service.DTO;
 
 namespace Machete.Web.Controllers.Api
 {
-    [Route("api/[controller]")]
+    [Route("api/workassignments")]
     [ApiController]
     [ElmahHandleError]
     [Authorize]
@@ -23,7 +23,10 @@ namespace Machete.Web.Controllers.Api
             this.serv = employerService;
             this.map = map;
         }
+        
         // GET api/values
+        [HttpGet]
+        [Route("")]
         public ActionResult Get()
         {
             var vo = new viewOptions();
@@ -38,6 +41,8 @@ namespace Machete.Web.Controllers.Api
         }
 
         // GET api/values/5
+        [HttpGet]
+        [Route("{id}")]
         public ActionResult Get(int id)
         {
             var result = map.Map<Domain.WorkAssignment, Machete.Web.ViewModel.Api.WorkAssignment>(serv.Get(id));
@@ -45,16 +50,19 @@ namespace Machete.Web.Controllers.Api
         }
 
         // POST api/values
+        [HttpPost("")]
         public void Post([FromBody]string value)
         {
         }
 
         // PUT api/values/5
+        [HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)
         {
         }
 
         // DELETE api/values/5
+        [HttpDelete("{id}")]
         public void Delete(int id)
         {
         }

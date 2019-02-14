@@ -9,7 +9,7 @@ using WorkOrder = Machete.Web.ViewModel.Api.WorkOrder;
 
 namespace Machete.Web.Controllers.Api
 {
-    [Route("api/[controller]")]
+    [Route("api/workorders")]
     [ApiController]
     public class WorkOrdersController : MacheteApiController
     {
@@ -28,6 +28,8 @@ namespace Machete.Web.Controllers.Api
 
         // GET api/values
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
+        [HttpGet]
+        [Route("")]
         public ActionResult Get()
         {
             var vo = new viewOptions();
@@ -44,6 +46,8 @@ namespace Machete.Web.Controllers.Api
 
         // GET api/values/5
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
+        [HttpGet]
+        [Route("{id}")]
         public ActionResult Get(int id)
         {
             var result = map.Map<Domain.WorkOrder, WorkOrder>(serv.Get(id));
@@ -52,6 +56,7 @@ namespace Machete.Web.Controllers.Api
 
         // POST api/values
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
+        [HttpPost("")]
         public void Post([FromBody]WorkOrder order)
         {
             var domain = map.Map<WorkOrder, Domain.WorkOrder>(order);
@@ -60,6 +65,7 @@ namespace Machete.Web.Controllers.Api
 
         // PUT api/values/5
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
+        [HttpPut("{id}")]
         public void Put(int id, [FromBody]WorkOrder order)
         {
             var domain = serv.Get(order.id);
@@ -70,6 +76,7 @@ namespace Machete.Web.Controllers.Api
 
         // DELETE api/values/5
         [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
+        [HttpDelete("{id}")]
         public void Delete(int id)
         {
         }

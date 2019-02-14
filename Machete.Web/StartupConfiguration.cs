@@ -5,6 +5,7 @@ using System.Reflection;
 using Machete.Data;
 using Machete.Data.Repositories;
 using Machete.Service;
+using Machete.Web.Controllers.Api;
 using Machete.Web.Helpers;
 using Machete.Web.Helpers.Api;
 using Machete.Web.Helpers.Api.Identity;
@@ -90,7 +91,7 @@ namespace Machete.Web
             var controllerNames = Assembly.GetCallingAssembly()
                 .GetTypes()
                 .Where(x =>
-                    x.IsSubclassOf(typeof(ControllerBase)) &&
+                    x.IsSubclassOf(typeof(MacheteApiController)) &&
                     x.FullName.StartsWith(MethodBase.GetCurrentMethod().DeclaringType.Namespace + ".Controllers"))
                 .ToList()
                 .Select(x => x.Name.Replace("Controller", ""));
