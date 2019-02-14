@@ -73,8 +73,7 @@ namespace Machete.Web.Controllers.Api.Identity
         
         [HttpGet]
         [Route("authorize")]
-        public async Task<IActionResult> Authorize([FromQuery(Name = "redirect_uri")] string redirectUri)
-            //, [FromQuery(Name = "nonce")] Guid nonce)
+        public async Task<IActionResult> Authorize()
         {
             if (!User.Identity.IsAuthenticated) return await Task.FromResult(new UnauthorizedResult());
             
@@ -90,7 +89,7 @@ namespace Machete.Web.Controllers.Api.Identity
             var jwt = await _jwtFactory.GenerateEncodedToken(claimsIdentity, _jwtOptions);
             
             return await Task.FromResult<IActionResult>(
-                new OkObjectResult(new { data = redirectUri, access_token = jwt })
+                new OkObjectResult(new { access_token = jwt })
             );
         }
 
