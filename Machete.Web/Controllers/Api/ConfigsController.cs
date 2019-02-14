@@ -21,7 +21,7 @@ namespace Machete.Web.Controllers.Api
         }
 
         // GET: api/Configs
-        //[ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
+        //[Authorize(Roles = "Administrator")]
         [AllowAnonymous]
         [HttpGet]
         [Route("")]
@@ -32,7 +32,7 @@ namespace Machete.Web.Controllers.Api
         }
 
         // GET: api/Configs/5
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
+        [Authorize(Roles = "Administrator")]
         [HttpGet]
         [Route("{id}")]
         public JsonResult Get(int id)
@@ -42,21 +42,21 @@ namespace Machete.Web.Controllers.Api
         }
 
         // POST: api/Configs
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
+        [Authorize(Roles = "Administrator")]
         [HttpPost("")]
         public void Post([FromBody]string value)
         {
         }
 
         // PUT: api/Configs/5
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
+        [Authorize(Roles = "Administrator")]
         [HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)
         {
         }
 
         // DELETE: api/Configs/5
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
+        [Authorize(Roles = "Administrator")]
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

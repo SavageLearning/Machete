@@ -6,7 +6,7 @@ using System.Threading;
 using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
-using Machete.Web.Helpers.Api;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RestSharp;
@@ -62,7 +62,7 @@ namespace Machete.Web.Controllers.Api
         }
 
         // GET: api/OnlineOrders
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Employer })]
+        [Authorize(Roles = "Administrator, Hirer")]
         [HttpGet]
         [Route("")]
         public ActionResult Get()
@@ -81,7 +81,7 @@ namespace Machete.Web.Controllers.Api
         }
 
         // GET: api/OnlineOrders/5
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Employer })]
+        [Authorize(Roles = "Administrator, Hirer")]
         [HttpGet]
         [Route("api/onlineorders/{orderID}")]
         public ActionResult Get(int orderID)
@@ -104,7 +104,7 @@ namespace Machete.Web.Controllers.Api
         }
 
         // POST: api/OnlineOrders
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Employer })]
+        [Authorize(Roles = "Administrator, Hirer")]
         [HttpPost("")]
         public ActionResult Post([FromBody]WorkOrder order)
         {
@@ -139,7 +139,7 @@ namespace Machete.Web.Controllers.Api
         }
 
         // POST: api/onlineorders/{orderid}/paypalexecute
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Employer })]
+        [Authorize(Roles = "Administrator, Hirer")]
         [HttpPost]
         [Route("{orderID}/paypalexecute")]
         public ActionResult PaypalExecute(int orderID, [FromBody]PaypalPayment data)

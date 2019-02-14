@@ -4,6 +4,7 @@ using System.Net;
 using AutoMapper;
 using Machete.Service;
 using Machete.Web.Helpers.Api;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Web.Controllers.Api
@@ -22,7 +23,7 @@ namespace Machete.Web.Controllers.Api
 
         // GET api/<controller>
         //[Authorize(Roles = "Administrator, Manager")]
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        [Authorize(Roles = "Administrator")]
         [HttpGet]
         [Route("")]
         public ActionResult Get()
@@ -33,7 +34,7 @@ namespace Machete.Web.Controllers.Api
             return new JsonResult( new { data = result } );
         }
         
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        [Authorize(Roles = "Administrator")]
         [HttpGet]
         [Route("{id}")]
         public ActionResult Get(string id)
@@ -44,7 +45,7 @@ namespace Machete.Web.Controllers.Api
             return new JsonResult(new { data = result });
         }
         
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        [Authorize(Roles = "Administrator")]
         [HttpGet]
         [Route("{id}/{beginDate}/{endDate}")]
         public ActionResult Get(string id, DateTime? beginDate, DateTime? endDate)
@@ -52,7 +53,7 @@ namespace Machete.Web.Controllers.Api
             return Get(id, beginDate, endDate, null);
         }
 
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        [Authorize(Roles = "Administrator")]
         [HttpGet]
         [Route("{id}/{beginDate}")]
         public ActionResult Get(string id, DateTime? beginDate)
@@ -60,7 +61,7 @@ namespace Machete.Web.Controllers.Api
             return Get(id, beginDate, null, null);
         }
 
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        [Authorize(Roles = "Administrator")]
         [HttpGet]
         [Route("{id}/{memberNumber}")]
         public ActionResult Get(string id, int? memberNumber)
@@ -68,7 +69,7 @@ namespace Machete.Web.Controllers.Api
             return Get(id, null, null, memberNumber);
         }
 
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        [Authorize(Roles = "Administrator")]
         [HttpGet]
         [Route("{id}/{beginDate}/{endDate}/{memberNumber}")]
         public ActionResult Get(string id, DateTime? beginDate, DateTime? endDate, int? memberNumber)
@@ -84,7 +85,7 @@ namespace Machete.Web.Controllers.Api
         }
 
         // POST api/values
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        [Authorize(Roles = "Administrator")]
         [HttpPost("{data}")]
         public ActionResult Post(Machete.Web.ViewModel.Api.ReportQuery data)
         {
@@ -114,14 +115,14 @@ namespace Machete.Web.Controllers.Api
         }
 
         // PUT api/values/5
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        [Authorize(Roles = "Administrator")]
         [HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)
         {
         }
 
         // DELETE api/values/5
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        [Authorize(Roles = "Administrator")]
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

@@ -3,6 +3,7 @@ using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Helpers.Api;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DTO = Machete.Service.DTO;
 using WorkOrder = Machete.Web.ViewModel.Api.WorkOrder;
@@ -27,7 +28,7 @@ namespace Machete.Web.Controllers.Api
 
 
         // GET api/values
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
+        [Authorize(Roles = "Administrator")]
         [HttpGet]
         [Route("")]
         public ActionResult Get()
@@ -45,7 +46,7 @@ namespace Machete.Web.Controllers.Api
         }
 
         // GET api/values/5
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
+        [Authorize(Roles = "Administrator")]
         [HttpGet]
         [Route("{id}")]
         public ActionResult Get(int id)
@@ -55,7 +56,7 @@ namespace Machete.Web.Controllers.Api
         }
 
         // POST api/values
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
+        [Authorize(Roles = "Administrator")]
         [HttpPost("")]
         public void Post([FromBody]WorkOrder order)
         {
@@ -64,7 +65,7 @@ namespace Machete.Web.Controllers.Api
         }
 
         // PUT api/values/5
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
+        [Authorize(Roles = "Administrator")]
         [HttpPut("{id}")]
         public void Put(int id, [FromBody]WorkOrder order)
         {
@@ -75,7 +76,7 @@ namespace Machete.Web.Controllers.Api
         }
 
         // DELETE api/values/5
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
+        [Authorize(Roles = "Administrator")]
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

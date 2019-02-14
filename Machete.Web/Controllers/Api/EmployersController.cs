@@ -5,6 +5,7 @@ using Machete.Domain;
 using Machete.Service;
 using Machete.Service.DTO;
 using Machete.Web.Helpers.Api;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DTO = Machete.Service.DTO;
 using Employer = Machete.Web.ViewModel.Api.Employer;
@@ -31,7 +32,7 @@ namespace Machete.Web.Controllers.Api
 
         // GET api/values
         // TODO Add real permissions
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Employer })]
+        [Authorize(Roles = "Administrator, Hirer")]
         [HttpGet]
         [Route("")]
         public ActionResult Get()
@@ -48,7 +49,7 @@ namespace Machete.Web.Controllers.Api
         }
 
         // GET api/values/5
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Manager, CV.Phonedesk })]
+        [Authorize(Roles = "Administrator, Manager, Phonedesk")]
         [HttpGet]
         [Route("{id}")]
         public ActionResult Get(int id)
@@ -59,7 +60,7 @@ namespace Machete.Web.Controllers.Api
             return new JsonResult(new { data = result });
         }
 
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Manager, CV.Phonedesk, CV.Employer })]
+        [Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
         [HttpGet]
         [Route("profile")]
         public ActionResult ProfileGet()
@@ -111,7 +112,7 @@ namespace Machete.Web.Controllers.Api
 
         // POST api/values
         // This action method is for ANY employer
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Manager, CV.Phonedesk })]
+        [Authorize(Roles = "Administrator, Manager, Phonedesk")]
         [HttpPost("")]
         public void Post([FromBody]Employer employer)
         {
@@ -120,7 +121,7 @@ namespace Machete.Web.Controllers.Api
         }
 
         // For an employer creating his/her own record
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Employer })]
+        [Authorize(Roles = "Administrator, Hirer")]
         [HttpPost("profile")]
         public ActionResult ProfilePost([FromBody]Employer employer)
         {
@@ -146,7 +147,7 @@ namespace Machete.Web.Controllers.Api
         }
 
         // For editing any employer record
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Manager, CV.Phonedesk })]
+        [Authorize(Roles = "Administrator, Manager, Phonedesk")]
         [HttpPut("{id}")]
         public void Put(int id, [FromBody]Employer employer)
         {
@@ -156,7 +157,7 @@ namespace Machete.Web.Controllers.Api
         }
 
         // for an employer editing his/her own employer record
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Employer })]
+        [Authorize(Roles = "Administrator, Hirer")]
         [HttpPut("profile")]
         public ActionResult ProfilePut([FromBody]Employer employer)
         {
@@ -188,7 +189,7 @@ namespace Machete.Web.Controllers.Api
         }
 
         // DELETE api/values/5
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
+        [Authorize(Roles = "Administrator")]
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {

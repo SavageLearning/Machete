@@ -6,7 +6,9 @@ using System.Net.Http.Headers;
 using AutoMapper;
 using Machete.Service;
 using Machete.Service.DTO;
+using Machete.Web.Controllers.Api;
 using Machete.Web.Helpers.Api;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // ReSharper disable UnusedMember.Global
@@ -42,7 +44,7 @@ namespace Machete.Web.Controllers.Api
 
         //  GET api/<controller>
         // [Authorize(Roles = "Administrator, Manager")]
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        [Authorize(Roles = "Administrator")]
         [HttpGet]
         [Route("")]
         public ActionResult Get()
@@ -68,7 +70,7 @@ namespace Machete.Web.Controllers.Api
         }
         
         //[Authorize(Roles = "Administrator, Manager")]
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        [Authorize(Roles = "Administrator")]
         [HttpGet]
         [Route("{tableName}")]
         public ActionResult Get(string tableName)
@@ -78,14 +80,13 @@ namespace Machete.Web.Controllers.Api
             return new JsonResult(new { data = result });
         }
 
-        //[Authorize(Roles = "Administrator")]
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
         // https://stackoverflow.com/questions/36274985/how-to-map-webapi-routes-correctly
         // http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api#restful
         // https://docs.microsoft.com/en-us/aspnet/web-api/overview/formats-and-model-binding/parameter-binding-in-aspnet-web-api
         //
         // The ZZtablename is a more unique namespace than ID; an ID is getting sent from the domain, which this method
         // has to comply with. ZZTablename is less likely to cause a collison.
+        [Authorize(Roles = "Administrator")]
         [HttpGet]
         [Route("{ZZtablename}/execute")]
         public HttpResponseMessage Execute(string ZZtablename, string filterField, DateTime? beginDate, DateTime? endDate)
@@ -117,16 +118,14 @@ namespace Machete.Web.Controllers.Api
         }
 
         // PUT api/values/5
-        //[Authorize(Roles = "Administrator")]
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        [Authorize(Roles = "Administrator")]
         [HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)
         {
         }
 
         // DELETE api/values/5
-        //[Authorize(Roles = "Administrator")]
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { "Administrator" })]
+        [Authorize(Roles = "Administrator")]
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

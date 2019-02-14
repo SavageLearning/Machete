@@ -4,6 +4,7 @@ using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Helpers.Api;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ScheduleRule = Machete.Web.ViewModel.Api.ScheduleRule;
 
@@ -23,7 +24,7 @@ namespace Machete.Web.Controllers.Api
         }
 
         // GET: api/ScheduleRules
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Employer })]
+        [Authorize(Roles = "Administrator, Hirer")]
         [HttpGet]
         public ActionResult Get()
         {

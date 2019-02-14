@@ -6,6 +6,7 @@ using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Helpers.Api;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TransportProvider = Machete.Web.ViewModel.Api.TransportProvider;
 
@@ -25,7 +26,7 @@ namespace Machete.Web.Controllers.Api
         }
 
         // GET: api/TransportRule
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Any })]
+        [Authorize(Roles = "Any")]
         [HttpGet]
         [Route("")]
         public ActionResult Get()
@@ -45,7 +46,7 @@ namespace Machete.Web.Controllers.Api
         }
 
         // GET: api/TransportProvider/5
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Any })]
+        [Authorize(Roles = "Any")]
         [HttpGet]
         [Route("{id}")]
         public ActionResult Get(int id)
@@ -57,7 +58,7 @@ namespace Machete.Web.Controllers.Api
         }
 
         // POST: api/TransportProvider
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Manager })]
+        [Authorize(Roles = "Administrator, Manager")]
         [HttpPost("")]
         public void Post([FromBody]TransportProvider value)
         {
@@ -66,7 +67,7 @@ namespace Machete.Web.Controllers.Api
         }
 
         // PUT: api/TransportProvider/5
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Manager })]
+        [Authorize(Roles = "Administrator, Manager")]
         [HttpPut("{id}")]
         public void Put(int id, [FromBody]TransportProvider value)
         {
@@ -77,7 +78,7 @@ namespace Machete.Web.Controllers.Api
         }
 
         // DELETE: api/TransportProvider/5
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
+        [Authorize(Roles = "Administrator")]
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
@@ -86,7 +87,7 @@ namespace Machete.Web.Controllers.Api
         //
         // TransportProvider Availabilities
 
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Any })]
+        [Authorize(Roles = "Any")]
         [HttpGet]
         [Route("{tpid}/availabilities")]
         public ActionResult ARGet(int tpid)
@@ -106,7 +107,7 @@ namespace Machete.Web.Controllers.Api
         }
 
         // POST: api/TransportProvider/{tpid}/AvailabilityRules
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin })]
+        [Authorize(Roles = "Administrator")]
         [HttpPost("{tpid}/availabilities")]
         public ActionResult ARPost(int tpid, [FromBody]TransportProviderAvailability value)
         {

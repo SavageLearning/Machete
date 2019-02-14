@@ -4,6 +4,7 @@ using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Helpers.Api;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Web.Controllers.Api
@@ -22,7 +23,7 @@ namespace Machete.Web.Controllers.Api
         }
 
         // GET: api/TransportRule
-        [ClaimsAuthorization(claimType: CAType.Role, claimValues: new[] { CV.Admin, CV.Employer })]
+        [Authorize(Roles = "Administrator, Hirer")]
         [HttpGet]
         [Route("")]
         public ActionResult Get()
