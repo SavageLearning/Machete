@@ -1,10 +1,13 @@
-﻿namespace Machete.Web.Maps.Api
+﻿using AutoMapper;
+using ScheduleRuleViewModel = Machete.Web.ViewModel.Api.ScheduleRule;
+
+namespace Machete.Web.Maps.Api
 {
-    public class ScheduleRulesMap : MacheteProfile
+    public class ScheduleRulesMap : Profile
     {
         public ScheduleRulesMap()
         {
-            CreateMap<Domain.ScheduleRule, Machete.Web.ViewModel.Api.ScheduleRule>()
+            CreateMap<Domain.ScheduleRule, ScheduleRuleViewModel>()
                 .ForMember(v => v.id, opt => opt.MapFrom(d => d.ID));
         }
     }

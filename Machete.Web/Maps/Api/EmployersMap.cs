@@ -1,14 +1,15 @@
-﻿using Machete.Domain;
+﻿using AutoMapper;
+using EmployerViewModel = Machete.Web.ViewModel.Api.Employer;
 
 namespace Machete.Web.Maps.Api
 {
-    public class EmployersMap : MacheteProfile
+    public class EmployersMap : Profile
     {
         public EmployersMap()
         {
-            CreateMap<Service.DTO.EmployersList, Employer>();
-            CreateMap<Domain.Employer, Employer>();
-            CreateMap<Employer, Domain.Employer>()
+            CreateMap<Service.DTO.EmployersList, EmployerViewModel>();
+            CreateMap<Domain.Employer, EmployerViewModel>();
+            CreateMap<EmployerViewModel, Domain.Employer>()
                 .ForMember(v => v.datecreated, opt => opt.Ignore())
                 .ForMember(v => v.dateupdated, opt => opt.Ignore())
                 .ForMember(v => v.createdby, opt => opt.Ignore())

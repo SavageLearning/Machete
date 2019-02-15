@@ -1,14 +1,17 @@
-﻿namespace Machete.Web.Maps.Api
+﻿using AutoMapper;
+using WorkAssignmentViewModel = Machete.Web.ViewModel.Api.WorkAssignment;
+
+namespace Machete.Web.Maps.Api
 {
-    public class WorkAssignmentsMap : MacheteProfile
+    public class WorkAssignmentsMap : Profile
     {
         public WorkAssignmentsMap()
         {
-            CreateMap<Service.DTO.WorkAssignmentsList, Machete.Web.ViewModel.Api.WorkAssignment>();
-            CreateMap<Domain.WorkAssignment, Machete.Web.ViewModel.Api.WorkAssignment>()
+            CreateMap<Service.DTO.WorkAssignmentsList, WorkAssignmentViewModel>();
+            CreateMap<Domain.WorkAssignment, WorkAssignmentViewModel>()
                 .ForMember(v => v.skill, opt => opt.MapFrom(d => d.skillEN))
                 .ForMember(v => v.requiresHeavyLifting, opt => opt.MapFrom(d => d.weightLifted));
-            CreateMap<Machete.Web.ViewModel.Api.WorkAssignment, Domain.WorkAssignment>()
+            CreateMap<WorkAssignmentViewModel, Domain.WorkAssignment>()
                 .ForMember(v => v.weightLifted, opt => opt.MapFrom(d => d.requiresHeavyLifting));
         }
     }

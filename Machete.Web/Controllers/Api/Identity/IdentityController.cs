@@ -111,10 +111,15 @@ namespace Machete.Web.Controllers.Api.Identity
         public async Task<IActionResult> Login([FromBody] CredentialsViewModel model)
         {
             if (!ValidateLogin(model)) return BadRequest(ModelState);
+            
 
             var result = await _signinManager.PasswordSignInAsync(model.UserName, model.Password, model.Remember, false);
 
-            if (result?.Succeeded == true) return await Task.FromResult(new OkResult());
+            if (result?.Succeeded == true)
+            {
+                
+                return await Task.FromResult(new OkResult());
+            }
 
             ModelState.TryAddModelError("login_failure", "Invalid username or password.");
             return BadRequest(ModelState);

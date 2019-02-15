@@ -8,7 +8,7 @@ using Machete.Web.Helpers.Api;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DTO = Machete.Service.DTO;
-using Employer = Machete.Web.ViewModel.Api.Employer;
+using EmployerViewModel = Machete.Web.ViewModel.Api.Employer;
 
 namespace Machete.Web.Controllers.Api
 {
@@ -54,7 +54,7 @@ namespace Machete.Web.Controllers.Api
         [Route("{id}")]
         public ActionResult Get(int id)
         {
-            var result = map.Map<Domain.Employer, Employer>(serv.Get(id));
+            var result = map.Map<Domain.Employer, EmployerViewModel>(serv.Get(id));
             if (result == null) return NotFound();
 
             return new JsonResult(new { data = result });
@@ -68,7 +68,7 @@ namespace Machete.Web.Controllers.Api
             Domain.Employer e;
             try
             {
-                e = findEmployerBy();
+                e = findEmployerBySubjectOrEmail();
             }
             catch (Exception ex)
             {
@@ -85,27 +85,28 @@ namespace Machete.Web.Controllers.Api
                 serv.Save(e, userEmail);
             }
             if (e.onlineSigninID != userSubject) return Conflict();
-            var result = map.Map<Domain.Employer, Employer>(e);
+            var result = map.Map<Domain.Employer, EmployerViewModel>(e);
             return new JsonResult(new { data = result });
         }
 
         [NonAction]
-        public Domain.Employer findEmployerBy()
+        public Domain.Employer findEmployerBySubjectOrEmail()
         {
-            Domain.Employer e = null;
-            e = serv.Get(userSubject);
+            var e = serv.Get(userSubject);
             if (e != null) return e;
-            
-            // legacy accounts wont have an email; comes from a claim
             if (userEmail != null)
             {
                 // If SingleOrDefault, then ~500 users will fail to login.
                 // Need solution to de-duplicating employers before getting
                 // string on emails duplication
-                e = serv.GetMany(em => em.email == userEmail).OrderByDescending(em => em.dateupdated).FirstOrDefault();
+                e = serv.GetMany(em => em.email == userEmail).OrderByDescending(em => em.dateupdated)
+                    .FirstOrDefault();
                 return e;
             }
+
             return e;
+
+            // legacy accounts wont have an email; comes from a claim
             // if we haven't found by userSubject, and userEmail is null, assume it's a 
             // legacy account. Legacy accounts have self-attested emails for userNames
         }
@@ -114,23 +115,23 @@ namespace Machete.Web.Controllers.Api
         // This action method is for ANY employer
         [Authorize(Roles = "Administrator, Manager, Phonedesk")]
         [HttpPost("")]
-        public void Post([FromBody]Employer employer)
+        public void Post([FromBody]EmployerViewModel employer)
         {
-            var domain = map.Map<Employer, Domain.Employer>(employer);
+            var domain = map.Map<EmployerViewModel, Domain.Employer>(employer);
             serv.Create(domain, userEmail);
         }
 
         // For an employer creating his/her own record
         [Authorize(Roles = "Administrator, Hirer")]
         [HttpPost("profile")]
-        public ActionResult ProfilePost([FromBody]Employer employer)
+        public ActionResult ProfilePost([FromBody]EmployerViewModel employer)
         {
             Domain.Employer e = null;
-            e = findEmployerBy();
+            e = findEmployerBySubjectOrEmail();
             // If 
             if (e != null) return Conflict();
 
-            var domain = map.Map<Employer, Domain.Employer>(employer);
+            var domain = map.Map<EmployerViewModel, Domain.Employer>(employer);
             domain.onlineSigninID = userSubject;
             if (userEmail != null)
                 domain.email = userEmail;
@@ -149,41 +150,40 @@ namespace Machete.Web.Controllers.Api
         // For editing any employer record
         [Authorize(Roles = "Administrator, Manager, Phonedesk")]
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]Employer employer)
+        public void Put(int id, [FromBody]EmployerViewModel employer)
         {
             var domain = serv.Get(employer.id);
-            map.Map<Employer, Domain.Employer>(employer, domain);
+            map.Map<EmployerViewModel, Domain.Employer>(employer, domain);
             serv.Save(domain, userEmail);
         }
 
         // for an employer editing his/her own employer record
         [Authorize(Roles = "Administrator, Hirer")]
         [HttpPut("profile")]
-        public ActionResult ProfilePut([FromBody]Employer employer)
+        public ActionResult ProfilePut([FromBody]EmployerViewModel viewmodel)
         {
             bool newEmployer = false;
-            Domain.Employer e = null;
-            e = findEmployerBy();
-            if (e == null)
+            var employer = findEmployerBySubjectOrEmail();
+            if (employer == null)
             {
-                e = new Domain.Employer();
+                employer = new Domain.Employer();
                 newEmployer = true;
             }
-            e.onlineSigninID = userSubject;
-            e.email = userEmail;
-            map.Map<Employer, Domain.Employer>(employer, e);
+            employer.onlineSigninID = userSubject;
+            employer.email = userEmail;
+            map.Map<EmployerViewModel, Domain.Employer>(viewmodel, employer);
 
             Domain.Employer result;
             if (newEmployer)
             {
-                result = serv.Create(e, userEmail);
+                result = serv.Create(employer, userEmail);
             }
             else
             {
-                serv.Save(e, userEmail);
-                result = serv.Get(e.ID);
+                serv.Save(employer, userEmail);
+                result = serv.Get(employer.ID);
             }
-            var mapped = map.Map<Domain.Employer, Employer>(result);
+            var mapped = map.Map<Domain.Employer, EmployerViewModel>(result);
             return new JsonResult(new { data = mapped });
 
         }

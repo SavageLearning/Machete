@@ -14,28 +14,19 @@ namespace Machete.Web.Controllers.Api
         {
             userSubject = subjectFromUser();
             userEmail = emailFromUser();
-            base.ControllerContext = controllerContext;
+            ControllerContext = controllerContext;
         }
+        
         [NonAction]
         public string subjectFromUser()
         {
-            if (User == null) return null;
-
-            var claim = ((ClaimsPrincipal)User).FindFirst(CAType.nameidentifier);
-            if (claim == null) return null;
-
-            return claim.Value;
+            return User?.FindFirst(CAType.nameidentifier)?.Value;
         }
 
         [NonAction]
         public string emailFromUser()
         {
-            if (User == null) return null;
-
-            var claim = ((ClaimsPrincipal)User).FindFirst(CAType.email);
-            if (claim == null) return null;
-
-            return claim.Value;
+            return User?.FindFirst(CAType.email)?.Value;
         }
     }
 }

@@ -100,7 +100,7 @@ namespace Machete.Web
             {
                 //options.IdleTimeout = TimeSpan.FromSeconds(10); // for testing only
                 options.Cookie.HttpOnly = true; // prevent JavaScript access
-                options.Cookie.Expiration = TimeSpan.FromDays(150); // half a year?
+                options.Cookie.Expiration = TimeSpan.FromDays(150); // TODO half a year?
                 options.Cookie.SameSite = SameSiteMode.None;
                 
                 // these paths are the defaults, declared explicitly:
