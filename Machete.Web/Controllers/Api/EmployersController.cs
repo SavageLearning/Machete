@@ -77,14 +77,14 @@ namespace Machete.Web.Controllers.Api
 
             if (e == null) return NotFound();
             // Ensure link between email, onlineSigninID, and employer account are correct
-            if (e.email != userEmail) e.email = userEmail;
+            if (e.email != UserEmail) e.email = UserEmail;
             if (e.onlineSigninID == null)
             {
-                e.onlineSigninID = userSubject;
+                e.onlineSigninID = UserSubject;
                 // aggressive linking of asp.net identity and employer record
-                serv.Save(e, userEmail);
+                serv.Save(e, UserEmail);
             }
-            if (e.onlineSigninID != userSubject) return Conflict();
+            if (e.onlineSigninID != UserSubject) return Conflict();
             var result = map.Map<Domain.Employer, EmployerViewModel>(e);
             return new JsonResult(new { data = result });
         }
@@ -92,14 +92,14 @@ namespace Machete.Web.Controllers.Api
         [NonAction]
         public Domain.Employer findEmployerBySubjectOrEmail()
         {
-            var e = serv.Get(userSubject);
+            var e = serv.Get(UserSubject);
             if (e != null) return e;
-            if (userEmail != null)
+            if (UserEmail != null)
             {
                 // If SingleOrDefault, then ~500 users will fail to login.
                 // Need solution to de-duplicating employers before getting
                 // string on emails duplication
-                e = serv.GetMany(em => em.email == userEmail).OrderByDescending(em => em.dateupdated)
+                e = serv.GetMany(em => em.email == UserEmail).OrderByDescending(em => em.dateupdated)
                     .FirstOrDefault();
                 return e;
             }
@@ -118,7 +118,7 @@ namespace Machete.Web.Controllers.Api
         public void Post([FromBody]EmployerViewModel employer)
         {
             var domain = map.Map<EmployerViewModel, Domain.Employer>(employer);
-            serv.Create(domain, userEmail);
+            serv.Create(domain, UserEmail);
         }
 
         // For an employer creating his/her own record
@@ -132,12 +132,12 @@ namespace Machete.Web.Controllers.Api
             if (e != null) return Conflict();
 
             var domain = map.Map<EmployerViewModel, Domain.Employer>(employer);
-            domain.onlineSigninID = userSubject;
-            if (userEmail != null)
-                domain.email = userEmail;
+            domain.onlineSigninID = UserSubject;
+            if (UserEmail != null)
+                domain.email = UserEmail;
             try
             {
-                serv.Create(domain, userEmail);
+                serv.Create(domain, UserEmail);
 
             }
             catch
@@ -154,7 +154,7 @@ namespace Machete.Web.Controllers.Api
         {
             var domain = serv.Get(employer.id);
             map.Map<EmployerViewModel, Domain.Employer>(employer, domain);
-            serv.Save(domain, userEmail);
+            serv.Save(domain, UserEmail);
         }
 
         // for an employer editing his/her own employer record
@@ -169,18 +169,18 @@ namespace Machete.Web.Controllers.Api
                 employer = new Domain.Employer();
                 newEmployer = true;
             }
-            employer.onlineSigninID = userSubject;
-            employer.email = userEmail;
+            employer.onlineSigninID = UserSubject;
+            employer.email = UserEmail;
             map.Map<EmployerViewModel, Domain.Employer>(viewmodel, employer);
 
             Domain.Employer result;
             if (newEmployer)
             {
-                result = serv.Create(employer, userEmail);
+                result = serv.Create(employer, UserEmail);
             }
             else
             {
-                serv.Save(employer, userEmail);
+                serv.Save(employer, UserEmail);
                 result = serv.Get(employer.ID);
             }
             var mapped = map.Map<Domain.Employer, EmployerViewModel>(result);

@@ -51,10 +51,10 @@ namespace Machete.Web.Controllers.Api
             // base executes first to populate userSubject
             base.Initialize(controllerContext);
 
-            employer = eServ.Get(guid: userSubject);
+            employer = eServ.Get(guid: UserSubject);
             if (employer == null)
             {
-                throw new MacheteNullObjectException(string.Format("Not found: employer record; no employer record associated with claim {0}", userSubject));
+                throw new MacheteNullObjectException(string.Format("Not found: employer record; no employer record associated with claim {0}", UserSubject));
             }
             paypalId = cServ.getConfig(Cfg.PaypalId);
             paypalSecret = cServ.getConfig(Cfg.PaypalSecret);
@@ -70,7 +70,7 @@ namespace Machete.Web.Controllers.Api
             var vo = new viewOptions();
             vo.displayLength = 500; // TODO dumping on the client; will address Angular using search later
             vo.displayStart = 0;
-            vo.employerGuid = userSubject;
+            vo.employerGuid = UserSubject;
             vo.CI = Thread.CurrentThread.CurrentCulture;
             dataTableResult<Service.DTO.WorkOrdersList> list = woServ.GetIndexView(vo);
             var result = list.query
@@ -161,7 +161,7 @@ namespace Machete.Web.Controllers.Api
                 order.ppPaymentID = data.paymentID;
                 order.ppPaymentToken = data.paymentToken;
                 order.ppState = "created";
-                woServ.Save(order, userEmail);
+                woServ.Save(order, UserEmail);
             }
 
             var result = postExecute(data); // TODO fix
@@ -169,7 +169,7 @@ namespace Machete.Web.Controllers.Api
             order.ppResponse = result;
             //order.ppState = payment.state;
             //order.ppFee = Double.Parse(payment.transactions.Single().amount.total);
-            woServ.Save(order, userEmail);
+            woServ.Save(order, UserEmail);
             return new JsonResult(new { thingIs = "You seriously need to fix this." });//payment);
         }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Machete.Data;
@@ -112,17 +113,29 @@ namespace Machete.Web.Controllers.Api.Identity
         {
             if (!ValidateLogin(model)) return BadRequest(ModelState);
             
-
+            await VerifyClaimsExistFor(model.UserName);
+            
             var result = await _signinManager.PasswordSignInAsync(model.UserName, model.Password, model.Remember, false);
 
-            if (result?.Succeeded == true)
-            {
-                
-                return await Task.FromResult(new OkResult());
-            }
+            if (result?.Succeeded == true) return await Task.FromResult(new OkResult());
 
             ModelState.TryAddModelError("login_failure", "Invalid username or password.");
             return BadRequest(ModelState);
+        }
+
+        private async Task VerifyClaimsExistFor(string username)
+        {
+            // They are probably using an email, but not necessarily. Either way, it should be "username" in the db.
+            var user = await _userManager.FindByNameAsync(username);
+            
+            var claims = await _userManager.GetClaimsAsync(user);
+            var claimsList = claims.Select(claim => claim.Type).ToList();
+            
+            if (!claimsList.Contains(CAType.nameidentifier))
+                await _userManager.AddClaimAsync(user, new Claim(CAType.nameidentifier, user.Id));           
+            if (!claimsList.Contains(CAType.email))
+                await _userManager.AddClaimAsync(user, new Claim(CAType.email, user.Email));
+            // In the above we use the user.Email regardless of UserName. TODO inform them if a discrepancy exists.
         }
 
         private bool ValidateLogin(CredentialsViewModel creds)

@@ -36,7 +36,7 @@ namespace Machete.Web.Controllers.Api
             var vo = new viewOptions();
             vo.displayLength = 10;
             vo.displayStart = 0;
-            vo.employerGuid = userSubject;
+            vo.employerGuid = UserSubject;
             dataTableResult<DTO.WorkOrdersList> list = serv.GetIndexView(vo);
             var result = list.query
                 .Select(
@@ -61,7 +61,7 @@ namespace Machete.Web.Controllers.Api
         public void Post([FromBody]WorkOrder order)
         {
             var domain = map.Map<WorkOrder, Domain.WorkOrder>(order);
-            serv.Save(domain, userEmail);
+            serv.Save(domain, UserEmail);
         }
 
         // PUT api/values/5
@@ -72,7 +72,7 @@ namespace Machete.Web.Controllers.Api
             var domain = serv.Get(order.id);
             // TODO employers must only be able to edit their record
             map.Map<WorkOrder, Domain.WorkOrder>(order, domain);
-            serv.Save(domain,userEmail);
+            serv.Save(domain,UserEmail);
         }
 
         // DELETE api/values/5

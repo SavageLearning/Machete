@@ -63,7 +63,7 @@ namespace Machete.Web.Controllers.Api
         public void Post([FromBody]TransportProvider value)
         {
             var domain = map.Map<TransportProvider, Domain.TransportProvider>(value);
-            serv.Save(domain, userEmail);
+            serv.Save(domain, UserEmail);
         }
 
         // PUT: api/TransportProvider/5
@@ -74,7 +74,7 @@ namespace Machete.Web.Controllers.Api
             var domain = serv.Get(value.id);
             // TODO employers must only be able to edit their record
             map.Map<TransportProvider, Domain.TransportProvider>(value, domain);
-            serv.Save(domain, userEmail);
+            serv.Save(domain, UserEmail);
         }
 
         // DELETE: api/TransportProvider/5
@@ -115,7 +115,7 @@ namespace Machete.Web.Controllers.Api
 
             try
             {
-                var entity = serv.CreateAvailability(tpid, domain, userEmail);
+                var entity = serv.CreateAvailability(tpid, domain, UserEmail);
                 var result = map.Map<Domain.TransportProviderAvailability, TransportProviderAvailability>(entity);
                 return new JsonResult(new { data = result });
 
