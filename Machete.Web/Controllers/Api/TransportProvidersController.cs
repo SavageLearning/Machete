@@ -26,14 +26,14 @@ namespace Machete.Web.Controllers.Api
         }
 
         // GET: api/TransportRule
-        [Authorize(Roles = "Any")]
+        [Authorize(Roles = "Administrator, Check-in, Hirer, Manager, PhoneDesk, Teacher, User")]
         [HttpGet]
         [Route("")]
         public ActionResult Get()
         {
             try
             {
-                var result = serv.GetMany(w => w.active == true)
+                var result = serv.GetMany(w => w.active)
                     .Select(e => 
                     map.Map<Domain.TransportProvider, TransportProvider>(e))
                     .AsEnumerable();
@@ -46,7 +46,7 @@ namespace Machete.Web.Controllers.Api
         }
 
         // GET: api/TransportProvider/5
-        [Authorize(Roles = "Any")]
+        [Authorize(Roles = "Administrator, Check-in, Hirer, Manager, PhoneDesk, Teacher, User")]
         [HttpGet]
         [Route("{id}")]
         public ActionResult Get(int id)
@@ -87,7 +87,7 @@ namespace Machete.Web.Controllers.Api
         //
         // TransportProvider Availabilities
 
-        [Authorize(Roles = "Any")]
+        [Authorize(Roles = "Administrator, Check-in, Hirer, Manager, PhoneDesk, Teacher, User")]
         [HttpGet]
         [Route("{tpid}/availabilities")]
         public ActionResult ARGet(int tpid)
