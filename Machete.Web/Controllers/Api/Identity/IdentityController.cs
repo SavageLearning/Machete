@@ -123,6 +123,7 @@ namespace Machete.Web.Controllers.Api.Identity
             return BadRequest(ModelState);
         }
 
+        //https://www.c-sharpcorner.com/article/claim-based-and-policy-based-authorization-with-asp-net-core-2-1/
         private async Task VerifyClaimsExistFor(string username)
         {
             // They are probably using an email, but not necessarily. Either way, it should be "username" in the db.

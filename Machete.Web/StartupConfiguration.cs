@@ -72,6 +72,7 @@ namespace Machete.Web
             services.AddScoped<IPersonService, PersonService>();
             services.AddScoped<IReportService, ReportService>();
             services.AddScoped<IReportsV2Service, ReportsV2Service>();
+            services.AddScoped<IScheduleRuleService, ScheduleRuleService>();
             services.AddScoped<ITransportRuleService, TransportRuleService>();
             services.AddScoped<ITransportProvidersService, TransportProvidersService>();
             services.AddScoped<ITransportProvidersAvailabilityService, TransportProvidersAvailabilityService>();
