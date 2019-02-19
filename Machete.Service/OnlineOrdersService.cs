@@ -74,7 +74,7 @@ namespace Machete.Service
                 throw new MacheteValidationException("WorkAssignments can't be empty");
 
             if (order.transportProviderID == 0)
-                throw new MacheteValidationException("Transport pROVIDER can't be 0");
+                throw new MacheteValidationException("Transport provider can't be 0");
 
             var transMethod = tpServ.Get(order.transportProviderID);
             if (transMethod == null)

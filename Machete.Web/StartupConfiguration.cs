@@ -56,6 +56,7 @@ namespace Machete.Web
             services.AddScoped<IWorkerRequestRepository, WorkerRequestRepository>();
             services.AddScoped<IWorkerSigninRepository, WorkerSigninRepository>();
             services.AddScoped<IWorkOrderRepository, WorkOrderRepository>();
+            services.AddScoped<IScheduleRuleRepository, ScheduleRuleRepository>();
             services.AddScoped<ITransportRuleRepository, TransportRuleRepository>();
             services.AddScoped<ITransportProvidersRepository, TransportProvidersRepository>();
             services.AddScoped<ITransportProvidersAvailabilityRepository, TransportProvidersAvailabilityRepository>();

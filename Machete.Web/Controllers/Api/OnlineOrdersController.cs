@@ -22,40 +22,26 @@ namespace Machete.Web.Controllers.Api
         private readonly IOnlineOrdersService serv;
         private readonly IEmployerService eServ;
         private readonly IWorkOrderService woServ;
-        private readonly ITransportRuleService trServ;
         private readonly IMapper map;
-        private readonly IConfigService cServ;
-        private string paypalId;
-        private string paypalSecret;
-        private string paypalUrl;
-        private Employer employer;
+        private readonly string paypalId;
+        private readonly string paypalSecret;
+        private readonly string paypalUrl;
+
+        private Employer Employer => eServ.Get(guid: UserSubject) ??
+            throw new MacheteNullObjectException($"Not found: employer record; no employer record associated with claim {UserSubject}");
 
         public OnlineOrdersController(
             IOnlineOrdersService serv, 
             IEmployerService eServ,
             IWorkOrderService woServ,
-            ITransportRuleService trServ,
             IMapper map,
             IConfigService cServ)
         {
             this.serv = serv;
             this.eServ = eServ;
             this.woServ = woServ;
-            this.trServ = trServ;
             this.map = map;
-            this.cServ = cServ;
-        }
 
-        protected new void Initialize(ControllerContext controllerContext)
-        {
-            // base executes first to populate userSubject
-            base.Initialize(controllerContext);
-
-            employer = eServ.Get(guid: UserSubject);
-            if (employer == null)
-            {
-                throw new MacheteNullObjectException(string.Format("Not found: employer record; no employer record associated with claim {0}", UserSubject));
-            }
             paypalId = cServ.getConfig(Cfg.PaypalId);
             paypalSecret = cServ.getConfig(Cfg.PaypalSecret);
             paypalUrl = cServ.getConfig(Cfg.PaypalUrl);
@@ -90,7 +76,7 @@ namespace Machete.Web.Controllers.Api
             try
             {
                 order = serv.Get(orderID);
-                if (order.EmployerID != employer.ID) throwInvalidOrder(orderID);
+                if (order.EmployerID != Employer.ID) throwInvalidOrder(orderID);
             }
             catch
             {
@@ -106,23 +92,22 @@ namespace Machete.Web.Controllers.Api
         // POST: api/OnlineOrders
         [Authorize(Roles = "Administrator, Hirer")]
         [HttpPost("")]
-        public ActionResult Post([FromBody]WorkOrder order)
+        public ActionResult Post([FromBody]WorkOrder viewmodel)
         {
-
-            var domain = map.Map<WorkOrder, Domain.WorkOrder>(order);
-            domain.Employer = employer;
-            domain.EmployerID = employer.ID;
-            domain.onlineSource = true;
-            Domain.WorkOrder newOrder = null;
+            var workOrder = map.Map<WorkOrder, Domain.WorkOrder>(viewmodel);
+            workOrder.Employer = Employer;
+            workOrder.EmployerID = Employer.ID;
+            workOrder.onlineSource = true;
+            Domain.WorkOrder newOrder;
             try {
-                newOrder = serv.Create(domain, employer.email ?? employer.name);
+                newOrder = serv.Create(workOrder, Employer.email ?? Employer.name);
             }
             catch(MacheteValidationException e)
             {
                 var res = new HttpResponseMessage(HttpStatusCode.BadRequest)
                 {
                     Content = new StringContent(e.ErrorMessage),
-                    ReasonPhrase = "Validation failed on workorder"
+                    ReasonPhrase = "Validation failed on workOrder"
                 };
                 return BadRequest(res);
             } catch(InvalidOperationException e)
@@ -145,10 +130,9 @@ namespace Machete.Web.Controllers.Api
         public ActionResult PaypalExecute(int orderID, [FromBody]PaypalPayment data)
         {
             validatePaypalData(data);
-            Domain.WorkOrder order = null;
 
-            order = serv.Get(orderID);        
-            if (order.EmployerID != employer.ID)
+            var order = serv.Get(orderID);        
+            if (order.EmployerID != Employer.ID)
             {
                 throwInvalidOrder(orderID);
             }
@@ -211,7 +195,7 @@ namespace Machete.Web.Controllers.Api
         {
             var res = new HttpResponseMessage(HttpStatusCode.NotFound)
             {
-                Content = new StringContent(string.Format("Order {0} not found for employer {1}", id, employer.ID)),
+                Content = new StringContent(string.Format("Order {0} not found for employer {1}", id, Employer.ID)),
                 ReasonPhrase = "Workorder not found"
             };
             throw new Exception(res.ToString());

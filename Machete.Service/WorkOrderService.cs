@@ -209,51 +209,54 @@ namespace Machete.Service
 
             return group_query;
         }
+
         /// <summary>
-        /// Create Work Order
+        /// A method to create a WorkOrder, along with associated WorkAssignments and WorkerRequests, in the database. 
         /// </summary>
-        /// <param name="workOrder">Work order to create</param>
-        /// <param name="user">User performing action</param>
-        /// <returns>Work Order object</returns>
-        public WorkOrder Create(WorkOrder workOrder, List<WorkerRequest> wrList,  string user, ICollection<WorkAssignment> was = null)
+        /// <param name="workOrder">The work order to be created.</param>
+        /// <param name="workerRequestList">A list of worker requests made by the employer.</param>
+        /// <param name="username">User performing action</param>
+        /// <param name="workAssignments">A collection representing the worker assignments for the work order.</param>
+        /// <returns>The created WorkOrder.</returns>
+        public WorkOrder Create(WorkOrder workOrder, List<WorkerRequest> workerRequestList, string username, ICollection<WorkAssignment> workAssignments = null)
         {
-            WorkOrder wo;
             workOrder.timeZoneOffset = Convert.ToDouble(cfg.getConfig(Cfg.TimeZoneDifferenceFromPacific));
             updateComputedValues(ref workOrder);
-            workOrder.createdByUser(user);
-            wo = repo.Add(workOrder);
-            wo.workerRequests = new Collection<WorkerRequest>();
-            if (wrList != null)
+            workOrder.createdByUser(username);
+            var createdWorkOrder = repo.Add(workOrder);
+            createdWorkOrder.workerRequests = new Collection<WorkerRequest>();
+            if (workerRequestList != null)
             {
-                // New Worker Requests to add
-                foreach (var workerRequest in wrList)
+                foreach (var workerRequest in workerRequestList)
                 {
-                    workerRequest.workOrder = wo;
+                    workerRequest.workOrder = createdWorkOrder;
                     workerRequest.workerRequested = wServ.Get(workerRequest.WorkerID);
-                    workerRequest.updatedByUser(user);
-                    workerRequest.createdByUser(user);
-                    wo.workerRequests.Add(workerRequest);
+                    workerRequest.updatedByUser(username);
+                    workerRequest.createdByUser(username);
+                    createdWorkOrder.workerRequests.Add(workerRequest);
                 }
             }
-            uow.SaveChanges(); 
-            if (wo.paperOrderNum == null || wo.paperOrderNum == 0)
+            uow.SaveChanges();
+            
+            if (createdWorkOrder.paperOrderNum == null || createdWorkOrder.paperOrderNum == 0)
             {
-                wo.paperOrderNum = wo.ID;
+                createdWorkOrder.paperOrderNum = createdWorkOrder.ID;
             }
-            if (was != null)
+            if (workAssignments != null)
             {
-                foreach (var a in was)
+                foreach (var workAssignment in workAssignments)
                 {
-                    a.workOrderID = wo.ID;
-                    a.workOrder = wo;
-                    waServ.Create(a, user);
+                    workAssignment.ID = default(int); //so EF Core will save the record; otherwise IDENTITY_INSERT fails
+                    workAssignment.workOrderID = createdWorkOrder.ID;
+                    workAssignment.workOrder = createdWorkOrder;
+                    waServ.Create(workAssignment, username);
                 }
             }
 
             uow.SaveChanges();
 
-            _log(workOrder.ID, user, "WorkOrder created");
-            return wo;
+            _log(workOrder.ID, username, "WorkOrder created");
+            return createdWorkOrder;
         }
 
         public WorkOrder Create(WorkOrder wo, string user, ICollection<WorkAssignment> was = null)
