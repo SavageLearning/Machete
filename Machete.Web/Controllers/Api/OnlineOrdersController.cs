@@ -47,7 +47,7 @@ namespace Machete.Web.Controllers.Api
             paypalUrl = cServ.getConfig(Cfg.PaypalUrl);
         }
 
-        // GET: api/OnlineOrders
+        // GET: api/onlineorders
         [Authorize(Roles = "Administrator, Hirer")]
         [HttpGet]
         [Route("")]
@@ -66,10 +66,10 @@ namespace Machete.Web.Controllers.Api
             return new JsonResult(new { data = result });
         }
 
-        // GET: api/OnlineOrders/5
+        // GET: api/onlineorders/5
         [Authorize(Roles = "Administrator, Hirer")]
         [HttpGet]
-        [Route("api/onlineorders/{orderID}")]
+        [Route("{orderID}")]
         public ActionResult Get(int orderID)
         {
             Domain.WorkOrder order = null;
