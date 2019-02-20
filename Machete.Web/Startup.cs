@@ -62,8 +62,6 @@ namespace Machete.Web
 
             services.ConfigureJwt(_signingKey, Configuration.GetSection(nameof(JwtIssuerOptions)));
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme);
-
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/localization?view=aspnetcore-2.2#configure-localization
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
@@ -75,6 +73,8 @@ namespace Machete.Web
             services.AddIdentity<MacheteUser, IdentityRole>()
                 .AddEntityFrameworkStores<MacheteContext>()
                 .AddDefaultTokenProviders(); // <~ keep for JWT auth
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme);
 
             services.Configure<IdentityOptions>(options =>
             {
