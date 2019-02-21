@@ -15,6 +15,49 @@ axios.defaults.headers.common = {
 };
 
 class ExternalLoginForm extends React.Component {
+  constructor(props) {
+    super(props);
+
+    let queryString = document.location.href.split('?')[1];
+
+    if (!queryString) {
+      this.handleError({response: 'not sent'});
+      return;
+    }
+
+    let dictionary = this.props.dictionaryBuilder(queryString);
+    
+    this.state = {
+      app_id: dictionary['app_id'],
+      client_id: dictionary['client_id'],
+      redirect_uri: 'https://localhost:4213/id/signin-',
+      state: dictionary['state'],
+      scopes: 'email' // space delimited; use %20
+    };
+  }
+  
+  buildQuery(which) {
+    switch (which) {
+      case 'facebook':
+        return 'https://www.facebook.com/v3.2/dialog/oauth?'
+                + 'client_id=' + this.state.app_id + '&'
+                + 'redirect_uri=' + this.state.redirect_uri + 'facebook&'
+                + 'state=' + this.state.state + '&'
+                + 'scope=' + this.state.scopes;
+        break;
+      case 'google':
+        return 'https://accounts.google.com/o/oauth2/v2/auth?'
+                + 'client_id=' + this.state.client_id + '&'
+                + 'redirect_uri=' + this.state.redirect_uri + 'google&'
+                + 'scope=' + this.state.scopes + '&'
+                + 'response_type=code&'
+                + 'state=' + this.state.state;
+        break;
+      default:
+        throw 'unable to parse input; class ExternalLoginForm, method buildQuery';
+    }
+  }
+  
   render() {
     return (
 
@@ -30,10 +73,16 @@ class ExternalLoginForm extends React.Component {
     <div className='panel-body'>
       <ul className='list-inline'>
         <li>
-          <a className='btn'>Sign in with Facebook</a>
+          <a className='btn'
+             href={this.buildQuery('facebook')}>
+            Sign in with Facebook
+          </a>
         </li>
         <li>
-          <a className='btn'>Sign in with Google</a>
+          <a className='btn'
+             href={this.buildQuery('google')}>
+            Sign in with Google
+          </a>
         </li>
       </ul>
     </div>
@@ -76,49 +125,35 @@ class LegacyLoginForm extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    var dictionary = {};
-    
-    var queryString = document.location.href.split('?')[1];
-    
-    if (queryString) {
-      var url = window.location.protocol + '//' + window.location.host + window.location.pathname;
+    let queryString = document.location.href.split('?')[1];
 
-      var parts = queryString.split('&');
-      for (var i = 0; i < parts.length; i++) {
-        var p = parts[i];
-        // Step 2: Split Key/Value pair
-        var keyValuePair = p.split('=');
+    if (!queryString) {
+      this.handleError({response: 'not sent'});
+      return;
+    }
 
-        // Step 3: Add Key/Value pair to Dictionary object
-        var key = keyValuePair[0];
-        var value = keyValuePair[1];
+    let dictionary = this.props.dictionaryBuilder(queryString);
 
-        // decode URI encoded string
-        value = decodeURIComponent(value);
-        value = value.replace(/\+/g, ' ');
+    let url = window.location.protocol + '//' + window.location.host + window.location.pathname;
 
-        dictionary[key] = value;
+    let data = JSON.stringify({
+      'username': this.state.username,
+      'password': this.state.password,
+      'remember': this.state.remember
+    });
+
+    let config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'cache-control': 'no-cache'
       }
+    };
 
-      var data = JSON.stringify({
-        'username': this.state.username,
-        'password': this.state.password,
-        'remember': this.state.remember
-      });
-
-      var config = {
-        headers: {
-          'Content-Type': 'application/json',
-          'cache-control': 'no-cache'
-        }
-      };
-
-      console.log('post: ', url);
-      axios.post(url, data, config).then((response) => {
-        console.log(response);
-        window.location.href = dictionary['redirect_uri'];
-      }).catch((error) => this.handleError(error));
-    } else { this.handleError({ response: 'not sent' }) }
+    console.log('post: ', url);
+    axios.post(url, data, config).then((response) => {
+      console.log(response);
+      window.location.href = dictionary['redirect_uri'];
+    }).catch((error) => this.handleError(error));
   }
 
   render() {
@@ -174,6 +209,29 @@ class Container extends React.Component {
       errorMessage: error.message
     });
   }
+  
+  dictionaryBuilder(queryString) {
+    let dictionary = {};
+    let parts = queryString.split('&');
+
+    for (var i = 0; i < parts.length; i++) {
+      let p = parts[i];
+      // Step 2: Split Key/Value pair
+      let keyValuePair = p.split('=');
+
+      // Step 3: Add Key/Value pair to Dictionary object
+      let key = keyValuePair[0];
+      let value = keyValuePair[1];
+
+      // decode URI encoded string
+      value = decodeURIComponent(value);
+      value = value.replace(/\+/g, ' ');
+
+      dictionary[key] = value;
+    }
+    
+    return dictionary;
+  }
 
   render() {
     return (
@@ -193,8 +251,8 @@ class Container extends React.Component {
       <strong>Error: {this.state.errorMessage}</strong>
     </div>
     <div className='row'>
-      <ExternalLoginForm />
-      <LegacyLoginForm handler={this.handler} />
+      <ExternalLoginForm dictionaryBuilder={this.dictionaryBuilder} />
+      <LegacyLoginForm handler={this.handler} dictionaryBuilder={this.dictionaryBuilder} />
     </div>
   </div>
 </div>

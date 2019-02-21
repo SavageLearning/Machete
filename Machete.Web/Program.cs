@@ -26,6 +26,11 @@ namespace Machete.Web
                 .ConfigureAppConfiguration((host, config) => {
                     config.SetBasePath(Directory.GetCurrentDirectory());
                     config.AddJsonFile("appsettings.json");
+
+                    if (host.HostingEnvironment.IsDevelopment())
+                    {
+                        config.AddUserSecrets<Startup>();
+                    }
                 })
                 .ConfigureLogging((app, logging) => {
                     logging.AddConfiguration(app.Configuration.GetSection("Logging"));

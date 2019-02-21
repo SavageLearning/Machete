@@ -1,9 +1,12 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Configuration;
+using System.Linq;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Helpers.Api;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace Machete.Web.Controllers.Api
 {
@@ -12,12 +15,12 @@ namespace Machete.Web.Controllers.Api
     public class ConfigsController : MacheteApiController
     {
         private readonly IConfigService _serv;
-        private readonly IMapper _map; 
+        private IConfiguration _configuration;
 
-        public ConfigsController(IConfigService serv, IMapper map)
+        public ConfigsController(IConfigService serv, IConfiguration configuration)
         {
-            this._serv = serv;
-            this._map = map;
+            _serv = serv;
+            _configuration = configuration;
         }
 
         // GET: api/Configs
@@ -27,7 +30,28 @@ namespace Machete.Web.Controllers.Api
         [Route("")]
         public ActionResult Get()
         {
-            var result = _serv.GetMany(c => c.publicConfig == true);
+            var result = _serv.GetMany(c => c.publicConfig).ToList();
+            
+            var facebookConfig = new Config
+            {
+                key = "FacebookAppId",
+                value = _configuration["Authentication:Facebook:AppId"]
+            };
+            var googleConfig = new Config
+            {
+                key = "GoogleClientId",
+                value = _configuration["Authentication:Google:ClientId"]
+            };
+            var state = new Config
+            {
+                key = "OAuthStateParameter",
+                value = "fakestate"
+            };
+            
+            result.Add(facebookConfig);
+            result.Add(googleConfig);
+            result.Add(state);
+            
             return new JsonResult(new { data = result });
         }
 

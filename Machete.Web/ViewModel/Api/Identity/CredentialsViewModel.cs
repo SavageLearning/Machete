@@ -4,4 +4,11 @@ namespace Machete.Web.ViewModel.Api.Identity {
         public string UserName { get; set; }
         public bool Remember { get; set; }
     }
+
+    public class ExternalLoginViewModel
+    {
+        public string Code { get; set; }
+        public string State { get; set; }
+        public string Scope { get; set; }
+    }
 }

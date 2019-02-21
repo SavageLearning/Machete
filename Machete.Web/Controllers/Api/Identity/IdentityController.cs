@@ -122,6 +122,24 @@ namespace Machete.Web.Controllers.Api.Identity
             ModelState.TryAddModelError("login_failure", "Invalid username or password.");
             return BadRequest(ModelState);
         }
+        
+        [HttpGet]
+        [Route("signin-facebook")]
+        public async Task<IActionResult> FacebookLogin([FromQuery] ExternalLoginViewModel viewModel)
+        {
+            return await Task.FromResult<IActionResult>(
+                new RedirectResult($"https://localhost:4213/V2/authorize?state={viewModel.State}")
+            );
+        }
+        
+        [HttpGet]
+        [Route("signin-google")]
+        public async Task<IActionResult> GoogleLogin([FromQuery] ExternalLoginViewModel viewModel)
+        {
+            return await Task.FromResult<IActionResult>(
+                new RedirectResult($"https://localhost:4213/V2/authorize?state={viewModel.State}")
+            );
+        }
 
         //https://www.c-sharpcorner.com/article/claim-based-and-policy-based-authorization-with-asp-net-core-2-1/
         private async Task VerifyClaimsExistFor(string username)
