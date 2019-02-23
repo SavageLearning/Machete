@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Linq;
 using System.Reflection;
 using Machete.Data;
+using Machete.Data.Initialize;
 using Machete.Data.Repositories;
 using Machete.Service;
 using Machete.Web.Controllers.Api;

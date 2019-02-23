@@ -74,7 +74,33 @@ namespace Machete.Web
                 .AddEntityFrameworkStores<MacheteContext>()
                 .AddDefaultTokenProviders(); // <~ keep for JWT auth
 
+            // https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-2.2&tabs=macos
+            // https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-2.2
+            // https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-2.2
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme);
+//                    .AddFacebook(facebookOptions =>
+//                    {
+//                        facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
+//                        facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+//                        facebookOptions.CallbackPath = "/id/signin-facebook";
+//                    })
+//                    .AddGoogle(googleOptions =>
+//                    {
+//                        googleOptions.ClientId = Configuration["Authentication:Google:ClientId"];
+//                        googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+//                        googleOptions.CallbackPath = "/id/signin-google";
+//                    });
+            // see notes at:
+            // https://github.com/aspnet/Security/issues/1756#issuecomment-388855389
+            // https://stackoverflow.com/a/50767346/2496266
+            // "The /signin-{provider} route is handled by the middleware, not by your MVC controller.
+            //  Your external login should route to something like `/ExternalLoginCallback`."
+            //            
+            // Great, so why is it commented out?
+            // https://github.com/aspnet/AspNetCore/issues/1871
+            // https://stackoverflow.com/questions/51883634/asp-net-core-2-1-web-api-identity-and-external-login-provider
+            // Basically, this would work great if it was an ASP.NET Core MVC app, but APIs are less suited to this
+            // sort of thing. So I am rolling my own in IdentityController.cs --but thinking of IdentityServer4 perhaps.
 
             services.Configure<IdentityOptions>(options =>
             {

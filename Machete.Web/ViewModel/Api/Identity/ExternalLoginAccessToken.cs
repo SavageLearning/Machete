@@ -1,5 +1,11 @@
 namespace Machete.Web.ViewModel.Api.Identity
 {
+    /// <summary>
+    /// <para>A class for storing the JSON response from an OIDC provider using Newtonsoft's deserializer.</para>
+    /// <para>string access_token</para>
+    /// <para>string bearer</para>
+    /// <para>int expires_in</para>
+    /// </summary>
     public class ExternalLoginAccessToken
     {
         // {

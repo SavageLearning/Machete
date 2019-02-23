@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Security.Authentication;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -102,20 +103,6 @@ namespace Machete.Web.Controllers.Api.Identity
             );
         }
 
-//        // POST id/accounts
-//        [HttpPost("accounts")] // remove; for testing only
-//        public async Task<IActionResult> Accounts([FromBody] RegistrationViewModel model)
-//        {
-//            if (!ModelState.IsValid) return BadRequest(ModelState);
-//
-//            var userIdentity = _mapper.Map<RegistrationViewModel, MacheteUser>(model);
-//            var result = await _userManager.CreateAsync(userIdentity, model.Password);
-//
-//            if (!result.Succeeded) return new BadRequestObjectResult(Errors.AddErrorsToModelState(result, ModelState));
-//
-//            return new JsonResult("Account created");
-//        }
-
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] CredentialsViewModel model)
         {
@@ -131,19 +118,19 @@ namespace Machete.Web.Controllers.Api.Identity
             return BadRequest(ModelState);
         }
         
-        // These routes _should_ be provided automatically by the middleware (but...)
+        // https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/
         [HttpGet]
         [Route("signin-facebook")]
         public async Task<IActionResult> FacebookLogin([FromQuery] ExternalLoginViewModel viewModel)
         {
             if (viewModel.State == _configuration["Authentication:State"])
             {
-                var client = new HttpClient();
+                var httpClient = new HttpClient();
                 var appId = _configuration["Authentication:Facebook:AppId"];
-                var redirectUri = "https://localhost:4213/id/signin-facebook";
+                var redirectUri = "https://localhost:4213/id/signin-facebook"; //TODO
                 var appSecret = _configuration["Authentication:Facebook:AppSecret"];
 
-                var tokenResponse = await client.GetAsync(
+                var tokenResponse = await httpClient.GetAsync(
                     $"https://graph.facebook.com/v3.2/oauth/access_token?" +
                     $"client_id={appId}&" +
                     $"redirect_uri={redirectUri}&" +
@@ -153,7 +140,7 @@ namespace Machete.Web.Controllers.Api.Identity
                 var tokenResponseContent = tokenResponse.Content.ReadAsStringAsync();
                 if (tokenResponse.IsSuccessStatusCode) {
                     var tokenObject = JsonConvert.DeserializeObject<ExternalLoginAccessToken>(tokenResponseContent.Result);
-                    var profileResponse = await client.GetAsync(
+                    var profileResponse = await httpClient.GetAsync(
                         $"https://graph.facebook.com/me?" +
                         $"fields=name,email&" +
                         $"access_token={tokenObject.access_token}");
@@ -173,7 +160,7 @@ namespace Machete.Web.Controllers.Api.Identity
                         await _userManager.CreateAsync(macheteUser);
                         user = await _userManager.FindByEmailAsync(profile.email);
                         await _userManager.AddToRoleAsync(user, "Hirer");
-                        /* fuck me */
+                        /* **** me */
                     }
                     await VerifyClaimsExistFor(user.UserName);
                     await _signinManager.SignInAsync(user, true);
@@ -186,13 +173,66 @@ namespace Machete.Web.Controllers.Api.Identity
                 new RedirectResult("https://localhost:4200/V2/authorize") // todo
             );
         }
-//        
+// TODO refactor; I apologize for the copy-paste code but we are out of time for auth
         [HttpGet]
         [Route("signin-google")]
         public async Task<IActionResult> GoogleLogin([FromQuery] ExternalLoginViewModel viewModel)
         {
+            if (viewModel.State == _configuration["Authentication:State"])
+            {
+                var httpClient = new HttpClient();
+                var appId = _configuration["Authentication:Google:ClientId"];
+                var redirectUri = "https://localhost:4213/id/signin-google"; //TODO
+                var appSecret = _configuration["Authentication:Google:ClientSecret"];
+
+                // TODO we *should* get this URL from https://accounts.google.com/.well-known/openid-configuration
+                var content = new StringContent($@"
+{{
+  ""code"": ""{viewModel.Code}"",
+  ""client_id"": ""{appId}"",
+  ""client_secret"": ""{appSecret}"",
+  ""redirect_uri"": ""{redirectUri}"",
+  ""grant_type"": ""authorization_code""
+}}
+"
+                );
+                var tokenResponse = await httpClient.PostAsync("https://oauth2.googleapis.com/token", content);
+                
+                var tokenResponseContent = tokenResponse.Content.ReadAsStringAsync();
+                if (tokenResponse.IsSuccessStatusCode) {
+                    var tokenObject = JsonConvert.DeserializeObject<ExternalLoginAccessToken>(tokenResponseContent.Result);
+                    
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenObject.access_token);
+                    
+                    // TODO we *should* get this URL from https://accounts.google.com/.well-known/openid-configuration
+                    var profileResponse = await httpClient.GetAsync("https://openidconnect.googleapis.com/v1/userinfo");
+                    var profileResponseContent = profileResponse.Content.ReadAsStringAsync();
+                    var profile = JsonConvert.DeserializeObject<ExternalLoginProfile>(profileResponseContent.Result);
+                    var user = await _userManager.FindByEmailAsync(profile.email);
+                    if (user == null)
+                    {
+                        var name = profile.name.Split(' ');
+                        var macheteUser = new MacheteUser
+                        {
+                            UserName = profile.email,
+                            Email = profile.email, // Machete pls
+                            FirstName = name[0],
+                            LastName = name[1] // Chaim pls
+                        };
+                        await _userManager.CreateAsync(macheteUser);
+                        user = await _userManager.FindByEmailAsync(profile.email);
+                        await _userManager.AddToRoleAsync(user, "Hirer");
+                        /* **** me */
+                    }
+                    await VerifyClaimsExistFor(user.UserName);
+                    await _signinManager.SignInAsync(user, true);
+                } else {
+                    throw new AuthenticationException(tokenResponseContent.Result);
+                }                
+            }
+            // They're either logged in now, or they aren't.
             return await Task.FromResult<IActionResult>(
-                new RedirectResult($"https://localhost:4213/V2/authorize")
+                new RedirectResult("https://localhost:4200/V2/authorize") // todo
             );
         }
 

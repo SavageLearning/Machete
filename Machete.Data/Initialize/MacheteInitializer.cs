@@ -24,10 +24,13 @@
 
 using System;
 using System.Linq;
-using Machete.Data.Initialize;
 
-namespace Machete.Data
+namespace Machete.Data.Initialize
 {
+    /// <summary>
+    /// <para>Machete.Data.Initialize.MacheteConfiguration class.</para>
+    /// <para>This class is responsible for ensuring the presence of the Seed data needed to run the application.</para>
+    /// </summary>
     public static class MacheteConfiguration
     {
         public static void Seed(MacheteContext db, IServiceProvider services)

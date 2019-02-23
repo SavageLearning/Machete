@@ -31,26 +31,29 @@ class ExternalLoginForm extends React.Component {
       app_id: dictionary['app_id'],
       client_id: dictionary['client_id'],
       redirect_uri: 'https://localhost:4213/id/signin-',
-      state: dictionary['state']
+      oauthState: dictionary['state']
     };
   }
   
+  // Facebook: https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/
+  // Google: https://developers.google.com/identity/protocols/OAuth2WebServer#languagespecificrequirements -> HTTP/REST
   buildQuery(which) {
     switch (which) {
       case 'facebook':
         return 'https://www.facebook.com/v3.2/dialog/oauth?'
                 + 'client_id=' + this.state.app_id + '&'
                 + 'redirect_uri=' + this.state.redirect_uri + 'facebook&'
-                + 'state=' + this.state.state + '&'
+                + 'state=' + this.state.oauthState + '&'
                 + 'scope=email'; // 'space' delimited, supposedly, but breaks if you do default+email (+ is url-encoded)
         break;
       case 'google':
         return 'https://accounts.google.com/o/oauth2/v2/auth?'
                 + 'client_id=' + this.state.client_id + '&'
                 + 'redirect_uri=' + this.state.redirect_uri + 'google&'
-                + 'state=' + this.state.state + '&'
-                + 'response_type=code&'
-                + 'scope=email';
+                + 'scope=email&'
+                + 'access_type=online&' // default value; 'recommended' by docs
+                + 'state=' + this.state.oauthState + '&'
+                + 'response_type=code&';
         break;
       default:
         throw 'unable to parse input; class ExternalLoginForm, method buildQuery';

@@ -9,8 +9,11 @@ namespace Machete.Web
     {
         /// <summary>
         /// The program's Main method; entry point for the application.
+        /// The program is not designed to accept arguments. Secrets from
+        /// the dotnet cli user store can be passed in as environment variables.
         /// </summary>
-        public static void Main(string[] args) => CustomWebHostBuilder(args).Build()
+        public static void Main(string[] args) => CustomWebHostBuilder(args)
+            .Build()
             .CreateOrMigrateDatabase()
             .Run();        
 
@@ -23,16 +26,16 @@ namespace Machete.Web
             new WebHostBuilder()
                 .UseKestrel()
               //.UseContentRoute() //uncomment for static content route
-                .ConfigureAppConfiguration((host, config) => {
+                .ConfigureAppConfiguration((host, config) =>
+                {
                     config.SetBasePath(Directory.GetCurrentDirectory());
                     config.AddJsonFile("appsettings.json");
 
                     if (host.HostingEnvironment.IsDevelopment())
-                    {
                         config.AddUserSecrets<Startup>();
-                    }
                 })
-                .ConfigureLogging((app, logging) => {
+                .ConfigureLogging((app, logging) =>
+                {
                     logging.AddConfiguration(app.Configuration.GetSection("Logging"));
                     logging.AddConsole();
                     logging.AddDebug();
