@@ -31,8 +31,7 @@ class ExternalLoginForm extends React.Component {
       app_id: dictionary['app_id'],
       client_id: dictionary['client_id'],
       redirect_uri: 'https://localhost:4213/id/signin-',
-      state: dictionary['state'],
-      scopes: 'email' // space delimited; use %20
+      state: dictionary['state']
     };
   }
   
@@ -43,15 +42,15 @@ class ExternalLoginForm extends React.Component {
                 + 'client_id=' + this.state.app_id + '&'
                 + 'redirect_uri=' + this.state.redirect_uri + 'facebook&'
                 + 'state=' + this.state.state + '&'
-                + 'scope=' + this.state.scopes;
+                + 'scope=email'; // 'space' delimited, supposedly, but breaks if you do default+email (+ is url-encoded)
         break;
       case 'google':
         return 'https://accounts.google.com/o/oauth2/v2/auth?'
                 + 'client_id=' + this.state.client_id + '&'
                 + 'redirect_uri=' + this.state.redirect_uri + 'google&'
-                + 'scope=' + this.state.scopes + '&'
+                + 'state=' + this.state.state + '&'
                 + 'response_type=code&'
-                + 'state=' + this.state.state;
+                + 'scope=email';
         break;
       default:
         throw 'unable to parse input; class ExternalLoginForm, method buildQuery';

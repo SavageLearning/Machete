@@ -45,7 +45,8 @@ namespace Machete.Web.Controllers.Api
             var state = new Config
             {
                 key = "OAuthStateParameter",
-                value = "fakestate"
+                //TODO value = this.httpContext.setCookie(foo, bar) => urlencode(bar)
+                value = _configuration["Authentication:State"]
             };
             
             result.Add(facebookConfig);

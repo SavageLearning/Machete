@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using System.Net.Http;
+using System.Security.Authentication;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -11,8 +14,10 @@ using Machete.Web.ViewModel.Api.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace Machete.Web.Controllers.Api.Identity
 {
@@ -51,13 +56,15 @@ namespace Machete.Web.Controllers.Api.Identity
         private readonly IJwtFactory _jwtFactory;
         private readonly JwtIssuerOptions _jwtOptions;
         private readonly List<IdentityRole> _roles;
+        private IConfiguration _configuration;
 
         public IdentityController(UserManager<MacheteUser> userManager,
             SignInManager<MacheteUser> signInManager,
             RoleManager<IdentityRole> roleManager,
             IMapper mapper,
             IJwtFactory jwtFactory,
-            IOptions<JwtIssuerOptions> jwtOptions
+            IOptions<JwtIssuerOptions> jwtOptions,
+            IConfiguration configuration
         )
         {
             ThrowIfInvalidOptions(jwtOptions.Value);
@@ -70,6 +77,7 @@ namespace Machete.Web.Controllers.Api.Identity
             _roles = roleManager.Roles.ToList();
             _jwtFactory = jwtFactory;
             _jwtOptions = jwtOptions.Value;
+            _configuration = configuration;
         }
         
         [HttpGet]
@@ -94,19 +102,19 @@ namespace Machete.Web.Controllers.Api.Identity
             );
         }
 
-        // POST id/accounts
-        [HttpPost("accounts")] // TODO remove; for testing only
-        public async Task<IActionResult> Accounts([FromBody] RegistrationViewModel model)
-        {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-
-            var userIdentity = _mapper.Map<RegistrationViewModel, MacheteUser>(model);
-            var result = await _userManager.CreateAsync(userIdentity, model.Password);
-
-            if (!result.Succeeded) return new BadRequestObjectResult(Errors.AddErrorsToModelState(result, ModelState));
-
-            return new JsonResult("Account created");
-        }
+//        // POST id/accounts
+//        [HttpPost("accounts")] // remove; for testing only
+//        public async Task<IActionResult> Accounts([FromBody] RegistrationViewModel model)
+//        {
+//            if (!ModelState.IsValid) return BadRequest(ModelState);
+//
+//            var userIdentity = _mapper.Map<RegistrationViewModel, MacheteUser>(model);
+//            var result = await _userManager.CreateAsync(userIdentity, model.Password);
+//
+//            if (!result.Succeeded) return new BadRequestObjectResult(Errors.AddErrorsToModelState(result, ModelState));
+//
+//            return new JsonResult("Account created");
+//        }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] CredentialsViewModel model)
@@ -123,21 +131,68 @@ namespace Machete.Web.Controllers.Api.Identity
             return BadRequest(ModelState);
         }
         
+        // These routes _should_ be provided automatically by the middleware (but...)
         [HttpGet]
         [Route("signin-facebook")]
         public async Task<IActionResult> FacebookLogin([FromQuery] ExternalLoginViewModel viewModel)
         {
+            if (viewModel.State == _configuration["Authentication:State"])
+            {
+                var client = new HttpClient();
+                var appId = _configuration["Authentication:Facebook:AppId"];
+                var redirectUri = "https://localhost:4213/id/signin-facebook";
+                var appSecret = _configuration["Authentication:Facebook:AppSecret"];
+
+                var tokenResponse = await client.GetAsync(
+                    $"https://graph.facebook.com/v3.2/oauth/access_token?" +
+                    $"client_id={appId}&" +
+                    $"redirect_uri={redirectUri}&" +
+                    $"client_secret={appSecret}&" +
+                    $"code={viewModel.Code}");
+                
+                var tokenResponseContent = tokenResponse.Content.ReadAsStringAsync();
+                if (tokenResponse.IsSuccessStatusCode) {
+                    var tokenObject = JsonConvert.DeserializeObject<ExternalLoginAccessToken>(tokenResponseContent.Result);
+                    var profileResponse = await client.GetAsync(
+                        $"https://graph.facebook.com/me?" +
+                        $"fields=name,email&" +
+                        $"access_token={tokenObject.access_token}");
+                    var profileResponseContent = profileResponse.Content.ReadAsStringAsync();
+                    var profile = JsonConvert.DeserializeObject<ExternalLoginProfile>(profileResponseContent.Result);
+                    var user = await _userManager.FindByEmailAsync(profile.email);
+                    if (user == null)
+                    {
+                        var name = profile.name.Split(' ');
+                        var macheteUser = new MacheteUser
+                        {
+                            UserName = profile.email,
+                            Email = profile.email, // Machete pls
+                            FirstName = name[0],
+                            LastName = name[1] // Chaim pls
+                        };
+                        await _userManager.CreateAsync(macheteUser);
+                        user = await _userManager.FindByEmailAsync(profile.email);
+                        await _userManager.AddToRoleAsync(user, "Hirer");
+                        /* fuck me */
+                    }
+                    await VerifyClaimsExistFor(user.UserName);
+                    await _signinManager.SignInAsync(user, true);
+                } else {
+                    throw new AuthenticationException(tokenResponseContent.Result);
+                }
+            }
+            // They're either logged in now, or they aren't.
             return await Task.FromResult<IActionResult>(
-                new RedirectResult($"https://localhost:4213/V2/authorize?state={viewModel.State}")
+                new RedirectResult("https://localhost:4200/V2/authorize") // todo
             );
         }
-        
+//        
         [HttpGet]
         [Route("signin-google")]
         public async Task<IActionResult> GoogleLogin([FromQuery] ExternalLoginViewModel viewModel)
         {
             return await Task.FromResult<IActionResult>(
-                new RedirectResult($"https://localhost:4213/V2/authorize?state={viewModel.State}")
+                new RedirectResult($"https://localhost:4213/V2/authorize")
             );
         }
 
