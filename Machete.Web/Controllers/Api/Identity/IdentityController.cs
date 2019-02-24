@@ -52,12 +52,11 @@ namespace Machete.Web.Controllers.Api.Identity
         private readonly UserManager<MacheteUser> _userManager;
         private readonly SignInManager<MacheteUser> _signinManager;
         private RoleManager<IdentityRole> _roleManager;
-        private readonly IMapper _mapper;
-        
+
         private readonly IJwtFactory _jwtFactory;
         private readonly JwtIssuerOptions _jwtOptions;
         private readonly List<IdentityRole> _roles;
-        private IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
 
         public IdentityController(UserManager<MacheteUser> userManager,
             SignInManager<MacheteUser> signInManager,
@@ -73,8 +72,7 @@ namespace Machete.Web.Controllers.Api.Identity
             _userManager = userManager;
             _signinManager = signInManager;
             _roleManager = roleManager;
-            _mapper = mapper;
-            
+
             _roles = roleManager.Roles.ToList();
             _jwtFactory = jwtFactory;
             _jwtOptions = jwtOptions.Value;
@@ -127,7 +125,7 @@ namespace Machete.Web.Controllers.Api.Identity
             {
                 var httpClient = new HttpClient();
                 var appId = _configuration["Authentication:Facebook:AppId"];
-                var redirectUri = "https://localhost:4213/id/signin-facebook"; //TODO
+                var redirectUri = "https://localhost:4213/id/signin-facebook"; // TODO
                 var appSecret = _configuration["Authentication:Facebook:AppSecret"];
 
                 var tokenResponse = await httpClient.GetAsync(
@@ -137,43 +135,15 @@ namespace Machete.Web.Controllers.Api.Identity
                     $"client_secret={appSecret}&" +
                     $"code={viewModel.Code}");
                 
-                var tokenResponseContent = tokenResponse.Content.ReadAsStringAsync();
-                if (tokenResponse.IsSuccessStatusCode) {
-                    var tokenObject = JsonConvert.DeserializeObject<ExternalLoginAccessToken>(tokenResponseContent.Result);
-                    var profileResponse = await httpClient.GetAsync(
-                        $"https://graph.facebook.com/me?" +
-                        $"fields=name,email&" +
-                        $"access_token={tokenObject.access_token}");
-                    var profileResponseContent = profileResponse.Content.ReadAsStringAsync();
-                    var profile = JsonConvert.DeserializeObject<ExternalLoginProfile>(profileResponseContent.Result);
-                    var user = await _userManager.FindByEmailAsync(profile.email);
-                    if (user == null)
-                    {
-                        var name = profile.name.Split(' ');
-                        var macheteUser = new MacheteUser
-                        {
-                            UserName = profile.email,
-                            Email = profile.email, // Machete pls
-                            FirstName = name[0],
-                            LastName = name[1] // Chaim pls
-                        };
-                        await _userManager.CreateAsync(macheteUser);
-                        user = await _userManager.FindByEmailAsync(profile.email);
-                        await _userManager.AddToRoleAsync(user, "Hirer");
-                        /* **** me */
-                    }
-                    await VerifyClaimsExistFor(user.UserName);
-                    await _signinManager.SignInAsync(user, true);
-                } else {
-                    throw new AuthenticationException(tokenResponseContent.Result);
-                }
+                await SigninByEmailAsync(tokenResponse, httpClient);
             }
             // They're either logged in now, or they aren't.
             return await Task.FromResult<IActionResult>(
                 new RedirectResult("https://localhost:4200/V2/authorize") // todo
             );
         }
-// TODO refactor; I apologize for the copy-paste code but we are out of time for auth
+
+        // https://developers.google.com/identity/protocols/OAuth2WebServer
         [HttpGet]
         [Route("signin-google")]
         public async Task<IActionResult> GoogleLogin([FromQuery] ExternalLoginViewModel viewModel)
@@ -182,10 +152,10 @@ namespace Machete.Web.Controllers.Api.Identity
             {
                 var httpClient = new HttpClient();
                 var appId = _configuration["Authentication:Google:ClientId"];
-                var redirectUri = "https://localhost:4213/id/signin-google"; //TODO
+                var redirectUri = "https://localhost:4213/id/signin-google"; // TODO
                 var appSecret = _configuration["Authentication:Google:ClientSecret"];
 
-                // TODO we *should* get this URL from https://accounts.google.com/.well-known/openid-configuration
+// TODO refactor; I apologize for the copy-paste code but we are out of time for auth
                 var content = new StringContent($@"
 {{
   ""code"": ""{viewModel.Code}"",
@@ -196,44 +166,57 @@ namespace Machete.Web.Controllers.Api.Identity
 }}
 "
                 );
+
+                // TODO we *should* get this URL from https://accounts.google.com/.well-known/openid-configuration
                 var tokenResponse = await httpClient.PostAsync("https://oauth2.googleapis.com/token", content);
                 
-                var tokenResponseContent = tokenResponse.Content.ReadAsStringAsync();
-                if (tokenResponse.IsSuccessStatusCode) {
-                    var tokenObject = JsonConvert.DeserializeObject<ExternalLoginAccessToken>(tokenResponseContent.Result);
-                    
-                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenObject.access_token);
-                    
-                    // TODO we *should* get this URL from https://accounts.google.com/.well-known/openid-configuration
-                    var profileResponse = await httpClient.GetAsync("https://openidconnect.googleapis.com/v1/userinfo");
-                    var profileResponseContent = profileResponse.Content.ReadAsStringAsync();
-                    var profile = JsonConvert.DeserializeObject<ExternalLoginProfile>(profileResponseContent.Result);
-                    var user = await _userManager.FindByEmailAsync(profile.email);
-                    if (user == null)
-                    {
-                        var name = profile.name.Split(' ');
-                        var macheteUser = new MacheteUser
-                        {
-                            UserName = profile.email,
-                            Email = profile.email, // Machete pls
-                            FirstName = name[0],
-                            LastName = name[1] // Chaim pls
-                        };
-                        await _userManager.CreateAsync(macheteUser);
-                        user = await _userManager.FindByEmailAsync(profile.email);
-                        await _userManager.AddToRoleAsync(user, "Hirer");
-                        /* **** me */
-                    }
-                    await VerifyClaimsExistFor(user.UserName);
-                    await _signinManager.SignInAsync(user, true);
-                } else {
-                    throw new AuthenticationException(tokenResponseContent.Result);
-                }                
+                await SigninByEmailAsync(tokenResponse, httpClient);
             }
             // They're either logged in now, or they aren't.
             return await Task.FromResult<IActionResult>(
                 new RedirectResult("https://localhost:4200/V2/authorize") // todo
             );
+        }
+
+      //private
+        private async Task SigninByEmailAsync(HttpResponseMessage tokenResponse, HttpClient httpClient)
+        {
+            var tokenResponseContent = tokenResponse.Content.ReadAsStringAsync();
+            if (tokenResponse.IsSuccessStatusCode)
+            {
+                var tokenObject = JsonConvert.DeserializeObject<ExternalLoginAccessToken>(tokenResponseContent.Result);
+
+                httpClient.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", tokenObject.access_token);
+
+                // TODO we *should* get this URL from https://accounts.google.com/.well-known/openid-configuration
+                var profileResponse = await httpClient.GetAsync("https://openidconnect.googleapis.com/v1/userinfo");
+                var profileResponseContent = profileResponse.Content.ReadAsStringAsync();
+                var profile = JsonConvert.DeserializeObject<ExternalLoginProfile>(profileResponseContent.Result);
+                var user = await _userManager.FindByEmailAsync(profile.email);
+                if (user == null)
+                {
+                    var name = profile.name.Split(' ');
+                    var macheteUser = new MacheteUser
+                    {
+                        UserName = profile.email,
+                        Email = profile.email, // Machete pls
+                        FirstName = name[0],
+                        LastName = name[1] // Chaim pls
+                    };
+                    await _userManager.CreateAsync(macheteUser);
+                    user = await _userManager.FindByEmailAsync(profile.email);
+                    await _userManager.AddToRoleAsync(user, "Hirer");
+                    /* **** me */
+                }
+
+                await VerifyClaimsExistFor(user.UserName);
+                await _signinManager.SignInAsync(user, true);
+            }
+            else
+            {
+                throw new AuthenticationException(tokenResponseContent.Result);
+            }
         }
 
         //https://www.c-sharpcorner.com/article/claim-based-and-policy-based-authorization-with-asp-net-core-2-1/
