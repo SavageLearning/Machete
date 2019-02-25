@@ -1,8 +1,8 @@
 using System;
-using System.Configuration;
 using System.Linq;
 using System.Reflection;
 using Machete.Data;
+using Machete.Data.Infrastructure;
 using Machete.Data.Initialize;
 using Machete.Data.Repositories;
 using Machete.Service;
@@ -11,14 +11,18 @@ using Machete.Web.Helpers;
 using Machete.Web.Helpers.Api;
 using Machete.Web.Helpers.Api.Identity;
 using Machete.Web.ViewModel.Api.Identity;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+// ReSharper disable ArrangeStaticMemberQualifier
+// ReSharper disable InvalidXmlDocComment
 
 namespace Machete.Web
 {
@@ -27,6 +31,10 @@ namespace Machete.Web
     /// </summary>
     public static class StartupConfiguration
     {
+        /// <summary>
+        /// <para>Part of the WebHost extension method pipeline. Calls the Entity Framework Core Migrate() method for the WebHost.</para>
+        /// <para>Demonstrates the use of the `using` statement with a context provided by the .NET Core DI container.</para>
+        /// </summary>
         public static IWebHost CreateOrMigrateDatabase(this IWebHost webhost)
         {
             using (var scope = webhost.Services.CreateScope())
@@ -38,9 +46,74 @@ namespace Machete.Web
 
             return webhost;
         }
-        
-        public static void ConfigureDi(this IServiceCollection services)
+
+        /// <summary>
+        /// <para>Extends the IServiceCollection object contained in the ConfigureServices method called by the runtime,
+        /// and configures authentication for Machete. We currently use ASP.NET Identity with cookie authentication.</para>
+        /// <para>JWT: https://github.com/mmacneil/AngularASPNETCore2WebApiAuth/blob/master/src/Startup.cs</para>
+        /// </summary>
+        public static void ConfigureAuthentication(this IServiceCollection services)
         {
+            services.AddIdentity<MacheteUser, IdentityRole>()
+                .AddEntityFrameworkStores<MacheteContext>()
+                .AddDefaultTokenProviders(); // <~ keep for JWT auth
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Password settings; we are relying on validation
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = false;
+                options.Password.RequiredUniqueChars = 6;
+
+                // Lockout settings
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+                options.Lockout.MaxFailedAccessAttempts = 10;
+                options.Lockout.AllowedForNewUsers = true;
+
+                // User settings
+                options.User.RequireUniqueEmail = true;
+            }); // <~ keep for JWT auth
+
+            // Cookie settings
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.HttpOnly = true; // prevent JavaScript access: https://tools.ietf.org/html/rfc6265
+                options.Cookie.Expiration = TimeSpan.FromHours(24);
+                options.Cookie.SameSite = SameSiteMode.None;
+
+                // these paths are the defaults, declared here explicitly:
+                options.LoginPath = "/Account/Login";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.SlidingExpiration = true;
+            }); // <~ keep for JWT auth
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(StartupConfiguration.AllowCredentials, builder =>
+                {
+                    // for JWT auth, this will have to be reconfigured for "AllowAllOrigins"
+                    builder.WithOrigins("https://localhost:4213", "https://localhost:4200") // TODO
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
+                });
+            });
+        }
+        
+        /// <summary>
+        /// Populate the DI container, which is part of the IServiceCollection. Extension method.
+        /// https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-2.2
+        /// </summary>
+        public static void ConfigureDependencyInjection(this IServiceCollection services)
+        {
+            services.AddScoped<IDatabaseFactory, DatabaseFactory>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             services.AddScoped<IActivityRepository, ActivityRepository>();
             services.AddScoped<IActivitySigninRepository, ActivitySigninRepository>();
             services.AddScoped<IConfigRepository, ConfigRepository>();
@@ -88,7 +161,9 @@ namespace Machete.Web
             services.AddScoped<IModelBindingAdaptor, ModelBindingAdaptor>();
         }
 
-
+        /// <summary>
+        /// Return the names of the Machete API controllers within the calling assembly (e.g., Machete.Web).
+        /// </summary>
         private static string GetControllerNames()
         {
             var controllerNames = Assembly.GetCallingAssembly()
@@ -101,26 +176,27 @@ namespace Machete.Web
 
             return string.Join("|", controllerNames);
         }
-       
+        
+        /// <summary>
+        /// IRouteBuilder extension method. Defines the routes for the legacy application.
+        /// </summary>
         public static void MapLegacyMvcRoutes(this IRouteBuilder routes)
         {
             routes.MapRoute(
                 name: "default",
                 template: "{controller=Account}/{action=Login}/{id?}");
-            routes.MapRoute(
-                name: "V2",
-                template: "V2/{*url}",
-                defaults: new { controller = "V2", action = "Index" }
-            );
         }
         
+        /// <summary>
+        /// IRouteBuilder extension method. Defines the routes for the API.
+        /// </summary>
         public static void MapApiRoutes(this IRouteBuilder routes)
         {
             var host = string.Empty;
 
             routes.MapRoute(
                 name: "DefaultApi",
-                template: "api/{controller}/{id?}", // id? == was RouteParameter.Optional
+                template: "api/{controller}/{id?}", // {id?} == RouteParameter.Optional
                 defaults: new { controller = "Home" },
                 constraints: new { controller = GetControllerNames() }
             );
@@ -143,36 +219,49 @@ namespace Machete.Web
             );
         }
         
-        public static void ConfigureJwt(this IServiceCollection services, RsaSecurityKey signingKey, IConfigurationSection jwtAppSettingOptions)
+        /// <summary>
+        /// Extension method for the IServiceCollection object in the ConfigureServices method called by the runtime.
+        /// Configures options for the issuance of JWTs.
+        /// </summary>
+        /// <param name="signingKey">An RSA encrypted signing key (https://tools.ietf.org/html/rfc3447#section-3.2).</param>
+        /// <param name="configuration">The Configuration field of the Startup class initialized by the runtime.</param>
+        public static void ConfigureJwt(
+            this IServiceCollection services,
+            RsaSecurityKey signingKey,
+            IConfiguration configuration
+        )
         {
+            var configurationSection = configuration.GetSection(nameof(JwtIssuerOptions));
+            
             var credentials = new SigningCredentials(signingKey, SecurityAlgorithms.RsaSha256);
             services.AddSingleton<IJwtFactory, JwtFactory>();
             services.Configure<JwtIssuerOptions>(options =>
             {
-                options.Issuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)];
-                options.Audience = jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)];
+                options.Issuer = configurationSection[nameof(JwtIssuerOptions.Issuer)];
+                options.Audience = configurationSection[nameof(JwtIssuerOptions.Audience)];
                 options.SigningCredentials = credentials;
             });
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidIssuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)],
-
-                ValidateAudience = true,
-                ValidAudience = jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)],
-
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = signingKey,
-
-                RequireExpirationTime = true,
-                ValidateLifetime = true,
-
-                ClockSkew = TimeSpan.Zero
-            };
             
+            #region future use
             // Do the following if you want to switch to JWT auth. We currently only generate a token for future use.
             //
                                                              // // PLEASE DO NOT REMOVE // //            
+//            var tokenValidationParameters = new TokenValidationParameters
+//            {
+//                ValidateIssuer = true,
+//                ValidIssuer = configurationSection[nameof(JwtIssuerOptions.Issuer)],
+//
+//                ValidateAudience = true,
+//                ValidAudience = configurationSection[nameof(JwtIssuerOptions.Audience)],
+//
+//                ValidateIssuerSigningKey = true,
+//                IssuerSigningKey = signingKey,
+//
+//                RequireExpirationTime = true,
+//                ValidateLifetime = true,
+//
+//                ClockSkew = TimeSpan.Zero
+//            };
 //            services.AddAuthentication(options => {
 //                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 //                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -187,10 +276,24 @@ namespace Machete.Web
 //                options.AddPolicy("ApiUser", policy =>
 //                    policy.RequireClaim("role", "api_access"));
 //            });
-            
-            services.AddScoped<JwtIssuerOptions>(); // <~ this may need to go later in the pipeline.
+            #endregion future use
+
+            services.AddScoped<JwtIssuerOptions>();
         }
 
+        /// <summary>
+        /// A static configuration object representing the computed string value "AllowCredentials".
+        /// </summary>
         public static string AllowCredentials => "AllowCredentials";
+        
+        /// <summary>
+        /// A static configuration object representing the computed string value "DefaultConnection".
+        /// </summary>
+        public static string DefaultConnection => "DefaultConnection";
+
+        /// <summary>
+        /// A static configuration object representing the computed string value "Resources".
+        /// </summary>
+        public static string ResourcesFolder => "Resources";
     }
 }

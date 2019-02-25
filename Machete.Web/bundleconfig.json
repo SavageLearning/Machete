@@ -9,32 +9,6 @@
     ]
   },
   {
-    "outputFileName": "Content/bundles/angular-css.js",
-    "inputFiles": [
-      "Content/bundles/styles.js"
-    ],
-    "minify": {
-      "enabled": false,
-      "renameLocals": true
-    },
-    "sourceMap": true
-  },
-  {
-    "outputFileName": "Content/bundles/angular.js",
-    "inputFiles": [
-      "Content/bundles/runtime.js",
-      "Content/bundles/polyfills.js",
-      "Content/bundles/scripts.js",
-      "Content/bundles/vendor.js",
-      "Content/bundles/main.js"
-    ],
-    "minify": {
-      "enabled": false,
-      "renameLocals": true
-    },
-    "sourceMap": true
-  },
-  {
     "outputFileName": "Content/reportcss.css",
     "inputFiles": [
       "Content/jquery.jqplot.css"
