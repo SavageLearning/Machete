@@ -84,7 +84,7 @@ namespace Machete.Data
                         try {
                             var value = reader[property.Name];
                             property.SetValue(instance, value);
-                        } catch (IndexOutOfRangeException) { /*sorry*/ }
+                        } catch (IndexOutOfRangeException) { /* the value is out of range and therefore not set */ }
                     }
                     result.Add(instance);
                 }

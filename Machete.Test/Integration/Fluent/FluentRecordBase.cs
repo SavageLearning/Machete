@@ -23,10 +23,9 @@
 #endregion
 
 using System;
-using System.Data;
-using System.Data.SqlClient;
+using System.IO;
+using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
 using Machete.Data;
 using Machete.Data.Repositories;
@@ -35,11 +34,10 @@ using Machete.Service;
 using Machete.Web;
 using Machete.Web.Maps;
 using Machete.Web.Maps.Api;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Machete.Test.Integration.Fluent
 {
@@ -68,23 +66,26 @@ namespace Machete.Test.Integration.Fluent
         private readonly IServiceProvider container;
 
         public FluentRecordBase() {
-            IConfigurationRoot configuration = new ConfigurationBuilder()
-                .SetBasePath(AppContext.BaseDirectory)
-                .AddJsonFile("appsettings.json")
-                .Build();
-            
-            string[] args = { "" };
-            var host = WebHost
-                .CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .UseConfiguration(configuration)
-                .UseStartup<Startup>()
-                .ConfigureServices(services => {
-                    new Startup(configuration).ConfigureServices(services);
+            var webHost = new WebHostBuilder()
+                .UseKestrel()
+                .ConfigureAppConfiguration((host, config) =>
+                {
+                    config.SetBasePath(Directory.GetCurrentDirectory());
+                    config.AddJsonFile("appsettings.json");
+
+                    if (host.HostingEnvironment.IsDevelopment())
+                        config.AddUserSecrets<Startup>();
                 })
-                .Build().CreateOrMigrateDatabase();
+                .ConfigureLogging((app, logging) =>
+                {
+                    logging.AddConfiguration(app.Configuration.GetSection("Logging"));
+                    logging.AddConsole();
+                    logging.AddDebug();
+                    logging.AddEventSourceLogger();
+                })
+                .UseStartup<Startup>().Build().CreateOrMigrateDatabase();//.Run()
                 
-            var serviceScope = host.Services.CreateScope();
+            var serviceScope = webHost.Services.CreateScope();
             
             container = serviceScope.ServiceProvider;
 

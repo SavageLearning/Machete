@@ -77,7 +77,7 @@ namespace Machete.Test.Integration.Data
             
             // Act
             MacheteReportDefinitions.Initialize(context);
-            var result = frb.ToFactory().ReportDefinitions.Count();
+            var result = context.ReportDefinitions.Count();
             
             // Assert
             Assert.AreEqual(count, result, "static cache and DB report definitions' count not equal");
