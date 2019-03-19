@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -9,6 +10,7 @@ using Machete.Web.Maps.Api;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -73,10 +75,16 @@ namespace Machete.Web
             
             services.AddSpaStaticFiles(angularApp =>
             {
-                angularApp.RootPath = "../UI/dist"; // TODO
+                angularApp.RootPath = "dist"; // TODO
             });            
 
             services.ConfigureDependencyInjection();
+
+            // Headers configuration:
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            });
 
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/localization?view=aspnetcore-2.2#use-a-custom-provider
             // They imply that this is only for "custom" providers but the RequestLocalizationOptions in Configure aren't populated
@@ -104,6 +112,15 @@ namespace Machete.Web
         /// </summary>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            // The pipeline is sequential; since all other elements rely on the headers, this must remain at the top
+            app.UseForwardedHeaders();
+            // https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-2.2#scenarios-and-use-cases
+            app.Use((context, next) =>
+            {
+                context.Request.Scheme = Environment.GetEnvironmentVariable("MACHETE_USE_HTTPS_SCHEME") ?? "http";
+                return next();
+            });
+
             var envIsDevelopment = env.IsDevelopment();
             if (envIsDevelopment)
             {
@@ -113,7 +130,7 @@ namespace Machete.Web
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
+                //app.UseHsts();
             }
 
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/localization?view=aspnetcore-2.2 (Ibid.)
@@ -140,7 +157,7 @@ namespace Machete.Web
             // This refers to the policies set in the services object. An invalid name will force the default policy.
             app.UseCors(StartupConfiguration.AllowCredentials);
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             // For the original MVC app. Serves CSS, JS, etc. from Content. Because this includes the Angular app,
             // this should be kept when de-fusing the two projects. This doesn't represent an issue or technical debt
@@ -191,7 +208,7 @@ namespace Machete.Web
             {
                 angularApp.Options.SourcePath = "../UI";
 
-                if (envIsDevelopment) angularApp.UseProxyToSpaDevelopmentServer("https://localhost:4200");
+                if (envIsDevelopment) angularApp.UseProxyToSpaDevelopmentServer("http://localhost:4200");
             });
 
             app.UseDirectoryBrowser(new DirectoryBrowserOptions

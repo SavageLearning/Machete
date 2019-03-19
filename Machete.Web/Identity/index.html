@@ -30,7 +30,7 @@ class ExternalLoginForm extends React.Component {
     this.state = {
       app_id: dictionary['app_id'],
       client_id: dictionary['client_id'],
-      redirect_uri: 'https://localhost:4213/id/signin-',
+      redirect_uri: window.location.protocol + '//' + window.location.host + '/id/signin-',
       oauthState: dictionary['state']
     };
   }

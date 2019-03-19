@@ -11,6 +11,8 @@
   <ItemGroup>
     <None Remove="App_Start\**" />
     <None Remove="machete.db" />
+    <None Remove="Machete.Web.csproj.DotSettings" />
+    <None Remove="published\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,15 +38,18 @@
 
   <ItemGroup>
     <Compile Remove="App_Start\**" />
+    <Compile Remove="published\**" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Remove="App_Start\**" />
+    <EmbeddedResource Remove="published\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Remove="App_Start\**" />
     <Content Include="Identity\favicon.ico" />
+    <Content Remove="published\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -91,6 +96,51 @@
     <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\LICENSE.txt" />
     <_ContentIncludedByDefault Remove="Views\ReportsV2\Index.cshtml" />
     <_ContentIncludedByDefault Remove="Views\V2\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="published\published\published\published\published\published\web.config" />
+    <_ContentIncludedByDefault Remove="published\published\published\published\published\web.config" />
+    <_ContentIncludedByDefault Remove="published\published\published\published\web.config" />
+    <_ContentIncludedByDefault Remove="published\published\published\web.config" />
+    <_ContentIncludedByDefault Remove="published\published\web.config" />
+    <_ContentIncludedByDefault Remove="published\web.config" />
+    <_ContentIncludedByDefault Remove="published\appsettings.Development.json" />
+    <_ContentIncludedByDefault Remove="published\appsettings.json" />
+    <_ContentIncludedByDefault Remove="published\appsettings.Release.json" />
+    <_ContentIncludedByDefault Remove="published\bundleconfig.json" />
+    <_ContentIncludedByDefault Remove="published\dist\assets\jobs-dispatched-count.json" />
+    <_ContentIncludedByDefault Remove="published\Machete.Web.deps.json" />
+    <_ContentIncludedByDefault Remove="published\Machete.Web.runtimeconfig.json" />
+    <_ContentIncludedByDefault Remove="published\published\appsettings.Development.json" />
+    <_ContentIncludedByDefault Remove="published\published\appsettings.json" />
+    <_ContentIncludedByDefault Remove="published\published\appsettings.Release.json" />
+    <_ContentIncludedByDefault Remove="published\published\bundleconfig.json" />
+    <_ContentIncludedByDefault Remove="published\published\dist\assets\jobs-dispatched-count.json" />
+    <_ContentIncludedByDefault Remove="published\published\Machete.Web.deps.json" />
+    <_ContentIncludedByDefault Remove="published\published\Machete.Web.runtimeconfig.json" />
+    <_ContentIncludedByDefault Remove="published\published\published\appsettings.Development.json" />
+    <_ContentIncludedByDefault Remove="published\published\published\appsettings.json" />
+    <_ContentIncludedByDefault Remove="published\published\published\appsettings.Release.json" />
+    <_ContentIncludedByDefault Remove="published\published\published\bundleconfig.json" />
+    <_ContentIncludedByDefault Remove="published\published\published\dist\assets\jobs-dispatched-count.json" />
+    <_ContentIncludedByDefault Remove="published\published\published\Machete.Web.deps.json" />
+    <_ContentIncludedByDefault Remove="published\published\published\Machete.Web.runtimeconfig.json" />
+    <_ContentIncludedByDefault Remove="published\published\published\published\appsettings.Development.json" />
+    <_ContentIncludedByDefault Remove="published\published\published\published\appsettings.json" />
+    <_ContentIncludedByDefault Remove="published\published\published\published\appsettings.Release.json" />
+    <_ContentIncludedByDefault Remove="published\published\published\published\bundleconfig.json" />
+    <_ContentIncludedByDefault Remove="published\published\published\published\dist\assets\jobs-dispatched-count.json" />
+    <_ContentIncludedByDefault Remove="published\published\published\published\Machete.Web.deps.json" />
+    <_ContentIncludedByDefault Remove="published\published\published\published\Machete.Web.runtimeconfig.json" />
+    <_ContentIncludedByDefault Remove="published\published\published\published\published\appsettings.Development.json" />
+    <_ContentIncludedByDefault Remove="published\published\published\published\published\appsettings.json" />
+    <_ContentIncludedByDefault Remove="published\published\published\published\published\bundleconfig.json" />
+    <_ContentIncludedByDefault Remove="published\published\published\published\published\dist\assets\jobs-dispatched-count.json" />
+    <_ContentIncludedByDefault Remove="published\published\published\published\published\Machete.Web.deps.json" />
+    <_ContentIncludedByDefault Remove="published\published\published\published\published\Machete.Web.runtimeconfig.json" />
+    <_ContentIncludedByDefault Remove="published\published\published\published\published\published\appsettings.Development.json" />
+    <_ContentIncludedByDefault Remove="published\published\published\published\published\published\appsettings.json" />
+    <_ContentIncludedByDefault Remove="published\published\published\published\published\published\bundleconfig.json" />
+    <_ContentIncludedByDefault Remove="published\published\published\published\published\published\Machete.Web.deps.json" />
+    <_ContentIncludedByDefault Remove="published\published\published\published\published\published\Machete.Web.runtimeconfig.json" />
   </ItemGroup>
 
 </Project>

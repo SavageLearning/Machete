@@ -18,7 +18,7 @@
     "Machete.Web": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:4213",
+      "applicationUrl": "http://localhost:4213",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
