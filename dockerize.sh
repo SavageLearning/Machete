@@ -4,8 +4,8 @@ set -e #-x
 
 export MSBUILDDISABLENODEREUSE=1
 
-docker stop machete1
-docker rm machete1
+docker stop machete1 || true
+docker rm machete1 || true
 
 dotnet clean
 
@@ -26,8 +26,8 @@ fi
 dotnet publish -o published
 cd ..
 
-# TODO fix versioning
-docker build -t machete/debian:1.15.0 .
+# TODO automate versioning
+docker build -t ndlonmachete/debian:1.15.0-dev .
 
 echo "to run, type:"
 echo ""

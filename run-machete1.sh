@@ -1,5 +1,7 @@
 #!/bin/bash
 
+trap "{ rm -f machete1env.list; }" EXIT
+
 clear
 
 echo "RUN-MACHETE1.SH"
@@ -23,6 +25,4 @@ dotnet user-secrets list --project=Machete.Web \
   | sed s/Authentication/MACHETE_Authentication/g \
   >> machete1env.list
 
-docker run -it --name machete1 --network machete-bridge -p 443:443 --env-file machete1env.list machete/debian:1.15.0
-
-rm machete1env.list
+docker run -it --name machete1 --network machete-bridge -p 443:443 --env-file machete1env.list ndlonmachete/debian:1.15.0-dev
