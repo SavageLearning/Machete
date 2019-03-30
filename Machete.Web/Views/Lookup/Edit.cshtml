@@ -1,0 +1,70 @@
+﻿@model Machete.Web.ViewModel.Lookup
+@using Machete.Web.Resources
+@using Machete.Web.Helpers
+@using Machete.Web.ViewModel
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "config";
+    string idPrefix = recType + Model.ID + "-";
+}
+
+@using (Html.BeginForm("Edit", "Lookup", FormMethod.Post,
+                    new { @class = "edittab-form EditPost", 
+                          @id = "configEditForm-" + Model.ID, 
+                          enctype = "multipart/form-data" }))
+{
+    <input type="submit" value="@Configs.editsubmit" class="formButton saveBtn"/>
+    if (Html.IsInRole(Html.Role_A()))
+    {
+        <input id="deleteConfigBtn-@(Model.ID)" type="button" value="@Configs.deletesubmit" 
+                class="formButton deleteButton" />
+    }
+    <br />  
+    @Html.ValidationSummary(true)
+    @Html.EditorForModel("Lookup")
+}
+
+@if (Html.IsInRole(Html.Role_A()))
+{
+    using (Html.BeginForm("Delete", "Lookup", FormMethod.Post,
+                            new { @class = "edittab-form DeletePost", @id = "deleteConfigForm-" + Model.ID }))
+    {
+        @Html.HiddenFor(model => model.ID);
+    }
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var configForm = $('#configEditForm-@Model.ID');
+        var deleteConfigForm = $('#deleteConfigForm-@Model.ID');
+        var deleteConfigBtn = $('#deleteConfigBtn-@(Model.ID)');
+        $('.formButton').button();
+        //var eventTabIdx = $('li', currentTabs).index($('li.ui-tabs-selected', currentTabs));
+        //
+        //
+        configForm.mUI('tabFormSubmit', {
+            create: false,
+            selectTab: 0,
+            formLevel: 1
+        });
+        //
+        // post-ready validation hack
+        $.validator.unobtrusive.parseDynamicContent(configForm);
+        //
+        // delete button confirmation
+        deleteConfigBtn.mUI('formClickDelete', {
+            ok: "@Configs.deletesubmit",
+            confirm: '@Configs.deleteconfirmation',
+            title: '@Configs.deletetitle',
+            form: deleteConfigForm
+        });
+        //
+        // machete UI detect changes on forms in tabs   
+        configForm.mUI('formDetectChanges', {
+            recType: "@(recType)",
+            formLevel: 1,
+            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+        });
+    });
+</script>
