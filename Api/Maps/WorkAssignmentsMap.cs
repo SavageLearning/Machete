@@ -16,7 +16,9 @@ namespace Machete.Api.Maps
                 .ForMember(v => v.skill, opt => opt.MapFrom(d => d.skillEN))
                 .ForMember(v => v.requiresHeavyLifting, opt => opt.MapFrom(d => d.weightLifted));
             CreateMap<WorkAssignment, Domain.WorkAssignment>()
-                .ForMember(v => v.weightLifted, opt => opt.MapFrom(d => d.requiresHeavyLifting));
+                .ForMember(v => v.weightLifted, opt => opt.MapFrom(d => d.requiresHeavyLifting))
+                // hard-coding onlineorders' days to 1 since no one is currently using the multi-day orders
+                .ForMember(v => v.days, opt => opt.UseValue(1));
         }
 
     }

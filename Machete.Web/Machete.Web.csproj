@@ -270,7 +270,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ActivityController.cs" />
     <Compile Include="Controllers\ActivitySigninController.cs" />
-    <Compile Include="Controllers\ConfigController.cs" />
+    <Compile Include="Controllers\LookupController.cs" />
     <Compile Include="Controllers\EmailController.cs" />
     <Compile Include="Controllers\EmployerController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
@@ -885,13 +885,13 @@
     <Content Include="Views\Activity\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Config\Create.cshtml" />
+    <Content Include="Views\Lookup\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Config\Edit.cshtml" />
+    <Content Include="Views\Lookup\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Config\Index.cshtml" />
+    <Content Include="Views\Lookup\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Email\Create.cshtml" />
@@ -1000,7 +1000,7 @@
     <Content Include="Views\Shared\EditorTemplates\Activity.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Shared\EditorTemplates\Config.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Lookup.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\EditorTemplates\EmailView.cshtml" />
