@@ -3,7 +3,7 @@
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
 // License:  GPL v3
-// Project:  Machete.Test
+// Project:  Machete.Test.Old
 // Contact:  savagelearning
 // 
 // Copyright 2011 Savage Learning, LLC., all rights reserved.
@@ -21,24 +21,24 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+
 using System;
-using System.Text;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
+using Machete.Service;
+using Machete.Web.Controllers;
+using Machete.Web.Helpers;
+using Machete.Web.Maps;
+using Machete.Web.ViewModel;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Machete.Data;
-using Machete.Service;
-using Machete.Data.Infrastructure;
-using Machete.Web.Controllers;
-using System.Web.Mvc;
-using Machete.Domain;
-using Machete.Test;
-using Machete.Web.ViewModel;
-using Machete.Web.Helpers;
-using AutoMapper;
+using ViewModel = Machete.Web.ViewModel;
 
-namespace Machete.Test.Unit.Controller
+namespace Machete.Test.UnitTests.Controllers
 {
     /// <summary>
     /// Summary description for WorkAssignmentControllerUnitTests
@@ -47,136 +47,130 @@ namespace Machete.Test.Unit.Controller
     [TestClass]
     public class WorkAssignmentTests
     {
-        Mock<IWorkAssignmentService> waServ;
-        Mock<IWorkerService> wkrServ;
-        Mock<IWorkOrderService> woServ;
-        Mock<IWorkerSigninService> wsiServ;
-        Mock<IDefaults> def;
-        Mock<IMapper> map;
-        WorkAssignmentController _ctrlr;
-        WorkAssignmentIndex _view;
-        FormCollection fakeform;
-        Mock<IDatabaseFactory> dbfactory;
+        Mock<IWorkAssignmentService> _waServ;
+        Mock<IWorkerService> _wkrServ;
+        Mock<IWorkOrderService> _woServ;
+        Mock<IWorkerSigninService> _wsiServ;
+        Mock<IDefaults> _def;
+        IMapper _map;
+        WorkAssignmentController _controller;
+        private int _fakeId;
+        private Mock<IModelBindingAdaptor> _adaptor;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            waServ = new Mock<IWorkAssignmentService>();
-            wkrServ = new Mock<IWorkerService>();
-            woServ = new Mock<IWorkOrderService>();
-            wsiServ = new Mock<IWorkerSigninService>();
-            def = new Mock<IDefaults>();
-            map = new Mock<IMapper>();
-            dbfactory = new Mock<IDatabaseFactory>();
-            _ctrlr = new WorkAssignmentController(waServ.Object, woServ.Object, wsiServ.Object, def.Object, map.Object);
-            _view = new WorkAssignmentIndex();
-            _ctrlr.SetFakeControllerContext();
-            fakeform = new FormCollection();
-            fakeform.Add("ID", "12345");
+            _waServ = new Mock<IWorkAssignmentService>();
+            _wkrServ = new Mock<IWorkerService>();
+            _woServ = new Mock<IWorkOrderService>();
+            _wsiServ = new Mock<IWorkerSigninService>();
+            _def = new Mock<IDefaults>();
+            var mapperConfig = new MapperConfiguration(config => { config.ConfigureMvc(); });
+            _map = mapperConfig.CreateMapper();
+            _adaptor = new Mock<IModelBindingAdaptor>();
+
+            _adaptor.Setup(dependency => 
+                    dependency.TryUpdateModelAsync(It.IsAny<MacheteController>(), It.IsAny<object>()))
+                .Returns(Task.FromResult(true));
+            
+            _controller = new WorkAssignmentController(_waServ.Object, _woServ.Object, _wsiServ.Object, _def.Object,
+                _map, _adaptor.Object);
+
+            _fakeId = 12345;
         }
-        //
+
         //   Testing /Index functionality
-        //
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WAs)]
         public void Unit_WA_Controller_index_get_returns_WorkAssignmentIndexViewModel()
         {
             //Arrange
 
             //Act
-            var result = (ViewResult)_ctrlr.Index();
+            var result = (ViewResult)_controller.Index();
             //Assert
             Assert.IsInstanceOfType(result.ViewData.Model, typeof(WorkAssignmentIndex));
         }
-        //
+
         //   Testing /Create functionality
-        //
-        #region createtests
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WAs)]
         public void create_get_returns_workAssignment()
         {
             // Arrange
-            var vmwo = new Machete.Web.ViewModel.WorkAssignment();
-            map.Setup(x => x.Map<Domain.WorkAssignment, Machete.Web.ViewModel.WorkAssignment>(It.IsAny<Domain.WorkAssignment>()))
-                .Returns(vmwo);
+            var vmwo = new ViewModel.WorkAssignment();
+//            _map.Setup(x => x.Map<WorkAssignment, ViewModel.WorkAssignment>(It.IsAny<WorkAssignment>()))
+//                .Returns(vmwo);
             var lc = new List<Domain.Lookup>();
             //Act
-            var result = (PartialViewResult)_ctrlr.Create(0, "Unit WA Cntroller desc");
+            var result = (PartialViewResult)_controller.Create(0, "Unit WA Controller desc");
             //Assert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Web.ViewModel.WorkAssignment));
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(ViewModel.WorkAssignment));
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WAs)]
-        public void create_valid_post_returns_json()
+        public async Task create_valid_post_returns_json()
         {
             //Arrange            
-            var vmwo = new Machete.Web.ViewModel.WorkAssignment();
-            map.Setup(x => x.Map<Domain.WorkAssignment, Machete.Web.ViewModel.WorkAssignment>(It.IsAny<Domain.WorkAssignment>()))
-                .Returns(vmwo);
-            Domain.WorkAssignment _asmt = new Domain.WorkAssignment();
-            fakeform.Add("ID", "11");
-            fakeform.Add("englishlevelID", "0");
-            fakeform.Add("skillID", "60");
-            fakeform.Add("hours", "5");
-            fakeform.Add("hourlyWage", "12");
-            fakeform.Add("days", "1");
+            var vmwo = new ViewModel.WorkAssignment();
+            Domain.WorkAssignment asmt = new Domain.WorkAssignment();
+            asmt.ID = 4242;
+            asmt.pseudoID = 01;
+
             Domain.WorkOrder _wo = new Domain.WorkOrder();
-            _wo.paperOrderNum = 12345;
+            _wo.paperOrderNum = _fakeId;
             _wo.ID = 123;
             int _num = 0;
 
             string username = "UnitTest";
-            woServ.Setup(p => p.Get(_num)).Returns(() => _wo);
-            waServ.Setup(p => p.Create(_asmt, username)).Returns(() => _asmt);
+            _woServ.Setup(p => p.Get(_num)).Returns(() => _wo);
+            _waServ.Setup(p => p.Create(asmt, username)).Returns(() => asmt);
             
-            _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
-            JsonResult result = (JsonResult)_ctrlr.Create(_asmt, username);
+            var result = await _controller.Create(asmt, username) as JsonResult;
+
             //Assert
+            Assert.IsNotNull(result);            
             Assert.IsInstanceOfType(result, typeof(JsonResult));
-            //Assert.AreEqual("{ sNewRef = /WorkAssignment/Edit/12345, sNewLabel = Assignment #: 12345-01, iNewID = 12345 }", 
-            //                result.Data.ToString());
+            Assert.AreEqual("{ sNewRef = /WorkAssignment/Edit/4242, sNewLabel = Assignment #: 12345-01, iNewID = 4242 }", 
+                            result.Value.ToString());
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WAs)]
-        [ExpectedException(typeof(InvalidOperationException),
-            "An invalid UpdateModel was inappropriately allowed.")]
-        public void create_post_invalid_throws_exception()
+        [ExpectedException(typeof(InvalidOperationException), "An invalid UpdateModel was inappropriately allowed.")]
+        public async Task create_post_invalid_throws_exception()
         {
             //Arrange
             Domain.WorkAssignment _asmt = new Domain.WorkAssignment();
-            fakeform.Add("hours", "invalid data type");
-            waServ.Setup(p => p.Create(_asmt, "UnitTest")).Returns(_asmt);
-            _ctrlr.ValueProvider = fakeform.ToValueProvider();
+            _waServ.Setup(p => p.Create(_asmt, "UnitTest")).Returns(_asmt);
+            _controller.ModelState.AddModelError("WorkAssignment", "null");
+            
             //Act
-            _ctrlr.Create(_asmt, "UnitTest");
+            await _controller.Create(_asmt, "UnitTest");
             //Assert
         }
-        #endregion
+
         //
         //   Testing /Edit functionality
         //
-        #region edittests
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WAs)]
         public void Unit_WA_Controller_edit_get_returns_workAssignment()
         {
             //Arrange
             var vmwo = new Machete.Web.ViewModel.WorkAssignment();
-            map.Setup(x => x.Map<Domain.WorkAssignment, Machete.Web.ViewModel.WorkAssignment>(It.IsAny<Domain.WorkAssignment>()))
-                .Returns(vmwo);
+//            _map.Setup(x => x.Map<Domain.WorkAssignment, Machete.Web.ViewModel.WorkAssignment>(It.IsAny<Domain.WorkAssignment>()))
+//                .Returns(vmwo);
             int testid = 4242;
             var fakeworkAssignment = new Domain.WorkAssignment();
             fakeworkAssignment.ID = 4243;
-            waServ.Setup(p => p.Get(testid)).Returns(() => fakeworkAssignment);
+            _waServ.Setup(p => p.Get(testid)).Returns(() => fakeworkAssignment);
             //Act
-            PartialViewResult result = (PartialViewResult)_ctrlr.Edit(testid);
+            PartialViewResult result = (PartialViewResult)_controller.Edit(testid);
             //Assert
             Assert.IsInstanceOfType(result.ViewData.Model, typeof(Web.ViewModel.WorkAssignment));
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WAs)]
-        [ExpectedException(typeof(InvalidOperationException),
-            "An invalid UpdateModel was inappropriately allowed.")]
-        public void Unit_WA_Controller_edit_post_invalid_throws_exception()
+        [ExpectedException(typeof(InvalidOperationException), "An invalid UpdateModel was inappropriately allowed.")]
+        public async Task Unit_WA_Controller_edit_post_invalid_throws_exception()
         {
             //Arrange
             var asmt = new Domain.WorkAssignment();
@@ -185,41 +179,36 @@ namespace Machete.Test.Unit.Controller
             int testid = 4243;
             asmt.ID = testid;
             asmt.workerAssignedID = wkr.ID;
-            FormCollection fakeform = new FormCollection();
-            fakeform.Add("ID", testid.ToString());
-            fakeform.Add("hours", "blah");
-            fakeform.Add("comments", "UnitTest");
-            //
-            // Mock service and setup SaveWorkAssignment mock
-            waServ.Setup(p => p.Save(asmt, "UnitTest"));
-            waServ.Setup(p => p.Get(testid)).Returns(asmt);
-            wkrServ.Setup(p => p.Get((int)asmt.workerAssignedID)).Returns(wkr);
-            //
-            // Mock HttpContext so that ModelState and FormCollection work
-            _ctrlr.ValueProvider = fakeform.ToValueProvider();
-            //
+            var values = new Dictionary<string, StringValues>();
+            values.Add("ID", testid.ToString());
+            values.Add("hours", "blah");
+            values.Add("comments", "UnitTest");
+            _waServ.Setup(p => p.Save(asmt, "UnitTest"));
+            _waServ.Setup(p => p.Get(testid)).Returns(asmt);
+            _wkrServ.Setup(p => p.Get((int)asmt.workerAssignedID)).Returns(wkr);
+            
             //Act
-            //_ctrlr.ModelState.AddModelError("TestError", "foo");
-            _ctrlr.Edit(testid, null, "UnitTest");
+            _controller.ModelState.AddModelError("TestError", "foo");
+            await _controller.Edit(testid, null, "UnitTest");
             //Assert
         }
-        #endregion
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WAs)]
         public void delete_post_returns_json()
         {
             //Arrange
             int testid = 4242;
-            FormCollection fakeform = new FormCollection();
+            var values = new Dictionary<string, StringValues>();
+            var fakeform = new FormCollection(values);
 
-            _ctrlr.SetFakeControllerContext();
-            _ctrlr.ValueProvider = fakeform.ToValueProvider();
+            //_ctrlr.SetFakeControllerContext();
+            //_ctrlr.ValueProvider = fakeform.ToValueProvider();
 
             //Act
-            var result = _ctrlr.Delete(testid, fakeform, "UnitTest") as JsonResult;
+            var result = _controller.Delete(testid, fakeform, "UnitTest") as JsonResult;
             //Assert
             Assert.AreEqual("{ status = OK, jobSuccess = True, deletedID = 4242 }", 
-                            result.Data.ToString());
+                            result.Value.ToString());
         }
     }
 }

@@ -30,7 +30,6 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data.Entity;
 using System.Linq;
 
 namespace Machete.Service
@@ -51,8 +50,6 @@ namespace Machete.Service
         WorkOrder Create(WorkOrder wo, string userName, ICollection<WorkAssignment> was = null);
     }
 
-    // Business logic for WorkOrder record management
-    // Ïf I made a non-web app, would I still need the code? If yes, put in here.
     public class WorkOrderService : ServiceBase<WorkOrder>, IWorkOrderService
     {
         private readonly IWorkAssignmentService waServ;
@@ -62,12 +59,20 @@ namespace Machete.Service
         private readonly ILookupRepository lRepo;
         private readonly IConfigService cfg;
         private readonly ITransportProvidersService tpServ;
+
         /// <summary>
-        /// Constructor
+        /// Business logic object for WorkOrder record management. Contains logic specific
+        /// to processing work orders, and not necessarily related to a web application.
         /// </summary>
         /// <param name="repo"></param>
         /// <param name="waServ">Work Assignment service</param>
+        /// <param name="tpServ"></param>
+        /// <param name="wrServ"></param>
+        /// <param name="wServ"></param>
+        /// <param name="lRepo"></param>
         /// <param name="uow">Unit of Work</param>
+        /// <param name="map"></param>
+        /// <param name="cfg"></param>
         public WorkOrderService(IWorkOrderRepository repo, 
                                 IWorkAssignmentService waServ,
                                 ITransportProvidersService tpServ,
@@ -97,8 +102,8 @@ namespace Machete.Service
         public IEnumerable<WorkOrder> GetActiveOrders(DateTime date, bool assignedOnly)
         {
             IQueryable<WorkOrder> query = repo.GetAllQ();
-                            query = query.Where(wo => wo.statusID == WorkOrder.iActive && 
-                                           DbFunctions.DiffDays(wo.dateTimeofWork, date) == 0 ? true : false)
+                            query = query.Where(wo => wo.statusID == WorkOrder.iActive 
+                                                   && wo.dateTimeofWork.Date == date.Date)
                                     .AsQueryable();
             List<WorkOrder> list = query.ToList();
             List<WorkOrder> final = list.ToList();
@@ -158,8 +163,8 @@ namespace Machete.Service
             if (o.status != null) IndexViewBase.filterStatus(o, ref q);
             if (o.onlineSource == true) IndexViewBase.filterOnlineSource(o, ref q);
             if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
-            //
-            IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, o.CI.TwoLetterISOLanguageName, ref q);
+            // TODO restore CultureInfo
+            IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, /*o.CI.TwoLetterISOLanguageName*/"en", ref q);
             //
             result.filteredCount = q.Count();
             result.query = q.ProjectTo<DTO.WorkOrdersList>(map.ConfigurationProvider)
@@ -192,7 +197,7 @@ namespace Machete.Service
             else query = repo.GetAllQ();
             var group_query = from wo in query
                             group wo by new { 
-                                dateSoW = DbFunctions.TruncateTime(wo.dateTimeofWork),                                              
+                                dateSoW = wo.dateTimeofWork.Date,                                              
                                 wo.statusID
                             } into dayGroup
                             select new WorkOrderSummary()
@@ -204,51 +209,54 @@ namespace Machete.Service
 
             return group_query;
         }
+
         /// <summary>
-        /// Create Work Order
+        /// A method to create a WorkOrder, along with associated WorkAssignments and WorkerRequests, in the database. 
         /// </summary>
-        /// <param name="workOrder">Work order to create</param>
-        /// <param name="user">User performing action</param>
-        /// <returns>Work Order object</returns>
-        public WorkOrder Create(WorkOrder workOrder, List<WorkerRequest> wrList,  string user, ICollection<WorkAssignment> was = null)
+        /// <param name="workOrder">The work order to be created.</param>
+        /// <param name="workerRequestList">A list of worker requests made by the employer.</param>
+        /// <param name="username">User performing action</param>
+        /// <param name="workAssignments">A collection representing the worker assignments for the work order.</param>
+        /// <returns>The created WorkOrder.</returns>
+        public WorkOrder Create(WorkOrder workOrder, List<WorkerRequest> workerRequestList, string username, ICollection<WorkAssignment> workAssignments = null)
         {
-            WorkOrder wo;
             workOrder.timeZoneOffset = Convert.ToDouble(cfg.getConfig(Cfg.TimeZoneDifferenceFromPacific));
             updateComputedValues(ref workOrder);
-            workOrder.createdByUser(user);
-            wo = repo.Add(workOrder);
-            wo.workerRequests = new Collection<WorkerRequest>();
-            if (wrList != null)
+            workOrder.createdByUser(username);
+            var createdWorkOrder = repo.Add(workOrder);
+            createdWorkOrder.workerRequests = new Collection<WorkerRequest>();
+            if (workerRequestList != null)
             {
-                // New Worker Requests to add
-                foreach (var workerRequest in wrList)
+                foreach (var workerRequest in workerRequestList)
                 {
-                    workerRequest.workOrder = wo;
+                    workerRequest.workOrder = createdWorkOrder;
                     workerRequest.workerRequested = wServ.Get(workerRequest.WorkerID);
-                    workerRequest.updatedByUser(user);
-                    workerRequest.createdByUser(user);
-                    wo.workerRequests.Add(workerRequest);
+                    workerRequest.updatedByUser(username);
+                    workerRequest.createdByUser(username);
+                    createdWorkOrder.workerRequests.Add(workerRequest);
                 }
             }
-            uow.SaveChanges(); 
-            if (wo.paperOrderNum == null || wo.paperOrderNum == 0)
+            uow.SaveChanges();
+            
+            if (createdWorkOrder.paperOrderNum == null || createdWorkOrder.paperOrderNum == 0)
             {
-                wo.paperOrderNum = wo.ID;
+                createdWorkOrder.paperOrderNum = createdWorkOrder.ID;
             }
-            if (was != null)
+            if (workAssignments != null)
             {
-                foreach (var a in was)
+                foreach (var workAssignment in workAssignments)
                 {
-                    a.workOrderID = wo.ID;
-                    a.workOrder = wo;
-                    waServ.Create(a, user);
+                    workAssignment.ID = default(int); //so EF Core will save the record; otherwise IDENTITY_INSERT fails
+                    workAssignment.workOrderID = createdWorkOrder.ID;
+                    workAssignment.workOrder = createdWorkOrder;
+                    waServ.Create(workAssignment, username);
                 }
             }
 
             uow.SaveChanges();
 
-            _log(workOrder.ID, user, "WorkOrder created");
-            return wo;
+            _log(workOrder.ID, username, "WorkOrder created");
+            return createdWorkOrder;
         }
 
         public WorkOrder Create(WorkOrder wo, string user, ICollection<WorkAssignment> was = null)
@@ -267,7 +275,7 @@ namespace Machete.Service
         public void Save(WorkOrder workOrder, List<WorkerRequest> wrList, string user)
         {
             // Stale requests to remove
-            foreach (var rem in workOrder.workerRequests.Except<WorkerRequest>(wrList, new WorkerRequestComparer()).ToArray())
+            foreach (var rem in workOrder.workerRequests.Except(wrList, new WorkerRequestComparer()).ToArray())
             {
                 var request = wrServ.GetByWorkerID(workOrder.ID, rem.WorkerID);
                 wrServ.Delete(request.ID, user);
@@ -275,7 +283,7 @@ namespace Machete.Service
             }
 
             // New requests to add
-            foreach (var add in wrList.Except<WorkerRequest>(workOrder.workerRequests, new WorkerRequestComparer()))
+            foreach (var add in wrList.Except(workOrder.workerRequests, new WorkerRequestComparer()))
             {
                 add.workOrder = workOrder;
                 add.workerRequested = wServ.Get(add.WorkerID);

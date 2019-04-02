@@ -1,10 +1,15 @@
-﻿@model Machete.Web.ViewModel.WorkerSignin
+@model Machete.Web.ViewModel.WorkerSignin
 @using Machete.Web.Resources
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.Localization
 
 <link href="@Url.Content("~/Content/print.css")" rel="stylesheet" type="text/css" media="print" />
 @{
     ViewBag.Title = WorkerSignins.indextitle;
-    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+
+    var httpContext = ViewContext.HttpContext;
+    var currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
+    var currentUrl = UriHelper.BuildRelative(httpContext.Request.PathBase, httpContext.Request.Path, httpContext.Request.QueryString);
 }
 
 <div id="container" class="wsi-content">
@@ -114,7 +119,7 @@
             "bSort": true,
             "bFilter": true,
             "sAjaxSource": "/WorkerSignin/AjaxHandler",
-            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "oLanguage": datatable_lang_@(currentCulture.TwoLetterISOLanguageName),
             "bProcessing": true,
             "iDisplayLength": 15,
             //"aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "@WorkerSignins.allrecords"]],

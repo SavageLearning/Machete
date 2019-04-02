@@ -1,11 +1,15 @@
-﻿@model Machete.Web.ViewModel.ReportPrintView
+@model Machete.Web.ViewModel.ReportPrintView
 @using Machete.Web.Helpers
 
 @using Machete.Web.Resources
 @using Machete.Service
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.Localization
 
 @{
-    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    var httpContext = ViewContext.HttpContext;
+    var currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
+    var currentUrl = UriHelper.BuildRelative(httpContext.Request.PathBase, httpContext.Request.Path, httpContext.Request.QueryString);
 }
 
     @if (Model.typeOfReport == "yearly")
@@ -65,7 +69,7 @@
         </div>
         <script type="text/javascript">
                 $(document).ready(function () {
-                    var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
+                    var lang = datatable_lang_@(currentCulture.TwoLetterISOLanguageName);
                     var date = '@Model.date';
                     var oMwdTable = $.extend(true, {}, summaryTableDefaults("/Reports/AjaxYwd", lang, date, 'yearlyChart'));
                     var mwd = $('#ywdDataTable').dataTable(oMwdTable);
@@ -129,7 +133,7 @@
             </div>        </div>
         <script type="text/javascript">
             $(document).ready(function () {
-                var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
+                var lang = datatable_lang_@(currentCulture.TwoLetterISOLanguageName);
                 var date = '@Model.date';
                 var oMwdTable = $.extend(true, {}, summaryTableDefaults("/Reports/AjaxMwd", lang, date, 'monthlyChart'));
                 var mwd = $('#mwdDataTable').dataTable(oMwdTable);
@@ -165,7 +169,7 @@
         </div>
         <script type="text/javascript">
             $(document).ready(function () {
-                var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
+                var lang = datatable_lang_@(currentCulture.TwoLetterISOLanguageName);
                 var date = '@Model.date';
                 var oWecTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxWec", lang, $('#wecDate').val()));
                 oWecTable.aoColumns = [
@@ -236,7 +240,7 @@
         </div>
         <script type="text/javascript">
             $(document).ready(function () {
-                var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
+                var lang = datatable_lang_@(currentCulture.TwoLetterISOLanguageName);
                 var date = '@Model.date';
                 var oDclTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxDcl", lang, $('#dclDate').val()));
                 oDclTable.aoColumns = [

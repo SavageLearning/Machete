@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     WorkerSigninService.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -28,9 +28,10 @@ using Machete.Data.Infrastructure;
 using Machete.Domain;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text;
+// ReSharper disable ReplaceWithSingleCallToCount
 
 namespace Machete.Service
 {
@@ -69,7 +70,7 @@ namespace Machete.Service
         public Domain.WorkerSignin GetSignin(int dwccardnum, DateTime date)
         {
             return repo.GetAllQ().FirstOrDefault(r => r.dwccardnum == dwccardnum &&
-                            DbFunctions.DiffDays(r.dateforsignin, date) == 0 ? true : false);
+                            r.dateforsignin.Date == date.Date);
         }
         /// <summary>
         /// This method counts the current lottery (daily list) entries for the day and increments by one.
@@ -79,7 +80,7 @@ namespace Machete.Service
         public int GetNextLotterySequence(DateTime date)
         {
             return repo.GetAllQ().Where(p => p.lottery_timestamp != null && 
-                                        DbFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
+                                        p.dateforsignin.Date == date.Date)
                                  .Count() + 1;
         }
 
@@ -105,7 +106,7 @@ namespace Machete.Service
             Domain.WorkerSignin wsiUp = repo.GetById(
                                     repo.GetAllQ()
                                         .Where(up => up.lottery_sequence == nextID
-                                                  && DbFunctions.DiffDays(up.dateforsignin, date) == 0)
+                                                  && up.dateforsignin.Date == date.Date)
                                         .Select(g => g.ID).FirstOrDefault()
                                  ); //up.ID = 5
 
@@ -143,7 +144,7 @@ namespace Machete.Service
             Domain.WorkerSignin wsiDown = repo.GetById(
                                     repo.GetAllQ()
                                         .Where(up => up.lottery_sequence == prevID
-                                                  && DbFunctions.DiffDays(up.dateforsignin, date) == 0)
+                                                  && up.dateforsignin.Date == date.Date)
                                         .Select(g => g.ID).FirstOrDefault()
                                  ); //down.lotSq = 3
 
@@ -209,7 +210,7 @@ namespace Machete.Service
             var wsi = IsSignedIn(dwccardnum, dateforsignin);
             if (wsi != null) return wsi;
 
-            var signin = new Domain.WorkerSignin();
+            var signin = new WorkerSignin();
             signin.WorkerID = wfound.ID;
             signin.dwccardnum = dwccardnum;
             signin.dateforsignin = new DateTime(dateforsignin.Year, dateforsignin.Month, dateforsignin.Day,
@@ -221,16 +222,15 @@ namespace Machete.Service
             return Create(signin, user);
         }
 
-        public Domain.WorkerSignin IsSignedIn(int dwccardnum, DateTime dateforsignin)
+        public WorkerSignin IsSignedIn(int dwccardnum, DateTime dateforsignin)
         {
             // get uses FirstOrDefault(), which returns null for default
             // the GetAllQ is necessary to access the IQueryable object;
             // the IQueryable is necessary to use the DbFunctions, which 
             // sends the date comparison to the DB
-            var result = repo.GetAllQ().Where(t =>
-                             DbFunctions.TruncateTime(t.dateforsignin) == dateforsignin.Date &&
-                            t.dwccardnum == dwccardnum).FirstOrDefault();
-            return result;
+            return repo.GetAllQ()
+                .FirstOrDefault(t => 
+                    t.dateforsignin.Date == dateforsignin.Date && t.dwccardnum == dwccardnum);
         }
     }
 }

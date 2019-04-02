@@ -1,4 +1,4 @@
-﻿
+
 --up
 update dbo.Lookups set [key] = [ltrCode] where category = 'worktype'
 

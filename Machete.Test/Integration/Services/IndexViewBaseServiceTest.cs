@@ -3,7 +3,7 @@
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/25 
 // License:  GPL v3
-// Project:  Machete.Test
+// Project:  Machete.Test.Old
 // Contact:  savagelearning
 // 
 // Copyright 2011 Savage Learning, LLC., all rights reserved.
@@ -21,12 +21,14 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+
+using System.Linq;
 using Machete.Domain;
 using Machete.Service;
+using Machete.Test.Integration.Fluent;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
 
-namespace Machete.Test.Integration.Service
+namespace Machete.Test.Integration.Services
 {
     [TestClass]
     public class IvbFluentRecordBase
@@ -73,10 +75,10 @@ namespace Machete.Test.Integration.Service
             frb.AddActivity().AddActivity();
             frb.AddActivitySignin(worker: worker);
 
-            IQueryable<Activity> q = frb.ToFactory().Get().Activities;
+            IQueryable<Activity> q = frb.ToFactory().Activities;
             var count = q.Count();
             //Act
-            IndexViewBase.getUnassociated(worker.ID, ref q, frb.ToFactory().Get());
+            IndexViewBase.getUnassociated(worker.ID, ref q, frb.ToFactory());
             //Assert
             var result = q.ToList();
             Assert.AreEqual(count - 1, result.Count());

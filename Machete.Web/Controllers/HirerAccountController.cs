@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Web.Controllers
 {
@@ -11,7 +7,7 @@ namespace Machete.Web.Controllers
         // GET: HirerAccount
         public void Index()
         {
-            Response.RedirectPermanent("/V2/welcome");
+            Response.Redirect("/V2/welcome", true);
         }
     }
 }

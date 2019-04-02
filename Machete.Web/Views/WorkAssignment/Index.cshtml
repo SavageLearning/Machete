@@ -1,10 +1,14 @@
-﻿@model Machete.Web.ViewModel.WorkAssignmentIndex
+@model Machete.Web.ViewModel.WorkAssignmentIndex
+
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.Localization
 
-@using Machete.Service
 @{
-    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    var httpContext = ViewContext.HttpContext;
+    var currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
+    var currentUrl = UriHelper.BuildRelative(httpContext.Request.PathBase, httpContext.Request.Path, httpContext.Request.QueryString);
 }
 <div class="wa-content">
     @using (Html.BeginForm())
@@ -38,7 +42,7 @@
 
     }
     <div id="buttonDivider">
-        @if (Html.IsInRole(Html.Role_AM()))
+        @if (Html.IsInRole(new[] { "Administrator", "Manager" }))
         {
             <div class="radio">
                 <input type="button" id="bOpenLottery" class="formButton dispatchButton" value="@(WorkAssignments.lottery)" />
@@ -79,7 +83,7 @@
                             </tr>
                         </thead>
                     </table>
-                </div>
+                </div> 
             </div>
 
             <div id="assignmentTab" class="tb-cell">
@@ -124,7 +128,7 @@
             </thead>
         </table>
     </div>
-    @Html.Partial("WorkerIndex")
+    @await Html.PartialAsync("WorkerIndex")
 </div>
 <script type="text/javascript">
     //@@ sourceURL=WorkAssignment_inline.js
@@ -164,7 +168,7 @@ $(document).ready(function () {
         "bServerSide": true,
         "aaSorting": [[0, 'asc']],
         "sAjaxSource": "/WorkerSignin/AjaxHandler",
-        "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+        "oLanguage": datatable_lang_@(currentCulture.TwoLetterISOLanguageName),
         "bProcessing": true,
         "aoColumns": [
             { "mDataProp": "lotterySequence"},
@@ -193,7 +197,7 @@ $(document).ready(function () {
                 lotteryField.append('<a class="moveup_Lottery" title="Move Up" href="/WorkerSignin/moveUp/'
                     + aData['recordid'] + '"><img src="/Content/images/arrow-up-2.png" /></a>');
             }
-            if (aData['WAID'] > 0) { // green -- WA record associated with WSI record
+            if (aData['waid'] > 0) { // green -- WA record associated with WSI record
                 $(nRow).addClass('statusGreen');
             }
             return nRow;
@@ -251,7 +255,7 @@ $(document).ready(function () {
             "bAutoWidth": false,
             "bServerSide": true,
             "sAjaxSource": "/WorkerSignin/AjaxHandler",
-            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "oLanguage": datatable_lang_@(currentCulture.TwoLetterISOLanguageName),
             "bProcessing": true,
             "aoColumns": [
                 {"mDataProp": "dwccardnum"},
@@ -259,7 +263,7 @@ $(document).ready(function () {
                 {"mDataProp": "lotterySequence"},
                 {"mDataProp": "program"},
                 {"mDataProp": "fullname"},
-                {"mDataProp": "WAID"}
+                {"mDataProp": "waid"}
             ],
             "fnServerDataExtra": function () {
                 return [
@@ -270,7 +274,7 @@ $(document).ready(function () {
                 ]
             },
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                if (aData['WAID'] > 0) { // green
+                if (aData['waid'] > 0) { // green
                     $(nRow).addClass('statusGreen');
                 }
                 return nRow;
@@ -294,13 +298,13 @@ $(document).ready(function () {
             "bInfo": true,
             "bServerSide": true,
             "sAjaxSource": "/WorkAssignment/AjaxHandler",
-            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "oLanguage": datatable_lang_@(currentCulture.TwoLetterISOLanguageName),
             "bProcessing": true,
             "aoColumns": [
                             { "mDataProp": "assignedWorker", "bVisible": false, "bSortable": true},
                             { "mDataProp": "requestedList", "bVisible": false, "bSortable": false},
-                            { "mDataProp": "WAID", "bVisible": false, "bSortable": false },
-                            { "mDataProp": "WOID", "bVisible": true, "bSortable": true },
+                            { "mDataProp": "waid", "bVisible": false, "bSortable": false },
+                            { "mDataProp": "woid", "bVisible": true, "bSortable": true },
                             { "mDataProp": "timeofwork"},
                             { "mDataProp": "englishlevel"},
                             { "mDataProp": "skill"},

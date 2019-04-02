@@ -3,7 +3,7 @@
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
 // License:  GPL v3
-// Project:  Machete.Test
+// Project:  Machete.Test.Old
 // Contact:  savagelearning
 // 
 // Copyright 2011 Savage Learning, LLC., all rights reserved.
@@ -21,27 +21,27 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Machete.Domain;
-using Machete.Data;
-using System.Collections.ObjectModel;
-using System.Data.Entity;
 using System.Globalization;
+using System.Linq;
+using Machete.Domain;
+using Microsoft.EntityFrameworkCore;
+using Machete.Data.Initialize;
 
 namespace Machete.Test 
 {
     public static class Records
     {
         private static readonly DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        public static int GetNextMemberID(DbSet<Worker> db)
+        public static int GetNextMemberID(DbSet<Worker> workers)
         {
             //debug
             //return 10000;
             var first = 10000;
-            var last = db.OrderByDescending(x => x.dwccardnum).Select(x => x.dwccardnum).FirstOrDefault();
+            var orderByDescending = workers.OrderByDescending(x => x.dwccardnum);
+            var queryable = orderByDescending.Select(x => x.dwccardnum);
+            var last = queryable.FirstOrDefault();
             var next = last == 0 ? first + 1 : last + 1;
             if (first > next || last == 99999) throw new ArgumentOutOfRangeException("Sorry, I'm having trouble finding a card number.");
             else return next;
@@ -202,7 +202,7 @@ namespace Machete.Test
             transportTransactID = "#6169"
         };
 
-        public static Machete.Api.ViewModel.WorkOrder onlineOrder = new Api.ViewModel.WorkOrder
+        public static Machete.Web.ViewModel.Api.WorkOrder onlineOrder = new Machete.Web.ViewModel.Api.WorkOrder
         {
             workSiteAddress1 = "2400 Main Ave E",
             workSiteAddress2 = "Apt 207",

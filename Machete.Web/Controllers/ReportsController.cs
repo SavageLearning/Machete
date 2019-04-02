@@ -1,4 +1,3 @@
-﻿#region COPYRIGHT
 // File:     ReportsController.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -23,29 +22,26 @@
 //
 // forked at http://www.github.com/chaim1221/machete/
 // 
-#endregion
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using Machete.Service;
 using Machete.Web.Helpers;
 using Machete.Web.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Web.Mvc;
-using System.Web.Routing;
-
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using String = System.String;
 
 namespace Machete.Web.Controllers
 {
-    #region public class ReportsController...
     [ElmahHandleError]
     public class ReportsController : MacheteController
     {
         private readonly IReportService repServ;
         private readonly IMapper map;
         private readonly IDefaults def;
-        CultureInfo CI;
 
         public ReportsController(IReportService repServ,
             IDefaults def,
@@ -56,35 +52,14 @@ namespace Machete.Web.Controllers
             this.def = def;
         }
 
-        /// <summary>
-        /// Initialize the controller context for the reports.
-        /// </summary>
-        /// <param name="requestContext">RequestContext</param>
-        protected override void Initialize(RequestContext requestContext)
-        {
-            base.Initialize(requestContext);
-            CI = (CultureInfo)Session["Culture"];
-        }
-
-    #endregion
-        #region Index
-
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Index()
         {
             return View();
         }
-        #endregion
 
-        #region PartialViews
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Summary()
-        {
-            return PartialView();
-        }
-
-        [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult Orders()
         {
             return PartialView();
         }
@@ -106,10 +81,6 @@ namespace Machete.Web.Controllers
         {
             return PartialView();
         }
-       
-        #endregion
-
-        #region ExternalViews
 
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult PrintView(DateTime date, string typeOfReport)
@@ -119,10 +90,7 @@ namespace Machete.Web.Controllers
             view.typeOfReport = typeOfReport;
             return View(view);
         }
-        #endregion
 
-        #region AjaxHandlers
-        #region Summary (Orders) Reports
         /// <summary>
         /// Daily, Casa Latina == dcl. This is a daily report for Machete, different than the Work Order
         /// Status summary, and part of the summary reports.
@@ -143,25 +111,24 @@ namespace Machete.Web.Controllers
             var result = from d in dcl.query
                          select new
                          {
-                            date = System.String.Format("{0:MM/dd/yyyy}", d.date),
-                            dwcList = d.dwcList,
-                            dwcPropio = d.dwcPropio,
-                            hhhList = d.hhhList,
-                            hhhPropio = d.hhhPropio,
-                            uniqueSignins = d.uniqueSignins,
-                            totalSignins = d.totalSignins,
-                            totalAssignments = d.totalAssignments,
-                            cancelledJobs = d.cancelledJobs
+                            date = String.Format("{0:MM/dd/yyyy}", d.date),
+                            d.dwcList,
+                            d.dwcPropio,
+                            d.hhhList,
+                            d.hhhPropio,
+                            d.uniqueSignins,
+                            d.totalSignins,
+                            d.totalAssignments,
+                            d.cancelledJobs
                          };
 
             return Json(new
             {
                 iTotalRecords = dcl.totalCount, //total records, before filtering
                 iTotalDisplayRecords = dcl.filteredCount, //total records, after filtering
-                sEcho = param.sEcho, //unaltered copy of sEcho sent from the client side
+                param.sEcho, //unaltered copy of sEcho sent from the client side
                 aaData = result
-            },
-            JsonRequestBehavior.AllowGet);
+            });
         }
         /// <summary>
         /// 'WEC' is 'Weekly, El Centro' -- a weekly report for Machete that comes from
@@ -176,7 +143,7 @@ namespace Machete.Web.Controllers
             DateTime weekDate;
             DateTime beginDate;
             DateTime endDate;
-            dataTableResult<WeeklySumData> wec;
+            dataTableResult<WeeklySummaryData> wec;
 
             // jQuery passes in parameters that must be mapped to viewOptions
             weekDate = voDate(param);
@@ -190,18 +157,17 @@ namespace Machete.Web.Controllers
                          select new
                          {
                              weekday = d.dayofweek.ToString(),
-                             date = System.String.Format("{0:MM/dd/yyyy}", d.date),
-                             totalSignins = d.totalSignins,
+                             date = String.Format("{0:MM/dd/yyyy}", d.date),
+                             d.totalSignins,
                              totalAssignments = d.noWeekJobs,
-                             weekEstDailyHours = d.weekEstDailyHours,
-                             weekEstPayment = System.String.Format("{0:C}", d.weekEstPayment),
-                             weekHourlyWage = System.String.Format("{0:C}", d.weekHourlyWage),
+                             d.weekEstDailyHours,
+                             weekEstPayment = String.Format("{0:C}", d.weekEstPayment),
+                             weekHourlyWage = String.Format("{0:C}", d.weekHourlyWage),
                              drilldown = from j in d.topJobs
                                        select new
                                        {
 //                                           date = System.String.Format("{0:MM/dd/yyyy}", j.date),
-                                           skill = j.info,
-                                           count = j.count
+                                           skill = j.info, j.count
                                        }
                          };
 
@@ -209,10 +175,9 @@ namespace Machete.Web.Controllers
             {
                 iTotalRecords = wec.totalCount, //total records, before filtering
                 iTotalDisplayRecords = wec.filteredCount, //total records, after filtering
-                sEcho = param.sEcho, //unaltered copy of sEcho sent from the client side
+                param.sEcho, //unaltered copy of sEcho sent from the client side
                 aaData = result
-            },
-            JsonRequestBehavior.AllowGet);
+            });
         }
 
         /// <summary>
@@ -226,26 +191,26 @@ namespace Machete.Web.Controllers
             DateTime monthDate;
             DateTime beginDate;
             DateTime endDate;
-            dataTableResult<MonthlySumData> mwd;
+            dataTableResult<MonthlySummaryData> mwd;
 
             monthDate = voDate(param);
             beginDate = new DateTime(monthDate.Year, monthDate.Month, 1, 0, 0, 0);
-            endDate = new DateTime(monthDate.Year, monthDate.Month, System.DateTime.DaysInMonth(monthDate.Year, monthDate.Month));
+            endDate = new DateTime(monthDate.Year, monthDate.Month, DateTime.DaysInMonth(monthDate.Year, monthDate.Month));
 
             mwd = monthSumView(beginDate, endDate);
 
             var result = from d in mwd.query
                          select new
                          {
-                             date = System.String.Format("{0:MM/dd/yyyy}", d.dateStart),
-                             datestring = System.String.Format("{0:MMMM d}", d.dateStart),
+                             date = String.Format("{0:MM/dd/yyyy}", d.dateStart),
+                             datestring = String.Format("{0:MMMM d}", d.dateStart),
                              stillHere = d.stillHere.ToString(),
                              totalSignins = d.totalSignins.ToString(),
                              wentToClass = d.peopleWhoWentToClass.ToString(),
                              dispatched = d.dispatched.ToString(),
                              totalHours = d.totalHours.ToString(),
-                             totalIncome = System.String.Format("{0:C}", d.totalIncome),
-                             avgIncomePerHour = System.String.Format("{0:C}", d.avgIncomePerHour),
+                             totalIncome = String.Format("{0:C}", d.totalIncome),
+                             avgIncomePerHour = String.Format("{0:C}", d.avgIncomePerHour),
                              drilldown = new
                                          {
                                              newlyEnrolled = d.newlyEnrolled.ToString(), //dd
@@ -253,7 +218,7 @@ namespace Machete.Web.Controllers
                                              uniqueSignins = d.uniqueSignins.ToString(), //dd
                                              tempDispatched = d.tempDispatched.ToString(), //dd
                                              permanentPlacements = d.permanentPlacements.ToString(), //dd
-                                             undupDispatched = d.undupDispatched.ToString(), //dd
+                                             undupDispatched = d.undupDispatched.ToString() //dd
                                          }
                          };
 
@@ -261,10 +226,9 @@ namespace Machete.Web.Controllers
             {
                 iTotalRecords = mwd.totalCount, //total records, before filtering
                 iTotalDisplayRecords = mwd.filteredCount, //total records, after filtering
-                sEcho = param.sEcho, //unaltered copy of sEcho sent from the client side
+                param.sEcho, //unaltered copy of sEcho sent from the client side
                 aaData = result
-            },
-            JsonRequestBehavior.AllowGet);
+            });
         }
 
         /// <summary>
@@ -290,15 +254,15 @@ namespace Machete.Web.Controllers
             var result = from d in ywd.query
                          select new
                          {
-                             date = System.String.Format("{0:MM/dd/yyyy}", d.dateEnd),
-                             datestring = "Quarter beginning " + System.String.Format("{0:MM/dd/yyyy}", d.dateStart) + " and ending " + System.String.Format("{0:MM/dd/yyyy}", d.dateEnd),
+                             date = String.Format("{0:MM/dd/yyyy}", d.dateEnd),
+                             datestring = "Quarter beginning " + String.Format("{0:MM/dd/yyyy}", d.dateStart) + " and ending " + String.Format("{0:MM/dd/yyyy}", d.dateEnd),
                              stillHere = d.stillHere.ToString(),
                              totalSignins = d.totalSignins.ToString(),
                              wentToClass = d.peopleWhoWentToClass.ToString(),
                              dispatched = d.dispatched.ToString(),
                              totalHours = d.totalHours.ToString(),
-                             totalIncome = System.String.Format("{0:C}", d.totalIncome),
-                             avgIncomePerHour = System.String.Format("{0:C}", d.avgIncomePerHour),
+                             totalIncome = String.Format("{0:C}", d.totalIncome),
+                             avgIncomePerHour = String.Format("{0:C}", d.avgIncomePerHour),
                              drilldown = new
                              {
                                  newlyEnrolled = d.newlyEnrolled.ToString(), //dd
@@ -306,7 +270,7 @@ namespace Machete.Web.Controllers
                                  uniqueSignins = d.uniqueSignins.ToString(), //dd
                                  tempDispatched = d.tempDispatched.ToString(), //dd
                                  permanentPlacements = d.permanentPlacements.ToString(), //dd
-                                 undupDispatched = d.undupDispatched.ToString(), //dd
+                                 undupDispatched = d.undupDispatched.ToString() //dd
                              }
                          };
 
@@ -314,14 +278,11 @@ namespace Machete.Web.Controllers
             {
                 iTotalRecords = ywd.totalCount, //total records, before filtering
                 iTotalDisplayRecords = ywd.filteredCount, //total records, after filtering
-                sEcho = param.sEcho, //unaltered copy of sEcho sent from the client side
+                param.sEcho, //unaltered copy of sEcho sent from the client side
                 aaData = result
-            },
-            JsonRequestBehavior.AllowGet);
+            });
         }
-        #endregion
 
-        #region Activities Reports
         [Authorize(Roles = "Administrator, Manager")]
         public JsonResult AjaxWeekAct(jQueryDataTableParam param)
         {
@@ -341,7 +302,7 @@ namespace Machete.Web.Controllers
             var result = from d in year.query
                          select new
                          {
-                             date = System.String.Format("{0:MMMM d, yyyy}", d.dateStart),
+                             date = String.Format("{0:MMMM d, yyyy}", d.dateStart),
                              safety = d.safety.ToString(),
                              skills = d.skills.ToString(),
                              esl = d.esl.ToString(),
@@ -363,10 +324,9 @@ namespace Machete.Web.Controllers
             {
                 iTotalRecords = year.totalCount, //total records, before filtering
                 iTotalDisplayRecords = year.filteredCount, //total records, after filtering
-                sEcho = param.sEcho, //unaltered copy of sEcho sent from the client side
+                param.sEcho, //unaltered copy of sEcho sent from the client side
                 aaData = result
-            },
-            JsonRequestBehavior.AllowGet);
+            });
         }
 
         [Authorize(Roles = "Administrator, Manager")]
@@ -388,7 +348,7 @@ namespace Machete.Web.Controllers
             var result = from d in year.query
                          select new
                          {
-                             date = System.String.Format("{0:MMMM d, yyyy}", d.dateStart),
+                             date = String.Format("{0:MMMM d, yyyy}", d.dateStart),
                              safety = d.safety.ToString(),
                              skills = d.skills.ToString(),
                              esl = d.esl.ToString(),
@@ -410,10 +370,9 @@ namespace Machete.Web.Controllers
             {
                 iTotalRecords = year.totalCount, //total records, before filtering
                 iTotalDisplayRecords = year.filteredCount, //total records, after filtering
-                sEcho = param.sEcho, //unaltered copy of sEcho sent from the client side
+                param.sEcho, //unaltered copy of sEcho sent from the client side
                 aaData = result
-            },
-            JsonRequestBehavior.AllowGet);
+            });
         }
 
         [Authorize(Roles = "Administrator, Manager")]
@@ -437,7 +396,7 @@ namespace Machete.Web.Controllers
             var result = from d in year.query
                          select new
                          {
-                             date = "Quarter beginning " + System.String.Format("{0:MMMM d, yyyy}", d.dateStart) + " and ending " + System.String.Format("{0:MMMM d, yyyy}", d.dateEnd),
+                             date = "Quarter beginning " + String.Format("{0:MMMM d, yyyy}", d.dateStart) + " and ending " + String.Format("{0:MMMM d, yyyy}", d.dateEnd),
                              safety = d.safety.ToString(),
                              skills = d.skills.ToString(),
                              esl = d.esl.ToString(),
@@ -459,14 +418,11 @@ namespace Machete.Web.Controllers
             {
                 iTotalRecords = year.totalCount, //total records, before filtering
                 iTotalDisplayRecords = year.filteredCount, //total records, after filtering
-                sEcho = param.sEcho, //unaltered copy of sEcho sent from the client side
+                param.sEcho, //unaltered copy of sEcho sent from the client side
                 aaData = result
-            },
-            JsonRequestBehavior.AllowGet);
+            });
         }
-        #endregion
 
-        #region Worker Reports
         [Authorize(Roles = "Administrator, Manager")]
         public JsonResult AjaxWeekWkr(jQueryDataTableParam param)
         {
@@ -481,25 +437,24 @@ namespace Machete.Web.Controllers
             dataTableResult<NewWorkerData> newWkr = NewWorkerView(beginDate, endDate, "weekly");
 
             var result = from d in newWkr.query
-                         orderby d.dateStart ascending
+                         orderby d.dateStart
                          select new
                          {
-                             date = System.String.Format("{0:dddd}", d.dateStart),
+                             date = String.Format("{0:dddd}", d.dateStart),
                              singleAdults = d.singleAdults.ToString(),
                              familyHouseholds = d.familyHouseholds.ToString(),
                              newSingleAdults = d.newSingleAdults.ToString(),
                              newFamilyHouseholds = d.newFamilyHouseholds.ToString(),
-                             zipCompleteness = d.zipCompleteness
+                             d.zipCompleteness
                          };
 
             return Json(new
             {
                 iTotalRecords = newWkr.totalCount,
                 iTotalDisplayRecords = newWkr.filteredCount,
-                sEcho = param.sEcho,
+                param.sEcho,
                 aaData = result
-            },
-            JsonRequestBehavior.AllowGet);
+            });
         }
         [Authorize(Roles = "Administrator, Manager")]
         public JsonResult AjaxMonthWkr(jQueryDataTableParam param)
@@ -510,29 +465,28 @@ namespace Machete.Web.Controllers
 
             mDate = voDate(param);
             beginDate = new DateTime(mDate.Year, mDate.Month, 1, 0, 0, 0);
-            endDate = new DateTime(mDate.Year, mDate.Month, System.DateTime.DaysInMonth(mDate.Year, mDate.Month));
+            endDate = new DateTime(mDate.Year, mDate.Month, DateTime.DaysInMonth(mDate.Year, mDate.Month));
 
             dataTableResult<NewWorkerData> newWkr = NewWorkerView(beginDate, endDate, "monthly");
 
             var result = from d in newWkr.query
                          select new
                          {
-                             date = System.String.Format("{0:MMMM d}", d.dateStart),
+                             date = String.Format("{0:MMMM d}", d.dateStart),
                              singleAdults = d.singleAdults.ToString(),
                              familyHouseholds = d.familyHouseholds.ToString(),
                              newSingleAdults = d.newSingleAdults.ToString(),
                              newFamilyHouseholds = d.newFamilyHouseholds.ToString(),
-                             zipCompleteness = d.zipCompleteness
+                             d.zipCompleteness
                          };
 
             return Json(new
             {
                 iTotalRecords = newWkr.totalCount,
                 iTotalDisplayRecords = newWkr.filteredCount,
-                sEcho = param.sEcho,
+                param.sEcho,
                 aaData = result
-            },
-            JsonRequestBehavior.AllowGet);
+            });
         }
         [Authorize(Roles = "Administrator, Manager")]
         public JsonResult AjaxYearWkr(jQueryDataTableParam param)
@@ -550,26 +504,23 @@ namespace Machete.Web.Controllers
             var result = from d in newWkr.query
                          select new
                          {
-                             date = System.String.Format("{0:MM/d/yyyy}", d.dateStart) + " to " + System.String.Format("{0:MM/d/yyyy}", d.dateEnd),
+                             date = String.Format("{0:MM/d/yyyy}", d.dateStart) + " to " + String.Format("{0:MM/d/yyyy}", d.dateEnd),
                              singleAdults = d.singleAdults.ToString(),
                              familyHouseholds = d.familyHouseholds.ToString(),
                              newSingleAdults = d.newSingleAdults.ToString(),
                              newFamilyHouseholds = d.newFamilyHouseholds.ToString(),
-                             zipCompleteness = d.zipCompleteness
+                             d.zipCompleteness
                          };
 
             return Json(new
             {
                 iTotalRecords = newWkr.totalCount,
                 iTotalDisplayRecords = newWkr.filteredCount,
-                sEcho = param.sEcho,
+                param.sEcho,
                 aaData = result
-            },
-            JsonRequestBehavior.AllowGet);
+            });
         }
-        #endregion
 
-        #region Employer Reports
         [Authorize(Roles = "Administrator, Manager")]
         public JsonResult AjaxWeekEmp(jQueryDataTableParam param)
         {
@@ -586,14 +537,13 @@ namespace Machete.Web.Controllers
             var result = from d in newEmp.query
                          select new
                          {
-                             zips = d.zips.ToString(),
+                             d.zips,
                              jobs = d.jobs.ToString(),
                              emps = d.emps.ToString(),
                              drilldown = from j in d.skills
                                          select new
                                          {
-                                             skill = j.info,
-                                             count = j.count
+                                             skill = j.info, j.count
                                          }
                          };
 
@@ -601,10 +551,9 @@ namespace Machete.Web.Controllers
             {
                 iTotalRecords = newEmp.totalCount,
                 iTotalDisplayRecords = newEmp.filteredCount,
-                sEcho = param.sEcho,
+                param.sEcho,
                 aaData = result
-            },
-            JsonRequestBehavior.AllowGet);
+            });
         }
 
         [Authorize(Roles = "Administrator, Manager")]
@@ -616,21 +565,20 @@ namespace Machete.Web.Controllers
 
             mDate = voDate(param);
             beginDate = new DateTime(mDate.Year, mDate.Month, 1, 0, 0, 0);
-            endDate = new DateTime(mDate.Year, mDate.Month, System.DateTime.DaysInMonth(mDate.Year, mDate.Month));
+            endDate = new DateTime(mDate.Year, mDate.Month, DateTime.DaysInMonth(mDate.Year, mDate.Month));
 
             dataTableResult<ZipModel> newEmp = EmployerReportView(beginDate, endDate);
 
             var result = from d in newEmp.query
                          select new
                          {
-                             zips = d.zips.ToString(),
+                             d.zips,
                              jobs = d.jobs.ToString(),
                              emps = d.emps.ToString(),
                              drilldown = from j in d.skills
                                          select new
                                          {
-                                             skill = j.info,
-                                             count = j.count
+                                             skill = j.info, j.count
                                          }
                          };
 
@@ -638,10 +586,9 @@ namespace Machete.Web.Controllers
             {
                 iTotalRecords = newEmp.totalCount,
                 iTotalDisplayRecords = newEmp.filteredCount,
-                sEcho = param.sEcho,
+                param.sEcho,
                 aaData = result
-            },
-            JsonRequestBehavior.AllowGet);
+            });
         }
 
         [Authorize(Roles = "Administrator, Manager")]
@@ -660,14 +607,13 @@ namespace Machete.Web.Controllers
             var result = from d in newEmp.query
                          select new
                          {
-                             zips = d.zips.ToString(),
+                             d.zips,
                              jobs = d.jobs.ToString(),
                              emps = d.emps.ToString(),
                              drilldown = from j in d.skills
                                          select new
                                          {
-                                             skill = j.info,
-                                             count = j.count
+                                             skill = j.info, j.count
                                          }
                          };
 
@@ -675,45 +621,40 @@ namespace Machete.Web.Controllers
             {
                 iTotalRecords = newEmp.totalCount,
                 iTotalDisplayRecords = newEmp.filteredCount,
-                sEcho = param.sEcho,
+                param.sEcho,
                 aaData = result
-            },
-            JsonRequestBehavior.AllowGet);
+            });
         }
-        #endregion
 
         private DateTime voDate(jQueryDataTableParam param)
         {
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             if (vo.date != null) return DateTime.Parse(vo.date.ToString());
-            else return DateTime.Now;
+            return DateTime.Now;
         }
-        #endregion
 
-        #region DataTablesStuff
         // The following methods organize the above service-layer views for return to Ajax/DataTables and the GUI.
-        #region For Summary Reports
         private dataTableResult<DailySumData> DaySumView(DateTime date)
         {
             IEnumerable<DailySumData> query;
             query = repServ.DailySumController(date);
-            var result = GetDataTableResult<DailySumData>(query);
+            var result = GetDataTableResult(query);
             return result; // ...for DataTables.
         }
 
-        private dataTableResult<WeeklySumData> WeekSumView(DateTime beginDate, DateTime endDate)
+        private dataTableResult<WeeklySummaryData> WeekSumView(DateTime beginDate, DateTime endDate)
         {
-            IEnumerable<WeeklySumData> query;
+            IEnumerable<WeeklySummaryData> query;
             query = repServ.WeeklySumController(beginDate, endDate);
-            var result = GetDataTableResult<WeeklySumData>(query);
+            var result = GetDataTableResult(query);
             return result;
         }
 
-        private dataTableResult<MonthlySumData> monthSumView(DateTime beginDate, DateTime endDate)
+        private dataTableResult<MonthlySummaryData> monthSumView(DateTime beginDate, DateTime endDate)
         {
-            IEnumerable<MonthlySumData> query;
+            IEnumerable<MonthlySummaryData> query;
             query = repServ.MonthlySumController(beginDate, endDate);
-            var result = GetDataTableResult<MonthlySumData>(query);
+            var result = GetDataTableResult(query);
             return result;
         }
 
@@ -721,16 +662,15 @@ namespace Machete.Web.Controllers
         {
             IEnumerable<YearSumData> query;
             query = repServ.YearlySumController(beginDate, endDate);
-            var result = GetDataTableResult<YearSumData>(query);
+            var result = GetDataTableResult(query);
             return result;
         }
-        #endregion
-        #region For Activity Reports
+
         private dataTableResult<ActivityData> ActivityView(DateTime beginDate, DateTime endDate, string reportType)
         {
             IEnumerable<ActivityData> query;
             query = repServ.ActivityReportController(beginDate, endDate, reportType);
-            var result = GetDataTableResult<ActivityData>(query);
+            var result = GetDataTableResult(query);
             return result;
         }
 
@@ -738,15 +678,15 @@ namespace Machete.Web.Controllers
         {
             IEnumerable<ActivityData> query;
             query = repServ.YearlyActController(beginDate, endDate);
-            var result = GetDataTableResult<ActivityData>(query);
+            var result = GetDataTableResult(query);
             return result;
         }
-        #endregion
+
         private dataTableResult<NewWorkerData> NewWorkerView(DateTime beginDate, DateTime endDate, string reportType)
         {
             IEnumerable<NewWorkerData> query;
             query = repServ.NewWorkerController(beginDate, endDate, reportType);
-            var result = GetDataTableResult<NewWorkerData>(query);
+            var result = GetDataTableResult(query);
             return result;
         }
 
@@ -754,7 +694,7 @@ namespace Machete.Web.Controllers
         {
             IEnumerable<ZipModel> query;
             query = repServ.EmployerReportController(beginDate, endDate);
-            var result = GetDataTableResult<ZipModel>(query);
+            var result = GetDataTableResult(query);
             return result;
         }
         private dataTableResult<T> GetDataTableResult<T>(IEnumerable<T> query)
@@ -766,7 +706,5 @@ namespace Machete.Web.Controllers
             result.totalCount = query.Count();
             return result;
         }
-
-        #endregion
     }
 }

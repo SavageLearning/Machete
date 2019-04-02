@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Machete.Test.Selenium.View;
 using OpenQA.Selenium;
 
 namespace Machete.Test.UINav

@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     ImageController.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -21,13 +21,14 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+
 using Machete.Domain;
-//using Machete.Helpers;
 using Machete.Service;
 using Machete.Web.Helpers;
-using System.Web.Mvc;
-using System.Web.Routing;
-
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Web.Controllers
 {
@@ -39,15 +40,16 @@ namespace Machete.Web.Controllers
         // GET: /Image/
         public ImageController(IImageService imageService)
         {
-            this.serv = imageService;
+            serv = imageService;
         }
-        protected override void Initialize(RequestContext requestContext)
+        protected override void Initialize(ActionContext requestContext)
         {
             base.Initialize(requestContext);
-            System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
-        }
+            var httpContext = requestContext.HttpContext;
+            var currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
+            var currentUrl = UriHelper.BuildRelative(httpContext.Request.PathBase, httpContext.Request.Path, httpContext.Request.QueryString);        }
         /// <summary>
-        /// 
+        /// Get an image from the database as file content.
         /// </summary>
         /// <param name="ID"></param>
         /// <returns></returns>
@@ -60,10 +62,8 @@ namespace Machete.Web.Controllers
                 Image image = serv.Get(ID);
                 return File(image.ImageData, image.ImageMimeType, image.filename);
             }
-            else
-            {
-                return null; //File(new byte [1], "");
-            }
+
+            return null; //File(new byte [1], "");
         }
     }
 }

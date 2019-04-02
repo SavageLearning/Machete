@@ -1,4 +1,4 @@
-﻿use [machete-elcentro]
+use [machete-elcentro]
 
 CREATE TABLE [dbo].[Emails] (
     [ID] [int] NOT NULL IDENTITY,

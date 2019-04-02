@@ -1,4 +1,4 @@
-﻿using Machete.Data.Infrastructure;
+using Machete.Data.Infrastructure;
 using Machete.Domain;
 
 namespace Machete.Data

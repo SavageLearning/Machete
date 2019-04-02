@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
 using System;
@@ -74,7 +74,7 @@ namespace Machete.Service
                 throw new MacheteValidationException("WorkAssignments can't be empty");
 
             if (order.transportProviderID == 0)
-                throw new MacheteValidationException("Transport pROVIDER can't be 0");
+                throw new MacheteValidationException("Transport provider can't be 0");
 
             var transMethod = tpServ.Get(order.transportProviderID);
             if (transMethod == null)
@@ -103,7 +103,7 @@ namespace Machete.Service
                 //
                 // This assumes that the IDs are going to come in as 1,2,3,4...they're reset
                 // later on down in the code
-                var costRule = trRule.costRules.Where(c => wa.ID >= c.minWorker && wa.ID <= c.maxWorker).First();
+                var costRule = trRule.costRules.First(c => wa.ID >= c.minWorker && wa.ID <= c.maxWorker);
                 if (costRule == null)
                     throw new MacheteValidationException("No cost rule matching workAssignment ID");
 

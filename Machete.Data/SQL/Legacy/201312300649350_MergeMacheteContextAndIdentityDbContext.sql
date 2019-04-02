@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[AspNetRoles] (
+CREATE TABLE [dbo].[AspNetRoles] (
     [Id] [nvarchar](128) NOT NULL,
     [Name] [nvarchar](max) NOT NULL,
     CONSTRAINT [PK_dbo.AspNetRoles] PRIMARY KEY ([Id])

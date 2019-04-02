@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     Activity.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/25 
@@ -67,6 +67,10 @@ namespace Machete.Domain
 
     public class ActivitySignin: Signin
     {
+        
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public new int ID { get; set; }
         public virtual Activity Activity { get; set; }
         public int activityID { get; set; }
         public int? personID { get; set; }

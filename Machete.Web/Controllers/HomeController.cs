@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     HomeController.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -21,32 +21,24 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+
+using System;
 using Machete.Web.Helpers;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Web.Controllers
 {
     [ElmahHandleError]
     public class HomeController : Controller
     {
-        [AllowAnonymous]
+        [Authorize] // if unauthenticated, bounce back to login until we figure it out
         public ActionResult Index()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                if (User.IsInRole("Hirer"))
-                {
-                    return Redirect("/V2/Onlineorders");
-                }
-                return View();
-            }
-            return RedirectToAction("Login", "Account");
-        }
-
-        [Authorize(Roles = "Manager, Administrator, PhoneDesk, User, Teacher, Check-in")]
-        public ActionResult Changes()
-        {
-            return PartialView();
+            if (User.IsInRole("Hirer")) return Redirect("/V2/Onlineorders");
+            return View();
         }
 
         [Authorize(Roles = "Manager, Administrator, PhoneDesk, User, Teacher, Check-in")]
@@ -72,15 +64,18 @@ namespace Machete.Web.Controllers
         {
             return PartialView();
         }
-        [Authorize(Roles = "Manager, Administrator, PhoneDesk, User, Teacher, Check-in")]
-        public ActionResult Reports()
+
+        // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/localization?view=aspnetcore-2.2#set-the-culture-programmatically
+        // https://github.com/aspnet/Docs/blob/master/aspnetcore/fundamentals/localization/sample/Localization/Controllers/HomeController.cs#L58
+        public IActionResult SetLanguage(string culture, string returnUrl)
         {
-            return PartialView();
-        }
-        [AllowAnonymous]
-        public ActionResult NotFound()
-        {
-            return PartialView();
+            Response.Cookies.Append(
+                CookieRequestCultureProvider.DefaultCookieName,
+                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+                new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+            );
+
+            return LocalRedirect(returnUrl);
         }
     }   
 }

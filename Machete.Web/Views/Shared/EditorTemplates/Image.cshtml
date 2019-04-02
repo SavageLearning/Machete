@@ -1,8 +1,7 @@
-﻿@model Machete.Web.ViewModel.Image
+@model Machete.Web.ViewModel.Image
 
-
-
-@using (Html.BeginForm("Create", "Image", FormMethod.Post, new { enctype = "multipart/form-data" }))
+@* @using (Html.BeginForm("Create", "Image", FormMethod.Post, new { enctype = "multipart/form-data" })) *@
+@using (Html.BeginForm("AddImage", "Event", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.ValidationSummary(true)
     <fieldset>

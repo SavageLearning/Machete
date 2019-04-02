@@ -3,7 +3,7 @@
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
 // License:  GPL v3
-// Project:  Machete.Test
+// Project:  Machete.Test.Old
 // Contact:  savagelearning
 // 
 // Copyright 2011 Savage Learning, LLC., all rights reserved.
@@ -21,19 +21,19 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+
 using System;
-using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+using AutoMapper;
 using Machete.Data;
 using Machete.Data.Infrastructure;
-using Machete.Service;
 using Machete.Domain;
-using AutoMapper;
+using Machete.Service;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
-namespace Machete.Test.Unit.Service
+namespace Machete.Test.UnitTests.Services
 {
     /// <summary>
     /// Summary description for WorkerSigninServiceUnitTest
@@ -115,6 +115,8 @@ namespace Machete.Test.Unit.Service
             _iServ = new Mock<IImageService>();
             _uow = new Mock<IUnitOfWork>();
             _map = new Mock<IMapper>();
+            
+            _cServ = new Mock<IConfigService>();
         }
 
         [Ignore, TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
@@ -123,7 +125,7 @@ namespace Machete.Test.Unit.Service
             //
             //Arrange
             var _serv = new WorkerSigninService(_wsiRepo.Object, _wServ.Object, _iServ.Object, _wrServ.Object, _uow.Object, _map.Object, _cServ.Object);
-            var _signin = new WorkerSignin() { dwccardnum = 66666, dateforsignin = DateTime.Today };
+            var _signin = new WorkerSignin { dwccardnum = 66666, dateforsignin = DateTime.Today };
             WorkerSignin _cbsignin = new WorkerSignin();
             _wsiRepo.Setup(s => s.Add(It.IsAny<WorkerSignin>())).Callback((WorkerSignin s) => { _cbsignin = s; });
             //

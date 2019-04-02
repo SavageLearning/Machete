@@ -1,4 +1,4 @@
-﻿// Script: JavaScript Debug: A simple wrapper for console.log
+// Script: JavaScript Debug: A simple wrapper for console.log
 //
 // *Version: 0.4, Last Updated: 6/22/2010*
 // 

@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using Machete.Data;
-using Machete.Domain;
 using Machete.Test.Integration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
@@ -9,6 +7,9 @@ using System;
 using System.Configuration;
 using System.Linq;
 using System.Text;
+using Machete.Data.Initialize;
+using Machete.Web.Maps;
+using Machete.Test.Integration.Fluent;
 
 namespace Machete.Test.Selenium.View
 {
@@ -29,8 +30,9 @@ namespace Machete.Test.Selenium.View
             string solutionDirectory = sharedUI.SolutionDirectory();
             //testdir = solutionDirectory + "\\Machete.test\\";
             testimagefile = solutionDirectory + "\\jimmy_machete.jpg";
-            map = new Machete.Web.MapperConfig().getMapper();
-
+            var mapperConfig = new MapperConfiguration(config => { config.ConfigureMvc(); });
+            map = mapperConfig.CreateMapper();
+            
             WebServer.StartIis();
         }
 
@@ -136,7 +138,7 @@ namespace Machete.Test.Selenium.View
             var _per = (Web.ViewModel.Person)ViewModelRecords.person.Clone();
             var _wkr = (Web.ViewModel.Worker)ViewModelRecords.worker.Clone();
             _wkr.memberexpirationdate = DateTime.Now.AddYears(1);
-            _wkr.dwccardnum = sharedUI.nextAvailableDwccardnum(frb.ToFactory().Get());
+            _wkr.dwccardnum = sharedUI.nextAvailableDwccardnum(frb.ToFactory());
             var _san = (Web.ViewModel.Event)ViewModelRecords.event1.Clone();
             _san.Person = _per;
             _san.eventTypeID = MacheteLookup.cache.First(x => x.category == "eventtype" && x.text_EN == "Sanction").ID;

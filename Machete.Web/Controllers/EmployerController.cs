@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     EmployerController.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -21,18 +21,20 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using AutoMapper;
-using Machete.Domain;
-using Machete.Service;
-using DTO = Machete.Service.DTO;
-using Machete.Web.Helpers;
-using Machete.Web.Resources;
-using Machete.Web.ViewModel;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
-using System.Web.Routing;
+using System.Threading.Tasks;
+using AutoMapper;
+using Machete.Domain;
+using Machete.Service;
+using Machete.Service.DTO;
+using Machete.Web.Helpers;
+using Machete.Web.ViewModel;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Employer = Machete.Domain.Employer;
 
 namespace Machete.Web.Controllers
 {
@@ -40,96 +42,94 @@ namespace Machete.Web.Controllers
     [ElmahHandleError]
     public class EmployerController : MacheteController
     {
-        private readonly IEmployerService serv;
-        private readonly IMapper map;
-        private readonly IDefaults def;
-        private System.Globalization.CultureInfo CI;
+        private readonly IEmployerService _serv;
+        private readonly IDefaults _defaults;
+        private readonly IMapper _map;
+        private readonly IModelBindingAdaptor _adaptor;
 
         public EmployerController(
             IEmployerService employerService, 
-            IDefaults def,
-            IMapper map
-        ) {
-            this.serv = employerService;
-            this.map = map;
-            this.def = def;
+            IDefaults defaults,
+            IMapper map,
+            IModelBindingAdaptor adaptor) {
+            _serv = employerService;
+            _map = map;
+            _adaptor = adaptor;
+            _defaults = defaults;
         }
-        protected override void Initialize(RequestContext requestContext)
+        protected override void Initialize(ActionContext requestContext)
         {
             base.Initialize(requestContext);
-            CI = (System.Globalization.CultureInfo)Session["Culture"];
             ViewBag.idPrefix = "employer";
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
+
+        // GET: /Employer/Index
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return View();
+            return await Task.Run(() => View());
         }
-        /// <summary>
-        /// GET: /Employer/AjaxHandler
-        /// </summary>
-        /// <param name="param"></param>
-        /// <returns></returns>
+        
+        // GET: /Employer/AjaxHandler
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public JsonResult AjaxHandler(jQueryDataTableParam param)
         {
-            var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
-            vo.CI = CI;
-            dataTableResult<DTO.EmployersList> list = serv.GetIndexView(vo);
+            dataTableResult<EmployersList> list;
+
+            try {
+                var vo = _map.Map<jQueryDataTableParam, viewOptions>(param);
+                list = _serv.GetIndexView(vo);
+            }
+            catch (Exception ex) {
+                throw ex; // TODO Chaim plz
+            }
             //return what's left to datatables
             var result = list.query
-                .Select(e => map.Map<DTO.EmployersList, ViewModel.EmployerList>(e))
+                .Select(e => _map.Map<EmployersList, EmployerList>(e))
                 .AsEnumerable();
             return Json(new
             {
-                sEcho = param.sEcho,
+                param.sEcho,
                 iTotalRecords = list.totalCount,
                 iTotalDisplayRecords = list.filteredCount,
                 aaData = result
-            },
-            JsonRequestBehavior.AllowGet);
+            });
         }
-        /// <summary>
-        /// GET: /Employer/Create
-        /// </summary>
-        /// <returns>PartialView</returns>
+
+        // GET: /Employer/Create
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            var m = map.Map<Domain.Employer, ViewModel.Employer>(new Domain.Employer()
+            var model = _map.Map<Employer, ViewModel.Employer>(new Employer
             {
                 active = true,
                 blogparticipate = false,
-                referredby = def.getDefaultID(LCategory.emplrreference)
+                referredby = _defaults.getDefaultID(LCategory.emplrreference)
             });
-            m.def = def;
-            return PartialView("Create", m);
+            model.def = _defaults;
+            return await Task.Run(() => PartialView("Create", model));
         }
-        /// <summary>
-        /// POST: /Employer/Create
-        /// </summary>
-        /// <param name="employer"></param>
-        /// <param name="userName"></param>
-        /// <returns></returns>
+
+        // POST: /Employer/Create
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public JsonResult Create(Domain.Employer employer, string userName)
+        public async Task<JsonResult> Create(Employer employer, string userName)
         {
-            UpdateModel(employer);
-            Domain.Employer newEmployer = serv.Create(employer, userName);                          
-            var result = map.Map<Domain.Employer, ViewModel.Employer>(newEmployer);
-            return Json(new
-            {
-                sNewRef = result.tabref,
-                sNewLabel = result.tablabel,    
-                iNewID = result.ID,
-                jobSuccess = true
-            },
-            JsonRequestBehavior.AllowGet);
+            ModelState.ThrowIfInvalid();
+            
+            var modelIsValid = await _adaptor.TryUpdateModelAsync(this, employer);
+            if (modelIsValid) {
+                var saved = _serv.Create(employer, userName);
+                var result = _map.Map<Employer, ViewModel.Employer>(saved);
+                return Json(new {
+                    sNewRef = result.tabref,
+                    sNewLabel = result.tablabel,
+                    iNewID = result.ID,
+                    jobSuccess = true
+                });
+            } else {
+                return Json(new { jobSuccess = false });
+            }
         }
 
         /// <summary>
@@ -138,105 +138,109 @@ namespace Machete.Web.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            var e = serv.Get(id);
-            var m = map.Map<Domain.Employer, ViewModel.Employer>(e);
-            m.def = def;
-            return PartialView("Edit", m);
+            var e = _serv.Get(id);
+            var m = _map.Map<Employer, ViewModel.Employer>(e);
+            m.def = _defaults;
+            return await Task.Run(() => PartialView("Edit", m));
         }
+
         /// <summary>
         /// POST: /Employer/Edit/5
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="collection"></param>
         /// <param name="userName"></param>
         /// <returns></returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public JsonResult Edit(int id, FormCollection collection, string userName)
+        public async Task<JsonResult> Edit(int id, string userName)
         {
-            Domain.Employer employer = serv.Get(id);
-            UpdateModel(employer);
-            serv.Save(employer, userName);                            
-            return Json(new
-            {
-                jobSuccess = true
-            }, JsonRequestBehavior.AllowGet);            
+            ModelState.ThrowIfInvalid();
+
+            var employer = _serv.Get(id);
+
+            var modelIsValid = await _adaptor.TryUpdateModelAsync(this, employer);
+            if (modelIsValid) {
+                _serv.Save(employer, userName);
+                return Json(new { jobSuccess = true });
+            } else {
+                return Json(new { jobSuccess = false });
+            }
         }
+
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="UserName"></param>
+        /// <param name="userName"></param>
         /// <returns></returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator")]
         public JsonResult Delete(int id, string userName)
         {
-            serv.Delete(id, userName);
+            _serv.Delete(id, userName);
 
             return Json(new
             {
                 status = "OK",
                 jobSuccess = true,
                 deletedID = id
-            },
-            JsonRequestBehavior.AllowGet);
-        }
-
-        private List<Dictionary<string, string>> DuplicateEmployers(string name, string address, 
-            string phone, string city, string zipcode)
-        {
-            //Get all the records            
-            IEnumerable<Domain.Employer> list = serv.GetAll();
-            var employersFound = new List<Dictionary<string, string>>();
-            name = name.Replace(" ", "");
-            address = address.Replace(" ", "");
-            phone = string.IsNullOrEmpty(phone) ? "x" : phone;
-            city = city.Replace(" ","");
-            zipcode = zipcode.Replace(" ","");
-
-            foreach (var employer in list)
-            {
-                var employer_Name = employer.name.Replace(" ", "");
-                var employer_Address = employer.address1.Replace(" ", "");
-                var employer_Phone = string.IsNullOrEmpty(employer.phone) ? "y" : employer.phone;
-                var employer_City = employer.city.Replace(" ","");
-                var employer_Zipcode = employer.zipcode.Replace(" ","");
-
-                //checking if person already exists in dbase
-                var matchCount = 0;
-                if (employer_Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)) matchCount++;
-                if (employer_Address.Equals(address, StringComparison.CurrentCultureIgnoreCase)) matchCount++;
-                if (employer_Phone.Equals(phone, StringComparison.CurrentCultureIgnoreCase)) matchCount++;
-                if (employer_Zipcode.Equals(zipcode, StringComparison.CurrentCultureIgnoreCase)) matchCount++;
-                if (employer_City.Equals(city, StringComparison.CurrentCultureIgnoreCase)) matchCount++;
-                
-
-                if (matchCount >= 3)
-                {
-                    var employerFound = new Dictionary<string, string>();
-                    employerFound.Add("Name", employer.name);
-                    employerFound.Add("Address", employer.address1);
-                    employerFound.Add("Phone", employer.phone);
-                    employerFound.Add("City", employer.city);
-                    employerFound.Add("ZipCode", employer.zipcode);
-                    employerFound.Add("ID", employer.ID.ToString());
-
-                    employersFound.Add(employerFound);
-                }
-            }
-
-            return employersFound;
+            });
         }
 
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public JsonResult GetDuplicates(string name, string address,
-            string phone, string city, string zipcode )
+        public JsonResult GetDuplicates(string name, string address, string phone, string city, string zipcode)
         {
-            var duplicateFound = DuplicateEmployers(name, address, phone, city, zipcode);
-            return Json(new { duplicates = duplicateFound }, JsonRequestBehavior.AllowGet);
+            var name1 = name;
+            var address1 = address;
+            var phone1 = phone;
+            var city1 = city;
+            var zipcode1 = zipcode;
+            //Get all the records            
+            var list = _serv.GetAll();
+            var employersFound = new List<Dictionary<string, string>>();
+            
+            name1 = name1.Replace(" ", "");
+            address1 = address1.Replace(" ", "");
+            phone1 = string.IsNullOrEmpty(phone1) ? "nonMatchingValue" : phone1;
+            city1 = city1.Replace(" ","");
+            zipcode1 = zipcode1.Replace(" ","");
+
+            foreach (var employer in list)
+            {
+                var employerName = employer.name.Replace(" ", "");
+                var employerAddress = employer.address1.Replace(" ", "");
+                var employerPhone = string.IsNullOrEmpty(employer.phone) ? string.Empty : employer.phone;
+                var employerCity = employer.city.Replace(" ","");
+                var employerZipcode = employer.zipcode.Replace(" ","");
+
+                //checking if person already exists in database
+                var matchCount = 0;
+                if (employerName.Equals(name1, StringComparison.CurrentCultureIgnoreCase)) matchCount++;
+                if (employerAddress.Equals(address1, StringComparison.CurrentCultureIgnoreCase)) matchCount++;
+                if (employerPhone.Equals(phone1, StringComparison.CurrentCultureIgnoreCase)) matchCount++;
+                if (employerZipcode.Equals(zipcode1, StringComparison.CurrentCultureIgnoreCase)) matchCount++;
+                if (employerCity.Equals(city1, StringComparison.CurrentCultureIgnoreCase)) matchCount++;
+
+
+                if (matchCount < 3) continue;
+                var employerFound = new Dictionary<string, string> {
+                    { "Name", employer.name },
+                    { "Address", employer.address1 },
+                    { "Phone", employer.phone },
+                    { "City", employer.city },
+                    { "ZipCode", employer.zipcode },
+                    { "ID", employer.ID.ToString() }
+                };
+
+                employersFound.Add(employerFound);
+            }
+
+            return Json(new {
+                duplicates = employersFound
+            });
         }
     }
 }

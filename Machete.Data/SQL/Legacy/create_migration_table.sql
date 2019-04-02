@@ -1,4 +1,4 @@
-﻿CREATE TABLE [__MigrationHistory] (
+CREATE TABLE [__MigrationHistory] (
     [MigrationId] [nvarchar](255) NOT NULL,
     [CreatedOn] [datetime] NOT NULL,
     [Model] [varbinary](max) NOT NULL,

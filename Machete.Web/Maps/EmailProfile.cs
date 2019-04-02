@@ -1,9 +1,5 @@
 ﻿using AutoMapper;
 using Machete.Web.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace Machete.Web.Maps
 {
@@ -27,10 +23,10 @@ namespace Machete.Web.Maps
                 .ForMember(e => e.createdby, opt => opt.Ignore())
                 .ForMember(e => e.datecreated, opt => opt.Ignore())
                 .ForMember(e => e.dateupdated, opt => opt.Ignore());
-            CreateMap<Domain.Email, ViewModel.Email>()
+            CreateMap<Domain.Email, Email>()
                 .ForMember(e => e.idString, opt => opt.Ignore());
             CreateMap<Domain.Email, Service.DTO.EmailList>();
-            CreateMap<Service.DTO.EmailList, ViewModel.EmailList>();
+            CreateMap<Service.DTO.EmailList, EmailList>();
         }
     }
 }

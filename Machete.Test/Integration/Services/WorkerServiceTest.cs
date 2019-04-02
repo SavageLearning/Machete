@@ -3,7 +3,7 @@
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
 // License:  GPL v3
-// Project:  Machete.Test
+// Project:  Machete.Test.Old
 // Contact:  savagelearning
 // 
 // Copyright 2011 Savage Learning, LLC., all rights reserved.
@@ -21,13 +21,15 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using Machete.Domain;
-using Machete.Service;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using System;
 using System.Globalization;
+using Machete.Domain;
+using Machete.Service;
+using Machete.Test.Integration.Fluent;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Machete.Test.Integration.Service
+namespace Machete.Test.Integration.Services
 {
     [TestClass]
     public class WorkerTests
@@ -77,7 +79,7 @@ namespace Machete.Test.Integration.Service
             //Arrange
             Person _p = frb.ToPerson();
             Worker _w = frb.ToWorker(); ;
-            _p.firstname2 = "WorkerService_Intergation_CreateWorker";
+            _p.firstname2 = "WorkerService_Integration_CreateWorker";
             _w.height = "tall";
             //_w.Person = _p;
             _w.dwccardnum = frb.GetNextMemberID();

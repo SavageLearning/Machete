@@ -1,0 +1,272 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="app.css" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="text/babel">
+
+axios.defaults.headers.common = {
+  "Content-Type": "application/json"
+};
+
+class ExternalLoginForm extends React.Component {
+  constructor(props) {
+    super(props);
+
+    let queryString = document.location.href.split('?')[1];
+
+    if (!queryString) {
+      this.handleError({response: 'not sent'});
+      return;
+    }
+
+    let dictionary = this.props.dictionaryBuilder(queryString);
+    
+    this.state = {
+      app_id: dictionary['app_id'],
+      client_id: dictionary['client_id'],
+      redirect_uri: window.location.protocol + '//' + window.location.host + '/id/signin-',
+      oauthState: dictionary['state']
+    };
+  }
+  
+  // Facebook: https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/
+  // Google: https://developers.google.com/identity/protocols/OAuth2WebServer#languagespecificrequirements -> HTTP/REST
+  buildQuery(which) {
+    switch (which) {
+      case 'facebook':
+        return 'https://www.facebook.com/v3.2/dialog/oauth?'
+                + 'client_id=' + this.state.app_id + '&'
+                + 'redirect_uri=' + this.state.redirect_uri + 'facebook&'
+                + 'state=' + this.state.oauthState + '&'
+                + 'scope=email'; // 'space' delimited, supposedly, but breaks if you do default+email (+ is url-encoded)
+        break;
+      case 'google':
+        return 'https://accounts.google.com/o/oauth2/v2/auth?'
+                + 'client_id=' + this.state.client_id + '&'
+                + 'redirect_uri=' + this.state.redirect_uri + 'google&'
+                + 'scope=email&'
+                + 'access_type=online&' // default value; 'recommended' by docs
+                + 'state=' + this.state.oauthState + '&'
+                + 'response_type=code&';
+        break;
+      default:
+        throw 'unable to parse input; class ExternalLoginForm, method buildQuery';
+    }
+  }
+  
+  render() {
+    return (
+
+<div className='panel-container external-providers'>
+  <p>If you are a new employer, please use one of the following web services to authenticate.
+  If you have a legacy email and password account, you may also use it to authenticate.  
+  We are migrating to web services for authenticate because of the increased
+  security,  account management, and password reset options.</p>
+  <div className='panel'>
+    <div className='panel-heading'>
+      <h3 className='panel-title'>Web services available</h3>
+    </div>
+    <div className='panel-body'>
+      <ul className='list-inline'>
+        <li>
+          <a className='btn'
+             href={this.buildQuery('facebook')}>
+            Sign in with Facebook
+          </a>
+        </li>
+        <li>
+          <a className='btn'
+             href={this.buildQuery('google')}>
+            Sign in with Google
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+    );
+  }
+}
+
+class LegacyLoginForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+       username: '',
+       password: '',
+       remember: false
+     };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({
+      [event.target.name]: event.target.type === 'checkbox' ? event.target.checked : event.target.value
+    });
+  }
+
+  handleError(error) {
+    if (error.response && error.response.status === 400) {
+      this.props.handler({ show: true, message: error.response.data.login_failure[0] });
+    } else if (error.response && error.response === 'not sent' ) {
+      this.props.handler({ show: true, message: 'Your request was not sent because this is an invalid request.'});
+    } else {
+      this.props.handler({ show: true, message: this.props.defaultMessage });
+    }
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+
+    let queryString = document.location.href.split('?')[1];
+
+    if (!queryString) {
+      this.handleError({response: 'not sent'});
+      return;
+    }
+
+    let dictionary = this.props.dictionaryBuilder(queryString);
+
+    let url = window.location.protocol + '//' + window.location.host + window.location.pathname;
+
+    let data = JSON.stringify({
+      'username': this.state.username,
+      'password': this.state.password,
+      'remember': this.state.remember
+    });
+
+    let config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'cache-control': 'no-cache'
+      }
+    };
+
+    console.log('post: ', url);
+    axios.post(url, data, config).then((response) => {
+      console.log(response);
+      window.location.href = dictionary['redirect_uri'];
+    }).catch((error) => this.handleError(error));
+  }
+
+  render() {
+    return (
+
+<div className='panel-container'>
+  <div className='panel'>
+    <div className='panel-heading'>
+      <h3 className='panel-title'>Legacy account</h3>
+    </div>
+    <div className='panel-body'>
+      <form onSubmit={this.handleSubmit}>
+        <div className='form-group'>
+          <label>
+            Username
+            <input name='username' type='text' value={this.state.username} onChange={this.handleChange} />
+          </label>
+        </div>
+        <div className='form-group'>
+          <label>
+            Password
+            <input name='password' type='password' value={this.state.password} onChange={this.handleChange} />
+          </label>
+        </div>
+        <div className='form-group'>
+          <label>
+            <input name='remember' type='checkbox' value={this.state.remember} onChange={this.handleChange} />
+            Remember My Login
+          </label>
+        </div>
+        <div className='form-group'>
+          <input type='submit' value='Login' />
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+    );
+  }
+}
+
+class Container extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { showError: false, errorMessage: 'Something went wrong. Please try again.' };
+    this.handler = this.handler.bind(this);
+  }
+
+  handler(error) {
+    this.setState({
+      showError: error.show,
+      errorMessage: error.message
+    });
+  }
+  
+  dictionaryBuilder(queryString) {
+    let dictionary = {};
+    let parts = queryString.split('&');
+
+    for (var i = 0; i < parts.length; i++) {
+      let p = parts[i];
+      // Step 2: Split Key/Value pair
+      let keyValuePair = p.split('=');
+
+      // Step 3: Add Key/Value pair to Dictionary object
+      let key = keyValuePair[0];
+      let value = keyValuePair[1];
+
+      // decode URI encoded string
+      value = decodeURIComponent(value);
+      value = value.replace(/\+/g, ' ');
+
+      dictionary[key] = value;
+    }
+    
+    return dictionary;
+  }
+
+  render() {
+    return (
+
+<div className='container'>
+  <div className='navbar'>
+    <div className='navbar-header'>
+      <span className='navbar-brand'>Casa Latina</span>
+    </div>
+  </div>
+  <div className='page-login'>
+    <div className='page-header'>
+      <h1>Worker Requests</h1>
+      <h2>Please log in</h2>
+    </div>
+    <div className={this.state.showError ? 'row error-message' : 'row hide error-message'}>
+      <strong>Error: {this.state.errorMessage}</strong>
+    </div>
+    <div className='row'>
+      <ExternalLoginForm dictionaryBuilder={this.dictionaryBuilder} />
+      <LegacyLoginForm handler={this.handler} dictionaryBuilder={this.dictionaryBuilder} />
+    </div>
+  </div>
+</div>
+
+    );
+  }
+}
+
+const root = document.getElementById('root');
+const element = <Container />;
+ReactDOM.render(element, root);
+
+    </script>
+  </body>
+</html>

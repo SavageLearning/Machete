@@ -1,13 +1,9 @@
 ﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using DTO = Machete.Service.DTO;
+using static Machete.Web.Helpers.Extensions;
 
 namespace Machete.Web.Maps
 {
-    public class WorkerSigninProfile : MacheteProfile
+    public class WorkerSigninProfile : Profile
     {
         public WorkerSigninProfile()
         {
@@ -34,22 +30,22 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.memberStatusID, opt => opt.MapFrom(d => d.worker.memberStatusID))
                 .ForMember(v => v.memberStatusEN, opt => opt.MapFrom(d => d.worker.memberStatusEN))
                 .ForMember(v => v.memberStatusES, opt => opt.MapFrom(d => d.worker.memberStatusES))
-                .ForMember(v => v.memberExpired, opt => opt.MapFrom(d => d.worker.memberStatusID == Domain.Worker.iExpired ? true : false))
-                .ForMember(v => v.memberInactive, opt => opt.MapFrom(d => d.worker.memberStatusID == Domain.Worker.iInactive ? true : false))
-                .ForMember(v => v.memberSanctioned, opt => opt.MapFrom(d => d.worker.memberStatusID == Domain.Worker.iSanctioned ? true : false))
-                .ForMember(v => v.memberExpelled, opt => opt.MapFrom(d => d.worker.memberStatusID == Domain.Worker.iExpelled ? true : false))
+                .ForMember(v => v.memberExpired, opt => opt.MapFrom(d => d.worker.memberStatusID == Domain.Worker.iExpired))
+                .ForMember(v => v.memberInactive, opt => opt.MapFrom(d => d.worker.memberStatusID == Domain.Worker.iInactive))
+                .ForMember(v => v.memberSanctioned, opt => opt.MapFrom(d => d.worker.memberStatusID == Domain.Worker.iSanctioned))
+                .ForMember(v => v.memberExpelled, opt => opt.MapFrom(d => d.worker.memberStatusID == Domain.Worker.iExpelled))
                 .ForMember(v => v.imageRef, opt => opt.MapFrom(d => d.worker.ImageID == null ? "/Content/images/NO-IMAGE-AVAILABLE.jpg" : "/Image/GetImage/" + d.worker.ImageID))
                 .ForMember(v => v.imageID, opt => opt.MapFrom(d => d.worker.ImageID))
                 .ForMember(v => v.typeOfWorkID, opt => opt.MapFrom(d => d.worker.typeOfWorkID))
                 .ForMember(v => v.signinID, opt => opt.MapFrom(d => d.ID))
             ;
             CreateMap<Domain.WorkerSignin, ViewModel.WorkerSignin>()
-                .ForMember(v => v.memberExpired, opt => opt.MapFrom(d => d.worker.memberStatusID == Domain.Worker.iExpired ? true : false))
-                .ForMember(v => v.memberInactive, opt => opt.MapFrom(d => d.worker.memberStatusID == Domain.Worker.iInactive ? true : false))
-                .ForMember(v => v.memberSanctioned, opt => opt.MapFrom(d => d.worker.memberStatusID == Domain.Worker.iSanctioned ? true : false))
-                .ForMember(v => v.memberExpelled, opt => opt.MapFrom(d => d.worker.memberStatusID == Domain.Worker.iExpelled ? true : false))
+                .ForMember(v => v.memberExpired, opt => opt.MapFrom(d => d.worker.memberStatusID == Domain.Worker.iExpired))
+                .ForMember(v => v.memberInactive, opt => opt.MapFrom(d => d.worker.memberStatusID == Domain.Worker.iInactive))
+                .ForMember(v => v.memberSanctioned, opt => opt.MapFrom(d => d.worker.memberStatusID == Domain.Worker.iSanctioned))
+                .ForMember(v => v.memberExpelled, opt => opt.MapFrom(d => d.worker.memberStatusID == Domain.Worker.iExpelled))
                 .ForMember(v => v.imageRef, opt => opt.MapFrom(d => d.worker.ImageID == null ? "/Content/images/NO-IMAGE-AVAILABLE.jpg" : "/Image/GetImage/" + d.worker.ImageID))
-                .ForMember(v => v.message, opt => opt.UseValue("success"))
+                .ForMember(v => v.message, opt => opt.MapFrom(src => "success"))
                 .ForMember(v => v.worker, opt => opt.Ignore())
                 .ForMember(v => v.def, opt => opt.Ignore())
                 .ForMember(v => v.idString, opt => opt.Ignore())
@@ -66,90 +62,4 @@ namespace Machete.Web.Maps
             ;
         }
     }
-
-    //return what's left to datatables
-    //var result = from p in was.query select new 
-    //{  
-    //    WSIID = p.ID,
-    //    recordid = p.ID.ToString(),
-    //    dwccardnum = p.dwccardnum,
-    //    fullname = p.fullname,
-    //    firstname1 = p.firstname1,
-    //    firstname2 = p.firstname2,
-    //    lastname1 = p.lastname1,
-    //    lastname2 = p.lastname2, 
-    //    dateforsignin = p.dateforsignin.AddHours(Convert.ToDouble(WebConfigurationManager.AppSettings["TimeZoneDifferenceFromPacific"])).ToString(),
-    //    dateforsigninstring = p.dateforsignin.AddHours(Convert.ToDouble(WebConfigurationManager.AppSettings["TimeZoneDifferenceFromPacific"])).ToShortTimeString(),
-    //    WAID = p.waid ?? 0,
-    //    memberStatus = lcache.textByID(p.memberStatus, CI.TwoLetterISOLanguageName),
-    //    memberInactive = p.w.isInactive,
-    //    memberSanctioned = p.w.isSanctioned,
-    //    memberExpired = p.w.isExpired,
-    //    memberExpelled = p.w.isExpelled,
-    //    imageID = p.imageID,
-    //    lotterySequence = p.lotterySequence,
-    //    expirationDate = p.expirationDate.ToShortDateString(),
-    //    skills = _getSkillCodes(p.englishlevel, p.skill1, p.skill2, p.skill3),
-    //    program = lcache.getByID(p.typeOfWorkID).ltrCode
-    //};
-
-    //TODO: rework into model 
-
-
-
-    //public class signinView : Record
-    //{
-    //    public int dwccardnum { get; set; }
-    //    public string firstname1 { get; set; }
-    //    public string firstname2 { get; set; }
-    //    public string lastname1 { get; set; }
-    //    public string lastname2 { get; set; }
-    //    public string fullname
-    //    {
-    //        get
-    //        {
-    //            return firstname1 + " " +
-    //                    firstname2 + " " +
-    //                    lastname1 + " " +
-    //                    lastname2;
-    //        }
-    //        set{}
-    //    }
-    //    public int signinID { get; set; }
-    //    public DateTime dateforsignin { get; set; }
-    //    public int? imageID { get; set; }
-    //    public DateTime expirationDate { get; set; }
-    //    public int memberStatus { get; set; }
-    //    public Person p { get; set; }
-    //    public Worker w { get; set; }
-    //    public Signin s { get; set; }
-    //    /// <summary>
-    //    /// 
-    //    /// </summary>
-    //    /// <param name="per"></param>
-    //    /// <param name="sign"></param>
-    //    public signinView(Person per, Signin sign)
-    //    {
-    //        p = per;
-    //        w = p.Worker;
-    //        s = sign;
-    //        ID = s.ID;
-    //        firstname1 = p == null ? null : p.firstname1;
-    //        firstname2 = p == null ? null : p.firstname2;
-    //        lastname1 = p == null ? null : p.lastname1;
-    //        lastname2 = p == null ? null : p.lastname2;
-    //        dateforsignin = s.dateforsignin;
-    //        dwccardnum = s.dwccardnum;
-    //        signinID = s.ID;
-    //        dateupdated = s.dateupdated;
-    //        datecreated = s.datecreated;
-    //        createdby = s.createdby;
-    //        updatedby = s.updatedby;
-    //        imageID = p == null ? null : p.Worker.ImageID;
-    //        expirationDate = p == null ? DateTime.MinValue : p.Worker.memberexpirationdate;
-    //        memberStatus = p == null ? 0 : p.Worker.memberStatusID;
-
-    //    }
-    //    public signinView() { }
-    //}
 }

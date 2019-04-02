@@ -1,5 +1,5 @@
-﻿/// http://xhalent.wordpress.com/2011/01/24/applying-unobtrusive-validation-to-dynamic-content/
-/// <reference path="jquery-1.4.4.js" />
+/// http://xhalent.wordpress.com/2011/01/24/applying-unobtrusive-validation-to-dynamic-content/
+/// <reference path="jquery-1.7.1.js" />
 /// <reference path="jquery.validate.js" />
 /// <reference path="jquery.validate.unobtrusive.js" />
 

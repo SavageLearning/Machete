@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     ConfigController.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/25 
@@ -21,16 +21,21 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
-using DTO = Machete.Service.DTO;
+using Machete.Service.DTO;
 using Machete.Web.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
-using System.Web.Routing;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Machete.Web.Controllers
 {
@@ -40,7 +45,6 @@ namespace Machete.Web.Controllers
         private readonly ILookupService serv;
         private readonly IMapper map;
         private readonly IDefaults def;
-        System.Globalization.CultureInfo CI;
         public LookupController(ILookupService serv,
             IDefaults def,
             IMapper map)
@@ -48,13 +52,8 @@ namespace Machete.Web.Controllers
             this.serv = serv;
             this.map = map;
             this.def = def;
-            ViewBag.configCategories = def.configCategories();
         }
-        protected override void Initialize(RequestContext requestContext)
-        {
-            base.Initialize(requestContext);
-            CI = (System.Globalization.CultureInfo)Session["Culture"];
-        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -62,27 +61,26 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Index()
         {
-            return View();
+            ViewBag.configCategories = def.configCategories();
+            return View("~/Views/Config/Index.cshtml");
         }
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             //Get all the records
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
-            vo.CI = CI;
-            IEnumerable<DTO.LookupList> list = serv.GetIndexView(vo);
+            IEnumerable<LookupList> list = serv.GetIndexView(vo);
             var result = list
                 .Select(
-                    e => map.Map<DTO.LookupList, ViewModel.LookupList>(e)
+                    e => map.Map<LookupList, ViewModel.LookupList>(e)
                 ).AsEnumerable();
             return Json(new
             {
-                sEcho = param.sEcho,
+                param.sEcho,
                 iTotalRecords = serv.TotalCount(),
                 iTotalDisplayRecords = serv.TotalCount(),
                 aaData = result
-            },
-            JsonRequestBehavior.AllowGet);
+            });
         }
         /// <summary>
         /// 
@@ -91,34 +89,35 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Create()
         {
-            var m = map.Map<Domain.Lookup, ViewModel.Lookup>(new Lookup());
+            var m = map.Map<Lookup, ViewModel.Lookup>(new Lookup());
             m.def = def;
-            return PartialView(m);
+            return PartialView("~/Views/Config/Create.cshtml", m);
         }
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="person"></param>
-        /// <param name="userName"></param>
+        /// <param name="lookup">The model being created.</param>
+        /// <param name="userName">Automatically generated.</param>
         /// <returns></returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult Create(Lookup lookup, string userName)
+        public async Task<ActionResult> Create(Lookup lookup, string userName)
         {
             //Lookup lookup = null;
-            UpdateModel(lookup);
-            lookup = serv.Create(lookup, userName);
-            var result = map.Map<Domain.Lookup, ViewModel.Lookup>(lookup);
-            return Json(new
-            {
-                sNewRef = result.tabref,
-                sNewLabel = result.tablabel,
-                iNewID = result.ID,
-                jobSuccess = true
-            },
-            JsonRequestBehavior.AllowGet);
+            if(await TryUpdateModelAsync(lookup)) {
+                lookup = serv.Create(lookup, userName);
+                var result = map.Map<Lookup, ViewModel.Lookup>(lookup);
+                return Json(new
+                {
+                    sNewRef = result.tabref,
+                    sNewLabel = result.tablabel,
+                    iNewID = result.ID,
+                    jobSuccess = true
+                });
+            } else {
+                return Json(new { jobSuccess = false });
+            }
         }
-
         /// <summary>
         /// 
         /// </summary>
@@ -127,9 +126,9 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Edit(int id)
         {
-            var m = map.Map<Domain.Lookup, ViewModel.Lookup>(serv.Get(id));
+            var m = map.Map<Lookup, ViewModel.Lookup>(serv.Get(id));
             m.def = def;
-            return PartialView("Edit", m);
+            return PartialView("~/Views/Config/Edit.cshtml", m);
         }
         /// <summary>
         /// 
@@ -139,16 +138,18 @@ namespace Machete.Web.Controllers
         /// <returns></returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult Edit(int id, string userName)
+        public async Task<ActionResult> Edit(int id, string userName)
         {
-            Lookup lookup = serv.Get(id);
-            UpdateModel(lookup);
-            serv.Save(lookup, userName);
-            return Json(new
-            {
-                status = "OK"
-            },
-            JsonRequestBehavior.AllowGet);
+            var lookup = serv.Get(id);
+            if (await TryUpdateModelAsync(lookup)) {
+                serv.Save(lookup, userName);
+                return Json(new
+                {
+                     status = "OK"
+                });
+            } else {
+                return Json(new { status = "Not OK" }); // TODO Chaim plz
+            }
         }
         /// <summary>
         /// 
@@ -158,9 +159,9 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult View(int id)
         {
-            var m = map.Map<Domain.Lookup, ViewModel.Lookup>(serv.Get(id));
+            var m = map.Map<Lookup, ViewModel.Lookup>(serv.Get(id));
             m.def = def;
-            return PartialView("Edit", m);
+            return PartialView("~/Views/Config/Edit.cshtml", m);
         }
         /// <summary>
         /// 
@@ -178,8 +179,23 @@ namespace Machete.Web.Controllers
             {
                 status = "OK",
                 deletedID = id
-            },
-            JsonRequestBehavior.AllowGet);
+            });
         }
+    }
+
+    public class HandleErrorAttribute : ExceptionFilterAttribute
+    {
+        // TODO http://www.binaryintellect.net/articles/5df6e275-1148-45a1-a8b3-0ba2c7c9cea1.aspx
+        public override void OnException(ExceptionContext context)
+        {
+            var result = new ViewResult { ViewName = "Error" };
+            var modelMetadata = new EmptyModelMetadataProvider();
+            result.ViewData = new ViewDataDictionary(
+                modelMetadata, context.ModelState);
+            result.ViewData.Add("HandleException", 
+                context.Exception);
+            context.Result = result;
+            context.ExceptionHandled = true;
+        }     
     }
 }

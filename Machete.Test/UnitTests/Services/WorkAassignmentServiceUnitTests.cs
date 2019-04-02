@@ -3,7 +3,7 @@
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
 // License:  GPL v3
-// Project:  Machete.Test
+// Project:  Machete.Test.Old
 // Contact:  savagelearning
 // 
 // Copyright 2011 Savage Learning, LLC., all rights reserved.
@@ -21,20 +21,18 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Machete.Data;
-using Moq;
-using Machete.Data.Infrastructure;
-using Machete.Service;
-using Machete.Domain;
-using Machete.Test;
-using AutoMapper;
 
-namespace Machete.Test.Unit.Service
+using System;
+using System.Collections.Generic;
+using AutoMapper;
+using Machete.Data;
+using Machete.Data.Infrastructure;
+using Machete.Domain;
+using Machete.Service;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+
+namespace Machete.Test.UnitTests.Services
 {
     /// <summary>
     /// Summary description for WorkAssignmentServiceUnitTests
@@ -73,27 +71,6 @@ namespace Machete.Test.Unit.Service
             }
         }
 
-        #region Additional test attributes
-        //
-        // You can use the following additional attributes as you write your tests:
-        //
-        // Use ClassInitialize to run code before running the first test in the class
-        // [ClassInitialize()]
-        // public static void MyClassInitialize(TestContext testContext) { }
-        //
-        // Use ClassCleanup to run code after all tests in a class have run
-        // [ClassCleanup()]
-        // public static void MyClassCleanup() { }
-        //
-        // Use TestInitialize to run code before running each test 
-        // [TestInitialize()]
-        // public void MyTestInitialize() { }
-        //
-        // Use TestCleanup to run code after each test has run
-        // [TestCleanup()]
-        // public void MyTestCleanup() { }
-        //
-        #endregion
         [TestInitialize]
         public void TestInitialize()
         {

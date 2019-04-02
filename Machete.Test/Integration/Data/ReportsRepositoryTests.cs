@@ -1,40 +1,23 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
-using Machete.Domain;
-using Machete.Data.Helpers;
 using Machete.Data.DTO;
-using System.Data.Entity;
 using System.Linq;
+using Machete.Data;
+using Machete.Test.Integration.Fluent;
 
 namespace Machete.Test.Integration.Data
 {
     [TestClass]
-    public class ReportsRepositoryTests
+    public class ReportsRepositoryTests // TODO "duplicate value" bug??
     {
-        FluentRecordBase frb;
+        private FluentRecordBase frb;
+        private string connectionString { get; set; }
 
         [TestInitialize]
         public void Initialize()
         {
             frb = new FluentRecordBase();
-            //frb.AddDBFactory(connStringName: "MacheteConnection");
-        }
-
-        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Data), TestCategory(TC.Reports)]
-        public void getSimpleAggregate_returns_list()
-        {
-            // arrange
-            frb.AddWorkOrder(dateTimeOfWork: DateTime.Parse("1/2/2013"))
-                .AddWorkAssignment(skill: 63); // known skill ID from machete lookup initializer
-
-            // act
-            var result = frb.ToRepoReports()
-                .getSimpleAggregate(1, DateTime.Parse("2013/1/1"), 
-                                        DateTime.Parse("2014/1/1"));
-            // assert
-            Assert.IsNotNull(result);
-            Assert.AreNotEqual(0, result.Count);
+            connectionString = "Server=localhost,1433; Database=machete_db; User=readonlylogin; Password=@testPassword1;";
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Data), TestCategory(TC.Reports)]
@@ -58,12 +41,11 @@ namespace Machete.Test.Integration.Data
         public void getDynamicQuery_test_all_metadata()
         {
             // arrange
-            var context = frb.ToFactory().Get();
-            var reports = frb.ToFactory().Get().ReportDefinitions.AsQueryable();
+            var reports = frb.ToFactory().ReportDefinitions.AsQueryable();
 
             foreach (var r in reports)
             {
-                var result = SqlServerUtils.getMetadata(context, r.sqlquery);
+                var result = MacheteAdoContext.getMetadata(r.sqlquery, connectionString);
                 Assert.IsTrue(result.Count > 2);
             }
             // act
@@ -87,14 +69,12 @@ namespace Machete.Test.Integration.Data
         public void Analyze_columns()
         {
             var repo = frb.ToRepoReports();
-            var ctxt = frb.ToFactory().Get();
             var list = repo.GetAllQ();
             foreach (var l in list)
             {
-                l.columnsJson = SqlServerUtils.getUIColumnsJson(ctxt, l.sqlquery);
+                l.columnsJson = MacheteAdoContext.getUIColumnsJson(l.sqlquery, connectionString);
             }
-            frb.ToFactory().Get().SaveChanges();
-
+            frb.ToFactory().SaveChanges();
         }
     }
 }

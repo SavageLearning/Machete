@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[NLog](
+CREATE TABLE [dbo].[NLog](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[time_stamp] [datetime] NOT NULL,
 	[host] [nvarchar](max) NULL,

@@ -1,6 +1,5 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Machete.Data;
-using Machete.Data.Helpers;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
 using Machete.Service.DTO.Reports;
@@ -8,10 +7,12 @@ using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Machete.Data.Dynamic;
+using Machete.Data.Repositories;
 using DTO = Machete.Service.DTO;
 
 namespace Machete.Service
@@ -81,14 +82,14 @@ namespace Machete.Service
         public DataTable getDataTable(string query, DTO.SearchOptions o)
         {
             var oo = map.Map<DTO.SearchOptions, Data.DTO.SearchOptions>(o);
-            return rRepo.getDataTable(query, oo);
+            return rRepo.getDataTable(query);
         }
 
 
         public void getXlsxFile(DTO.SearchOptions o, ref byte[] bytes)
         {
             var oo = map.Map<DTO.SearchOptions, Data.DTO.SearchOptions>(o);
-            var tbl = rRepo.getDataTable(buildExportQuery(o), oo);
+            var tbl = rRepo.getDataTable(buildExportQuery(o));
 
             using (ExcelPackage pck = new ExcelPackage())
             {

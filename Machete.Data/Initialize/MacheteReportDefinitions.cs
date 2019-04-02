@@ -1,30 +1,33 @@
-﻿using Machete.Data.Helpers;
-using Machete.Domain;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Machete.Domain;
+using Machete.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
-namespace Machete.Data
+namespace Machete.Data.Initialize
 {
-    public static class MacheteReportDefinitions
-    {
+	public static class MacheteReportDefinitions
+	{
 
-        public static List<ReportDefinition> cache { get { return _cache; } }
+		public static List<ReportDefinition> cache => _cache;
 
-        private static List<ReportDefinition> _cache = new List<ReportDefinition>
-        {
-            #region Report definitions
-            // DispatchesByJob
-            new ReportDefinition {
-                name = "DispatchesByJob",
-                commonName = "Dispatches by job",
-                category = "Dispatches",
-                description = "The number of completed dispatches, grouped by job (skill ID)",
-                sqlquery =
-@"SELECT
+		private static List<ReportDefinition> _cache = new List<ReportDefinition>
+		{
+			#region REPORT DEFINITIONS
+
+			// DispatchesByJob
+			new ReportDefinition
+			{
+				name = "DispatchesByJob",
+				commonName = "Dispatches by job",
+				category = "Dispatches",
+				description = "The number of completed dispatches, grouped by job (skill ID)",
+				sqlquery =
+					@"SELECT
 convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByJob-' + convert(varchar(5), min(wa.skillid)) as id,
 lskill.text_en  AS [Job type (skill)],
 count(lskill.text_en) [Count]
@@ -47,15 +50,16 @@ join [dbo].lookups as lstatus on (WO.status = lstatus.id)
 WHERE wo.dateTimeOfWork < (@endDate) 
 and wo.dateTimeOfWork > (@beginDate)
 and lstatus.text_en = 'Completed'"
-            },
-            // DispatchesByMonth
-            new ReportDefinition {
-                name = "DispatchesByMonth",
-                commonName = "Dispatches by month",
-                description = "The number of completed dispatches, grouped by month",
-                category = "Dispatches",
-                sqlquery =
-@"SELECT
+			},
+			// DispatchesByMonth
+			new ReportDefinition
+			{
+				name = "DispatchesByMonth",
+				commonName = "Dispatches by month",
+				description = "The number of completed dispatches, grouped by month",
+				category = "Dispatches",
+				sqlquery =
+					@"SELECT
 convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByMonth-' + convert(varchar(5), month(min(wo.datetimeofwork))) as id,
 convert(varchar(7), min(wo.datetimeofwork), 126)  AS [Month],
 count(*) [Count]
@@ -80,16 +84,17 @@ join lookups l on wo.status = l.id
 where  datetimeofwork >= @beginDate
 and datetimeofwork < @endDate
 and l.text_en = 'Completed'"
-            },
-            // WorkersByIncome
-            new ReportDefinition
-            {
-                name = "WorkersByIncome",
-                commonName = "Workers by income",
-                description = "A count of workers by income level who signed in looking for work at least once within the given time range.",
-                category = "Demographics",
-                sqlquery =
-@"select 
+			},
+			// WorkersByIncome
+			new ReportDefinition
+			{
+				name = "WorkersByIncome",
+				commonName = "Workers by income",
+				description =
+					"A count of workers by income level who signed in looking for work at least once within the given time range.",
+				category = "Demographics",
+				sqlquery =
+					@"select 
 convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByIncome-' + convert(varchar(3), min(l.id)) as id,
 L.text_EN as [Income range], 
 count(*) as [Count]
@@ -133,16 +138,17 @@ from (
    WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
    group by W.ID
 ) as WWW"
-            },
-            // WorkersByDisability
-            new ReportDefinition
-            {
-                name = "WorkersByDisability",
-                commonName = "Workers by disability",
-                description = "A count of workers by disability status who signed in looking for work at least once within the given time range.",
-                category = "Demographics",
-                sqlquery =
-@"select 
+			},
+			// WorkersByDisability
+			new ReportDefinition
+			{
+				name = "WorkersByDisability",
+				commonName = "Workers by disability",
+				description =
+					"A count of workers by disability status who signed in looking for work at least once within the given time range.",
+				category = "Demographics",
+				sqlquery =
+					@"select 
 convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByDisability-' + min(disabled) as id,
 disabled as [Disabled?], 
 count(*) as [Count]
@@ -167,16 +173,17 @@ count(distinct(w.id)) as [Count]
 from Workers W
 JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
 WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate"
-            },
-            // WorkersByLivingSituation
-            new ReportDefinition
-            {
-                name = "WorkersByLivingSituation",
-                commonName = "Workers by living situation",
-                description = "A count of workers by homeless status who signed in looking for work at least once within the given time range.",
-                category = "Demographics",
-                sqlquery =
-@"select 
+			},
+			// WorkersByLivingSituation
+			new ReportDefinition
+			{
+				name = "WorkersByLivingSituation",
+				commonName = "Workers by living situation",
+				description =
+					"A count of workers by homeless status who signed in looking for work at least once within the given time range.",
+				category = "Demographics",
+				sqlquery =
+					@"select 
 convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByLivingSituation-' + min(homeless) as id,
 homeless as [Homeless?], 
 count(*) as [Count]
@@ -205,16 +212,17 @@ from (
    WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
    group by W.ID
 ) as WWW"
-            },
-            // WorkersByHouseholdComposition
-            new ReportDefinition
-            {
-                name = "WorkersByHouseholdComposition",
-                commonName = "Workers by household composition",
-                description = "A count of workers by household composition who signed in looking for work at least once within the given time range.",
-                category = "Demographics",
-                sqlquery =
-@"select 
+			},
+			// WorkersByHouseholdComposition
+			new ReportDefinition
+			{
+				name = "WorkersByHouseholdComposition",
+				commonName = "Workers by household composition",
+				description =
+					"A count of workers by household composition who signed in looking for work at least once within the given time range.",
+				category = "Demographics",
+				sqlquery =
+					@"select 
 convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByHouseholdComposition-' + myid as id, 
 label as [Household], 
 count(*) as [Count]
@@ -249,16 +257,17 @@ from (
    WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
    group by W.ID
 ) as WWW"
-            },
-            // WorkersByArrivalStatus
-            new ReportDefinition
-            {
-                name = "WorkersByArrivalStatus",
-                commonName = "Workers by arrival status",
-                description = "A count of workers by immigrant/refugee/new arrival status who signed in looking for work at least once within the given time range.",
-                category = "Demographics",
-                sqlquery =
-@"
+			},
+			// WorkersByArrivalStatus
+			new ReportDefinition
+			{
+				name = "WorkersByArrivalStatus",
+				commonName = "Workers by arrival status",
+				description =
+					"A count of workers by immigrant/refugee/new arrival status who signed in looking for work at least once within the given time range.",
+				category = "Demographics",
+				sqlquery =
+					@"
 select 
 convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByArrivalStatus-' + min(immigrantrefugee) as id,
 immigrantrefugee as [Immigrant / Refugee?], 
@@ -288,16 +297,17 @@ from (
    WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
    group by W.ID
 ) as WWW"
-            },
-            // WorkersByLimitedEnglish
-            new ReportDefinition
-            {
-                name = "WorkersByLimitedEnglish",
-                commonName = "Workers by limited English status",
-                description = "A count of workers by limited english ability who signed in looking for work at least once within the given time range.",
-                category = "Demographics",
-                sqlquery =
-@"select 
+			},
+			// WorkersByLimitedEnglish
+			new ReportDefinition
+			{
+				name = "WorkersByLimitedEnglish",
+				commonName = "Workers by limited English status",
+				description =
+					"A count of workers by limited english ability who signed in looking for work at least once within the given time range.",
+				category = "Demographics",
+				sqlquery =
+					@"select 
 convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByLimitedEnglish-' + min(limitedEnglish) as id,
 limitedEnglish as [Limited English?], 
 count(*) as [Count]
@@ -327,16 +337,17 @@ from (
    WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
    group by W.ID
 ) as WWW"
-            },
-            // WorkersByZipcode
-            new ReportDefinition
-            {
-                name = "WorkersByZipcode",
-                commonName = "Workers by zipcode",
-                description = "A count of workers by zipcodey who signed in looking for work at least once within the given time range.",
-                category = "Demographics",
-                sqlquery =
-@"select 
+			},
+			// WorkersByZipcode
+			new ReportDefinition
+			{
+				name = "WorkersByZipcode",
+				commonName = "Workers by zipcode",
+				description =
+					"A count of workers by zipcodey who signed in looking for work at least once within the given time range.",
+				category = "Demographics",
+				sqlquery =
+					@"select 
 convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByZipcode-' + min(zipcode) as id,
 zipcode as Zipcode, 
 count(*) as [Count]
@@ -360,16 +371,17 @@ from (
    WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
    group by W.ID
 ) as WWW"
-            },
-            // WorkersByLatinoStatus
-            new ReportDefinition
-            {
-                name = "WorkersByLatinoStatus",
-                commonName = "Workers by latino status",
-                description = "A count of workers by ethnicity (Spanish/Hispanic/Latino) who signed in looking for work at least once within the given time range.",
-                category = "Demographics",
-                sqlquery =
-@"select 
+			},
+			// WorkersByLatinoStatus
+			new ReportDefinition
+			{
+				name = "WorkersByLatinoStatus",
+				commonName = "Workers by latino status",
+				description =
+					"A count of workers by ethnicity (Spanish/Hispanic/Latino) who signed in looking for work at least once within the given time range.",
+				category = "Demographics",
+				sqlquery =
+					@"select 
 convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByLatinoStatus-' + min(raceID) as id,
 raceID as [Latino status], 
 count(*) as [Count]
@@ -398,16 +410,17 @@ from (
    WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
    group by W.ID
 ) as WWW"
-            },
-            // WorkersByEthnicGroup
-            new ReportDefinition
-            {
-                name = "WorkersByEthnicGroup",
-                commonName = "Workersr by ethnic group",
-                description = "A count of workers by ethnic group who signed in looking for work at least once within the given time range.",
-                category = "Demographics",
-                sqlquery =
-@"select 
+			},
+			// WorkersByEthnicGroup
+			new ReportDefinition
+			{
+				name = "WorkersByEthnicGroup",
+				commonName = "Workersr by ethnic group",
+				description =
+					"A count of workers by ethnic group who signed in looking for work at least once within the given time range.",
+				category = "Demographics",
+				sqlquery =
+					@"select 
 convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByEthnicGroup-' + convert(varchar(5), min(WW.raceID)) as id,
 L.text_EN as [Ethnic group], 
 count(*) as [Count]
@@ -448,16 +461,17 @@ from (
    WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
    group by W.ID
 ) as WWW"
-            },
-            // WorkersByGender
-            new ReportDefinition
-            {
-                name = "WorkersByGender",
-                commonName = "Workers by gender",
-                description = "A count of workers by gender who signed in looking for work at least once within the given time range.",
-                category = "Demographics",
-                sqlquery =
-@"
+			},
+			// WorkersByGender
+			new ReportDefinition
+			{
+				name = "WorkersByGender",
+				commonName = "Workers by gender",
+				description =
+					"A count of workers by gender who signed in looking for work at least once within the given time range.",
+				category = "Demographics",
+				sqlquery =
+					@"
 select 
 convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByGender-' + convert(varchar(5), min(WW.gender)) as id,
 L.text_EN as [Gender], 
@@ -499,18 +513,18 @@ from (
    WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
    group by W.ID
 ) as WWW"
-            },
-            // WorkersByAgeGroupBase10
-            new ReportDefinition 
-            {
-                name = "WorkersByAgeGroupBase10",
-                commonName = "Workers by age group, 10 year groupings",
-                description = 
-@"The count of workers who have signed in at least one during the search period,
+			},
+			// WorkersByAgeGroupBase10
+			new ReportDefinition
+			{
+				name = "WorkersByAgeGroupBase10",
+				commonName = "Workers by age group, 10 year groupings",
+				description =
+					@"The count of workers who have signed in at least one during the search period,
 grouped by the age, in 10-year groupings",
-                category = "Demographics",
-                sqlquery =
-@"with demos_age (age_range, ordinal)
+				category = "Demographics",
+				sqlquery =
+					@"with demos_age (age_range, ordinal)
 as 
 (
 	SELECT
@@ -554,18 +568,18 @@ select
 from demos_age 
 group by age_range, ordinal
 order by ordinal"
-            },
-            // WorkersByAgeGroupUnitedWay'
-            new ReportDefinition
-            {
-                name = "WorkersByAgeGroupUnitedWay",
-                commonName = "Workers by age group (United Way)",
-                description =
-@"The count of workers who have signed in at least one during the search period,
+			},
+			// WorkersByAgeGroupUnitedWay'
+			new ReportDefinition
+			{
+				name = "WorkersByAgeGroupUnitedWay",
+				commonName = "Workers by age group (United Way)",
+				description =
+					@"The count of workers who have signed in at least one during the search period,
 grouped by the age, in United Way's reporting groups",
-                category = "Demographics",
-                sqlquery =
-@"with demos_age (age_range, ordinal)
+				category = "Demographics",
+				sqlquery =
+					@"with demos_age (age_range, ordinal)
 as 
 (
 	SELECT
@@ -613,16 +627,16 @@ select
 from demos_age 
 group by age_range, ordinal
 order by ordinal"
-            },
-            // TransportationFeeDetails
-            new ReportDefinition
-            {
-                name = "TransportationFeeDetails",
-                commonName = "Transportation Fees (detail list)",
-                description = "A detailed list of transportation fees by date range",
-                category = "Transportation",
-                sqlquery =
-@"select 
+			},
+			// TransportationFeeDetails
+			new ReportDefinition
+			{
+				name = "TransportationFeeDetails",
+				commonName = "Transportation Fees (detail list)",
+				description = "A detailed list of transportation fees by date range",
+				category = "Transportation",
+				sqlquery =
+					@"select 
 convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-TransportationFeeDetails-' + convert(varchar(6), min(WOs.paperOrderNum)) as id,
    WOs.dateTimeofWork AS [Work start time],
    WOs.paperOrderNum as [WO number],
@@ -641,16 +655,16 @@ where (transportFee + transportFeeExtra) > 0
 	and WOs.dateTimeofWork < @endDate
 	and WAs.workerAssignedID IS NOT NULL
 group by WOs.dateTimeofWork, WOs.paperOrderNum, text_EN, name, transportFee, transportFeeExtra"
-            },
-            // TransportationFeeMonthly
-            new ReportDefinition
-            {
-                name = "TransportationFeeMonthly",
-                commonName = "Transportation Fees (monthly totals)",
-                description = "The monthly totals of transportation fees by date range",
-                category = "Transportation",
-                sqlquery =
-@"
+			},
+			// TransportationFeeMonthly
+			new ReportDefinition
+			{
+				name = "TransportationFeeMonthly",
+				commonName = "Transportation Fees (monthly totals)",
+				description = "The monthly totals of transportation fees by date range",
+				category = "Transportation",
+				sqlquery =
+					@"
 select 
 convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-TransportationFeeMonthly-' + CONVERT(VARCHAR(7), workStartTime, 102)as id,
 CONVERT(VARCHAR(7), workStartTime, 102) as Month,
@@ -680,17 +694,17 @@ from
 	group by WOs.dateTimeofWork, WOs.paperOrderNum, text_EN, name, transportFee, transportFeeExtra
 ) as foo
 group by CONVERT(VARCHAR(7), workStartTime, 102)"
-            },
-            // ActivitiesESLAttendance
-            new ReportDefinition
-            {
-                name = "ActivitiesESLAttendance",
-                commonName = "ESL class attendance",
-                description = @"A list of members' English class attendance by date range. Within the time period,
+			},
+			// ActivitiesESLAttendance
+			new ReportDefinition
+			{
+				name = "ActivitiesESLAttendance",
+				commonName = "ESL class attendance",
+				description = @"A list of members' English class attendance by date range. Within the time period,
 the report identifies if the member met the 12-hour or 24-hour threshold.",
-                category = "Activities",
-                sqlquery =
-@"select 
+				category = "Activities",
+				sqlquery =
+					@"select 
     convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-' + convert(varchar(10), min(member)) as id,	
 	member as [Member ID], 
 	sum(minutes) as [Total minutes],
@@ -723,16 +737,16 @@ from
 	GROUP BY dwccardnum
 ) as foo 
 group by member"
-            },
-            // DispatchesByMonthYearToYear
-            new ReportDefinition
-            {
-                name = "DispatchesByMonthYearToYear",
-                commonName = "Dispatches by month (pivot on year)",
-                description = "The count of completed dispatches by month, pivoted on year",
-                category = "Dispatches",
-                sqlquery =
-@"select 
+			},
+			// DispatchesByMonthYearToYear
+			new ReportDefinition
+			{
+				name = "DispatchesByMonthYearToYear",
+				commonName = "Dispatches by month (pivot on year)",
+				description = "The count of completed dispatches by month, pivoted on year",
+				category = "Dispatches",
+				sqlquery =
+					@"select 
 convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByMonthYearToYear-' + convert(varchar(4), [year])  as id,
 year, 
 	[1] as 'Jan', [2] as 'Feb', [3] as 'Mar', [4] as 'Apr',
@@ -761,16 +775,16 @@ FOR month IN
 ) AS pvt
  
 ORDER BY pvt.year"
-            },
-            // AverageWageByMonthYearToYear
-            new ReportDefinition
-            {
-                name = "AverageWageByMonthYearToYear",
-                commonName = "Average wage by month (pivot on year)",
-                description = "The average hourly rate (wage) by month of completed jobs, pivoted on year",
-                category = "Dispatches",
-                sqlquery =
-@"select 
+			},
+			// AverageWageByMonthYearToYear
+			new ReportDefinition
+			{
+				name = "AverageWageByMonthYearToYear",
+				commonName = "Average wage by month (pivot on year)",
+				description = "The average hourly rate (wage) by month of completed jobs, pivoted on year",
+				category = "Dispatches",
+				sqlquery =
+					@"select 
 convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-AverageWageByMonthYearToYear-' + convert(varchar(4), [year])  as id,
 year, 
 	cast(isnull([1],0) as float) as 'Jan', 
@@ -806,16 +820,16 @@ FOR month IN
 ( [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12] )  
 ) AS pvt 
 "
-            },
-            // DispatchesByProgramYearToYear
-            new ReportDefinition
-            {
-                name = "DispatchesByProgramYearToYear",
-                commonName = "Dispatches by month (pivot on year and program)",
-                description = "The count of completed dispatches by month, pivoted on year and program",
-                category = "Dispatches",
-                sqlquery =
-@"select
+			},
+			// DispatchesByProgramYearToYear
+			new ReportDefinition
+			{
+				name = "DispatchesByProgramYearToYear",
+				commonName = "Dispatches by month (pivot on year and program)",
+				description = "The count of completed dispatches by month, pivoted on year and program",
+				category = "Dispatches",
+				sqlquery =
+					@"select
 convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByProgramYearToYear-' + year_program as id, 
 year_program, 
 	isnull([1],0) as 'Jan', 
@@ -853,16 +867,16 @@ sum (JobCOunt)
 FOR month IN  
 ( [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12] )  
 ) AS pvt"
-            },
-            // SeattleCityReport
-            new ReportDefinition
-            {
-                name = "SeattleCityReport",
-                commonName = "Seattle City report",
-                description = "Casa Latina's monthly numbers for the City of Seattle",
-                category = "site-specific",
-                sqlquery =
-@"select
+			},
+			// SeattleCityReport
+			new ReportDefinition
+			{
+				name = "SeattleCityReport",
+				commonName = "Seattle City report",
+				description = "Casa Latina's monthly numbers for the City of Seattle",
+				category = "site-specific",
+				sqlquery =
+					@"select
 convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-CityReport-NewEnrolls-' + convert(varchar(4), [year]) as id, 
     'Newly enrolled in program (within time range)' as label, 
     cast(year as int) as year, 
@@ -1088,16 +1102,16 @@ FOR month IN
 ( [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12] )  
 ) AS pvt
 "
-            },
-            // NewEmployersByType
-            new ReportDefinition
-            {
-                name = "NewEmployersByType",
-                commonName = "New employers by type",
-                description = "A count of new employers by type (business/individual) for the given tiem range",
-                category = "Employers",
-                sqlquery =
-@"select 
+			},
+			// NewEmployersByType
+			new ReportDefinition
+			{
+				name = "NewEmployersByType",
+				commonName = "New employers by type",
+				description = "A count of new employers by type (business/individual) for the given tiem range",
+				category = "Employers",
+				sqlquery =
+					@"select 
 convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-' + convert(varchar(5), business) as id,
 case
   when business = 0 then 'Individual'
@@ -1111,16 +1125,17 @@ FROM dbo.Employers Es
 WHERE Es.datecreated >= @beginDate AND Es.datecreated <= @EnDdate
 group by business
 ) as WW"
-            },
-            // DispatchSummary
-            new ReportDefinition
-            {
-                name = "DispatchSummary",
-                commonName = "Dispatch summary",
-                description = "A count of distinct members dispatched and a count of total dispatches in the given time range",
-                category = "Dispatches",
-                sqlquery =
-@"SELECT
+			},
+			// DispatchSummary
+			new ReportDefinition
+			{
+				name = "DispatchSummary",
+				commonName = "Dispatch summary",
+				description =
+					"A count of distinct members dispatched and a count of total dispatches in the given time range",
+				category = "Dispatches",
+				sqlquery =
+					@"SELECT
 convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-total' as id,
 COUNT(DISTINCT(dwccardnum)) AS [Unduplicated dispatches], 
 COUNT(WAs.ID) AS [Total dispatches]
@@ -1131,16 +1146,17 @@ join dbo.lookups l on wos.status = l.id
 WHERE WOs.dateTimeOfWork >= @beginDate 
 AND WOs.dateTimeOfWork <= @enddate
 and l.text_en = 'Completed'"
-            },
-            // DispatchesByZipCodeAndCatecory
-            new ReportDefinition
-            {
-                name = "DispatchesByZipCodeAndCatecory",
-                commonName = "Dispatches by zipcode and category",
-                description = "Counts of dispatches by zip code, grouped by catgory. The categories are defined in teh SQL and are based on the skill needed",
-                category = "Dispatches",
-                sqlquery =
-@"
+			},
+			// DispatchesByZipCodeAndCatecory
+			new ReportDefinition
+			{
+				name = "DispatchesByZipCodeAndCatecory",
+				commonName = "Dispatches by zipcode and category",
+				description =
+					"Counts of dispatches by zip code, grouped by catgory. The categories are defined in teh SQL and are based on the skill needed",
+				category = "Dispatches",
+				sqlquery =
+					@"
 select 
 convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByZipCodeAndCatecory-' + isnull(zipcode, 'Total') as id,
 isnull(zipcode, 'Total') as zipcode,
@@ -1209,16 +1225,17 @@ FOR worktype IN
 ) AS pvt
 group by rollup (pvt.zipcode)
 order by total desc"
-            },
-            // DispatchesByZipCodeAndEmployerType
-            new ReportDefinition
-            {
-                name = "DispatchesByZipCodeAndEmployerType",
-                commonName = "Dispatches by zipcode and employer type",
-                description = "Counts of dispatches by zip code, grouped by employer type, which is either individual or business",
-                category = "Dispatches",
-                sqlquery =
-@"select 
+			},
+			// DispatchesByZipCodeAndEmployerType
+			new ReportDefinition
+			{
+				name = "DispatchesByZipCodeAndEmployerType",
+				commonName = "Dispatches by zipcode and employer type",
+				description =
+					"Counts of dispatches by zip code, grouped by employer type, which is either individual or business",
+				category = "Dispatches",
+				sqlquery =
+					@"select 
 convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByZipCodeAndEmployerType-' + isnull(zipcode, 'Total') as id,
 isnull(zipcode, 'Total') as zipcode,
 sum(
@@ -1259,16 +1276,17 @@ FOR employertype IN
 ) AS pvt
 group by rollup (pvt.zipcode)
 order by total desc"
-            },
-            // Worker details -- events
-            new ReportDefinition
-            {
-                name = "WorkerDetailsEvents",
-                commonName = "Worker Details, events (rap sheet)",
-                description = "A list of events, which are complaints, recommendatiosn, sanctions, etc. for a given worker",
-                category = "WorkerDetail",
-                sqlquery =
-@"SELECT     
+			},
+			// Worker details -- events
+			new ReportDefinition
+			{
+				name = "WorkerDetailsEvents",
+				commonName = "Worker Details, events (rap sheet)",
+				description =
+					"A list of events, which are complaints, recommendatiosn, sanctions, etc. for a given worker",
+				category = "WorkerDetail",
+				sqlquery =
+					@"SELECT     
 l.text_en AS eventType, 
 CONVERT(VARCHAR(11), dateFrom, 100) AS evDateFrom, 
 CONVERT(VARCHAR(11), dateTo, 100) AS evDateTo, 
@@ -1281,18 +1299,18 @@ FROM         Events AS ev
 join workers w on (ev.PersonID = w.id)
 join lookups l on (ev.eventType = l.id)
 WHERE     (w.dwccardnum = @dwccardnum)",
-                inputsJson = "{\"beginDate\":false,\"endDate\":false,\"memberNumber\":true}"
-            },
-            // Worker details -- jobs summary
-            new ReportDefinition
-            {
-                name = "WorkerDetailsJobsSummary",
-                commonName = "Worker Details, monthly summary within time range",
-                description = "",
-                category = "WorkerDetail",
-                inputsJson = "{\"beginDate\":true,\"endDate\":true,\"memberNumber\":true}",
-                sqlquery =
-@"select 
+				inputsJson = "{\"beginDate\":false,\"endDate\":false,\"memberNumber\":true}"
+			},
+			// Worker details -- jobs summary
+			new ReportDefinition
+			{
+				name = "WorkerDetailsJobsSummary",
+				commonName = "Worker Details, monthly summary within time range",
+				description = "",
+				category = "WorkerDetail",
+				inputsJson = "{\"beginDate\":true,\"endDate\":true,\"memberNumber\":true}",
+				sqlquery =
+					@"select 
 convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkerDetailsJobsSummary-' + convert(varchar(6), @dwccardnum) + '-' + CONVERT(VARCHAR(7), dateTimeofWork, 102)as id,
 CONVERT(VARCHAR(7), dateTimeofWork, 102) as Month,
 count(*) as [Job Count],
@@ -1314,17 +1332,17 @@ from
 ) as foo
 group by
  CONVERT(VARCHAR(7), dateTimeofWork, 102)"
-            },
-            // Worker details -- jobs itemized
-            new ReportDefinition
-            {
-                name = "WorkerDetailsJobsItemized",
-                commonName = "Worker details, itemized jobs within time range",
-                description = "",
-                category = "WorkerDetail",
-                inputsJson = "{\"beginDate\":true,\"endDate\":true,\"memberNumber\":true}",
-                sqlquery =
-@"SELECT   
+			},
+			// Worker details -- jobs itemized
+			new ReportDefinition
+			{
+				name = "WorkerDetailsJobsItemized",
+				commonName = "Worker details, itemized jobs within time range",
+				description = "",
+				category = "WorkerDetail",
+				inputsJson = "{\"beginDate\":true,\"endDate\":true,\"memberNumber\":true}",
+				sqlquery =
+					@"SELECT   
 convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkerDetailsJobsItemized-' + convert(varchar(6), @dwccardnum) + '-' + CONVERT(VARCHAR(7), wa.id)as id, 
 l.text_en AS skill, 
 wa.hours, 
@@ -1341,17 +1359,17 @@ inner join Lookups l on (l.id = wa.skillID)
 WHERE     (w.dwccardnum = @dwccardnum)
 		and WO.dateTimeofWork > @beginDate
 		and WO.dateTimeofWork < @endDate"
-            },
-            // Worker details -- signin summary
-            new ReportDefinition
-            {
-                name = "WorkerDetailsSigninSummary",
-                commonName = "Worker details, signin summary",
-                description = "",
-                category = "WorkerDetail",
-                inputsJson = "{\"beginDate\":true,\"endDate\":true,\"memberNumber\":true}",
-                sqlquery =
-@"select
+			},
+			// Worker details -- signin summary
+			new ReportDefinition
+			{
+				name = "WorkerDetailsSigninSummary",
+				commonName = "Worker details, signin summary",
+				description = "",
+				category = "WorkerDetail",
+				inputsJson = "{\"beginDate\":true,\"endDate\":true,\"memberNumber\":true}",
+				sqlquery =
+					@"select
 	convert(varchar(7), signindate, 102) as YearMonth,
 	case when (sum(cast([1] as int))) > 0 then 'X' else '' end as '1',
 	case when (sum(cast([2] as int))) > 0 then 'X' else '' end as '2',
@@ -1404,15 +1422,15 @@ for [day] in
 ( [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12], [13], [14], [15], [16], [17], [18], [19], [20], [21], [22], [23], [24], [25], [26], [27], [28], [29], [30], [31] )
 ) as pvt
 group by convert(varchar(7), signindate, 102)"
-            },
-            // Activity ttendance by activity
-            new ReportDefinition
-            {
-                name = "ActivityAttendance",
-                commonName = "Activity attendance by activity",
-                description = "",
-                category = "Activities",
-                sqlquery = @"SELECT
+			},
+			// Activity ttendance by activity
+			new ReportDefinition
+			{
+				name = "ActivityAttendance",
+				commonName = "Activity attendance by activity",
+				description = "",
+				category = "Activities",
+				sqlquery = @"SELECT
 convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-ActivityAttendanceByType-' + convert(varchar(5), min(a.name)) as id,
 l.text_en [Activity], 
 count(*) [Count],
@@ -1438,15 +1456,16 @@ join lookups l on l.id = a.name
 where a.datestart > @beginDate
 and a.datestart < @enddate
 order by count desc"
-            },
-            // 
-            new ReportDefinition
-            {
-                name = "UniqueDispatchedWorkers",
-                commonName = "Unique dispatched workers",
-                description = "A list of unique workers within the given time period. Job count included.",
-                category = "Dispatches",
-                sqlquery = @"SELECT distinct(dwccardnum) AS [Member number], min(fullname) as [Name], count(*) as [Job count]
+			},
+			// 
+			new ReportDefinition
+			{
+				name = "UniqueDispatchedWorkers",
+				commonName = "Unique dispatched workers",
+				description = "A list of unique workers within the given time period. Job count included.",
+				category = "Dispatches",
+				sqlquery =
+					@"SELECT distinct(dwccardnum) AS [Member number], min(fullname) as [Name], count(*) as [Job count]
 	from dbo.WorkAssignments WAs
 	JOIN dbo.WorkOrders WOs ON WAs.workOrderID = WOs.ID
 	JOIN dbo.Workers Ws on WAs.workerAssignedID = Ws.ID
@@ -1457,15 +1476,16 @@ order by count desc"
 	and l.text_EN = 'Completed'
 	group by dwccardnum, fullname
 	order by [Job count] desc"
-            },
-            new ReportDefinition
-            {
-                name = "MemberAttendanceMetrics",
-                commonName = "Member Attendance metrics",
-                description = "A list of unique members within a given time period, with counts of dispatches, activities, and ESL classes for the period.",
-                category = "Attendance",
-                sqlquery =
-@"with jobs (dwccardnum, Jobcount)
+			},
+			new ReportDefinition
+			{
+				name = "MemberAttendanceMetrics",
+				commonName = "Member Attendance metrics",
+				description =
+					"A list of unique members within a given time period, with counts of dispatches, activities, and ESL classes for the period.",
+				category = "Attendance",
+				sqlquery =
+					@"with jobs (dwccardnum, Jobcount)
 as
 (
 	SELECT dwccardnum, count(*) as [Jobcount]
@@ -1523,41 +1543,80 @@ left join esl on esl.dwccardnum = jobs.dwccardnum
 
 where jobcount is not null or actcount is not null or eslcount is not null
 "
-            }           
-            #endregion  
-        };
-        public static void Initialize(MacheteContext context)
-        {
-            var inputsStub = new
-            {
-                // TODO make model class
-                beginDate = true,
-                beginDateDefault = DateTime.Parse("1/1/2016"),
-                endDate = true,
-                endDateDefault = DateTime.Parse("1/1/2017"),
-                memberNumber = false
-            };
-            _cache.ForEach(u => {
-                try
-                {
-                    context.ReportDefinitions.First(a => a.name == u.name);
-                }
-                catch
-                {
-                    u.datecreated = DateTime.Now;
-                    u.dateupdated = DateTime.Now;
-                    u.createdby = "Init T. Script";
-                    u.updatedby = "Init T. Script";
-                    u.columnsJson = SqlServerUtils.getUIColumnsJson(context, u.sqlquery);
-                    if (u.inputsJson == null)
-                    {
-                        u.inputsJson = JsonConvert.SerializeObject(inputsStub);
-                    }
-                    context.ReportDefinitions.Add(u);
-                }
-            });
-            context.SaveChanges();
-        }
-    }
+			}
 
+			#endregion
+		};
+
+		public static void Initialize(MacheteContext context)
+		{
+			var connectionString = context.Database.GetDbConnection().ConnectionString;
+
+			if (_cache == null)
+				throw new MacheteException(
+					"Value cannot be null: _cache; check connection string for field `Persist Security Info=true;`");
+
+			_cache.ForEach(u =>
+			{
+				var definition = context.ReportDefinitions.FirstOrDefault(record => record.name == u.name);
+				if (definition == null)
+				{
+					u.datecreated = DateTime.Now;
+					u.dateupdated = DateTime.Now;
+					u.createdby = "Init T. Script";
+					u.updatedby =
+						"Init T. Script"; // this next part is a little bit of a mess, but it is only run once during initialization.
+					u.columnsJson = MacheteAdoContext.getUIColumnsJson(u.sqlquery, connectionString);
+					if (u.inputsJson == null)
+					{
+						u.inputsJson = JsonConvert.SerializeObject(new
+						{
+							beginDate = true,
+							beginDateDefault = DateTime.Parse("1/1/2016"),
+							endDate = true,
+							endDateDefault = DateTime.Parse("1/1/2017"),
+							memberNumber = false
+						});
+					}
+
+					context.ReportDefinitions.Add(u);
+					context.SaveChanges();
+				}
+			});
+
+			AddDBReadOnlyUser(context);
+		}
+
+		private static void AddDBReadOnlyUser(MacheteContext context)
+		{
+			var connection = context.Database.GetDbConnection();
+			if (connection.State == ConnectionState.Closed) connection.Open();
+			using (var command = connection.CreateCommand())
+			{
+				command.CommandText = "sp_executesql";
+				command.CommandType = CommandType.StoredProcedure;
+				var param = command.CreateParameter();
+				param.ParameterName = "@statement";
+				param.Value = @"
+CREATE LOGIN readonlyLogin WITH PASSWORD='@testPassword1'
+CREATE USER readonlyUser FROM LOGIN readonlyLogin
+EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
+                    ";
+				command.Parameters.Add(param);
+				try
+				{
+					command.ExecuteNonQuery();
+				}
+				catch (SqlException ex)
+				{
+					var userAlreadyExists = ex.Errors[0].Number.Equals(15025);
+					if (!userAlreadyExists)
+						throw ex;
+				} // finally {
+
+				// context.Close();// unnecessary because it will be closed outside the using statement
+				// }
+			}
+		}
+	}
 }

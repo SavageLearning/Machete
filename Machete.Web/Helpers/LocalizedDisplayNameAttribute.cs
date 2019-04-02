@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     LocalizedDisplayNameAttribute.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -21,11 +21,12 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+
 using System;
 using System.ComponentModel;
 using System.Reflection;
 
-namespace Machete.Web
+namespace Machete.Web.Helpers
 {
     public class LocalizedDisplayNameAttribute : DisplayNameAttribute
     {

@@ -1,4 +1,4 @@
-﻿///
+///
 /// Datatables add-ons from datatables.net
 ///
 $.fn.dataTableExt.oApi.fnReloadAjax = function (oSettings, sNewSource, fnCallback, bStandingRedraw) {

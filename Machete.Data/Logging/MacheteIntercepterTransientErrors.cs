@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using System.Data.Common;
-using System.Data.Entity.Infrastructure.Interception;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;

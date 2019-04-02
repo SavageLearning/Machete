@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     Image.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/10/27 

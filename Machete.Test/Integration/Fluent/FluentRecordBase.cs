@@ -3,7 +3,7 @@
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17
 // License:  GPL v3
-// Project:  Machete.Test
+// Project:  Machete.Test.Old
 // Contact:  savagelearning
 //
 // Copyright 2011 Savage Learning, LLC., all rights reserved.
@@ -21,134 +21,96 @@
 // http://www.github.com/jcii/machete/
 //
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Machete.Data;
-using Machete.Service;
-using Machete.Data.Infrastructure;
-using Machete.Web.Helpers;
-using System.Data.Entity;
-using Machete.Domain;
-using System.IO;
-using AutoMapper;
-using System.Data;
-using System.Data.SqlClient;
-using Machete.Web.App_Start;
-using Microsoft.Practices.Unity;
 
-namespace Machete.Test.Integration
+using System;
+using System.IO;
+using System.Security.Cryptography;
+using System.Text;
+using AutoMapper;
+using Machete.Data;
+using Machete.Data.Repositories;
+using Machete.Domain;
+using Machete.Service;
+using Machete.Web;
+using Machete.Web.Maps;
+using Machete.Web.Maps.Api;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
+namespace Machete.Test.Integration.Fluent
 {
-    public partial class FluentRecordBase :IDisposable
+    public partial class FluentRecordBase : IDisposable
     {
-        #region internal fields
-        private IDatabaseFactory _dbFactory;
-        private IReadOnlyContext _dbReadOnly;
         private IWorkerService _servW;
         private IImageService _servI;
-        private IConfigService _servC;
         private IWorkerRequestService _servWR;
         private IActivityService _servA;
         private IActivitySigninService _servAS;
-        private ReportService _servR;
-        private ReportsV2Service _servRV2;
         private IEmailService _servEM;
         private IEventService _servEV;
         private ILookupService _servL;
-        private IUnitOfWork _uow;
-        private IEmailConfig _emCfg;
         private Email _email;
         private Event _event;
-        private Config _config = null;
         private Worker _w;
         private WorkerRequest  _wr;
         private Activity  _a;
         private ActivitySignin _as;
-        //private Event _e;
         private Lookup _l;
         private Image _i;
         private string _user = "FluentRecordBase";
-        private Random _random = new Random((int)DateTime.Now.Ticks);
+        private readonly Random _random = new Random((int)DateTime.Now.Ticks);
         private IMapper _webMap;
         private IMapper _apiMap;
-        private IUnityContainer container;
-
-        #endregion
+        private readonly IServiceProvider container;
 
         public FluentRecordBase() {
-            container = UnityConfig.GetUnityContainer();
-            AddDBFactory();
-            ToServ<ILookupService>().populateStaticIds();
-        }
-
-        public FluentRecordBase AddDBFactory(string connStringName = "macheteConnection")
-        {
-            AppDomain.CurrentDomain.SetData("DataDirectory", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ""));
-            var initializer = new TestInitializer();
-            Database.SetInitializer<MacheteContext>(initializer);
-            _dbFactory = container.Resolve<IDatabaseFactory>();
-            initializer.InitializeDatabase(_dbFactory.Get());
-
-            AddDBReadonly(); // need to ceate the readonlylogin account
-            return this;
-        }
-
-        private void AddDBReadonly(string connStringName = "readonlyConnection")
-        {
-            if (_dbFactory == null) throw new InvalidOperationException("You must first initialize the database.");
-            var db = _dbFactory.Get();
-            var connection = (db as DbContext).Database.Connection;
-
-            using (var command = connection.CreateCommand())
-            {
-                command.CommandText = "sp_executesql";
-                command.CommandType = CommandType.StoredProcedure;
-                var param = command.CreateParameter();
-                param.ParameterName = "@statement";
-                param.Value = @"
-CREATE LOGIN readonlyLogin WITH PASSWORD='@testPassword1'
-CREATE USER readonlyUser FROM LOGIN readonlyLogin
-EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
-                    ";
-                command.Parameters.Add(param);
-                connection.Open();
-                try
+            var webHost = new WebHostBuilder()
+                .UseKestrel()
+                .ConfigureAppConfiguration((host, config) =>
                 {
-                    command.ExecuteNonQuery();
-                }
-                catch (SqlException ex)
-                {                               // user already exists
-                    if (ex.Errors[0].Number.Equals(15025)) { } else throw ex;
-                }
-            }
+                    config.SetBasePath(Directory.GetCurrentDirectory());
+                    config.AddJsonFile("appsettings.json");
 
-            _dbReadOnly = new ReadOnlyContext(connStringName);
+                    if (host.HostingEnvironment.IsDevelopment())
+                        config.AddUserSecrets<Startup>();
+                })
+                .ConfigureLogging((app, logging) =>
+                {
+                    logging.AddConfiguration(app.Configuration.GetSection("Logging"));
+                    logging.AddConsole();
+                    logging.AddDebug();
+                    logging.AddEventSourceLogger();
+                })
+                .UseStartup<Startup>().Build().CreateOrMigrateDatabase();//.Run()
+                
+            var serviceScope = webHost.Services.CreateScope();
+            
+            container = serviceScope.ServiceProvider;
+
+            ToServ<ILookupService>().populateStaticIds();
         }
 
         public void Dispose()
         {
-            if (_dbFactory == null) AddDBFactory();
-            _dbFactory.Dispose();
+//            if (_dbContext == null) _dbContext = container.GetRequiredService<MacheteContext>();
+//            _dbContext.Dispose();
         }
 
-        public IDatabaseFactory ToFactory()
+        public MacheteContext ToFactory()
         {
-            if (_dbFactory == null) AddDBFactory();
-            return _dbFactory;
+//            return _dbContext ?? (_dbContext = container.GetRequiredService<MacheteContext>());
+            return container.GetRequiredService<MacheteContext>();
         }
 
-        public void Reload<T>(T entity) where T : Record
+        public T ToServ<T>()
         {
-            if (_dbFactory == null) AddDBFactory();
-            _dbFactory.Get().Entry<T>(entity).Reload();
+            return container.GetRequiredService<T>();
+            //return default(T);
         }
-
-        #region Persons
-        #endregion
-
+        
         #region Workers
-
         public FluentRecordBase AddWorker(
             int? skill1 = null,
             int? skill2 = null,
@@ -161,12 +123,9 @@ EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
             string testID = null
         )
         {
-            //
-            // DEPENDENCIES
-            if (_p == null) AddPerson();
-            _servW = container.Resolve<IWorkerService>();
-            //
             // ARRANGE
+            if (_p == null) AddPerson();
+            _servW = container.GetRequiredService<IWorkerService>();
             _w = (Worker)Records.worker.Clone();
             _w.Person = _p;
             _w.ID = _p.ID; // mimics MVC UI behavior. the POST to create worker includes the person record's ID
@@ -179,9 +138,8 @@ EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
             if (memberexpirationdate != null) _w.memberexpirationdate = (DateTime)memberexpirationdate;
             if (memberReactivateDate != null) _w.memberReactivateDate = (DateTime)memberReactivateDate;
             if (testID != null) _w.Person.firstname2 = testID;
-            // kludge
-            _w.dwccardnum = Records.GetNextMemberID(ToFactory().Get().Workers);
-            //
+            _w.dwccardnum = GetNextMemberID();
+
             // ACT
             _servW.Create(_w, _user);
             return this;
@@ -189,8 +147,8 @@ EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
 
         public int GetNextMemberID()
         {
-            if (_dbFactory == null) AddDBFactory();
-            return Records.GetNextMemberID(_dbFactory.Get().Workers);
+            var dbContext = container.GetRequiredService<MacheteContext>();
+            return Records.GetNextMemberID(dbContext.Workers);
         }
 
         public Worker ToWorker()
@@ -210,7 +168,7 @@ EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
         {
             //
             // DEPENDENCIES
-            _servWR = container.Resolve<IWorkerRequestService>();
+            _servWR = container.GetRequiredService<IWorkerRequestService>();
             if (_wo == null) AddWorkOrder();
             if (_w == null) AddWorker();
             //
@@ -222,11 +180,11 @@ EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
             _wr.workerRequested = _w;
             if (datecreated != null) _wr.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _wr.dateupdated = (DateTime)dateupdated;
-            //
-            // ACT
-            var Wentry = _dbFactory.Get().Entry<Worker>(_w);
-            var WOentry = _dbFactory.Get().Entry<WorkOrder>(_wo);
-            var WRentry = _dbFactory.Get().Entry<WorkerRequest>(_wr);
+            
+            // ACT //huh?
+//            var Wentry = _dbContext.Entry(_w);
+//            var WOentry = _dbContext.Entry(_wo);
+//            var WRentry = _dbContext.Entry(_wr);
             _servWR.Create(_wr, _user);
             return this;
         }
@@ -248,7 +206,7 @@ EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
         {
             //
             // DEPENDENCIES
-            _servI = container.Resolve<IImageService>();
+            _servI = container.GetRequiredService<IImageService>();
             //
             // ARRANGE
             _i = (Image)Records.image.Clone();
@@ -278,7 +236,7 @@ EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
         {
             //
             // DEPENDENCIES
-            _servL = container.Resolve<ILookupService>();
+            _servL = container.GetRequiredService<ILookupService>();
             //
             // ARRANGE
             _l = (Lookup)Records.lookup.Clone();
@@ -298,14 +256,7 @@ EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
 
         #endregion
 
-        #region Activitys
-
-
-        public T ToServ<T>()
-        {
-            return container.Resolve<T>();
-        }
-
+        #region Activities
         public FluentRecordBase AddActivity(
             DateTime? datecreated = null,
             DateTime? dateupdated = null,
@@ -316,7 +267,7 @@ EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
         {
             //
             // DEPENDENCIES
-            _servA = container.Resolve<IActivityService>();
+            _servA = container.GetRequiredService<IActivityService>();
             //
             // ARRANGE
             _a = (Activity)Records.activity.Clone();
@@ -350,7 +301,7 @@ EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
             //
             // DEPENDENCIES
             if (_a == null) AddActivity();
-            _servAS = container.Resolve<IActivitySigninService>();
+            _servAS = container.GetRequiredService<IActivitySigninService>();
             if (worker != null) _w = worker;
             if (_w == null) AddWorker();
             //
@@ -380,7 +331,7 @@ EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
 
         public IReportsRepository ToRepoReports()
         {
-            return container.Resolve<IReportsRepository>();
+            return container.GetRequiredService<IReportsRepository>();
         }
 
         #endregion
@@ -397,7 +348,7 @@ EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
         {
             //
             // DEPENDENCIES
-            _servEM = container.Resolve<IEmailService>();
+            _servEM = container.GetRequiredService<IEmailService>();
             //
             // ARRANGE
             _email = (Email)Records.email.Clone();
@@ -408,7 +359,7 @@ EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
             if (attachmentType != null) _email.attachment = attachmentType;
             //
             // ACT
-            _servEM.Create(_email, _user);
+            _servEM.Create(_email, _user); // this is done twice and it's causing an error with EF Core
             return this;
         }
 
@@ -462,43 +413,23 @@ EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
         }
         #endregion
 
-        #region Configs
-
-        public FluentRecordBase AddConfig()
-        {
-            //
-            // DEPENDENCIES
-            _servC = ToServ<IConfigService>();
-
-            //
-            // ARRANGE
-            _config.updatedby = _user;
-            _config.createdby = _user;
-            //
-            // ACT
-            _servC.Create(_config, _user);
-            return this;
-        }
-
-        #endregion
-
-        public FluentRecordBase AddMapper()
-        {
-            _webMap = new Machete.Web.MapperConfig().getMapper();
-            _apiMap = new Machete.Api.MapperConfig().getMapper();
-
-            return this;
-        }
-
         public IMapper ToWebMapper()
         {
-            if (_webMap == null) AddMapper();
+            if (_webMap != null) return _webMap;
+            
+            var mapperConfig = new MapperConfiguration(config => { config.ConfigureMvc(); });
+            _webMap = mapperConfig.CreateMapper();
+            
             return _webMap;
         }
 
         public IMapper ToApiMapper()
         {
-            if (_apiMap == null) AddMapper();
+            if (_apiMap != null) return _apiMap;
+
+            var apiConfig = new MapperConfiguration(config => { config.ConfigureApi(); });
+            _apiMap = apiConfig.CreateMapper();
+
             return _apiMap;
         }    
 

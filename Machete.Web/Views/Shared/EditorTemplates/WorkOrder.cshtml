@@ -1,80 +1,208 @@
-﻿@model Machete.Web.ViewModel.WorkOrder
-@using Machete.Web.Helpers
+@using Machete.Domain
 @using Machete.Web.Resources
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.Localization
+@using WorkOrder = Machete.Web.Resources.WorkOrder
+@using Worker = Machete.Web.Resources.Worker
+@using Person = Machete.Web.Resources.Person
+@model Machete.Web.ViewModel.WorkOrder
 
 @{
-    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    var httpContext = ViewContext.HttpContext;
+    var currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
+    var currentUrl = UriHelper.BuildRelative(httpContext.Request.PathBase, httpContext.Request.Path, httpContext.Request.QueryString);
+
     string recType = "WO";
     string idPrefix = recType + Model.ID + "-";
 }
 @Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID" })
-@Html.HiddenFor(model => model.EmployerID, new { @id = idPrefix + "EmployerID" })
+@Html.HiddenFor(model => model.EmployerID, new { id = idPrefix + "EmployerID" })
 
 <!-- MAIN WORK ORDER FORM -->
 <div class="tb-table">
     <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.dateTimeofWork, new { tabindex = "1", id = idPrefix + "dateTimeofWork" })
-        @Html.mUITableLabelAndTextBoxFor(model => model.paperOrderNum, new { tabindex = "11", style = "width: 5em", id = idPrefix + "paperOrderNum" })
+        <div class="tb-label">
+            @Html.LabelFor(model => model.dateTimeofWork)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.dateTimeofWork, new { tabindex = "1", id = idPrefix + "dateTimeofWork" })
+            @Html.ValidationMessageFor(model => model.dateTimeofWork)
+        </div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.paperOrderNum)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.paperOrderNum, new { tabindex = "11", style = "width: 5em", id = idPrefix + "paperOrderNum" })
+            @Html.ValidationMessageFor(model => model.paperOrderNum)
+        </div>
     </div>
     <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.statusID)
-        @Html.mUIDropDownListFor(model => model.statusID,
-                    Model.def.getSelectList(Machete.Domain.LCategory.orderstatus),
-                    new { tabindex = "2", id = idPrefix + "status" })                
-        @Html.mUITableLabelFor(model => model.timeFlexible)
-        @Html.mUIDropDownYesNoFor(model => model.timeFlexible, Model.def.yesnoSelectList(), new { tabindex = "12", id = idPrefix + "timeFlexible" }) 
+        <div class="tb-label">
+            @Html.LabelFor(model => model.statusID)
+        </div>
+        <div class="tb-field">
+            @Html.DropDownListFor(model => model.statusID, new SelectList(Model.def.getSelectList(LCategory.orderstatus),
+                "Value", "Text", Model), Shared.choose, new { tabindex = "2", id = idPrefix + "status" })
+            @Html.ValidationMessageFor(model => model.statusID);
+        </div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.timeFlexible)
+        </div>
+        <div class="tb-field">
+            @Html.DropDownListFor(model => model.timeFlexible, new SelectList(Model.def.yesnoSelectList(),
+                "Value", "Text", Model), Shared.choose, new { tabindex = "12", id = idPrefix + "timeFlexible" })
+            @Html.ValidationMessageFor(model => model.timeFlexible)
+        </div>
     </div>
     <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.contactName, new { tabindex = "3", id = idPrefix + "contactName" })
-        @Html.mUITableLabelFor(model => model.permanentPlacement)
-        @Html.mUIDropDownYesNoFor(model => model.permanentPlacement, Model.def.yesnoSelectList(), new { tabindex = "13", id = idPrefix + "permanentPlacement" })
+        <div class="tb-label">
+            @Html.LabelFor(model => model.contactName)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.contactName, new { tabindex = "3", id = idPrefix + "contactName" })
+            @Html.ValidationMessageFor(model => model.contactName)
+        </div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.permanentPlacement)
+        </div>
+        <div class="tb-field">
+            @Html.DropDownListFor(model => model.permanentPlacement, new SelectList(Model.def.yesnoSelectList(),
+                "Value", "Text", Model), Shared.choose, new { tabindex = "13", id = idPrefix + "permanentPlacement" })
+            @Html.ValidationMessageFor(model => model.permanentPlacement)
+        </div>
     </div>
     <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.workSiteAddress1, new { tabindex = "4", id = idPrefix + "workSiteAddress1" })
+        <div class="tb-label">
+            @Html.LabelFor(model => model.workSiteAddress1)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.workSiteAddress1, new { tabindex = "4", id = idPrefix + "workSiteAddress1" })
+            @Html.ValidationMessageFor(model => model.workSiteAddress1)
+        </div>
         <div class="tb-label englishRequired_@(Model.ID)">
             @Html.LabelFor(model => model.englishRequired)
         </div>
         <div class="tb-field englishRequired_@(Model.ID)">
-            @Html.mUIDropDownYesNoFor(model => model.englishRequired, Model.def.yesnoSelectList(), new { tabindex = "14", id = idPrefix + "englishRequired" })
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.englishRequired, new SelectList(Model.def.yesnoSelectList(),
+                    "Value", "Text", Model), Shared.choose, new { tabindex = "14", id = idPrefix + "englishRequired" })
+                @Html.ValidationMessageFor(model => model.englishRequired)
+            </div>
         </div>
     </div>
     <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.workSiteAddress2, new { tabindex = "5", id = idPrefix + "workSiteAddress2" })
-        @Html.mUITableLabelFor(model => model.lunchSupplied)
-        @Html.mUIDropDownYesNoFor(model => model.lunchSupplied, Model.def.yesnoSelectList(), new { tabindex = "15", id = idPrefix + "lunchSupplied" })
+        <div class="tb-label">
+            @Html.LabelFor(model => model.workSiteAddress2)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.workSiteAddress2, new { tabindex = "5", id = idPrefix + "workSiteAddress2" })
+            @Html.ValidationMessageFor(model => model.workSiteAddress2)
+        </div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.lunchSupplied)
+        </div>
+        <div class="tb-field">
+            @Html.DropDownListFor(model => model.lunchSupplied, new SelectList(Model.def.yesnoSelectList(),
+                "Value", "Text", Model), Shared.choose, new { tabindex = "15", id = idPrefix + "lunchSupplied" })
+            @Html.ValidationMessageFor(model => model.lunchSupplied)
+        </div>
     </div>
     <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.city, new { tabindex = "6", id = idPrefix + "city" })
-        @Html.mUITableLabelFor(model => model.transportMethodID)
-        @Html.mUIDropDownListFor(model => model.transportProviderID,
-                        Model.def.getTransportationMethodList(),
-                        new { tabindex = "16", id = idPrefix + "transportMethodID" })
+        <div class="tb-label">
+            @Html.LabelFor(model => model.city)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.city, new { tabindex = "6", id = idPrefix + "city" })
+            @Html.ValidationMessageFor(model => model.city)
+        </div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.transportMethodID)
+        </div>
+        <div class="tb-field">
+            @Html.DropDownListFor(model => model.transportProviderID,
+                new SelectList(Model.def.getTransportationMethodList(),
+                    "Value", "Text", Model), Shared.choose, new { tabindex = "16", id = idPrefix + "transportMethodID" })
+            @Html.ValidationMessageFor(model => model.transportProviderID);
+        </div>
     </div>
     <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.state, new { tabindex = "7", id = idPrefix + "state" })
-        @Html.mUITableLabelAndTextBoxFor(model => model.transportFee, new { tabindex = "17", @class = "money-field", id = idPrefix + "transportFee" })
+        <div class="tb-label">
+            @Html.LabelFor(model => model.state)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.state, new { tabindex = "7", id = idPrefix + "state" })
+            @Html.ValidationMessageFor(model => model.state)
+        </div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.transportFee)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.transportFee,
+                new { tabindex = "17", @class = "money-field", id = idPrefix + "transportFee" })
+            @Html.ValidationMessageFor(model => model.transportFee)
+        </div>
     </div>
     <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.zipcode, new { tabindex = "8", id = idPrefix + "zipcode" })
-        @Html.mUITableLabelAndTextBoxFor(model => model.ppFee, new { tabindex = "18", @class = "money-field", id = idPrefix + "ppFee", @readonly = "readonly" })
+        <div class="tb-label">
+            @Html.LabelFor(model => model.zipcode)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.zipcode, new { tabindex = "8", id = idPrefix + "zipcode" })
+            @Html.ValidationMessageFor(model => model.zipcode)
+        </div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.ppFee)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.ppFee,
+                new { tabindex = "18", @class = "money-field", id = idPrefix + "ppFee", @readonly = "readonly" })
+            @Html.ValidationMessageFor(model => model.ppFee)
+        </div>
     </div>
     <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.phone, new { tabindex = "9", id = idPrefix + "phone" })
-        @Html.mUITableLabelAndTextBoxFor(model => model.ppState, new { tabindex = "18", @class = "money-field", id = idPrefix + "ppState", @readonly = "readonly" })
-
-
+        <div class="tb-label">
+            @Html.LabelFor(model => model.phone)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.phone, new { tabindex = "9", id = idPrefix + "phone" })
+            @Html.ValidationMessageFor(model => model.phone)
+        </div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.ppState)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.ppState,
+                new { tabindex = "18", @class = "money-field", id = idPrefix + "ppState", @readonly = "readonly" })
+            @Html.ValidationMessageFor(model => model.ppState)
+        </div>
     </div>
     <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.onlineSource)
-        @Html.mUIDropDownYesNoFor(model => model.onlineSource, Model.def.yesnoSelectList(), new { tabindex = "10", id = idPrefix + "onlineSource" })
-        @Html.mUITableLabelAndTextBoxFor(model => model.ppPaymentID, new { tabindex = "20", id = idPrefix + "ppPaymentID", @readonly = "readonly" })
+        <div class="tb-label">
+            @Html.LabelFor(model => model.onlineSource)
+        </div>
+        <div class="tb-field">
+            @Html.DropDownListFor(model => model.onlineSource, new SelectList(Model.def.yesnoSelectList(),
+                "Value", "Text", Model), Shared.choose,
+                new { tabindex = "10", id = idPrefix + "onlineSource" })
+            @Html.ValidationMessageFor(model => model.onlineSource)
+        </div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.ppPaymentID)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.ppPaymentID,
+                new { tabindex = "20", id = idPrefix + "ppPaymentID", @readonly = "readonly" })
+            @Html.ValidationMessageFor(model => model.ppPaymentID)
+        </div>
     </div>
 </div><!--tb-table main workorder table-->
 
 <div class="tb-table">
-    <!-- TODO: investigate why this row (englishnoterow) doesn't appear on the table -->
+    <!-- TODO: investigate why this row (englishNoteRow) doesn't appear on the table -->
     <div class="tb-row englishNoteRow" id="@(idPrefix)englishRequiredNoteRow">
-        @Html.mUITableDescLabelFor(model => model.englishRequiredNote)
+        <div class="tb-label desc-label">
+            @Html.LabelFor(model => model.englishRequiredNote)
+        </div>
         <div class="tb-field">
             @Html.TextAreaFor(model => model.englishRequiredNote, new { tabindex = "21", @class = "desc-field", id = idPrefix + "englishRequiredNote" })
             @Html.ValidationMessageFor(model => model.englishRequiredNote)
@@ -86,14 +214,15 @@
         <div class="tb-label desc-label">
             @Html.LabelFor(model => model.workerRequests)
             <br />
-            <input type="button" value="@Machete.Web.Resources.WorkOrder.requestAdd" class="formButton" id="addRequestBtn-@(Model.ID)"/>
-            <input type="button" value="@Machete.Web.Resources.WorkOrder.requestRemove" class="formButton" id="removeRequestBtn-@(Model.ID)"/>
+            <input type="button" value="@WorkOrder.requestAdd" class="formButton" id="addRequestBtn-@(Model.ID)"/>
+            <input type="button" value="@WorkOrder.requestRemove" class="formButton" id="removeRequestBtn-@(Model.ID)"/>
         </div>
         <div class="tb-field desc-field">
-            @Html.ListBox("workerRequests2", new SelectList(ViewBag.workerRequests, "Value", "Text"), new { id = "workerRequests2_WO-"+ Model.ID, tabindex = "22", style="min-width: 16em;"})
+            @* @Html.ListBox("workerRequests2", new SelectList(ViewBag.workerRequests, "Value", "Text"), new { id = "workerRequests2_WO-"+ Model.ID, tabindex = "22", style="min-width: 16em;"}) *@
         </div>
-
-        @Html.mUITableDescLabelFor(model => model.description)
+        <div class="tb-label desc-label">
+            @Html.LabelFor(model => model.description)
+        </div>
         <div class="tb-field desc-field">
             @Html.TextAreaFor(model => model.description, new { tabindex = "23", @class = "desc-field", id = idPrefix + "description" })
             @Html.ValidationMessageFor(model => model.description)
@@ -102,11 +231,11 @@
 </div>
 
 <!-- LOAD MANAGER INFO PARTIAL FORM -->
-@Html.Partial("ManagerInfo")
+@await Html.PartialAsync("ManagerInfo")
 <!-- LOAD ADMINISTRATOR INFO PARTIAL FORM -->
 
 
-<div id="workerDialog-@(Model.ID)" title="@Machete.Web.Resources.WorkOrder.requestTitle">
+<div id="workerDialog-@(Model.ID)" title="@WorkOrder.requestTitle">
     <table id="workerTable-@(Model.ID)" class="display" style="display: none">
         <thead>
             <tr>
@@ -151,12 +280,12 @@
             "bAutoWidth": false,
             "bServerSide": true,
             "sAjaxSource": "/Worker/AjaxHandler", 
-            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "oLanguage": datatable_lang_@(currentCulture.TwoLetterISOLanguageName),
             "bProcessing": true,
             "aoColumns": [
                 { "mDataProp": "tabref","bSearchable": false, "bSortable": false, "bVisible": false },
                 { "mDataProp": "tablabel","bSearchable": false, "bSortable": false, "bVisible": false },
-                { "mDataProp": "WID","bSearchable": false, "bSortable": false, "bVisible": false },
+                { "mDataProp": "wid","bSearchable": false, "bSortable": false, "bVisible": false },
                 { "mDataProp": "dwccardnum" },
                 { "mDataProp": "active" },
                 { "mDataProp": "firstname1" },
@@ -167,7 +296,7 @@
             ],
             // callback populates html attr with row data from JSON            
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                $(nRow).attr('recordid', aData['WID']);
+                $(nRow).attr('recordid', aData['wid']);
                 //$(nRow).attr('edittablabel', aData[1]);                
                 return nRow;
             }         
@@ -178,25 +307,20 @@
             var myTr = event.target.parentNode;
             var myID = $(myTr).attr('recordid');  
             var myLabel =  $(myTr).find('td:eq(0)').text() + ' '+
-                                              $(myTr).find('td:eq(2)').text() + ' '+
-                                              $(myTr).find('td:eq(4)').text();
-          // handler function created by addRequestionBtn create event
-          //M_workerRequestHandler_@(Model.ID)(myID, myLabel);
-              $('#workerRequests2_WO-@(Model.ID)').append(
-                    $('<option></option>').val(myID).html(myLabel)                
-                );
-          $('a.ui-dialog-titlebar-close').click();
+                $(myTr).find('td:eq(2)').text() + ' '+
+                $(myTr).find('td:eq(4)').text();
+            // handler function created by addRequestionBtn create event
+            //M_workerRequestHandler_@(Model.ID)(myID, myLabel);
+            $('#workerRequests2_WO-@(Model.ID)').append(
+                $('<option></option>').val(myID).html(myLabel)                
+            );
+            $('a.ui-dialog-titlebar-close').click();
         });
-        //////////////////////////////////////////////////
-        //
-        //
+
         $('#workerDialog-@(Model.ID)').hide();
         $('#workerTable-@(Model.ID)').hide();
         //$("#wophone").mask("999-999-9999", { placeholder: " " });
 
-        //////////////////////////////////////////////////
-        //
-        //
         $('#addRequestBtn-@(Model.ID)').click(function () {
             $('#workerTable-@(Model.ID)').dataTable().fnDraw();
             $('#workerTable-@(Model.ID)').show();
@@ -208,16 +332,14 @@
             //    );
             //}
             $("#workerDialog-@(Model.ID)").dialog({
-                    height: 340,
-                    width: 1000,
-                    modal: true
+                height: 340,
+                width: 1000,
+                modal: true
             });
             
             $('#workerDialog-@(Model.ID)').show();
         });
-        //////////////////////////////////////////////////
-        //
-        //
+
         $('#removeRequestBtn-@(Model.ID)').click(function () {
             $('#workerRequests2_WO-@(Model.ID)').find('option:selected').remove();
         });

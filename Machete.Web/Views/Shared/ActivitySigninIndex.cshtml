@@ -1,15 +1,23 @@
-﻿@model Machete.Web.ViewModel.ActivitySignin
-@using Machete.Web.Resources
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.Localization
+@using Machete.Web.Resources;
+
+@model Machete.Web.ViewModel.ActivitySignin
 
 @{
-    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
-    string recType = "asi";
-    string idPrefix = recType + Model.activityID + "-";
-    int maxTabs = User.Identity.IsAuthenticated == true ? 2 : 1; //If auth, 2 tab limit
+    var httpContext = ViewContext.HttpContext;
+    var currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
+    var currentUrl = UriHelper.BuildRelative(httpContext.Request.PathBase, httpContext.Request.Path, httpContext.Request.QueryString);
+
+    var recType = "asi";
+    var idPrefix = recType + Model.activityID + "-";
+    
+    var userIdentity = new ClaimsIdentity("Cookies");
 
     //To hide JS features for unauthorized
-    int authenticated = 0;
-    if (User.Identity.IsAuthenticated)
+    var authenticated = 0;
+    if (userIdentity.IsAuthenticated)
     {
         authenticated = 1;
     }
@@ -28,18 +36,18 @@
                 <div class="tb-table">
                     <div class="tb-row">
                         <div class="tb-label">
-                            @if (User.Identity.IsAuthenticated)
+                            @if (userIdentity.IsAuthenticated)
                             {
                                 @Html.LabelFor(model => model.dwccardnum)
                             }
                             else
                             {
-                                @Html.Label(@Activities.touch)
+                                @Html.Label(Activities.touch)
                             }
                         </div>
                         <div class="tb-field">
-                            @Html.TextBox("dwccardnum", "", new { style = "width: 100px;", id = idPrefix + "dwccardnum", placeholder = @Activities.touchhere })
-                            @Html.ValidationMessage("dwccardnum", new { @id = idPrefix + "dwccardnum" })
+                            @Html.TextBox("dwccardnum", "", new { style = "width: 100px;", id = idPrefix + "dwccardnum", placeholder = Activities.touchhere })
+                            @Html.ValidationMessage("dwccardnum", new { id = idPrefix + "dwccardnum" })
                         </div>
                         <div class="tb-field">
                             <input type="submit" value="@(WorkerSignins.indexsubmit)"  id="@(idPrefix)submit"/>
@@ -104,8 +112,8 @@
         $('#@(idPrefix)Tabs').mUI('createTabs', {
             prefix: "@(idPrefix)ui-tabs",
             formLevel: 2,
-            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
-            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+            changeConfirm: "@Shared.changeConfirm",
+            changeTitle: "@Shared.changeTitle"
             });
 
         $('.ui-datepicker').datepicker({
@@ -150,7 +158,7 @@
             "bSort": true,
             "bFilter": @(authenticated),
             "sAjaxSource": "/ActivitySignin/AjaxHandler",
-            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "oLanguage": datatable_lang_@(currentCulture.TwoLetterISOLanguageName),
             "bProcessing": true,
             "iDisplayLength": -1,
             "aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "@WorkerSignins.allrecords"]],

@@ -1,21 +1,19 @@
-﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Web;
-using System.Web.Configuration;
+using AutoMapper;
+using static Machete.Web.Helpers.Extensions;
 
 namespace Machete.Web.Maps
 {
-    public class WorkAssignmentProfile : MacheteProfile
+    public class WorkAssignmentProfile : Profile
     {
         public WorkAssignmentProfile()
         {
             CreateMap<Domain.WorkAssignment, ViewModel.WorkAssignment>()
                 .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/WorkAssignment/Edit/" + Convert.ToString(d.ID)))
                 .ForMember(v => v.tablabel, opt => opt.MapFrom(d =>
-                    Resources.WorkAssignments.tabprefix +
-                    System.String.Format("{0,5:D5}-{1,2:D2}", d.workOrder.paperOrderNum, d.pseudoID)))
+                    Resources.WorkAssignments.tabprefix
+                    + System.String.Format("{0,5:D5}-{1,2:D2}", d.workOrder.paperOrderNum, d.pseudoID)))
                 .ForMember(v => v.def, opt => opt.Ignore())
                 .ForMember(v => v.idString, opt => opt.Ignore())
                 .ForMember(v => v.isWorkerAssigned, opt => opt.MapFrom(d => d.workerAssigned == null ? false : true))
@@ -78,14 +76,5 @@ namespace Machete.Web.Maps
                 return "active";
             return null;
         }
-        public static string PersonFullName(Domain.Person p)
-        {
-            var rtnstr = p.firstname1 + " ";
-            if (p.firstname2 != null) rtnstr = rtnstr + p.firstname2 + " ";
-            rtnstr = rtnstr + p.lastname1;
-            if (p.lastname2 != null) rtnstr = rtnstr + " " + p.lastname2;
-            return rtnstr;
-        }
-
     }
 }

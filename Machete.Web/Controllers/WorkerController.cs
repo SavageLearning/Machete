@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     WorkerController.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -21,17 +21,18 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
-using Machete.Data;
 using Machete.Domain;
 using Machete.Service;
-using DTO = Machete.Service.DTO;
+using Machete.Service.DTO;
 using Machete.Web.Helpers;
-using System;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Web.Controllers
 {
@@ -42,27 +43,21 @@ namespace Machete.Web.Controllers
         private readonly IImageService imageServ;
         private readonly IMapper map;
         private readonly IDefaults def;
-        System.Globalization.CultureInfo CI;
+        private readonly IModelBindingAdaptor _adaptor;
 
-        public WorkerController(IWorkerService workerService, 
-                                IPersonService personService,
+        public WorkerController(IWorkerService workerService,
                                 IImageService  imageServ,
             IDefaults def,
-            IMapper map)
+            IMapper map,
+            IModelBindingAdaptor adaptor)
         {
-            this.serv = workerService;
+            serv = workerService;
             this.imageServ = imageServ;
             this.map = map;
+            _adaptor = adaptor;
             this.def = def;
         }
-        protected override void Initialize(RequestContext requestContext)
-        {
-            base.Initialize(requestContext);
-            CI = (System.Globalization.CultureInfo)Session["Culture"];
-            // TODO this needs to be scheduled elsewhere
-            //serv.ExpireMembers();
-            //serv.ReactivateMembers();
-        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -81,44 +76,34 @@ namespace Machete.Web.Controllers
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
-            vo.CI = CI;
-            dataTableResult<DTO.WorkerList> list = serv.GetIndexView(vo);
+            dataTableResult<WorkerList> list = serv.GetIndexView(vo);
             var result = list.query
             .Select(
-                e => map.Map<DTO.WorkerList, ViewModel.WorkerList>(e)
+                e => map.Map<WorkerList, ViewModel.WorkerList>(e)
             ).AsEnumerable();
             return Json(new
             {
-                sEcho = param.sEcho,
+                param.sEcho,
                 iTotalRecords = list.totalCount,
                 iTotalDisplayRecords = list.filteredCount,
                 aaData = result
-            },
-            JsonRequestBehavior.AllowGet);
+            });
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="wkr"></param>
-        /// <returns></returns>
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="ID"></param>
-        /// <returns></returns>
+        /// <summary />
+        /// <param name="id"></param>
         [Authorize(Roles = "PhoneDesk, Manager, Teacher, Administrator")] 
-        public ActionResult Create(int ID)
+        public ActionResult Create(int id)
         {
             // TODO handle exception of next worker number
             var nextnum = serv.GetNextWorkerNum();
-            var w = map.Map<Domain.Worker, ViewModel.Worker>(new Domain.Worker()
-            {
-                ID = ID,
+            var w = map.Map<Worker, ViewModel.Worker>(new Worker {
+                ID = id,
                 dwccardnum = nextnum
             });
             w.def = def;
             return PartialView("Create", w);
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -128,21 +113,26 @@ namespace Machete.Web.Controllers
         /// <returns></returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "PhoneDesk, Manager, Teacher, Administrator")]
-        public ActionResult Create(Domain.Worker worker, string userName, HttpPostedFileBase imagefile)
+        public async Task<ActionResult> Create(Worker worker, string userName, IFormFile imagefile)
         {
-            UpdateModel(worker);
-            if (imagefile != null) updateImage(worker, imagefile);
-            Worker newWorker = serv.Create(worker, userName);
-            var result = map.Map<Domain.Worker, ViewModel.Worker>(newWorker);
-            return Json(new
-            {
-                sNewRef = result.tabref,
-                sNewLabel = result.tablabel,
-                iNewID = result.ID,
-                jobSuccess = true
-            },
-            JsonRequestBehavior.AllowGet);
+            ModelState.ThrowIfInvalid();
+
+            var modelIsValid = await _adaptor.TryUpdateModelAsync(this, worker);
+            if (modelIsValid) {
+                if (imagefile != null) await updateImage(worker, imagefile, userName);
+                var newWorker = serv.Create(worker, userName);
+                var result = map.Map<Worker, ViewModel.Worker>(newWorker);
+                return Json(new {
+                    sNewRef = result.tabref,
+                    sNewLabel = result.tablabel,
+                    iNewID = result.ID,
+                    jobSuccess = true
+                });
+            } else {
+                return Json(new {jobSuccess = "false"});
+            }
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -152,32 +142,33 @@ namespace Machete.Web.Controllers
         public ActionResult Edit(int id)
         {
             Worker w = serv.Get(id);
-            var m = map.Map<Domain.Worker, ViewModel.Worker>(w);
+            var m = map.Map<Worker, ViewModel.Worker>(w);
             m.def = def;
             return PartialView(m);
         }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="_model"></param>
         /// <param name="userName"></param>
         /// <param name="imagefile"></param>
         /// <returns></returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "PhoneDesk, Manager, Teacher, Administrator")]
-        public ActionResult Edit(int id, Worker _model, string userName, HttpPostedFileBase imagefile)
+        public async Task<ActionResult> Edit(int id, string userName, IFormFile imagefile)
         {
-            Worker worker = serv.Get(id);
-            UpdateModel(worker);
+            ModelState.ThrowIfInvalid();
             
-            if (imagefile != null) updateImage(worker, imagefile);                
-            serv.Save(worker, userName);
-            return Json(new
-            {
-                jobSuccess = true
-            }, JsonRequestBehavior.AllowGet);
+            Worker worker = serv.Get(id);
+            if (await _adaptor.TryUpdateModelAsync(this, worker)) {
 
+                if (imagefile != null) await updateImage(worker, imagefile, userName);
+                serv.Save(worker, userName);
+                return Json(new {
+                    jobSuccess = true
+                });
+            } else { return Json(new { jobSuccess = false }); }
         }
         /// <summary>
         /// 
@@ -195,44 +186,51 @@ namespace Machete.Web.Controllers
             {
                 status = "OK",
                 deletedID = id
-            },
-            JsonRequestBehavior.AllowGet);
+            });
         }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="worker"></param>
-        /// <param name="imagefile"></param>
+        /// <param name="imageFile"></param>
+        /// <param name="userName"></param>
         [Authorize(Roles = "PhoneDesk, Manager, Teacher, Administrator")]
-        private void updateImage(Worker worker, HttpPostedFileBase imagefile)
+        [UserNameFilter]
+        private async Task updateImage(Worker worker, IFormFile imageFile, string userName)
         {
-            // TODO: Move this to the business layer
             if (worker == null) throw new MacheteNullObjectException("updateImage called with null worker");
-            if (imagefile == null) throw new MacheteNullObjectException("updateImage called with null imagefile");
+            if (imageFile == null) throw new MacheteNullObjectException("updateImage called with null imagefile");
             if (worker.ImageID != null)
             {
-                Image image = imageServ.Get((int)worker.ImageID);
-                image.ImageMimeType = imagefile.ContentType;
+                var image = imageServ.Get((int)worker.ImageID);
+                image.ImageMimeType = imageFile.ContentType;
                 image.parenttable = "Workers";
-                image.filename = imagefile.FileName;
+                image.filename = imageFile.FileName;
                 image.recordkey = worker.ID.ToString();
-                image.ImageData = new byte[imagefile.ContentLength];
-                imagefile.InputStream.Read(image.ImageData,
-                                           0,
-                                           imagefile.ContentLength);
-                imageServ.Save(image, this.User.Identity.Name);
+                image.ImageData = new byte[imageFile.Length];
+
+                using (var memoryStream = new MemoryStream()) {
+                    await imageFile.CopyToAsync(memoryStream);
+                    image.ImageData = memoryStream.ToArray();
+                }
+
+                imageServ.Save(image, userName);
             }
             else
             {
-                Image image = new Image();
-                image.ImageMimeType = imagefile.ContentType;
+                var image = new Image();
+                image.ImageMimeType = imageFile.ContentType;
                 image.parenttable = "Workers";
                 image.recordkey = worker.ID.ToString();
-                image.ImageData = new byte[imagefile.ContentLength];
-                imagefile.InputStream.Read(image.ImageData,
-                                           0,
-                                           imagefile.ContentLength);
-                Image newImage = imageServ.Create(image, this.User.Identity.Name);
+                image.ImageData = new byte[imageFile.Length];
+
+                using (var memoryStream = new MemoryStream()) {
+                    await imageFile.CopyToAsync(memoryStream);
+                    image.ImageData = memoryStream.ToArray();
+                }
+                
+                Image newImage = imageServ.Create(image, userName);
                 worker.ImageID = newImage.ID;
             }
         }

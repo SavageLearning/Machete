@@ -9,6 +9,8 @@ using System;
 using System.Configuration;
 using System.Text;
 using System.Threading;
+using Machete.Web.Maps;
+using Machete.Test.Integration.Fluent;
 
 namespace Machete.Test.Selenium.View
 {
@@ -26,7 +28,8 @@ namespace Machete.Test.Selenium.View
         public static void ClassInitialize(TestContext testContext)
         {
             WebServer.StartIis();
-            map = new Machete.Web.MapperConfig().getMapper();
+            var webMapperConfig = new MapperConfiguration(config => { config.ConfigureMvc(); });
+            map = webMapperConfig.CreateMapper();
         }
 
         [TestInitialize]

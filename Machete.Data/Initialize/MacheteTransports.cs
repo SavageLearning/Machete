@@ -1,38 +1,34 @@
-﻿using Machete.Domain;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Machete.Domain;
+using Microsoft.EntityFrameworkCore;
 
-namespace Machete.Data
+namespace Machete.Data.Initialize
 {
     public static class MacheteTransports
     {
-        public static void Initialize(MacheteContext c)
+        public static void Initialize(MacheteContext context)
         {
-            if (c.TransportProviders.Count() == 0) { 
-                c.Database.ExecuteSqlCommand(@"insert into dbo.TransportProviders
+            if (!context.TransportProviders.Any()) {
+                context.Database.ExecuteSqlCommand(@"insert into dbo.TransportProviders
                         ( [key], text_EN, text_ES, defaultAttribute, sortorder, active, datecreated, dateupdated, Createdby, Updatedby )
                             select [key], text_EN, text_ES, selected, sortorder, active, datecreated, dateupdated, Createdby, Updatedby
                             from dbo.Lookups
                             where category = 'transportmethod'");
-                c.SaveChanges();
+                
+                context.SaveChanges();
             }
 
-            if (c.TransportProvidersAvailability.Count() == 0)
-            {
-                var providers = c.TransportProviders.ToList();
-                foreach (var p in providers)
-                {
-                    p.AvailabilityRules = new List<TransportProviderAvailability>();
-                    for (var i = 0; i < 7; i++)
-                    {
-                        p.AvailabilityRules.Add(new Domain.TransportProviderAvailability
-                        {
-                            transportProviderID = p.ID,
-                            day = i,
-                            available = i == 0 ? p.key == "transport_pickup" ? true : false : true,
+            if (!context.TransportProvidersAvailability.Any()) {
+                var providers = context.TransportProviders.ToList();
+                foreach (var provider in providers) {
+                    provider.AvailabilityRules = new List<TransportProviderAvailability>();
+                    for (var dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
+                        provider.AvailabilityRules.Add(new TransportProviderAvailability {
+                            transportProviderID = provider.ID,
+                            day = dayOfWeek,
+                            available = dayOfWeek != 0 || (provider.key == "transport_pickup"),
                             datecreated = DateTime.Now,
                             dateupdated = DateTime.Now,
                             createdby = "Init T. Script",
@@ -40,9 +36,9 @@ namespace Machete.Data
                         });
                     }
                 }
-                c.SaveChanges();
-            }
 
+                context.SaveChanges();
+            }
         }
     }
 }

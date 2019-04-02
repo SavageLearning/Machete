@@ -1,4 +1,4 @@
-﻿using Machete.Data;
+using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
 using System;
@@ -45,13 +45,12 @@ namespace Machete.Service
             {
                 SendSmtpSimple(email);
             }
-            Email newEmail;
-            newEmail = base.Create(email, userName);
-            //newEmail = Get(newEmail.ID);
+
+            var newEmail = base.Create(email, userName);
+
             if (woid != null)
             {
                 WorkOrder wo = _woServ.Get((int)woid);
-                newEmail.WorkOrders = new Collection<WorkOrder>();
                 newEmail.WorkOrders.Add(wo);
             }
             uow.SaveChanges();

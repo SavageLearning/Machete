@@ -8,10 +8,12 @@ using OpenQA.Selenium.Chrome;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using Machete.Web.Maps;
+using Machete.Test.Integration.Fluent;
 
 namespace Machete.Test.Selenium.View
 {
@@ -29,8 +31,8 @@ namespace Machete.Test.Selenium.View
         public static void ClassInitialize(TestContext testContext)
         {
             WebServer.StartIis();
-            map = new Machete.Web.MapperConfig().getMapper();
-
+            var webMapperConfig = new MapperConfiguration(config => config.ConfigureMvc());
+            map = webMapperConfig.CreateMapper();
         }
 
         [TestInitialize]
@@ -84,13 +86,13 @@ namespace Machete.Test.Selenium.View
             int rowcount = 1;                        
             Random rand = new Random();
 
-            if (frb.ToFactory().Get().Workers.Select(q => q.dwccardnum).Distinct().Count() <= 10)
+            if (frb.ToFactory().Workers.Select(q => q.dwccardnum).Distinct().Count() <= 10)
             {
                 frb.AddWorker();
             }
             //
             //
-            IEnumerable<int> list = frb.ToFactory().Get().Workers.Select(q => q.dwccardnum).Distinct().ToList();
+            IEnumerable<int> list = frb.ToFactory().Workers.Select(q => q.dwccardnum).Distinct().ToList();
             var count = list.Count();
             int numberOfSignins = rand.Next(count / 10) + 1; //+1 will never lead to zero here
             int numberSignedIn = numberOfSignins;
@@ -117,7 +119,7 @@ namespace Machete.Test.Selenium.View
 
                 //This line ensures the test doesn't break if we try to sign in an ID that has multiple workers attached to it.
                 //rowcount increments by the number of records found in the database matching that cardNum
-                rowcount += frb.ToFactory().Get().Workers.Where(q => q.dwccardnum == cardNum).Count();
+                rowcount += frb.ToFactory().Workers.Where(q => q.dwccardnum == cardNum).Count();
             }
             ui.WaitThenClickElement(By.Id("activityListTab"));
             //ui.SelectOption(By.XPath("//*[@id='activityTable_length']/label/select"), "100");
@@ -175,12 +177,12 @@ namespace Machete.Test.Selenium.View
         {
             //Arrange
             var _act = (Web.ViewModel.Activity)ViewModelRecords.activity.Clone();
-            IEnumerable<int> cardList = frb.ToFactory().Get().Workers.Select(q => q.dwccardnum).Distinct();
+            IEnumerable<int> cardList = frb.ToFactory().Workers.Select(q => q.dwccardnum).Distinct();
             Random rand = new Random();
             int randCardIndex = rand.Next(cardList.Count());
             int rowCount = 1;
             int randCard = cardList.ElementAt(randCardIndex);
-            while (frb.ToFactory().Get().Workers.First(c => c.dwccardnum == randCard).isSanctioned)
+            while (frb.ToFactory().Workers.First(c => c.dwccardnum == randCard).isSanctioned)
             {
                 randCardIndex = rand.Next(cardList.Count());
                 randCard = cardList.ElementAt(randCardIndex);

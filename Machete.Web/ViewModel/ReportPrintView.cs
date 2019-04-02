@@ -1,4 +1,4 @@
-﻿using Machete.Service;
+using Machete.Service;
 using System;
 
 namespace Machete.Web.ViewModel
@@ -16,12 +16,12 @@ namespace Machete.Web.ViewModel
 
     public class WeeklyReportPrintView : ReportPrintView
     {
-        public dataTableResult<WeeklySumData> report { get; set; }
+        public dataTableResult<WeeklySummaryData> report { get; set; }
     }
 
     public class MonthlyReportPrintView : ReportPrintView
     {
-        public dataTableResult<MonthlySumData> report { get; set; }
+        public dataTableResult<MonthlySummaryData> report { get; set; }
     }
 
     public class JzcReportPrintView : ReportPrintView

@@ -1,16 +1,11 @@
-﻿using Machete.Data;
+﻿using System;
 using Machete.Domain;
 using Machete.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Practices.Unity;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Machete.Test.Integration
+namespace Machete.Test.Integration.Fluent
 {
-    public partial class FluentRecordBase : IDisposable
+    public partial class FluentRecordBase
     {
         private IPersonService _servP;
         private Person _p;
@@ -21,16 +16,15 @@ namespace Machete.Test.Integration
             string testID = null
         )
         {
-            //
             // DEPENDENCIES
-            _servP = container.Resolve<IPersonService>();
-            //
+            _servP = container.GetRequiredService<IPersonService>();
+
             // ARRANGE
             _p = (Person)Records.person.Clone();
             if (datecreated != null) _p.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _p.dateupdated = (DateTime)dateupdated;
             if (testID != null) _p.firstname2 = testID;
-            //
+            
             // ACT
             var result = _servP.Create(_p, _user);
             return this;
@@ -49,7 +43,5 @@ namespace Machete.Test.Integration
             p.lastname1 = RandomString(8);
             return p;
         }
-
-
     }
 }

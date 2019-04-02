@@ -1,9 +1,14 @@
-﻿@model Machete.Web.ViewModel.Person
-@using Machete.Web.Helpers
-@using Machete.Web.Resources
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.Localization
+@model Machete.Web.ViewModel.Person
+
+@using Machete.Web.Resources;
 
 @{
-    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    var httpContext = ViewContext.HttpContext;
+    var currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
+    var currentUrl = UriHelper.BuildRelative(httpContext.Request.PathBase, httpContext.Request.Path, httpContext.Request.QueryString);
+
     string recType = "aji";
     string idPrefix = recType + Model.ID + "-";
     string parentPrefix = "person" + Model.ID + "-";
@@ -80,14 +85,14 @@
         $("#actOutTab").mUI('createTabs', {
             prefix: "ui-tabs-actOut-", 
             formLevel: 3,
-            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
-            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+            changeConfirm: "@Shared.changeConfirm",
+            changeTitle: "@Shared.changeTitle"
         });
         $("#actInTab").mUI('createTabs', {
             prefix: "ui-tabs-actIn-", 
             formLevel: 3,
-            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
-            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+            changeConfirm: "@Shared.changeConfirm",
+            changeTitle: "@Shared.changeTitle"
         });
         jqrfyTable({
             table: $('#@(idPrefix)actOutTable'), 
@@ -102,7 +107,7 @@
                 "bAutoWidth": false,
                 "bServerSide": true,
                 "sAjaxSource": "/Activity/AjaxHandler", 
-                "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+                "oLanguage": datatable_lang_@(currentCulture.TwoLetterISOLanguageName),
                 "bProcessing": true,
                 "aoColumns": [
                                 {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
@@ -141,7 +146,7 @@
                 "bAutoWidth": false,
                 "bServerSide": true,
                 "sAjaxSource": "/Activity/AjaxHandler", 
-                "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+                "oLanguage": datatable_lang_@(currentCulture.TwoLetterISOLanguageName),
                 "bProcessing": true,
                 "aoColumns": [
                                 {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },

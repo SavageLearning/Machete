@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     EventController.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -21,17 +21,18 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
-using DTO = Machete.Service.DTO;
+using Machete.Service.DTO;
 using Machete.Web.Helpers;
-using System;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
-
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Web.Controllers
 {
@@ -42,7 +43,6 @@ namespace Machete.Web.Controllers
         private readonly IImageService iServ;
         private readonly IMapper map;
         private readonly IDefaults def;
-        System.Globalization.CultureInfo CI;
         //
         //
         public EventController(IEventService eventService, 
@@ -50,50 +50,42 @@ namespace Machete.Web.Controllers
             IDefaults def,
             IMapper map)
         {
-            this.serv = eventService;
-            this.iServ = imageServ;
+            serv = eventService;
+            iServ = imageServ;
             this.map = map;
             this.def = def;
         }
-        protected override void Initialize(RequestContext requestContext)
-        {
-            base.Initialize(requestContext);
-            CI = (System.Globalization.CultureInfo)Session["Culture"];
-        }
+
         //
         //
         [Authorize(Roles = "Manager, Administrator")]
-
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {            
             //Get all the records
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
-            vo.CI = CI;
-            dataTableResult<DTO.EventList> list = serv.GetIndexView(vo);
+            dataTableResult<EventList> list = serv.GetIndexView(vo);
             //return what's left to datatables
             var result = list.query
-                .Select(e => map.Map<DTO.EventList, ViewModel.EventList>(e))
+                .Select(e => map.Map<EventList, ViewModel.EventList>(e))
                 .AsEnumerable();
             return Json(new
             {
-                sEcho = param.sEcho,
+                param.sEcho,
                 iTotalRecords = list.totalCount,
                 iTotalDisplayRecords = list.filteredCount,
                 aaData = result
-            },
-            JsonRequestBehavior.AllowGet);
+            });
         }
         //
         // GET: /Event/Create
         [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult Create(int PersonID)
+        public ActionResult Create(int personID)
         {
-            Event ev = new Event();
-            var m = map.Map<Domain.Event, ViewModel.Event>(new Event()
+            var m = map.Map<Event, ViewModel.Event>(new Event
             {
                 dateFrom = DateTime.Today,
                 dateTo = DateTime.Today,
-                PersonID = PersonID
+                PersonID = personID
             });
             m.def = def;
             return PartialView("Create", m);
@@ -103,19 +95,18 @@ namespace Machete.Web.Controllers
         // POST: /Event/Create
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Manager, Administrator")]
-        public ActionResult Create(Event evnt, string userName)
+        public async Task<ActionResult> Create(Event evnt, string userName)
         {
-            UpdateModel(evnt);
-            Event newEvent = serv.Create(evnt, userName);
-            var result = map.Map<Domain.Event, ViewModel.Event>(newEvent);
-            return Json(new
-            {
-                sNewRef = result.tabref,
-                sNewLabel = result.tablabel,
-                iNewID = newEvent.ID,
-                jobSuccess = true
-            },
-            JsonRequestBehavior.AllowGet);
+            if (await TryUpdateModelAsync(evnt)) {
+                var newEvent = serv.Create(evnt, userName);
+                var result = map.Map<Event, ViewModel.Event>(newEvent);
+                return Json(new {
+                    sNewRef = result.tabref,
+                    sNewLabel = result.tablabel,
+                    iNewID = newEvent.ID,
+                    jobSuccess = true
+                });
+            } else { return Json(new { jobSuccess = false }); }
         }
 
         //
@@ -123,7 +114,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Edit(int id)
         {
-            var m = map.Map<Domain.Event, ViewModel.Event>(serv.Get(id));
+            var m = map.Map<Event, ViewModel.Event>(serv.Get(id));
             m.def = def;
             return PartialView("Edit", m);
         }
@@ -133,33 +124,34 @@ namespace Machete.Web.Controllers
 
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult Edit(int id, string userName)
+        public async Task<ActionResult> Edit(int id, string userName)
         {
-            Event evnt = serv.Get(id);
-            UpdateModel(evnt);
-            serv.Save(evnt, userName);
-  
-            return Json(new { status = "OK" }, JsonRequestBehavior.AllowGet);
+            var evnt = serv.Get(id);
+            if (await TryUpdateModelAsync(evnt)) {
+                serv.Save(evnt, userName);
+                return Json(new {status = "OK"});
+            } else { return Json(new { status = "Not OK" }); } // TODO Chaim plz
         }
         //
         // AddImage
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult AddImage(int id, string userName, HttpPostedFileBase imagefile)
+        public ActionResult AddImage(int id, string userName, IFormFile imagefile)
         {
             if (imagefile == null) throw new MacheteNullObjectException("AddImage called with null imagefile");
-            JoinEventImage joiner = new JoinEventImage();
-            Event evnt = serv.Get(id);
+            var joiner = new JoinEventImage();
+            var evnt = serv.Get(id);
             // TODO:The following code should be in the Service layer
-            Image image = new Image();
+            var image = new Image();
             image.ImageMimeType = imagefile.ContentType;
             image.parenttable = "Events";
             image.filename = imagefile.FileName;
             image.recordkey = id.ToString();
-            image.ImageData = new byte[imagefile.ContentLength];
-            imagefile.InputStream.Read(image.ImageData,
-                                       0,
-                                       imagefile.ContentLength);
+            image.ImageData = new byte[imagefile.Length];
+            imagefile.OpenReadStream();//(image.ImageData,
+                                       //0,
+                                       //imagefile.Length);
+            // TODO read the stream, close the file
             Image newImage = iServ.Create(image, userName);
             joiner.ImageID = newImage.ID;
             joiner.EventID = evnt.ID;
@@ -176,10 +168,9 @@ namespace Machete.Web.Controllers
             return Json(new
             {
                 status = "OK"                
-            },
-            JsonRequestBehavior.AllowGet);
+            });
         }
-        //
+
         // GET: /Event/Delete/5
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager")]
@@ -190,27 +181,24 @@ namespace Machete.Web.Controllers
             {
                 status = "OK",
                 deletedID = id
-            },
-            JsonRequestBehavior.AllowGet);
+            });
         }
 
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult DeleteImage(int evntID, int jeviID, string user)
         {
-            int deletedJEVI = 0;
-            Event evnt = serv.Get(evntID);
-            JoinEventImage jevi = evnt.JoinEventImages.Single(e => e.ID == jeviID);
-            deletedJEVI = jevi.ID;
-            iServ.Delete(jevi.ImageID, user);
-            evnt.JoinEventImages.Remove(jevi);
+            var evnt = serv.Get(evntID);
+            var joinEventImage = evnt.JoinEventImages.Single(e => e.ID == jeviID);
+            var deletedImageId = joinEventImage.ID;
+            iServ.Delete(joinEventImage.ImageID, user);
+            evnt.JoinEventImages.Remove(joinEventImage);
 
             return Json(new
             {
                 status = "OK",
-                deletedID = deletedJEVI
-            },
-            JsonRequestBehavior.AllowGet);
+                deletedID = deletedImageId
+            });
         }
     }
 }

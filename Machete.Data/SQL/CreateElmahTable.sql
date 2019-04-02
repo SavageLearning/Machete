@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[ELMAH_Error](
+CREATE TABLE [dbo].[ELMAH_Error](
 	[ErrorId] [uniqueidentifier] NOT NULL,
 	[Application] [nvarchar](60) NOT NULL,
 	[Host] [nvarchar](50) NOT NULL,

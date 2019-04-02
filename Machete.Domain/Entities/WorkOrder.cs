@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     WorkOrder.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace Machete.Domain
 {
@@ -42,13 +43,20 @@ namespace Machete.Domain
 
         public virtual ICollection<WorkAssignment> workAssignments { get; set; }
         public virtual ICollection<WorkerRequest> workerRequests { get; set; }
-        public virtual ICollection<Email> Emails { get; set; }
 
-        // Constructor
+        private ICollection<JoinWorkOrderEmail> WorkOrderEmails { get; } = new List<JoinWorkOrderEmail>();
+        [NotMapped] public ICollection<Email> Emails;
+
         public WorkOrder()
         {
-            this.waPseudoIDCounter = 0;
+            waPseudoIDCounter = 0;
+            Emails = new JoinCollectionFacade<Email,JoinWorkOrderEmail>(
+                WorkOrderEmails,
+                woe => woe.Email,
+                e => new JoinWorkOrderEmail { WorkOrder = this, Email = e }
+            );
         }
+        
         public Double timeZoneOffset { get; set; }
         // Flag identifying if source of work order was online web form
         public bool onlineSource { get; set; }

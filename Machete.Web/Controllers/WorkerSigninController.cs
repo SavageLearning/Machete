@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     WorkerSigninController.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -21,16 +21,16 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+
+using System;
+using System.Linq;
 using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
-using DTO = Machete.Service.DTO;
+using Machete.Service.DTO;
 using Machete.Web.Helpers;
-using System;
-using System.Linq;
-using System.Web.Configuration;
-using System.Web.Mvc;
-using System.Web.Routing;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Web.Controllers
 {
@@ -39,22 +39,14 @@ namespace Machete.Web.Controllers
     {
         private readonly IWorkerSigninService serv;
         private readonly IMapper map;
-        private readonly IDefaults def;
-        private System.Globalization.CultureInfo CI;        
-        public WorkerSigninController(IWorkerSigninService workerSigninService, 
-            IDefaults def,
+
+        public WorkerSigninController(IWorkerSigninService workerSigninService,
             IMapper map)
         {
-            this.serv = workerSigninService;
+            serv = workerSigninService;
             this.map = map;
-            this.def = def;
         }
 
-        protected override void Initialize(RequestContext requestContext)
-        {
-            base.Initialize(requestContext);
-            CI = (System.Globalization.CultureInfo)Session["Culture"];
-        }
         //
         // GET: /WorkerSignin/
         // Initial page creation
@@ -65,13 +57,13 @@ namespace Machete.Web.Controllers
         }
         //
         // POST: /WorkerSignin/Index -- records a signin
-        [HttpPost]
+        [HttpPost, UserNameFilter]
         [Authorize(Roles = "Manager, Administrator, Check-in")]
         public ActionResult Index(int dwccardnum, DateTime dateforsignin, string userName)
         {
-            var wsi = serv.CreateSignin(dwccardnum, dateforsignin, this.User.Identity.Name);
+            var wsi = serv.CreateSignin(dwccardnum, dateforsignin, userName);
             var result = map.Map<WorkerSignin, ViewModel.WorkerSignin>(wsi);
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(result);
 
         }
         /// <summary>
@@ -93,8 +85,7 @@ namespace Machete.Web.Controllers
                 jobSuccess = true,
                 status = "OK", 
                 workerID = id
-            },
-            JsonRequestBehavior.AllowGet);
+            });
         }
 
         /// <summary>
@@ -116,8 +107,7 @@ namespace Machete.Web.Controllers
                 jobSuccess = true,
                 status = "OK",
                 workerID = id
-            },
-            JsonRequestBehavior.AllowGet);
+            });
         }
 
         // GET: /WorkerSignin/Delete/5
@@ -138,39 +128,33 @@ namespace Machete.Web.Controllers
                     {
                         jobSuccess = false,
                         rtnMessage = "You cannot delete a signin that has been associated with an Assignment. Disassociate the sigin with the assignment first."
-                    },
-                    JsonRequestBehavior.AllowGet);
+                    });
             }
-            else
-            { 
-                serv.Delete(id, userName);            
-                return Json(new
-                {
-                    jobSuccess = true,
-                    status = "OK",
-                    deletedID = id
-                },
-                JsonRequestBehavior.AllowGet);
-            }
+
+            serv.Delete(id, userName);            
+            return Json(new
+            {
+                jobSuccess = true,
+                status = "OK",
+                deletedID = id
+            });
         }
 
         [Authorize(Roles = "Administrator, Manager, Check-in")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
-            vo.CI = CI;
-            dataTableResult<Service.DTO.WorkerSigninList> was = serv.GetIndexView(vo);
+            dataTableResult<WorkerSigninList> was = serv.GetIndexView(vo);
             var result = was.query
-                .Select(e => map.Map<DTO.WorkerSigninList, ViewModel.WorkerSigninList>(e))
+                .Select(e => map.Map<WorkerSigninList, ViewModel.WorkerSigninList>(e))
                 .AsEnumerable();
             return Json(new
             {
-                sEcho = param.sEcho,
+                param.sEcho,
                 iTotalRecords = was.totalCount,
                 iTotalDisplayRecords = was.filteredCount,
                 aaData = result
-            },
-            JsonRequestBehavior.AllowGet);
+            });
         }
     }
 }

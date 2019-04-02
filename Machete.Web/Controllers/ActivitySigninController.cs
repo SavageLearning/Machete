@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     ActivitySigninController.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -21,15 +21,16 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+
+using System;
+using System.Linq;
 using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
-using DTO = Machete.Service.DTO;
+using Machete.Service.DTO;
 using Machete.Web.Helpers;
-using System;
-using System.Linq;
-using System.Web.Mvc;
-using System.Web.Routing;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Web.Controllers
 {
@@ -39,7 +40,6 @@ namespace Machete.Web.Controllers
         private readonly IActivitySigninService serv;
         private readonly IMapper map;
         private readonly IDefaults def;
-        private System.Globalization.CultureInfo CI;
 
         public ActivitySigninController(
             IActivitySigninService serv, 
@@ -51,40 +51,35 @@ namespace Machete.Web.Controllers
             this.def = def;
         }
 
-        protected override void Initialize(RequestContext requestContext)
-        {
-            base.Initialize(requestContext);
-            CI = (System.Globalization.CultureInfo)Session["Culture"];
-        }
         /// <summary>
-        /// 
+        /// GET /Activity/Index
         /// </summary>
         /// <returns></returns>
         [Authorize(Roles = "Manager, Administrator, Check-in, Teacher")]
         public ActionResult Index()
         {
-            return View();
+            return View("~/Views/Shared/ActivitySigninIndex.cshtml");
         }
+
         /// <summary>
-        /// 
+        /// POST /Activity/Index
         /// </summary>
         /// <param name="dwccardnum"></param>
         /// <param name="activityID"></param>
-        /// <returns></returns>
+        /// <param name="userName"></param>
         [HttpPost]
+        [UserNameFilter]
         [Authorize(Roles = "Manager, Administrator, Check-in, Teacher")]
-        public ActionResult Index(int dwccardnum, int activityID)
+        public ActionResult Index(int dwccardnum, int activityID, string userName)
         {
             var _asi = new ActivitySignin();
-            // Tthe card just swiped
             _asi.dateforsignin = DateTime.Now;
             _asi.activityID = activityID;
-            _asi.dwccardnum = dwccardnum;            
-            //
-            //
-            string imageRef = serv.getImageRef(dwccardnum);
-            Worker w = serv.CreateSignin(_asi, this.User.Identity.Name);
+            _asi.dwccardnum = dwccardnum;
+
             //Get picture from checkin, show with next view
+            string imageRef = serv.getImageRef(dwccardnum);
+            Worker w = serv.CreateSignin(_asi, userName);
 
             return Json(new
             {
@@ -92,17 +87,11 @@ namespace Machete.Web.Controllers
                 memberInactive = w.isInactive,
                 memberSanctioned = w.isSanctioned,
                 memberExpelled = w.isExpelled,
-                imageRef = imageRef,
+                imageRef,
                 expirationDate = w.memberexpirationdate
-            },
-            JsonRequestBehavior.AllowGet);
+            });
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="userName"></param>
-        /// <returns></returns>
+
         [UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, Check-in, Teacher")]
         public ActionResult Delete(int id, string userName)
@@ -113,33 +102,25 @@ namespace Machete.Web.Controllers
                 jobSuccess = true,
                 status = "OK",
                 deletedID = id
-            },
-            JsonRequestBehavior.AllowGet);
+            });
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="param"></param>
-        /// <returns></returns>
+
         [Authorize(Roles = "Administrator, Manager, Check-in, Teacher")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
-            vo.CI = CI;
-            dataTableResult<DTO.ActivitySigninList> list = serv.GetIndexView(vo);
+            dataTableResult<ActivitySigninList> list = serv.GetIndexView(vo);
             var result = list.query
                 .Select(
-                    e => map.Map<DTO.ActivitySigninList, ViewModel.ActivitySigninList>(e)
+                    e => map.Map<ActivitySigninList, ViewModel.ActivitySigninList>(e)
                 ).AsEnumerable();
             return Json(new
             {
-                sEcho = param.sEcho,
+                param.sEcho,
                 iTotalRecords = list.totalCount,
                 iTotalDisplayRecords = list.filteredCount,
                 aaData = result
-            },
-            JsonRequestBehavior.AllowGet);
+            });
         }
-
     }
 }

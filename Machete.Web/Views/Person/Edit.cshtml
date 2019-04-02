@@ -1,4 +1,4 @@
-﻿@model Machete.Web.ViewModel.Person
+@model Machete.Web.ViewModel.Person
 @using Machete.Web.Resources
 @using Machete.Web.Helpers
 @{
@@ -12,16 +12,16 @@
         {
             <li><a href="/Worker/Create?ID=@(Model.ID)" id="workerCreateTab" class="CreateTab">@Machete.Web.Resources.Persons.createworker</a></li>
         }
-        @if (Html.IsRoleAllowed("Worker.Edit.WorkerInfo.ShowTab") && Model.Worker != null)
+        @if (Html.IsInRole("Administrator", "Manager") && Model.Worker != null)
         {
             <li><a href="/Worker/Edit/@(Model.ID)" id="workerEditTab">@Machete.Web.Resources.Persons.workerinfo</a></li>
         }
-        @if (Html.IsInRole(Html.Role_AM()))
+        @if (Html.IsInRole("Administrator", "Manager"))
         {
             <li><a href="#eventList" id="eventListTab" class="ListTab">@Events.eventtab</a> </li>
             <li><a href="/Event/Create?PersonID=@(Model.ID)" id="eventCreateTab" class="CreateTab">@Events.createlink</a></li>
         }
-        @if (Html.IsInRole(Html.Role_T()) && Model.Worker != null)
+        @if (Html.IsInRole("Teacher") && Model.Worker != null)
         {
             <li><a href="#actJoinList" id="actJoinTab" class="ListTab">@Activities.actJoinTab</a></li>
             <li><a hidden href="/Worker/Edit/@(Model.ID)" id="workerEditTab">@Machete.Web.Resources.Persons.workerinfo</a></li>
@@ -34,7 +34,7 @@
 
             <input type="button" value="@Persons.viewlink" class="formButton" id="view-@Model.ID" />
             <input type="button" onclick="FindPersonDuplicate()" value="@Persons.editsubmit" class="formButton saveBtn" />
-            if (Html.IsInRole(Html.Role_AM()))
+            if (Html.IsInRole("Administrator", "Manager"))
             {
                 <input id="delete-@Model.ID" type="button" value="@Persons.deletesubmit"
                        class="formButton deleteButton" />
@@ -44,7 +44,7 @@
             @Html.EditorForModel()
 
         }
-        @if (Html.IsInRole(Html.Role_AM()))
+        @if (Html.IsInRole("Administrator", "Manager"))
         {
             using (Html.BeginForm("Delete", "Person", FormMethod.Post,
                                     new { @class = "edittab-form", @id = "DeletePerson-" + Model.ID }))
@@ -55,10 +55,10 @@
             }
         }
     </div>
-    @Html.Partial("EventIndex", Model)
-    @if (Html.IsInRole(Html.Role_T()) && Model.Worker != null)
+    @await Html.PartialAsync("EventIndex", Model)
+    @if (Html.IsInRole("Teacher") && Model.Worker != null)
     {
-        @Html.Partial("ActivityJoinIndex", Model)
+        @await Html.PartialAsync("ActivityJoinIndex", Model)
     }
 </div>
 
