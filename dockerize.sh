@@ -27,7 +27,7 @@ dotnet publish -o published
 cd ..
 
 # TODO automate versioning
-docker build -t ndlonmachete/debian:1.15.0-dev .
+docker build -t ndlonmachete/debian:1.15.1-dev .
 
 echo "to run, type:"
 echo ""
