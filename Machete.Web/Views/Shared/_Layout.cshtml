@@ -41,7 +41,6 @@
                     @if (Html.IsInRole("Administrator", "Manager"))
                     {
                         <li><a id="menulinkV2" href="/V2">V2</a></li>
-                        <li>@Html.ActionLink(Shared.reportstab, "Index", "Reports", null, new { id = "menulinkreports" })</li>
                         <li>@Html.ActionLink(Shared.emailstab, "Index", "Email", null, new { id = "menulinkemails" })</li>
                      }
                      @if (Html.IsInRole("Administrator", "Manager", "PhoneDesk"))

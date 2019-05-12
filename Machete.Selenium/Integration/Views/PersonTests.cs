@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Machete.Test.Integration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;

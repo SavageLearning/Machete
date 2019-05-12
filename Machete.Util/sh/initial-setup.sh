@@ -10,4 +10,4 @@ source ./new-db-use-with-caution.sh
 
 # This would be nice, but you're going to run into the problem that you don't have any secrets provisioned.
 # Which is fine, except that it disables Google and Facebook login. So I'm leaving it commented out for now.
-# ./dockerize.sh && run-machete-1.sh
+# ./dockerize.sh && run-machete1.sh

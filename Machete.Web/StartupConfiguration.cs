@@ -145,7 +145,6 @@ namespace Machete.Web
             services.AddScoped<ILookupService, LookupService>();
             services.AddScoped<IOnlineOrdersService, OnlineOrdersService>();
             services.AddScoped<IPersonService, PersonService>();
-            services.AddScoped<IReportService, ReportService>();
             services.AddScoped<IReportsV2Service, ReportsV2Service>();
             services.AddScoped<IScheduleRuleService, ScheduleRuleService>();
             services.AddScoped<ITransportRuleService, TransportRuleService>();

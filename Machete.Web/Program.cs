@@ -14,7 +14,7 @@ namespace Machete.Web
         /// The program is not designed to accept arguments. Secrets from
         /// the dotnet cli user store can be passed in as environment variables.
         /// </summary>
-        public static void Main(string[] args) => CustomWebHostBuilder(args)
+        public static void Main(string[] args) => CreateWebHostBuilder(args)
             .Build()
             .CreateOrMigrateDatabase()
             .Run();        
@@ -24,7 +24,7 @@ namespace Machete.Web
         /// basics necessary to run an MVC app on POSIX. It does not contain configuration for IIS, instead using only
         /// the Kestrel development server; ideal for hosting with containers.
         /// </summary>
-        public static IWebHostBuilder CustomWebHostBuilder(string[] args) =>
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             new WebHostBuilder()
              // .UseContentRoute() //uncomment for static content route
                 .ConfigureAppConfiguration((host, config) =>

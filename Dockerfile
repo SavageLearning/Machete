@@ -1,5 +1,5 @@
 
-FROM ndlonmachete/debian-base:0.1.11
+FROM ndlonmachete/debian-base:0.1.13
 
 LABEL maintainer="chaimeliyah@gmail.com"
 ENV MACHETE_USE_HTTPS_SCHEME=https

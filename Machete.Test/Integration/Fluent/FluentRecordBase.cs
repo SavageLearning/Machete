@@ -24,7 +24,6 @@
 
 using System;
 using System.IO;
-using System.Security.Cryptography;
 using System.Text;
 using AutoMapper;
 using Machete.Data;
@@ -67,7 +66,6 @@ namespace Machete.Test.Integration.Fluent
 
         public FluentRecordBase() {
             var webHost = new WebHostBuilder()
-                .UseKestrel()
                 .ConfigureAppConfiguration((host, config) =>
                 {
                     config.SetBasePath(Directory.GetCurrentDirectory());
@@ -76,6 +74,7 @@ namespace Machete.Test.Integration.Fluent
                     if (host.HostingEnvironment.IsDevelopment())
                         config.AddUserSecrets<Startup>();
                 })
+                .UseKestrel()
                 .ConfigureLogging((app, logging) =>
                 {
                     logging.AddConfiguration(app.Configuration.GetSection("Logging"));

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Machete.Data.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -534,6 +534,8 @@ namespace Machete.Data.Migrations
                 name: "ActivitySignins",
                 columns: table => new
                 {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     datecreated = table.Column<DateTime>(nullable: false),
                     dateupdated = table.Column<DateTime>(nullable: false),
                     Createdby = table.Column<string>(maxLength: 30, nullable: true),
@@ -542,8 +544,6 @@ namespace Machete.Data.Migrations
                     memberStatus = table.Column<int>(nullable: true),
                     dateforsignin = table.Column<DateTime>(nullable: false),
                     timeZoneOffset = table.Column<double>(nullable: false),
-                    ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     activityID = table.Column<int>(nullable: false),
                     personID = table.Column<int>(nullable: true)
                 },
@@ -737,13 +737,13 @@ namespace Machete.Data.Migrations
                 name: "JoinWorkOrderEmail",
                 columns: table => new
                 {
+                    WorkOrderID = table.Column<int>(nullable: false),
+                    EmailID = table.Column<int>(nullable: false),
                     ID = table.Column<int>(nullable: false),
                     datecreated = table.Column<DateTime>(nullable: false),
                     dateupdated = table.Column<DateTime>(nullable: false),
                     Createdby = table.Column<string>(maxLength: 30, nullable: true),
-                    Updatedby = table.Column<string>(maxLength: 30, nullable: true),
-                    WorkOrderID = table.Column<int>(nullable: false),
-                    EmailID = table.Column<int>(nullable: false)
+                    Updatedby = table.Column<string>(maxLength: 30, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -826,6 +826,8 @@ namespace Machete.Data.Migrations
                 name: "WorkerSignins",
                 columns: table => new
                 {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     datecreated = table.Column<DateTime>(nullable: false),
                     dateupdated = table.Column<DateTime>(nullable: false),
                     Createdby = table.Column<string>(maxLength: 30, nullable: true),
@@ -834,8 +836,6 @@ namespace Machete.Data.Migrations
                     memberStatus = table.Column<int>(nullable: true),
                     dateforsignin = table.Column<DateTime>(nullable: false),
                     timeZoneOffset = table.Column<double>(nullable: false),
-                    ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     WorkAssignmentID = table.Column<int>(nullable: true),
                     lottery_timestamp = table.Column<DateTime>(nullable: true),
                     lottery_sequence = table.Column<int>(nullable: true),

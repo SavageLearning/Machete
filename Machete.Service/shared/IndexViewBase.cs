@@ -27,7 +27,7 @@ using Machete.Domain;
 using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.SqlServer;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -649,8 +649,8 @@ namespace Machete.Service
         /// <param name="asRepo"></param>
         public static void getUnassociated(int personID, ref IQueryable<Activity> q, MacheteContext db)
         {
-            var aRepo = db.Set<Activity>().AsNoTracking().AsQueryable();
-            var asRepo = db.Set<ActivitySignin>().AsNoTracking().AsQueryable();
+            var aRepo = db.Activities.AsNoTracking().AsQueryable();
+            var asRepo = db.ActivitySignins.AsNoTracking().AsQueryable();
             //
             //SELECT extent1.* FROM  [dbo].[Activities] AS [Extent1]
             //LEFT OUTER JOIN [dbo].[ActivitySignins] AS [Extent2] ON 
@@ -679,7 +679,7 @@ namespace Machete.Service
         /// <param name="asRepo"></param>
         public static void getAssociated(int personID, ref IQueryable<Activity> q, MacheteContext db)
         {
-            var asRepo = db.Set<ActivitySignin>().AsNoTracking().AsQueryable();
+            var asRepo = db.ActivitySignins.AsNoTracking().AsQueryable();
             q = from a in q
                 join az in asRepo on a.ID equals az.activityID into g
                 from f in g.DefaultIfEmpty()

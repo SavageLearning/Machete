@@ -1,14 +1,12 @@
 ﻿using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
-using Machete.Test.Integration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text;
 using System.Threading;

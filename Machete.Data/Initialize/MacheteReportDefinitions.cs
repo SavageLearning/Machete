@@ -12,10 +12,7 @@ namespace Machete.Data.Initialize
 {
 	public static class MacheteReportDefinitions
 	{
-
-		public static List<ReportDefinition> cache => _cache;
-
-		private static List<ReportDefinition> _cache = new List<ReportDefinition>
+		public static List<ReportDefinition> _cache { get; } = new List<ReportDefinition>
 		{
 			#region REPORT DEFINITIONS
 
@@ -1558,31 +1555,31 @@ where jobcount is not null or actcount is not null or eslcount is not null
 
 			_cache.ForEach(u =>
 			{
-				var definition = context.ReportDefinitions.FirstOrDefault(record => record.name == u.name);
-				if (definition == null)
+				if (context.ReportDefinitions.Any(record => record.name == u.name)) return;
+				
+				u.datecreated = DateTime.Now;
+				u.dateupdated = DateTime.Now;
+				u.createdby = "Init T. Script";
+				u.updatedby =
+					"Init T. Script"; // this next part is a little bit of a mess, but it is only run once during initialization.
+				u.columnsJson = MacheteAdoContext.getUIColumnsJson(u.sqlquery, connectionString);
+				if (u.inputsJson == null)
 				{
-					u.datecreated = DateTime.Now;
-					u.dateupdated = DateTime.Now;
-					u.createdby = "Init T. Script";
-					u.updatedby =
-						"Init T. Script"; // this next part is a little bit of a mess, but it is only run once during initialization.
-					u.columnsJson = MacheteAdoContext.getUIColumnsJson(u.sqlquery, connectionString);
-					if (u.inputsJson == null)
+					u.inputsJson = JsonConvert.SerializeObject(new
 					{
-						u.inputsJson = JsonConvert.SerializeObject(new
-						{
-							beginDate = true,
-							beginDateDefault = DateTime.Parse("1/1/2016"),
-							endDate = true,
-							endDateDefault = DateTime.Parse("1/1/2017"),
-							memberNumber = false
-						});
-					}
-
-					context.ReportDefinitions.Add(u);
-					context.SaveChanges();
+						beginDate = true,
+						beginDateDefault = DateTime.Parse("1/1/2016"),
+						endDate = true,
+						endDateDefault = DateTime.Parse("1/1/2017"),
+						memberNumber = false
+					});
 				}
+
+				// If we add the original Cache entry, it winds up with an ID.
+				context.ReportDefinitions.Add((ReportDefinition) u.Clone());
 			});
+			context.Database.OpenConnection();
+    		context.SaveChanges();
 
 			AddDBReadOnlyUser(context);
 		}

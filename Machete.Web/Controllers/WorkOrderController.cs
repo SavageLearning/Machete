@@ -281,14 +281,14 @@ namespace Machete.Web.Controllers
         /// <summary>
         /// Creates the view to print all orders for a given day
         /// </summary>
-        /// <param name="date">Date to perform action</param>
+        /// <param name="dateTime">Date to perform action</param>
         /// <param name="assignedOnly">Optional flag: if True, only shows orders that are fully assigned</param>
         /// <returns>MVC Action Result</returns>
         [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult GroupView(DateTime date, bool? assignedOnly)
+        public ActionResult GroupView(DateTime dateTime, bool? assignedOnly)
         {
             WorkOrderGroupPrintView view = new WorkOrderGroupPrintView();
-            var v = woServ.GetActiveOrders(date, assignedOnly ?? false);
+            var v = woServ.GetActiveOrders(dateTime, assignedOnly ?? false);
             view.orders = v.Select(e => map.Map<WorkOrder, ViewModel.WorkOrder>(e)).ToList();
             foreach (var i in view.orders) // inelegant, but functional
             {
@@ -300,14 +300,14 @@ namespace Machete.Web.Controllers
         /// <summary>
         /// Completes all orders for a given day
         /// </summary>
-        /// <param name="date">Date to perform action</param>
+        /// <param name="dateTime">Date to perform action</param>
         /// <param name="userName">UserName performing action</param>
         /// <returns>MVC Action Result</returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult CompleteOrders(DateTime date, string userName)
+        public ActionResult CompleteOrders(DateTime dateTime, string userName)
         {
-            int count = woServ.CompleteActiveOrders(date, userName);
+            int count = woServ.CompleteActiveOrders(dateTime, userName);
             return Json(new
             {
                 completedCount = count

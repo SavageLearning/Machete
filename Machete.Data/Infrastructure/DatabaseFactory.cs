@@ -61,8 +61,7 @@ namespace Machete.Data.Infrastructure
             
             var builder = new DbContextOptionsBuilder<MacheteContext>()
                     .UseLazyLoadingProxies()
-                    .UseSqlServer(connString, with =>
-                    with.MigrationsAssembly("Machete.Data"));
+                    .UseSqlServer(connString, with => with.MigrationsAssembly("Machete.Data"));
             options = builder.Options;
         }
 

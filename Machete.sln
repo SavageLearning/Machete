@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Machete.Service", "Machete.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Machete.Test", "Machete.Test\Machete.Test.csproj", "{69EC5263-745F-40CB-9E53-FC091FE1619C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Machete.Selenium", "Machete.Selenium\Machete.Selenium.csproj", "{44BF9EB7-75F8-4ED2-9429-2769151A31FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,5 +61,13 @@ Global
 		{69EC5263-745F-40CB-9E53-FC091FE1619C}.CasaLatina|Any CPU.Build.0 = Debug|Any CPU
 		{69EC5263-745F-40CB-9E53-FC091FE1619C}.Debug-no_nodejs_build|Any CPU.ActiveCfg = Debug|Any CPU
 		{69EC5263-745F-40CB-9E53-FC091FE1619C}.Debug-no_nodejs_build|Any CPU.Build.0 = Debug|Any CPU
+		{44BF9EB7-75F8-4ED2-9429-2769151A31FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44BF9EB7-75F8-4ED2-9429-2769151A31FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44BF9EB7-75F8-4ED2-9429-2769151A31FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44BF9EB7-75F8-4ED2-9429-2769151A31FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44BF9EB7-75F8-4ED2-9429-2769151A31FE}.CasaLatina|Any CPU.ActiveCfg = Debug|Any CPU
+		{44BF9EB7-75F8-4ED2-9429-2769151A31FE}.CasaLatina|Any CPU.Build.0 = Debug|Any CPU
+		{44BF9EB7-75F8-4ED2-9429-2769151A31FE}.Debug-no_nodejs_build|Any CPU.ActiveCfg = Debug|Any CPU
+		{44BF9EB7-75F8-4ED2-9429-2769151A31FE}.Debug-no_nodejs_build|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 EndGlobal

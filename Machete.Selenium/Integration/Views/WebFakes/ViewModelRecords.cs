@@ -3,7 +3,7 @@
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
 // License:  GPL v3
-// Project:  Machete.Test.Old
+// Project:  Machete.Selenium.Old
 // Contact:  savagelearning
 // 
 // Copyright 2011 Savage Learning, LLC., all rights reserved.
@@ -22,14 +22,9 @@
 // 
 #endregion
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Machete.Web.ViewModel;
-using Machete.Data;
-using System.Collections.ObjectModel;
 using Microsoft.EntityFrameworkCore;
-using System.Globalization;
 using Machete.Data.Initialize;
 
 namespace Machete.Test 

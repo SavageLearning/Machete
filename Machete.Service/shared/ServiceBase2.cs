@@ -105,7 +105,8 @@ namespace Machete.Service
             {
                 return record.text_ES;
             }
-            return record.text_EN; ;  //defaults to English
+            //defaults to English
+            return record.text_EN;
         }
     }
 }

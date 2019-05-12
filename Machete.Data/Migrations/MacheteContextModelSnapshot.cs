@@ -15,7 +15,7 @@ namespace Machete.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
+                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -989,6 +989,134 @@ namespace Machete.Data.Migrations
                     b.ToTable("WorkAssignments");
                 });
 
+            modelBuilder.Entity("Machete.Domain.WorkOrder", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("EmployerID");
+
+                    b.Property<string>("additionalNotes")
+                        .HasMaxLength(1000);
+
+                    b.Property<string>("city")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("contactName")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("createdby")
+                        .HasColumnName("Createdby")
+                        .HasMaxLength(30);
+
+                    b.Property<DateTime>("dateTimeofWork");
+
+                    b.Property<DateTime>("datecreated");
+
+                    b.Property<DateTime>("dateupdated");
+
+                    b.Property<string>("description")
+                        .HasMaxLength(4000);
+
+                    b.Property<bool?>("disclosureAgreement");
+
+                    b.Property<bool>("englishRequired");
+
+                    b.Property<string>("englishRequiredNote")
+                        .HasMaxLength(100);
+
+                    b.Property<bool>("lunchSupplied");
+
+                    b.Property<bool>("onlineSource");
+
+                    b.Property<int?>("paperOrderNum");
+
+                    b.Property<bool>("permanentPlacement");
+
+                    b.Property<string>("phone")
+                        .IsRequired()
+                        .HasMaxLength(12);
+
+                    b.Property<double?>("ppFee");
+
+                    b.Property<string>("ppPayerID")
+                        .HasMaxLength(25);
+
+                    b.Property<string>("ppPaymentID")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("ppPaymentToken")
+                        .HasMaxLength(25);
+
+                    b.Property<string>("ppResponse")
+                        .HasMaxLength(5000);
+
+                    b.Property<string>("ppState")
+                        .HasMaxLength(20);
+
+                    b.Property<string>("state")
+                        .IsRequired()
+                        .HasMaxLength(2);
+
+                    b.Property<string>("statusEN")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("statusES")
+                        .HasMaxLength(50);
+
+                    b.Property<int>("statusID")
+                        .HasColumnName("status");
+
+                    b.Property<bool>("timeFlexible");
+
+                    b.Property<double>("timeZoneOffset");
+
+                    b.Property<double>("transportFee");
+
+                    b.Property<double>("transportFeeExtra");
+
+                    b.Property<string>("transportMethodEN");
+
+                    b.Property<string>("transportMethodES");
+
+                    b.Property<int>("transportMethodID");
+
+                    b.Property<int>("transportProviderID");
+
+                    b.Property<string>("transportTransactID")
+                        .HasMaxLength(50);
+
+                    b.Property<int?>("transportTransactType");
+
+                    b.Property<int>("typeOfWorkID");
+
+                    b.Property<string>("updatedby")
+                        .HasColumnName("Updatedby")
+                        .HasMaxLength(30);
+
+                    b.Property<int>("waPseudoIDCounter");
+
+                    b.Property<string>("workSiteAddress1")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("workSiteAddress2")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("zipcode")
+                        .IsRequired()
+                        .HasMaxLength(10);
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("EmployerID");
+
+                    b.ToTable("WorkOrders");
+                });
+
             modelBuilder.Entity("Machete.Domain.Worker", b =>
                 {
                     b.Property<int>("ID");
@@ -1231,134 +1359,6 @@ namespace Machete.Data.Migrations
                     b.ToTable("WorkerSignins");
                 });
 
-            modelBuilder.Entity("Machete.Domain.WorkOrder", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("EmployerID");
-
-                    b.Property<string>("additionalNotes")
-                        .HasMaxLength(1000);
-
-                    b.Property<string>("city")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<string>("contactName")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<string>("createdby")
-                        .HasColumnName("Createdby")
-                        .HasMaxLength(30);
-
-                    b.Property<DateTime>("dateTimeofWork");
-
-                    b.Property<DateTime>("datecreated");
-
-                    b.Property<DateTime>("dateupdated");
-
-                    b.Property<string>("description")
-                        .HasMaxLength(4000);
-
-                    b.Property<bool?>("disclosureAgreement");
-
-                    b.Property<bool>("englishRequired");
-
-                    b.Property<string>("englishRequiredNote")
-                        .HasMaxLength(100);
-
-                    b.Property<bool>("lunchSupplied");
-
-                    b.Property<bool>("onlineSource");
-
-                    b.Property<int?>("paperOrderNum");
-
-                    b.Property<bool>("permanentPlacement");
-
-                    b.Property<string>("phone")
-                        .IsRequired()
-                        .HasMaxLength(12);
-
-                    b.Property<double?>("ppFee");
-
-                    b.Property<string>("ppPayerID")
-                        .HasMaxLength(25);
-
-                    b.Property<string>("ppPaymentID")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("ppPaymentToken")
-                        .HasMaxLength(25);
-
-                    b.Property<string>("ppResponse")
-                        .HasMaxLength(5000);
-
-                    b.Property<string>("ppState")
-                        .HasMaxLength(20);
-
-                    b.Property<string>("state")
-                        .IsRequired()
-                        .HasMaxLength(2);
-
-                    b.Property<string>("statusEN")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("statusES")
-                        .HasMaxLength(50);
-
-                    b.Property<int>("statusID")
-                        .HasColumnName("status");
-
-                    b.Property<bool>("timeFlexible");
-
-                    b.Property<double>("timeZoneOffset");
-
-                    b.Property<double>("transportFee");
-
-                    b.Property<double>("transportFeeExtra");
-
-                    b.Property<string>("transportMethodEN");
-
-                    b.Property<string>("transportMethodES");
-
-                    b.Property<int>("transportMethodID");
-
-                    b.Property<int>("transportProviderID");
-
-                    b.Property<string>("transportTransactID")
-                        .HasMaxLength(50);
-
-                    b.Property<int?>("transportTransactType");
-
-                    b.Property<int>("typeOfWorkID");
-
-                    b.Property<string>("updatedby")
-                        .HasColumnName("Updatedby")
-                        .HasMaxLength(30);
-
-                    b.Property<int>("waPseudoIDCounter");
-
-                    b.Property<string>("workSiteAddress1")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<string>("workSiteAddress2")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("zipcode")
-                        .IsRequired()
-                        .HasMaxLength(10);
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("EmployerID");
-
-                    b.ToTable("WorkOrders");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -1547,6 +1547,14 @@ namespace Machete.Data.Migrations
                         .HasForeignKey("workerSigininID");
                 });
 
+            modelBuilder.Entity("Machete.Domain.WorkOrder", b =>
+                {
+                    b.HasOne("Machete.Domain.Employer", "Employer")
+                        .WithMany("WorkOrders")
+                        .HasForeignKey("EmployerID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("Machete.Domain.Worker", b =>
                 {
                     b.HasOne("Machete.Domain.Person", "Person")
@@ -1573,14 +1581,6 @@ namespace Machete.Data.Migrations
                     b.HasOne("Machete.Domain.Worker", "worker")
                         .WithMany("workersignins")
                         .HasForeignKey("WorkerID");
-                });
-
-            modelBuilder.Entity("Machete.Domain.WorkOrder", b =>
-                {
-                    b.HasOne("Machete.Domain.Employer", "Employer")
-                        .WithMany("WorkOrders")
-                        .HasForeignKey("EmployerID")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

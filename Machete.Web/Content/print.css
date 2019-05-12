@@ -187,7 +187,7 @@ ul#menu li.selected a
 
 fieldset 
 {
-    border:1px solid #black;
+    border: 1px solid black;
     padding:0;
     margin:0;
 }
@@ -226,7 +226,7 @@ input[type="text"]
 input[type="password"] 
 {
     width: 200px;
-    border: 1px solid #black;
+    border: 1px solid black;
 }
 
 /* TABLE
