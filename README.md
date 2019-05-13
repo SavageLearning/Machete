@@ -1,7 +1,7 @@
 
 # Machete
 
-[![Build status](https://ci.appveyor.com/api/projects/status/4xhan2xt89f7sgji/branch/feature/multi-database?svg=true)](https://ci.appveyor.com/project/savagelearning/machete-k8wo2/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/4xhan2xt89f7sgji/branch/master?svg=true)](https://ci.appveyor.com/project/savagelearning/machete-k8wo2/branch/master)
 [![Join the chat at https://gitter.im/machete-project/Lobby](https://badges.gitter.im/machete-project/Lobby.svg)](https://gitter.im/machete-project/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.en.html)
 
