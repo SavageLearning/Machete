@@ -47,7 +47,7 @@
       "Scripts/jquery.jqplot.js",
       "Scripts/jqplot.cursor.js",
       "Scripts/jqplot.dateAxisRenderer.js",
-      "Scripts/jqplot.highligher.js",
+      "Scripts/jqplot.highlighter.js",
       "Scripts/jqplot.pieRenderer.js",
       "Scripts/reports.js"
     ],

@@ -38,7 +38,7 @@ namespace Machete.Test.Integration.Services
         [TestInitialize]
         public void TestInitialize()
         {
-            frb = new FluentRecordBase();
+            frb = FluentRecordBaseFactory.Get();
         }
 
         [TestCleanup]
@@ -54,7 +54,7 @@ namespace Machete.Test.Integration.Services
         {
             //Arrange
             //Act
-            var result = frb.ToPerson();
+            var result = frb.AddPerson();
             //Assert
             Assert.IsNotNull(result.ID, "Person.ID is Null");
         }

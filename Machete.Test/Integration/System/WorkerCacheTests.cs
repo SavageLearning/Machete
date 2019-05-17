@@ -42,7 +42,7 @@ namespace Machete.Test.Integration.System
         [TestInitialize]
         public void TestInitialize()
         {
-            frb = new FluentRecordBase();
+            frb = FluentRecordBaseFactory.Get();
             dOptions = new viewOptions
             {
                 CI = new CultureInfo("en-US", false),
@@ -60,10 +60,9 @@ namespace Machete.Test.Integration.System
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Workers)]
         public void ExpireMembers_expires_1_active()
         {
-
             //Arrange
             frb.AddWorker(status: Worker.iActive, skill1: 62, memberexpirationdate: DateTime.Now.AddDays(-1));
-            var _w = frb.ToWorker();
+            var _w = frb.AddWorker();
             //Act
             frb.ToServ<IWorkerService>().ExpireMembers();
             IEnumerable<Worker> result = frb.ToFactory().Workers.AsEnumerable()
@@ -76,10 +75,8 @@ namespace Machete.Test.Integration.System
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Workers)]
         public void ExpireMembers_doesnt_expire_1_inactive()
         {
-
             //Arrange
-            frb.AddWorker(status: Worker.iInactive, skill1: 62, memberexpirationdate: DateTime.Now.AddDays(-1));
-            var _w = frb.ToWorker();
+            var _w = frb.AddWorker(status: Worker.iInactive, skill1: 62, memberexpirationdate: DateTime.Now.AddDays(-1));
             //Act
             frb.ToServ<IWorkerService>().ExpireMembers();
             IEnumerable<Worker> result = frb.ToFactory().Workers.AsEnumerable()
@@ -92,11 +89,10 @@ namespace Machete.Test.Integration.System
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Workers)]
         public void ReactivateMembers_activates_1_sanctioned()
         {
-
             //Arrange
             frb.AddWorker(status: Worker.iSanctioned, memberReactivateDate: DateTime.Now.AddDays(-1),
                 memberexpirationdate: DateTime.Now.AddDays(1));
-            var _w = frb.ToWorker();
+            var _w = frb.AddWorker();
             //Act
             frb.ToServ<IWorkerService>().ReactivateMembers();
             IEnumerable<Worker> result = frb.ToFactory().Workers.AsEnumerable()
@@ -108,11 +104,9 @@ namespace Machete.Test.Integration.System
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Workers)]
         public void ExpireMembers_doesnt_activate_1_current_sanction()
         {
-
             //Arrange
-            frb.AddWorker(status: Worker.iSanctioned, memberReactivateDate: DateTime.Now.AddMonths(1),
+            var _w = frb.AddWorker(status: Worker.iSanctioned, memberReactivateDate: DateTime.Now.AddMonths(1),
                 memberexpirationdate: DateTime.Now.AddDays(1));
-            var _w = frb.ToWorker();
             //Act
             frb.ToServ<IWorkerService>().ReactivateMembers();
             IEnumerable<Worker> result = frb.ToFactory().Workers.AsEnumerable()
@@ -124,11 +118,9 @@ namespace Machete.Test.Integration.System
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Workers)]
         public void ExpireMembers_doesnt_activate_1_null_reactivation_date()
         {
-
             //Arrange
-            frb.AddWorker(status: Worker.iSanctioned, 
+            var _w = frb.AddWorker(status: Worker.iSanctioned, 
                     memberexpirationdate: DateTime.Now.AddDays(1));
-            var _w = frb.ToWorker();
             //Act
             frb.ToServ<IWorkerService>().ReactivateMembers();
             IEnumerable<Worker> result = frb.ToFactory().Workers.AsEnumerable()

@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RuntimeFrameworkVersion>2.2.4</RuntimeFrameworkVersion>
     <UserSecretsId>aspnet-Machete.Web-989B45A2-280E-40E5-85C9-2EA24160C6D1</UserSecretsId>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
 
 <ItemGroup>

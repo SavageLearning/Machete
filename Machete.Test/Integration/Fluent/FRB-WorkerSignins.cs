@@ -16,13 +16,9 @@ namespace Machete.Test.Integration.Fluent
         //DateTime? dateupdated = null
         )
         {
-            //
-            // DEPENDENCIES
-            _servWSI = container.GetRequiredService<IWorkerSigninService>();
-            if (worker != null) _w = worker;
-            if (_w == null) AddWorker();
-            //
             // ARRANGE
+            _servWSI = container.GetRequiredService<IWorkerSigninService>();
+            var _w = worker ?? AddWorker();
 
             //
             // ACT

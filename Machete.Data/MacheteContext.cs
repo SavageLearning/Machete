@@ -31,6 +31,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Machete.Data.Dynamic;
+using Machete.Data.Tenancy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Activity = Machete.Domain.Activity;
@@ -55,7 +56,17 @@ namespace Machete.Data
     // http://stackoverflow.com/questions/22105583/why-is-asp-net-identity-identitydbcontext-a-black-box
     public class MacheteContext : IdentityDbContext<MacheteUser>
     {
-        public MacheteContext(DbContextOptions<MacheteContext> options) : base(options) { }
+        private Tenant _tenant;
+
+        public MacheteContext(DbContextOptions<MacheteContext> options, ITenantService tenantService) : base(options)
+        {
+            _tenant = tenantService.GetCurrentTenant();
+        }
+
+        public MacheteContext(DbContextOptions<MacheteContext> options, Tenant tenant) : base(options)
+        {
+            _tenant = tenant;
+        }
         
         // Machete here defines the data context to use by EF Core convention.
         // Entity Framework will not retrieve or modify types not expressed here.
@@ -107,6 +118,13 @@ namespace Machete.Data
         }
 
         public bool IsDead { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(_tenant.ConnectionString);
+            
+            base.OnConfiguring(optionsBuilder);
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

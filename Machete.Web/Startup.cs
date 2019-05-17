@@ -57,7 +57,7 @@ namespace Machete.Web
                        .UseSqlServer(connString, with => with.MigrationsAssembly("Machete.Data"));
             });
 
-            services.ConfigureAuthentication();
+            services.ConfigureAuthentication(Configuration);
 
             var mapperConfig = new MapperConfiguration(maps =>
             {

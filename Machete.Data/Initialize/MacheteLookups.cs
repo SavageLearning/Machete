@@ -32,7 +32,8 @@ namespace Machete.Data.Initialize
     // static -- [ class-modifier ]
     //              cannot be instantiated, cannot be used as a type, can only contain
     //              static members
-    public static class MacheteLookup    {
+    public static class MacheteLookups
+    {
         /// <summary>
         /// There have been multiple renditions of the Lookups table and a form of cache, as I learned
         /// C#, .Net, and MVC. This list of objects is used to seed the database and to provide 

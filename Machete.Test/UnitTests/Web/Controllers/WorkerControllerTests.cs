@@ -126,7 +126,7 @@ namespace Machete.Test.UnitTests.Controllers
             //Act
             var result = (PartialViewResult)_controller.Create(0);
             //Assert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Web.ViewModel.Worker));
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Machete.Web.ViewModel.Worker));
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Workers)]
@@ -136,7 +136,7 @@ namespace Machete.Test.UnitTests.Controllers
             var w = new Machete.Web.ViewModel.Worker {
                 ID = 12345
             };
-            map.Setup(x => x.Map<Worker, Web.ViewModel.Worker>(It.IsAny<Worker>()))
+            map.Setup(x => x.Map<Worker, Machete.Web.ViewModel.Worker>(It.IsAny<Worker>()))
                 .Returns(w);
             var worker = new Worker();
             var person = new Person();
@@ -186,7 +186,7 @@ namespace Machete.Test.UnitTests.Controllers
             //Act
             var result = (PartialViewResult)_controller.Edit(testid);
             //Assert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Web.ViewModel.Worker));
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Machete.Web.ViewModel.Worker));
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Workers)]

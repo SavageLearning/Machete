@@ -33,7 +33,9 @@ using System.Configuration;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text;
+using Machete.Data.Tenancy;
 using Machete.Web.Maps;
+using Moq;
 
 namespace Machete.Test.Selenium.View
 {
@@ -69,7 +71,7 @@ namespace Machete.Test.Selenium.View
 
             // fake
             DbContextOptions<MacheteContext> options = new DbContextOptions<MacheteContext>();
-            DB = new MacheteContext(options);
+            DB = new MacheteContext(options, new Mock<ITenantService>().Object);
             wsiSet = DB.Set<WorkerSignin>();
             wSet = DB.Set<Worker>();
             pSet = DB.Set<Person>();

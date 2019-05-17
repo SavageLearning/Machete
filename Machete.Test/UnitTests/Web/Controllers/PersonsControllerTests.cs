@@ -177,7 +177,7 @@ namespace Machete.Test.UnitTests.Controllers
             
             //Assert
             Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Web.ViewModel.Person));
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Machete.Web.ViewModel.Person));
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]

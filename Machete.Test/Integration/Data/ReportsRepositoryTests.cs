@@ -16,7 +16,7 @@ namespace Machete.Test.Integration.Data
         [TestInitialize]
         public void Initialize()
         {
-            frb = new FluentRecordBase();
+            frb = FluentRecordBaseFactory.Get();
             connectionString = "Server=localhost,1433; Database=machete_db; User=readonlylogin; Password=@testPassword1;";
         }
 

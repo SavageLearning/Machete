@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Data.Initialize;
 using Machete.Data.Repositories;
+using Machete.Data.Tenancy;
 using Machete.Service;
 using Machete.Web.Controllers.Api;
 using Machete.Web.Helpers;
@@ -37,14 +40,41 @@ namespace Machete.Web
         /// </summary>
         public static IWebHost CreateOrMigrateDatabase(this IWebHost webhost)
         {
-            using (var scope = webhost.Services.CreateScope())
+            using (var serviceScope = webhost.Services.CreateScope())
             {
-                var context = scope.ServiceProvider.GetService<MacheteContext>();
-                context.Database.Migrate();
-                MacheteConfiguration.Seed(context, webhost.Services);
+                var tenantService = serviceScope.ServiceProvider.GetService<ITenantService>();
+                var tenants = tenantService.GetAllTenants();
+
+                foreach (var tenant in tenants)
+                {
+                    var factory = serviceScope.ServiceProvider.GetService<IDatabaseFactory>();
+                    var macheteContext = factory.Get(tenant);
+                    macheteContext.Database.Migrate();
+                    MacheteConfiguration.Seed(macheteContext);
+                }
             }
 
             return webhost;
+        }
+
+        public static async Task SeedUsersAsync(this IWebHost webhost)
+        {
+            using (var serviceScope = webhost.Services.CreateScope())
+            {
+                var tenantService = serviceScope.ServiceProvider.GetService<ITenantService>();
+                var tenants = tenantService.GetAllTenants();
+
+                foreach (var tenant in tenants)
+                {
+                    var factory = serviceScope.ServiceProvider.GetService<IDatabaseFactory>();
+                    var macheteContext = factory.Get(tenant);
+                    
+                    var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
+                    var userManager = serviceScope.ServiceProvider.GetService<UserManager<MacheteUser>>();
+                    
+                    await MacheteConfiguration.SeedAsync(macheteContext, roleManager, userManager);
+                }
+            }
         }
 
         /// <summary>
@@ -52,7 +82,7 @@ namespace Machete.Web
         /// and configures authentication for Machete. We currently use ASP.NET Identity with cookie authentication.</para>
         /// <para>JWT: https://github.com/mmacneil/AngularASPNETCore2WebApiAuth/blob/master/src/Startup.cs</para>
         /// </summary>
-        public static void ConfigureAuthentication(this IServiceCollection services)
+        public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddIdentity<MacheteUser, IdentityRole>()
                 .AddEntityFrameworkStores<MacheteContext>()
@@ -92,12 +122,24 @@ namespace Machete.Web
                 options.SlidingExpiration = true;
             }); // <~ keep for JWT auth
 
+            var mappings = configuration.GetSection("Tenants").Get<TenantMapping>();
+            var tenants = mappings.Tenants.Keys.ToList();
+            tenants.Add("localhost");
+            var origins = new List<string>();
+
+            foreach (var tenant in tenants)
+            {
+                origins.Add("http://" + tenant + ":4213");
+                origins.Add("http://" + tenant + ":4200");
+                origins.Add("http://" + tenant);
+            }
+            
             services.AddCors(options =>
             {
                 options.AddPolicy(StartupConfiguration.AllowCredentials, builder =>
                 {
-                    // for JWT auth, this will have to be reconfigured for "AllowAllOrigins"
-                    builder.WithOrigins("http://localhost:4213", "http://localhost:4200", "https://localhost") // TODO
+                    // JWT auth: reconfigure for "AllowAnyOrigin" (cannot be combined with AllowCredentials)
+                    builder.WithOrigins(origins.ToArray())
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials();
@@ -110,7 +152,10 @@ namespace Machete.Web
         /// https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-2.2
         /// </summary>
         public static void ConfigureDependencyInjection(this IServiceCollection services)
-        {
+        {        
+            services.AddScoped<ITenantIdentificationService, TenantIdentificationService>();
+            services.AddScoped<ITenantService, TenantService>();
+            
             services.AddScoped<IDatabaseFactory, DatabaseFactory>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 

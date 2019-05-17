@@ -23,13 +23,13 @@ namespace Machete.Test.Integration.Fluent
             //
             // DEPENDENCIES
             if (_wo == null) AddWorkOrder();
-            if (assignWorker && _w == null) AddWorker();
             _servWA = container.GetRequiredService<IWorkAssignmentService>();
             //
             // ARRANGE
             _wa = (WorkAssignment)Records.assignment.Clone();
             _wa.workOrder = _wo;
-            if (assignWorker) _wa.workerAssigned = _w;
+
+            if (assignWorker) _wa.workerAssigned = AddWorker();
             if (datecreated != null) _wa.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _wa.dateupdated = (DateTime)dateupdated;
             if (desc != null) _wa.description = desc;

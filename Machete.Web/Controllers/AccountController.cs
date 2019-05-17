@@ -63,7 +63,6 @@ namespace Machete.Web.Controllers
             _context = context;
         }
 
-        // TODO naming _
         private UserManager<MacheteUser> UserManager { get; }
         private SignInManager<MacheteUser> SignInManager { get; }
         private RoleManager<IdentityRole> RoleManager { get; }

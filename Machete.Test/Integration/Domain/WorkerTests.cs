@@ -40,7 +40,7 @@ namespace Machete.Test.Integration.Domain
         [TestInitialize]
         public void Initialize()
         {
-            frb = new FluentRecordBase();
+            frb = FluentRecordBaseFactory.Get();
             dOptions = new viewOptions
             {
                 CI = new CultureInfo("en-US", false),
@@ -64,11 +64,11 @@ namespace Machete.Test.Integration.Domain
         {
             //Arrange
             frb.AddWorker();
-            Person _p = frb.ToPerson();
-            Worker _w = frb.ToWorker();
+            var person = frb.AddPerson();
+            var worker = frb.AddWorker();
             //Assert
-            Assert.IsNotNull(_p.Worker);
-            Assert.IsNotNull(_w.Person);
+            Assert.IsNotNull(person.Worker);
+            Assert.IsNotNull(worker.Person);
         }
     }
 }

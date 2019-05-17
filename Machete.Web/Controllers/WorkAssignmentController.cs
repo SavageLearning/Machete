@@ -144,7 +144,8 @@ namespace Machete.Web.Controllers
         {
             // TODO: Move duplication functionality to the service layer
             WorkAssignment _assignment = waServ.Get(id);
-            WorkAssignment duplicate = _assignment;
+            WorkAssignment duplicate = (WorkAssignment)_assignment.Clone();
+            duplicate.ID = 0;
             duplicate.workerAssigned = null;
             duplicate.workerAssignedID = null;
             duplicate.workerSiginin = null;

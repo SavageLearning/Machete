@@ -65,7 +65,7 @@ namespace Machete.Test
         public static Worker worker = new Worker
         {
             typeOfWorkID = 20,
-            RaceID = MacheteLookup.cache.First(x => x.category == "race" && x.text_EN =="Latino").ID,                     //byte
+            RaceID = MacheteLookups.cache.First(x => x.category == "race" && x.text_EN =="Latino").ID,                     //byte
             raceother = "Records._worker1", //string
             height = "too tall",            //string
             weight = "too big",             //string
@@ -75,18 +75,18 @@ namespace Machete.Test
             dateinseattle = DateTime.Now,   //datetime
             disabled = true,                //bool
             disabilitydesc = "foo",         //string
-            maritalstatus = MacheteLookup.cache.First(x => x.category == "maritalstatus" && x.text_EN == "Single").ID,            //string
+            maritalstatus = MacheteLookups.cache.First(x => x.category == "maritalstatus" && x.text_EN == "Single").ID,            //string
             livewithchildren = true,        //bool
             numofchildren = 0,              //byte
-            incomeID = MacheteLookup.cache.First(x => x.category == "income" && x.text_EN == "Poor (Less than $15,000)").ID,                   //byte
+            incomeID = MacheteLookups.cache.First(x => x.category == "income" && x.text_EN == "Poor (Less than $15,000)").ID,                   //byte
             livealone = true,               //bool
             emcontUSAname = "Bill Clinton", //string
             emcontUSAphone = "1234567890",  //string
             emcontUSArelation = "idol",     //string
             dwccardnum = 0,             //int
-            neighborhoodID = MacheteLookup.cache.First(x => x.category == "neighborhood" && x.text_EN == "Primary City").ID,             //byte
+            neighborhoodID = MacheteLookups.cache.First(x => x.category == "neighborhood" && x.text_EN == "Primary City").ID,             //byte
             immigrantrefugee = true,        //bool
-            countryoforiginID = MacheteLookup.cache.First(x => x.category == "countryoforigin" && x.text_EN == "Mexico").ID,        //string
+            countryoforiginID = MacheteLookups.cache.First(x => x.category == "countryoforigin" && x.text_EN == "Mexico").ID,        //string
             emcontoriginname = "Barak Obama",   //string
             emcontoriginphone = "1234567890",   //string
             emcontoriginrelation = "friend",    //string
@@ -101,7 +101,7 @@ namespace Machete.Test
             updatedby = "initialization script",
             dateOfBirth = DateTime.Now,
             dateOfMembership = DateTime.Now,
-            memberStatusID = MacheteLookup.cache.First(x => x.category == "memberstatus" && x.text_EN == "Active").ID
+            memberStatusID = MacheteLookups.cache.First(x => x.category == "memberstatus" && x.text_EN == "Active").ID
         };
 
         public static Person person = new Person
@@ -114,7 +114,7 @@ namespace Machete.Test
             phone = "206-555-3825",
             state = "CO",
             zipcode = "67123",
-            gender = MacheteLookup.cache.First(x => x.category == "gender" && x.text_EN == "Male").ID,
+            gender = MacheteLookups.cache.First(x => x.category == "gender" && x.text_EN == "Male").ID,
             active = true, //true
             datecreated = DateTime.Now,
             dateupdated = DateTime.Now,
@@ -130,7 +130,7 @@ namespace Machete.Test
             dateupdated = DateTime.Now,
             dateFrom = DateTime.Now,
             dateTo = DateTime.Now + TimeSpan.FromDays(30),
-            eventTypeID = MacheteLookup.cache.First(x => x.category == "eventtype" && x.text_EN == "Complaint").ID,
+            eventTypeID = MacheteLookups.cache.First(x => x.category == "eventtype" && x.text_EN == "Complaint").ID,
             notes = "Event note"
         };
 
@@ -158,7 +158,7 @@ namespace Machete.Test
             zipcode = "98124-4749",
             phone = "206-684-4000",
             cellphone = "123-456-7890",
-            referredby = MacheteLookup.cache.First(c => c.category == "emplrreference" && c.text_EN == "Facebook").ID,
+            referredby = MacheteLookups.cache.First(c => c.category == "emplrreference" && c.text_EN == "Facebook").ID,
             email = "willy@wonka.com",
             driverslicense = "wonkawi028f5",
             licenseplate = "123-CDY",
@@ -256,8 +256,8 @@ namespace Machete.Test
 
         public static Activity activity = new Activity
         {
-            typeID = MacheteLookup.cache.First(x => x.category == Domain.LCategory.activityType && x.text_EN == Domain.LActType.Class).ID,
-            nameID = MacheteLookup.cache.First(x => x.category == Domain.LCategory.activityName && x.text_EN == "Basic English").ID,
+            typeID = MacheteLookups.cache.First(x => x.category == Domain.LCategory.activityType && x.text_EN == Domain.LActType.Class).ID,
+            nameID = MacheteLookups.cache.First(x => x.category == Domain.LCategory.activityName && x.text_EN == "Basic English").ID,
             teacher = "jadmin",
             notes = "foo too",
             dateStart = DateTime.Now,

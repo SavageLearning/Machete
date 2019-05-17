@@ -26,6 +26,7 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text;
+using Machete.Data.Tenancy;
 using Microsoft.EntityFrameworkCore;
 
 namespace Machete.Data.Infrastructure
@@ -35,6 +36,7 @@ namespace Machete.Data.Infrastructure
     public interface IDatabaseFactory : IDisposable
     {
         MacheteContext Get();
+        MacheteContext Get(Tenant tenant);
     }
     //
     //
@@ -43,42 +45,32 @@ namespace Machete.Data.Infrastructure
         readonly DbContextOptions<MacheteContext> options;
         // ReSharper disable once InconsistentNaming
         private MacheteContext macheteContext;
+        private readonly ITenantService _tenantService;
+
         private const BindingFlags BindFlags = BindingFlags.Instance 
                                              | BindingFlags.Public
                                              | BindingFlags.NonPublic
                                              | BindingFlags.Static;
 
-        public DatabaseFactory(string connString)
-        {
-            var caller = Assembly.GetCallingAssembly();
-
-            if (!caller.FullName.StartsWith("Machete.Test"))
-            {
-                throw new UnauthorizedAccessException("This constructor can no longer retrieve a context for any class but the test class.");
-            }
-            
-            typeof(SqlConnection).GetField("ObjectID", BindFlags);
-            
-            var builder = new DbContextOptionsBuilder<MacheteContext>()
-                    .UseLazyLoadingProxies()
-                    .UseSqlServer(connString, with => with.MigrationsAssembly("Machete.Data"));
-            options = builder.Options;
-        }
-
-        public DatabaseFactory(DbContextOptions<MacheteContext> options)
+        public DatabaseFactory(DbContextOptions<MacheteContext> options, ITenantService tenantService)
         {
             typeof(SqlConnection).GetField("ObjectID", BindFlags);
             this.options = options;
+            _tenantService = tenantService;
         }
 
         public MacheteContext Get()
-        {            
+        {
             if (macheteContext == null) 
-            {
-                macheteContext = new MacheteContext(options);
-            }
+                macheteContext = new MacheteContext(options, _tenantService);
+
             log_connection_count("DatabaseFactory.Get");
             return macheteContext;
+        }
+
+        public MacheteContext Get(Tenant tenant)
+        {
+            return new MacheteContext(options, tenant);
         }
 
         private void log_connection_count(string prefix)

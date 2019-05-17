@@ -37,43 +37,16 @@ namespace Machete.Test.Integration.Services
         [TestInitialize]
         public void TestInitialize()
         {
-            frb = new FluentRecordBase();
+            frb = FluentRecordBaseFactory.Get();
         }
-
-        [TestCleanup]
-        public void TestCleanup()
-        {
-            frb = null;
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        //[TestMethod]
-        //public void Integration_WA_Service_GetIndexView_check_search_description()
-        //{
-        //    //
-        //    //Act
-        //    dOptions.search = "foostring1";
-        //    dOptions.woid = 1;
-        //    dOptions.orderDescending = true;
-        //    var result = _waServ.GetIndexView(dOptions);
-        //    //
-        //    //Assert
-        //    var tolist = result.query.ToList();
-        //    Assert.IsNotNull(tolist, "return value is null");
-        //    Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
-        //    Assert.AreEqual("foostring1", tolist[0].description);
-        //    Assert.AreEqual(1, result.filteredCount);
-        //    Assert.AreEqual(10, result.totalCount);
-        //}
 
         [TestMethod, TestCategory(TC.Fluent)]
         public void activity_getUnassociated()
         {
             //Arrange
-            var worker = frb.ToWorker();
+            var worker = frb.AddWorker();
             frb.AddActivity().AddActivity();
-            frb.AddActivitySignin(worker: worker);
+            frb.AddActivitySignin(worker);
 
             IQueryable<Activity> q = frb.ToFactory().Activities;
             var count = q.Count();
@@ -81,7 +54,13 @@ namespace Machete.Test.Integration.Services
             IndexViewBase.getUnassociated(worker.ID, ref q, frb.ToFactory());
             //Assert
             var result = q.ToList();
-            Assert.AreEqual(count - 1, result.Count());
+            Assert.AreEqual(count - 1, result.Count);
         }
+        
+//        [TestCleanup]
+//        public void TestCleanup()
+//        {
+//            frb = null;
+//        }
     }
 }

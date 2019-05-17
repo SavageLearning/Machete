@@ -41,8 +41,8 @@ namespace Machete.Test.Integration.Data
         [TestInitialize]
         public void Initialize()
         {
-            frb = new FluentRecordBase();
-            //frb._dbContext = frb.container.GetRequiredService<MacheteContext>();
+            frb = FluentRecordBaseFactory.Get();
+            //frb._dbContext` = frb.container.GetRequiredService<MacheteContext>();
         }
         /// <summary>
         /// Used with SQL Profiler to see what SQL is produced
@@ -51,8 +51,8 @@ namespace Machete.Test.Integration.Data
         public void Integration_Queryable_test()
         {
             // Arrange - load test records
-            var worker = frb.AddWorkerSignin().ToWorker();
-            var signin = frb.ToWorkerSignin();
+            var worker = frb.AddWorker();
+            var signin = frb.AddWorkerSignin(worker).ToWorkerSignin();
             // Act
             var q = frb.ToFactory().WorkerSignins.AsQueryable();
             q = q.Where(r => r.dwccardnum == signin.dwccardnum

@@ -134,21 +134,21 @@ namespace Machete.Test.UnitTests.Services
         {
             //
             //Arrange
-            string user = "UnitTest";
-            Worker _w = (Worker)Records.worker.Clone();
-            Lookup _l = (Lookup)Records.lookup.Clone();
-            Person _p = (Person)Records.person.Clone();
-            _w.Person = _p;
-            _w.Person.datecreated = DateTime.MinValue;
-            _w.Person.dateupdated = DateTime.MinValue;
-            //Records._worker1.datecreated = DateTime.MinValue;
-            //Records._worker1.dateupdated = DateTime.MinValue;
-            _repo.Setup(r => r.Add(_w)).Returns(_w);
-            _pRepo.Setup(r => r.GetById(It.IsAny<int>())).Returns(_p);
-            _lRepo.Setup(r => r.GetById(It.IsAny<int>())).Returns(_l);
+            const string user = "UnitTest";
+            var worker = (Worker)Records.worker.Clone();
+            var lookup = (Lookup)Records.lookup.Clone();
+            var person = (Person)Records.person.Clone();
+            worker.Person = person;
+            worker.Person.datecreated = DateTime.MinValue;
+            worker.Person.dateupdated = DateTime.MinValue;
+
+            _repo.Setup(r => r.Add(worker)).Returns(worker);
+            _pRepo.Setup(r => r.GetById(It.IsAny<int>())).Returns(person);
+            _lRepo.Setup(r => r.GetById(It.IsAny<int>())).Returns(lookup);
+            
             //
             //Act
-            var result = _serv.Create(_w, user);
+            var result = _serv.Create(worker, user);
             //
             //Assert
             Assert.IsInstanceOfType(result, typeof(Worker));
@@ -192,22 +192,22 @@ namespace Machete.Test.UnitTests.Services
             _uow = new Mock<IUnitOfWork>();
             _map = new Mock<IMapper>();
             _lRepo = new Mock<ILookupRepository>();
-            Worker _w = (Worker)Records.worker.Clone();
-            Lookup _l = (Lookup)Records.lookup.Clone();
-            _w.Person = (Person)Records.person.Clone();
-            _w.Person.datecreated = DateTime.MinValue;
-            _w.Person.dateupdated = DateTime.MinValue;
-            _repo.Setup(r => r.Add(_w)).Returns(_w);
-            _lRepo.Setup(r => r.GetById(It.IsAny<int>())).Returns(_l);
+            var worker = (Worker)Records.worker.Clone();
+            var lookup = (Lookup)Records.lookup.Clone();
+            worker.Person = (Person)Records.person.Clone();
+            worker.Person.datecreated = DateTime.MinValue;
+            worker.Person.dateupdated = DateTime.MinValue;
+            _repo.Setup(r => r.Add(worker)).Returns(worker);
+            _lRepo.Setup(r => r.GetById(It.IsAny<int>())).Returns(lookup);
             string user = "UnitTest";
             var _serv = new WorkerService(_repo.Object, _lRepo.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object, _map.Object);
             //
             //Act
-            _serv.Save(_w, user);
+            _serv.Save(worker, user);
             //
             //Assert
-            Assert.IsTrue(_w.updatedby == user);
-            Assert.IsTrue(_w.dateupdated > DateTime.MinValue);
+            Assert.IsTrue(worker.updatedby == user);
+            Assert.IsTrue(worker.dateupdated > DateTime.MinValue);
         }
     }
 }

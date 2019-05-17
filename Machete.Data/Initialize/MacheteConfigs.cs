@@ -38,7 +38,7 @@ namespace Machete.Data
                 c.dateupdated = DateTime.Now;
                 c.createdby = "Init T. Script";
                 c.updatedby = "Init T. Script";
-                context.Configs.Add(c);
+                context.Configs.Add((Config) c.Clone());
                 context.SaveChanges();
             }
         }

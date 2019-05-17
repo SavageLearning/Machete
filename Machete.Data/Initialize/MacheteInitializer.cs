@@ -22,8 +22,10 @@
 // 
 #endregion
 
-using System;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Machete.Data.Initialize
 {
@@ -33,15 +35,25 @@ namespace Machete.Data.Initialize
     /// </summary>
     public static class MacheteConfiguration
     {
-        public static void Seed(MacheteContext db, IServiceProvider services)
+        public static void Seed(MacheteContext db)
         {
-            if (db.Lookups.Count() == 0) MacheteLookup.Initialize(db);
-            if (db.TransportProviders.Count() == 0 || db.TransportProvidersAvailability.Count() == 0) MacheteTransports.Initialize(db);
-            if (db.Users.Count() == 0) MacheteUsers.Initialize(services);
-            // assume Configs table has been populated by script
-            if (db.Configs.Count() == 0) MacheteConfigs.Initialize(db);
-            if (db.TransportRules.Count() == 0) MacheteRules.Initialize(db);
-            if (db.ReportDefinitions.Count() != MacheteReportDefinitions._cache.Count) MacheteReportDefinitions.Initialize(db);
+            if (!db.Lookups.Any())
+                MacheteLookups.Initialize(db);
+            if (!db.TransportProviders.Any() || !db.TransportProvidersAvailability.Any())
+                MacheteTransports.Initialize(db);
+            if (!db.Configs.Any())
+                MacheteConfigs.Initialize(db);
+            if (!db.TransportRules.Any())
+                MacheteRules.Initialize(db);
+            if (db.ReportDefinitions.Count() != MacheteReportDefinitions._cache.Count)
+                MacheteReportDefinitions.Initialize(db);
         }
-    }   
+
+        public static async Task SeedAsync(MacheteContext db,
+            RoleManager<IdentityRole> roleManager, UserManager<MacheteUser> userManager)
+        {
+            if (!db.Users.Any())
+                await MacheteUsers.Initialize(roleManager, userManager);
+        }
+    }
 }

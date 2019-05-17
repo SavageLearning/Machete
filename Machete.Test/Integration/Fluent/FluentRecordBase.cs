@@ -52,7 +52,6 @@ namespace Machete.Test.Integration.Fluent
         private ILookupService _servL;
         private Email _email;
         private Event _event;
-        private Worker _w;
         private WorkerRequest  _wr;
         private Activity  _a;
         private ActivitySignin _as;
@@ -82,7 +81,7 @@ namespace Machete.Test.Integration.Fluent
                     logging.AddDebug();
                     logging.AddEventSourceLogger();
                 })
-                .UseStartup<Startup>().Build().CreateOrMigrateDatabase();//.Run()
+                .UseStartup<Startup>().Build().CreateOrMigrateDatabase();
                 
             var serviceScope = webHost.Services.CreateScope();
             
@@ -110,7 +109,7 @@ namespace Machete.Test.Integration.Fluent
         }
         
         #region Workers
-        public FluentRecordBase AddWorker(
+        public Worker AddWorker(
             int? skill1 = null,
             int? skill2 = null,
             int? skill3 = null,
@@ -123,9 +122,9 @@ namespace Machete.Test.Integration.Fluent
         )
         {
             // ARRANGE
-            if (_p == null) AddPerson();
+            var _p = AddPerson();
             _servW = container.GetRequiredService<IWorkerService>();
-            _w = (Worker)Records.worker.Clone();
+            var _w = (Worker)Records.worker.Clone();
             _w.Person = _p;
             _w.ID = _p.ID; // mimics MVC UI behavior. the POST to create worker includes the person record's ID
             if (skill1 != null) _w.skill1 = skill1;
@@ -141,19 +140,13 @@ namespace Machete.Test.Integration.Fluent
 
             // ACT
             _servW.Create(_w, _user);
-            return this;
+            return _w;
         }
 
         public int GetNextMemberID()
         {
             var dbContext = container.GetRequiredService<MacheteContext>();
             return Records.GetNextMemberID(dbContext.Workers);
-        }
-
-        public Worker ToWorker()
-        {
-            if (_w == null) AddWorker();
-            return _w;
         }
 
         #endregion
@@ -169,14 +162,14 @@ namespace Machete.Test.Integration.Fluent
             // DEPENDENCIES
             _servWR = container.GetRequiredService<IWorkerRequestService>();
             if (_wo == null) AddWorkOrder();
-            if (_w == null) AddWorker();
+
             //
             // ARRANGE
             _wr = (WorkerRequest)Records.request.Clone();
             //_wr.workOrder = (WorkOrder)_wo.Clone();
             //_wr.workerRequested = (Worker)_w.Clone();
             _wr.workOrder = _wo;
-            _wr.workerRequested = _w;
+            _wr.workerRequested = AddWorker();
             if (datecreated != null) _wr.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _wr.dateupdated = (DateTime)dateupdated;
             
@@ -291,27 +284,19 @@ namespace Machete.Test.Integration.Fluent
 
         #region ActivitySignins
 
-        public FluentRecordBase AddActivitySignin(
-            DateTime? datecreated = null,
-            DateTime? dateupdated = null,
-            Worker worker = null
-        )
+        public FluentRecordBase AddActivitySignin(Worker worker = null)
         {
             //
-            // DEPENDENCIES
+            // ARRANGE
             if (_a == null) AddActivity();
             _servAS = container.GetRequiredService<IActivitySigninService>();
-            if (worker != null) _w = worker;
-            if (_w == null) AddWorker();
-            //
-            // ARRANGE
+
             _as = (ActivitySignin)Records.activitysignin.Clone();
             _as.Activity = _a;
             _as.activityID = _a.ID;
-            if (datecreated != null) _as.datecreated = (DateTime)datecreated;
-            if (dateupdated != null) _as.dateupdated = (DateTime)dateupdated;
-            _as.dwccardnum = _w.dwccardnum;
+            _as.dwccardnum = worker?.dwccardnum ?? AddWorker().dwccardnum; // TODO yuck
             _as.dateforsignin = DateTime.Now;
+
             //
             // ACT
             _servAS.CreateSignin(_as, _user);
@@ -390,7 +375,7 @@ namespace Machete.Test.Integration.Fluent
             //
             // DEPENDENCIES
             _servEV = ToServ<IEventService>();
-            if (_p == null) AddPerson();
+            var _p = AddPerson();
             //
             // ARRANGE
             _event = (Event)Records.event1.Clone();

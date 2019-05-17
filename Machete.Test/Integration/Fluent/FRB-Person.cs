@@ -8,9 +8,8 @@ namespace Machete.Test.Integration.Fluent
     public partial class FluentRecordBase
     {
         private IPersonService _servP;
-        private Person _p;
 
-        public FluentRecordBase AddPerson(
+        public Person AddPerson(
             DateTime? datecreated = null,
             DateTime? dateupdated = null,
             string testID = null
@@ -20,19 +19,13 @@ namespace Machete.Test.Integration.Fluent
             _servP = container.GetRequiredService<IPersonService>();
 
             // ARRANGE
-            _p = (Person)Records.person.Clone();
+            var _p = (Person)Records.person.Clone();
             if (datecreated != null) _p.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _p.dateupdated = (DateTime)dateupdated;
             if (testID != null) _p.firstname2 = testID;
             
             // ACT
-            var result = _servP.Create(_p, _user);
-            return this;
-        }
-
-        public Person ToPerson()
-        {
-            if (_p == null) AddPerson();
+            _servP.Create(_p, _user);
             return _p;
         }
 

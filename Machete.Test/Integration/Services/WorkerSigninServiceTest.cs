@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Machete.Domain;
 using Machete.Service;
 using Machete.Test.Integration.Fluent;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -42,7 +43,7 @@ namespace Machete.Test.Integration.Services
         [TestInitialize]
         public void TestInitialize()
         {
-            frb = new FluentRecordBase();
+            frb = FluentRecordBaseFactory.Get();
             _dOptions = new viewOptions
             {
                 CI = new CultureInfo("en-US", false),
@@ -60,8 +61,9 @@ namespace Machete.Test.Integration.Services
         public void LotterySignin()
         {
             // Arrange
-            frb.AddWorker().AddWorkerSignin();
-            var w = frb.ToWorker();
+            var w = frb.AddWorker();
+            frb.AddWorkerSignin(w);
+            
             var wsi = frb.ToWorkerSignin();
             // Act
             var result = frb.ToServ<IWorkerSigninService>().GetSignin(w.dwccardnum, wsi.dateforsignin);
@@ -75,10 +77,9 @@ namespace Machete.Test.Integration.Services
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
         public void GetIndexView_check_search_dwccardnum()
         {
-            //
             // Arrange
-            frb.AddWorker(skill1:63).AddWorkerSignin();
-            var w = frb.ToWorker();
+            var w = frb.AddWorker(skill1:63);
+            frb.AddWorkerSignin(w);
             var wsi = frb.ToWorkerSignin();
             //
             //Act
@@ -97,12 +98,11 @@ namespace Machete.Test.Integration.Services
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
         public void GetIndexView_workerRequested()
         {
-            //
             // Arrange
             frb.AddWorker(skill1: 63);
             frb.AddWorkerSignin();
             frb.AddWorkerRequest();
-            var w = frb.ToWorker();
+            var w = frb.AddWorker();
             //
             //Act
             _dOptions.dwccardnum = w.dwccardnum;

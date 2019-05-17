@@ -1,6 +1,7 @@
 using System.IO;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -14,10 +15,14 @@ namespace Machete.Web
         /// The program is not designed to accept arguments. Secrets from
         /// the dotnet cli user store can be passed in as environment variables.
         /// </summary>
-        public static void Main(string[] args) => CreateWebHostBuilder(args)
-            .Build()
-            .CreateOrMigrateDatabase()
-            .Run();        
+        public static async Task Main(string[] args)
+        {
+            IWebHost webhost = CreateWebHostBuilder(args).Build().CreateOrMigrateDatabase();
+
+            await webhost.SeedUsersAsync();
+
+            await webhost.RunAsync();
+        }
 
         /// <summary>
         /// A stripped down version of the default WebHost object configuration, this method gives just the absolute

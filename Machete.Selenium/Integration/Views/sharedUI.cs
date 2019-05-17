@@ -90,7 +90,7 @@ namespace Machete.Test.Selenium.View
             _d.FindElement(By.Id(prefix + "address2")).SendKeys(_per.address2);
             _d.FindElement(By.Id(prefix + "phone")).Clear();
             _d.FindElement(By.Id(prefix + "phone")).SendKeys(_per.phone);
-            SelectOption(By.Id(prefix + "gender"), MacheteLookup.cache.First(c => c.category == "gender" && c.ID == _per.gender).text_EN);
+            SelectOption(By.Id(prefix + "gender"), MacheteLookups.cache.First(c => c.category == "gender" && c.ID == _per.gender).text_EN);
             _d.FindElement(By.Id(prefix + "city")).Clear();
             _d.FindElement(By.Id(prefix + "city")).SendKeys(_per.city);
             if (_per.genderother != null)
@@ -312,7 +312,7 @@ namespace Machete.Test.Selenium.View
             SelectOptionByIndex(By.Id(prefix + "blogparticipate"), _emp.blogparticipate.Value ? 2 : 1);
             SelectOptionByIndex(By.Id(prefix + "business"), _emp.business ? 2 : 1);
             SelectOption(By.Id(prefix + "referredby"), 
-                MacheteLookup.cache.First(c => c.category == "emplrreference" && c.ID == _emp.referredby).text_EN);
+                MacheteLookups.cache.First(c => c.category == "emplrreference" && c.ID == _emp.referredby).text_EN);
             // save employer
             _d.FindElement(By.Id(prefix + "SaveBtn")).Click();
             //
@@ -375,7 +375,7 @@ namespace Machete.Test.Selenium.View
             WaitForElement(By.Id(prefix + "business"));
             Assert.AreEqual(_emp.business ? 2 : 1, GetOptionIndex(By.Id(prefix + "business")));
             WaitForElement(By.Id(prefix + "referredbyOther"));
-            Assert.AreEqual(_emp.referredby, MacheteLookup.cache.First(c => c.category == "emplrreference" && c.text_EN == GetOptionText(By.Id(prefix + "referredby"))).ID);
+            Assert.AreEqual(_emp.referredby, MacheteLookups.cache.First(c => c.category == "emplrreference" && c.text_EN == GetOptionText(By.Id(prefix + "referredby"))).ID);
             return true;
         }
 
@@ -487,7 +487,7 @@ namespace Machete.Test.Selenium.View
 
             WaitForElement(By.Id(prefix + "status"));
             string optionText = GetOptionText(By.Id(prefix + "status"));
-            Assert.AreEqual(_wo.statusID, MacheteLookup.cache.First(c => c.category == "orderstatus" && c.text_EN == optionText).ID);
+            Assert.AreEqual(_wo.statusID, MacheteLookups.cache.First(c => c.category == "orderstatus" && c.text_EN == optionText).ID);
             WaitForElement(By.Id(prefix + "timeFlexible"));
             Assert.AreEqual(_wo.timeFlexible ? 2:1, GetOptionIndex(By.Id(prefix + "timeFlexible")));
             WaitForElement(By.Id(prefix + "permanentPlacement"));

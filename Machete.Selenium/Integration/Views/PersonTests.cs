@@ -38,7 +38,7 @@ namespace Machete.Test.Selenium.View
         [TestInitialize]
         public void SetupTest()
         {
-            frb = new FluentRecordBase();
+            frb = FluentRecordBaseFactory.Get();
 
             driver = new ChromeDriver(ConfigurationManager.AppSettings["CHROMEDRIVERPATH"]);
             baseURL = "http://localhost:4213/";
@@ -140,7 +140,7 @@ namespace Machete.Test.Selenium.View
             _wkr.dwccardnum = sharedUI.nextAvailableDwccardnum(frb.ToFactory());
             var _san = (Web.ViewModel.Event)ViewModelRecords.event1.Clone();
             _san.Person = _per;
-            _san.eventTypeID = MacheteLookup.cache.First(x => x.category == "eventtype" && x.text_EN == "Sanction").ID;
+            _san.eventTypeID = MacheteLookups.cache.First(x => x.category == "eventtype" && x.text_EN == "Sanction").ID;
             var _act = (Web.ViewModel.Activity)ViewModelRecords.activity.Clone();
 
             //Act

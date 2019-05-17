@@ -11,7 +11,7 @@ namespace Machete.Test.Integration.Fluent
         [TestInitialize]
         public void TestInitialize()
         {
-            frb = new FluentRecordBase();
+            frb = FluentRecordBaseFactory.Get();
         }
 
         [TestMethod, TestCategory(TC.Fluent), TestCategory(TC.IT), TestCategory(TC.Employers)]
@@ -48,13 +48,13 @@ namespace Machete.Test.Integration.Fluent
         [Ignore, TestMethod, TestCategory(TC.Fluent), TestCategory(TC.IT), TestCategory(TC.Persons)]
         public void FluentRecordBase_AddRepoPerson()
         {
-            var result = frb.AddPerson(testID: "FluentRecordBase_AddRepoPerson").ToPerson();
+            var result = frb.AddPerson(testID: "FluentRecordBase_AddRepoPerson");
             Assert.IsInstanceOfType(result, typeof(Person));
         }
         [TestMethod, TestCategory(TC.Fluent), TestCategory(TC.IT), TestCategory(TC.Workers)]
         public void FluentRecordBase_AddRepoWorker()
         {
-            var result = frb.AddWorker(testID: "FluentRecordBase_AddRepoWorker").ToWorker();
+            var result = frb.AddWorker(testID: "FluentRecordBase_AddRepoWorker");
             Assert.IsInstanceOfType(result, typeof(Worker));
         }
         [TestMethod, TestCategory(TC.Fluent), TestCategory(TC.IT), TestCategory(TC.Activities)]
