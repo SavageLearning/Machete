@@ -85,8 +85,12 @@ namespace Machete.Web.Controllers
                     IsLockedOut = u.IsLockedOut ? "Yes" : "No",
                     IsOnline = DbFunctions.DiffHours(u.LastLoginDate, DateTime.Now) < 1 ? "Yes" : "No",
                     CreationDate = u.CreateDate,
-                    LastLoginDate = u.LastLoginDate
-                }).Where (u => !u.UserName.Contains("@"));
+                    LastLoginDate = u.LastLoginDate,
+                    IsHirer = u.Roles.Contains(_context.Roles.FirstOrDefault(role => role.Name == "Hirer"))
+                })
+                .Where(u => !u.IsHirer) // replaces hack .Contains("@"); for email addresses, which hides legit users
+                .Where(u => !u.UserName.Equals("jadmin"))
+                .Where(u => !u.UserName.Contains("ndlon")); // ndlon addresses are invariably administrators
 
             return View(model);
         }

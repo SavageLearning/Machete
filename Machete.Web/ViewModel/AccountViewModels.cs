@@ -28,6 +28,8 @@ namespace Machete.Web.ViewModel
         public DateTime CreationDate { get; set; } // Note: not in db - is this used? Db has CreateDate
 
         public DateTime LastLoginDate { get; set; }
+        
+        public bool IsHirer { get; set; }
     }
 
     public class ManageUserViewModel
