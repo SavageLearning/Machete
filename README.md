@@ -66,6 +66,24 @@ This script runs the Machete.Web.dll binary inside a container behind an NginX p
 
 `🎺 💃 🇲🇽`
 
+## How to connect to the database
+<hr>
+Download DataGrip. It has a 30 day evaluation period, but is not free software.
+
+*`⌘-;`* will configure a data source, if you have one defined; *`⌘-↵`* is execute query, NOT F5
+if you don't you'll need the drivers for your data source. it will prompt you in the config window. right click on the area to the left to add a data source.
+
+1.14:
+if prod: Create SSH tunnel
+Host: `localhost`  Port: `1433` (or whatever you configure in the tunnel)
+User: `ask admins`
+Password: `ask admins`
+
+Test Connection + Select Schemas from the middle tab
+
+Select two databases using *`⌘`* to select multiple, then *`⌘-D`* will schema compare.
+
+
 ## People who use this free software include:
 <hr>
 
