@@ -8,7 +8,7 @@ namespace Machete.Service
 {
     public interface ITransportProvidersService : IService<TransportProvider>
     {
-        TransportProviderAvailability CreateAvailability(int id, TransportProviderAvailability tpa, string user);
+        TransportProviderAvailabilities CreateAvailability(int id, TransportProviderAvailabilities tpa, string user);
 
     }
     public class TransportProvidersService : ServiceBase<TransportProvider>, ITransportProvidersService
@@ -27,13 +27,13 @@ namespace Machete.Service
             this.logPrefix = "TransportRule";
         }
 
-        public TransportProviderAvailability CreateAvailability(int id, TransportProviderAvailability tpa, string user)
+        public TransportProviderAvailabilities CreateAvailability(int id, TransportProviderAvailabilities tpa, string user)
         {
-            TransportProviderAvailability entity;
+            TransportProviderAvailabilities entity;
             var provider = Get(id);
             if (provider.AvailabilityRules.SingleOrDefault(a => a.day == tpa.day) == null)
             {
-                tpa.Provider = provider;
+                tpa.TransportProvider = provider;
                 tpa.transportProviderID = provider.ID;
                 entity = tpaServ.Create(tpa, user);
                 return entity;

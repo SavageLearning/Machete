@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Machete.Data.Migrations
 {
     [DbContext(typeof(MacheteContext))]
-    [Migration("20190511230648_InitialCreate")]
+    [Migration("20190522164436_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -120,43 +120,60 @@ namespace Machete.Data.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("ID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("createdby")
                         .HasColumnName("Createdby")
                         .HasMaxLength(30);
 
-                    b.Property<DateTime>("dateEnd");
+                    b.Property<DateTime>("dateEnd")
+                        .HasColumnName("dateEnd")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime>("dateStart");
+                    b.Property<DateTime>("dateStart")
+                        .HasColumnName("dateStart")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime>("datecreated");
+                    b.Property<DateTime>("datecreated")
+                        .HasColumnName("datecreated")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime>("dateupdated");
+                    b.Property<DateTime>("dateupdated")
+                        .HasColumnName("dateupdated")
+                        .HasColumnType("datetime");
 
-                    b.Property<int>("firstID");
+                    b.Property<int>("firstID")
+                        .HasColumnName("firstID");
 
                     b.Property<string>("nameEN")
+                        .HasColumnName("nameEN")
                         .HasMaxLength(50);
 
                     b.Property<string>("nameES")
+                        .HasColumnName("nameES")
                         .HasMaxLength(50);
 
                     b.Property<int>("nameID")
                         .HasColumnName("name");
 
                     b.Property<string>("notes")
+                        .HasColumnName("notes")
                         .HasMaxLength(4000);
 
-                    b.Property<bool>("recurring");
+                    b.Property<bool>("recurring")
+                        .HasColumnName("recurring");
 
                     b.Property<string>("teacher")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnName("teacher");
 
                     b.Property<string>("typeEN")
+                        .HasColumnName("typeEN")
                         .HasMaxLength(50);
 
                     b.Property<string>("typeES")
+                        .HasColumnName("typeES")
                         .HasMaxLength(50);
 
                     b.Property<int>("typeID")
@@ -175,28 +192,39 @@ namespace Machete.Data.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("ID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("activityID");
+                    b.Property<int>("activityID")
+                        .HasColumnName("activityID");
 
                     b.Property<string>("createdby")
                         .HasColumnName("Createdby")
                         .HasMaxLength(30);
 
-                    b.Property<DateTime>("datecreated");
+                    b.Property<DateTime>("datecreated")
+                        .HasColumnName("datecreated")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime>("dateforsignin");
+                    b.Property<DateTime>("dateforsignin")
+                        .HasColumnName("dateforsignin")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime>("dateupdated");
+                    b.Property<DateTime>("dateupdated")
+                        .HasColumnName("dateupdated")
+                        .HasColumnType("datetime");
 
-                    b.Property<int>("dwccardnum");
+                    b.Property<int>("dwccardnum")
+                        .HasColumnName("dwccardnum");
 
                     b.Property<int?>("memberStatusID")
                         .HasColumnName("memberStatus");
 
-                    b.Property<int?>("personID");
+                    b.Property<int?>("personID")
+                        .HasColumnName("personID");
 
-                    b.Property<double>("timeZoneOffset");
+                    b.Property<double>("timeZoneOffset")
+                        .HasColumnName("timeZoneOffset");
 
                     b.Property<string>("updatedby")
                         .HasColumnName("Updatedby")
@@ -204,9 +232,11 @@ namespace Machete.Data.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("activityID");
+                    b.HasIndex("activityID")
+                        .HasName("IX_activityID");
 
-                    b.HasIndex("personID");
+                    b.HasIndex("personID")
+                        .HasName("IX_personID");
 
                     b.ToTable("ActivitySignins");
                 });
@@ -215,25 +245,36 @@ namespace Machete.Data.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("ID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("category");
+                    b.Property<string>("category")
+                        .HasColumnName("category");
 
                     b.Property<string>("createdby")
                         .HasColumnName("Createdby")
                         .HasMaxLength(30);
 
-                    b.Property<DateTime>("datecreated");
+                    b.Property<DateTime>("datecreated")
+                        .HasColumnName("datecreated")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime>("dateupdated");
+                    b.Property<DateTime>("dateupdated")
+                        .HasColumnName("dateupdated")
+                        .HasColumnType("datetime");
 
-                    b.Property<string>("description");
+                    b.Property<string>("description")
+                        .HasColumnName("description");
 
                     b.Property<string>("key")
                         .IsRequired()
+                        .HasColumnName("key")
                         .HasMaxLength(50);
 
-                    b.Property<bool>("publicConfig");
+                    b.Property<bool>("publicConfig")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("publicConfig")
+                        .HasDefaultValueSql("((1))");
 
                     b.Property<string>("updatedby")
                         .HasColumnName("Updatedby")
@@ -241,6 +282,7 @@ namespace Machete.Data.Migrations
 
                     b.Property<string>("value")
                         .IsRequired()
+                        .HasColumnName("value")
                         .HasMaxLength(5000);
 
                     b.HasKey("ID");
@@ -252,18 +294,23 @@ namespace Machete.Data.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("ID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
+                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate();
 
-                    b.Property<string>("attachment");
+                    b.Property<string>("attachment")
+                        .HasColumnName("attachment");
 
-                    b.Property<string>("attachmentContentType");
+                    b.Property<string>("attachmentContentType")
+                        .HasColumnName("attachmentContentType");
 
                     b.Property<string>("body")
                         .IsRequired()
+                        .HasColumnName("body")
                         .HasColumnType("nvarchar(4000)")
                         .HasMaxLength(4000);
 
@@ -271,26 +318,37 @@ namespace Machete.Data.Migrations
                         .HasColumnName("Createdby")
                         .HasMaxLength(30);
 
-                    b.Property<DateTime>("datecreated");
+                    b.Property<DateTime>("datecreated")
+                        .HasColumnName("datecreated")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime>("dateupdated");
+                    b.Property<DateTime>("dateupdated")
+                        .HasColumnName("dateupdated")
+                        .HasColumnType("datetime");
 
                     b.Property<string>("emailFrom")
+                        .HasColumnName("emailFrom")
                         .HasMaxLength(50);
 
                     b.Property<string>("emailTo")
                         .IsRequired()
+                        .HasColumnName("emailTo")
                         .HasMaxLength(50);
 
-                    b.Property<DateTime?>("lastAttempt");
+                    b.Property<DateTime?>("lastAttempt")
+                        .HasColumnName("lastAttempt")
+                        .HasColumnType("datetime");
 
-                    b.Property<int>("statusID");
+                    b.Property<int>("statusID")
+                        .HasColumnName("statusID");
 
                     b.Property<string>("subject")
                         .IsRequired()
+                        .HasColumnName("subject")
                         .HasMaxLength(100);
 
-                    b.Property<int>("transmitAttempts");
+                    b.Property<int>("transmitAttempts")
+                        .HasColumnName("transmitAttempts");
 
                     b.Property<string>("updatedby")
                         .HasColumnName("Updatedby")
@@ -301,33 +359,15 @@ namespace Machete.Data.Migrations
                     b.ToTable("Emails");
                 });
 
-            modelBuilder.Entity("Machete.Domain.Employer", b =>
+            modelBuilder.Entity("Machete.Domain.EmailWorkOrder", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<int>("EmailID")
+                        .HasColumnName("Email_ID");
 
-                    b.Property<bool>("active");
+                    b.Property<int>("WorkOrderID")
+                        .HasColumnName("WorkOrder_ID");
 
-                    b.Property<string>("address1")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<string>("address2")
-                        .HasMaxLength(50);
-
-                    b.Property<bool?>("blogparticipate");
-
-                    b.Property<bool>("business");
-
-                    b.Property<string>("businessname");
-
-                    b.Property<string>("cellphone")
-                        .HasMaxLength(12);
-
-                    b.Property<string>("city")
-                        .IsRequired()
-                        .HasMaxLength(50);
+                    b.Property<int>("ID");
 
                     b.Property<string>("createdby")
                         .HasColumnName("Createdby")
@@ -337,47 +377,127 @@ namespace Machete.Data.Migrations
 
                     b.Property<DateTime>("dateupdated");
 
+                    b.Property<string>("updatedby")
+                        .HasColumnName("Updatedby")
+                        .HasMaxLength(30);
+
+                    b.HasKey("EmailID", "WorkOrderID")
+                        .HasName("PK_dbo.EmailWorkOrders");
+
+                    b.HasIndex("EmailID")
+                        .HasName("IX_Email_ID");
+
+                    b.HasIndex("WorkOrderID")
+                        .HasName("IX_WorkOrder_ID");
+
+                    b.ToTable("EmailWorkOrder");
+                });
+
+            modelBuilder.Entity("Machete.Domain.Employer", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("ID")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("active")
+                        .HasColumnName("active");
+
+                    b.Property<string>("address1")
+                        .IsRequired()
+                        .HasColumnName("address1")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("address2")
+                        .HasColumnName("address2")
+                        .HasMaxLength(50);
+
+                    b.Property<bool?>("blogparticipate")
+                        .HasColumnName("blogparticipate");
+
+                    b.Property<bool>("business")
+                        .HasColumnName("business");
+
+                    b.Property<string>("businessname")
+                        .HasColumnName("businessname");
+
+                    b.Property<string>("cellphone")
+                        .HasColumnName("cellphone")
+                        .HasMaxLength(12);
+
+                    b.Property<string>("city")
+                        .IsRequired()
+                        .HasColumnName("city")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("createdby")
+                        .HasColumnName("Createdby")
+                        .HasMaxLength(30);
+
+                    b.Property<DateTime>("datecreated")
+                        .HasColumnName("datecreated")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime>("dateupdated")
+                        .HasColumnName("dateupdated")
+                        .HasColumnType("datetime");
+
                     b.Property<string>("driverslicense")
+                        .HasColumnName("driverslicense")
                         .HasMaxLength(30);
 
                     b.Property<string>("email")
+                        .HasColumnName("email")
                         .HasMaxLength(50);
 
                     b.Property<string>("fax")
+                        .HasColumnName("fax")
                         .HasMaxLength(12);
 
-                    b.Property<bool?>("isOnlineProfileComplete");
+                    b.Property<bool?>("isOnlineProfileComplete")
+                        .HasColumnName("isOnlineProfileComplete");
 
                     b.Property<string>("licenseplate")
+                        .HasColumnName("licenseplate")
                         .HasMaxLength(10);
 
                     b.Property<string>("name")
                         .IsRequired()
+                        .HasColumnName("name")
                         .HasMaxLength(50);
 
                     b.Property<string>("notes")
+                        .HasColumnName("notes")
                         .HasMaxLength(4000);
 
                     b.Property<string>("onlineSigninID")
+                        .HasColumnName("onlineSigninID")
                         .HasMaxLength(128);
 
-                    b.Property<bool>("onlineSource");
+                    b.Property<bool>("onlineSource")
+                        .HasColumnName("onlineSource");
 
                     b.Property<string>("phone")
                         .IsRequired()
+                        .HasColumnName("phone")
                         .HasMaxLength(12);
 
-                    b.Property<bool>("receiveUpdates");
+                    b.Property<bool>("receiveUpdates")
+                        .HasColumnName("receiveUpdates");
 
-                    b.Property<int?>("referredby");
+                    b.Property<int?>("referredby")
+                        .HasColumnName("referredby");
 
                     b.Property<string>("referredbyOther")
+                        .HasColumnName("referredbyOther")
                         .HasMaxLength(50);
 
-                    b.Property<bool>("returnCustomer");
+                    b.Property<bool>("returnCustomer")
+                        .HasColumnName("returnCustomer");
 
                     b.Property<string>("state")
                         .IsRequired()
+                        .HasColumnName("state")
                         .HasMaxLength(2);
 
                     b.Property<string>("updatedby")
@@ -386,6 +506,7 @@ namespace Machete.Data.Migrations
 
                     b.Property<string>("zipcode")
                         .IsRequired()
+                        .HasColumnName("zipcode")
                         .HasMaxLength(10);
 
                     b.HasKey("ID");
@@ -397,32 +518,45 @@ namespace Machete.Data.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("ID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("PersonID");
+                    b.Property<int>("PersonID")
+                        .HasColumnName("PersonID");
 
                     b.Property<string>("createdby")
                         .HasColumnName("Createdby")
                         .HasMaxLength(30);
 
-                    b.Property<DateTime>("dateFrom");
+                    b.Property<DateTime>("dateFrom")
+                        .HasColumnName("dateFrom")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime?>("dateTo");
+                    b.Property<DateTime?>("dateTo")
+                        .HasColumnName("dateTo")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime>("datecreated");
+                    b.Property<DateTime>("datecreated")
+                        .HasColumnName("datecreated")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime>("dateupdated");
+                    b.Property<DateTime>("dateupdated")
+                        .HasColumnName("dateupdated")
+                        .HasColumnType("datetime");
 
                     b.Property<string>("eventTypeEN")
+                        .HasColumnName("eventTypeEN")
                         .HasMaxLength(50);
 
                     b.Property<string>("eventTypeES")
+                        .HasColumnName("eventTypeES")
                         .HasMaxLength(50);
 
                     b.Property<int>("eventTypeID")
                         .HasColumnName("eventType");
 
                     b.Property<string>("notes")
+                        .HasColumnName("notes")
                         .HasMaxLength(4000);
 
                     b.Property<string>("updatedby")
@@ -431,7 +565,8 @@ namespace Machete.Data.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("PersonID");
+                    b.HasIndex("PersonID")
+                        .HasName("IX_PersonID");
 
                     b.ToTable("Events");
                 });
@@ -440,6 +575,7 @@ namespace Machete.Data.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("ID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<byte[]>("ImageData");
@@ -456,17 +592,24 @@ namespace Machete.Data.Migrations
                         .HasColumnName("Createdby")
                         .HasMaxLength(30);
 
-                    b.Property<DateTime>("datecreated");
+                    b.Property<DateTime>("datecreated")
+                        .HasColumnName("datecreated")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime>("dateupdated");
+                    b.Property<DateTime>("dateupdated")
+                        .HasColumnName("dateupdated")
+                        .HasColumnType("datetime");
 
                     b.Property<string>("filename")
+                        .HasColumnName("filename")
                         .HasMaxLength(255);
 
                     b.Property<string>("parenttable")
+                        .HasColumnName("parenttable")
                         .HasMaxLength(30);
 
                     b.Property<string>("recordkey")
+                        .HasColumnName("recordkey")
                         .HasMaxLength(20);
 
                     b.Property<string>("updatedby")
@@ -482,19 +625,26 @@ namespace Machete.Data.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("ID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("EventID");
+                    b.Property<int>("EventID")
+                        .HasColumnName("EventID");
 
-                    b.Property<int>("ImageID");
+                    b.Property<int>("ImageID")
+                        .HasColumnName("ImageID");
 
                     b.Property<string>("createdby")
                         .HasColumnName("Createdby")
                         .HasMaxLength(30);
 
-                    b.Property<DateTime>("datecreated");
+                    b.Property<DateTime>("datecreated")
+                        .HasColumnName("datecreated")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime>("dateupdated");
+                    b.Property<DateTime>("dateupdated")
+                        .HasColumnName("dateupdated")
+                        .HasColumnType("datetime");
 
                     b.Property<string>("updatedby")
                         .HasColumnName("Updatedby")
@@ -502,109 +652,109 @@ namespace Machete.Data.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("EventID");
+                    b.HasIndex("EventID")
+                        .HasName("IX_EventID");
 
                     b.HasIndex("ImageID")
-                        .IsUnique();
+                        .HasName("IX_ImageID");
 
                     b.ToTable("JoinEventImage");
-                });
-
-            modelBuilder.Entity("Machete.Domain.JoinWorkOrderEmail", b =>
-                {
-                    b.Property<int>("EmailID");
-
-                    b.Property<int>("WorkOrderID");
-
-                    b.Property<int>("ID");
-
-                    b.Property<string>("createdby")
-                        .HasColumnName("Createdby")
-                        .HasMaxLength(30);
-
-                    b.Property<DateTime>("datecreated");
-
-                    b.Property<DateTime>("dateupdated");
-
-                    b.Property<string>("updatedby")
-                        .HasColumnName("Updatedby")
-                        .HasMaxLength(30);
-
-                    b.HasKey("EmailID", "WorkOrderID");
-
-                    b.HasIndex("WorkOrderID");
-
-                    b.ToTable("JoinWorkOrderEmail");
                 });
 
             modelBuilder.Entity("Machete.Domain.Lookup", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("ID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("active");
+                    b.Property<bool>("active")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("active")
+                        .HasDefaultValueSql("((1))");
 
                     b.Property<string>("category")
                         .IsRequired()
+                        .HasColumnName("category")
                         .HasMaxLength(20);
 
                     b.Property<string>("createdby")
                         .HasColumnName("Createdby")
                         .HasMaxLength(30);
 
-                    b.Property<DateTime>("datecreated");
+                    b.Property<DateTime>("datecreated")
+                        .HasColumnName("datecreated")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime>("dateupdated");
+                    b.Property<DateTime>("dateupdated")
+                        .HasColumnName("dateupdated")
+                        .HasColumnType("datetime");
 
                     b.Property<string>("emailTemplate")
+                        .HasColumnName("emailTemplate")
                         .HasColumnType("nvarchar(4000)")
                         .HasMaxLength(4000);
 
-                    b.Property<bool?>("fixedJob");
+                    b.Property<bool?>("fixedJob")
+                        .HasColumnName("fixedJob");
 
                     b.Property<string>("key")
+                        .HasColumnName("key")
                         .HasMaxLength(30);
 
-                    b.Property<int?>("level");
+                    b.Property<int?>("level")
+                        .HasColumnName("level");
 
                     b.Property<string>("ltrCode")
+                        .HasColumnName("ltrCode")
                         .HasMaxLength(3);
 
-                    b.Property<int?>("minHour");
+                    b.Property<int?>("minHour")
+                        .HasColumnName("minHour");
 
-                    b.Property<double?>("minimumCost");
+                    b.Property<double?>("minimumCost")
+                        .HasColumnName("minimumCost");
 
-                    b.Property<bool>("selected");
+                    b.Property<bool>("selected")
+                        .HasColumnName("selected");
 
                     b.Property<string>("skillDescriptionEn")
+                        .HasColumnName("skillDescriptionEn")
                         .HasMaxLength(300);
 
                     b.Property<string>("skillDescriptionEs")
+                        .HasColumnName("skillDescriptionEs")
                         .HasMaxLength(300);
 
-                    b.Property<int?>("sortorder");
+                    b.Property<int?>("sortorder")
+                        .HasColumnName("sortorder");
 
-                    b.Property<bool>("speciality");
+                    b.Property<bool>("speciality")
+                        .HasColumnName("speciality");
 
                     b.Property<string>("subcategory")
+                        .HasColumnName("subcategory")
                         .HasMaxLength(20);
 
                     b.Property<string>("text_EN")
                         .IsRequired()
+                        .HasColumnName("text_EN")
                         .HasMaxLength(50);
 
                     b.Property<string>("text_ES")
                         .IsRequired()
+                        .HasColumnName("text_ES")
                         .HasMaxLength(50);
 
-                    b.Property<int?>("typeOfWorkID");
+                    b.Property<int?>("typeOfWorkID")
+                        .HasColumnName("typeOfWorkID");
 
                     b.Property<string>("updatedby")
                         .HasColumnName("Updatedby")
                         .HasMaxLength(30);
 
-                    b.Property<double?>("wage");
+                    b.Property<double?>("wage")
+                        .HasColumnName("wage");
 
                     b.HasKey("ID");
 
@@ -615,64 +765,86 @@ namespace Machete.Data.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("ID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("active");
+                    b.Property<bool>("active")
+                        .HasColumnName("active");
 
                     b.Property<string>("address1")
+                        .HasColumnName("address1")
                         .HasMaxLength(50);
 
                     b.Property<string>("address2")
+                        .HasColumnName("address2")
                         .HasMaxLength(50);
 
                     b.Property<string>("cellphone")
+                        .HasColumnName("cellphone")
                         .HasMaxLength(12);
 
                     b.Property<string>("city")
+                        .HasColumnName("city")
                         .HasMaxLength(25);
 
                     b.Property<string>("createdby")
                         .HasColumnName("Createdby")
                         .HasMaxLength(30);
 
-                    b.Property<DateTime>("datecreated");
+                    b.Property<DateTime>("datecreated")
+                        .HasColumnName("datecreated")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime>("dateupdated");
+                    b.Property<DateTime>("dateupdated")
+                        .HasColumnName("dateupdated")
+                        .HasColumnType("datetime");
 
                     b.Property<string>("email")
+                        .HasColumnName("email")
                         .HasMaxLength(50);
 
                     b.Property<string>("facebook")
+                        .HasColumnName("facebook")
                         .HasMaxLength(50);
 
                     b.Property<string>("firstname1")
                         .IsRequired()
+                        .HasColumnName("firstname1")
                         .HasMaxLength(50);
 
                     b.Property<string>("firstname2")
+                        .HasColumnName("firstname2")
                         .HasMaxLength(50);
 
-                    b.Property<string>("fullName");
+                    b.Property<string>("fullName")
+                        .HasColumnName("fullName");
 
-                    b.Property<int>("gender");
+                    b.Property<int>("gender")
+                        .HasColumnName("gender");
 
                     b.Property<string>("genderother")
+                        .HasColumnName("genderother")
                         .HasMaxLength(20);
 
                     b.Property<string>("lastname1")
                         .IsRequired()
+                        .HasColumnName("lastname1")
                         .HasMaxLength(50);
 
                     b.Property<string>("lastname2")
+                        .HasColumnName("lastname2")
                         .HasMaxLength(50);
 
                     b.Property<string>("nickname")
+                        .HasColumnName("nickname")
                         .HasMaxLength(50);
 
                     b.Property<string>("phone")
+                        .HasColumnName("phone")
                         .HasMaxLength(12);
 
                     b.Property<string>("state")
+                        .HasColumnName("state")
                         .HasMaxLength(2);
 
                     b.Property<string>("updatedby")
@@ -680,6 +852,7 @@ namespace Machete.Data.Migrations
                         .HasMaxLength(30);
 
                     b.Property<string>("zipcode")
+                        .HasColumnName("zipcode")
                         .HasMaxLength(10);
 
                     b.HasKey("ID");
@@ -691,33 +864,47 @@ namespace Machete.Data.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("ID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("category");
+                    b.Property<string>("category")
+                        .HasColumnName("category");
 
-                    b.Property<string>("columnsJson");
+                    b.Property<string>("columnsJson")
+                        .HasColumnName("columnsJson");
 
-                    b.Property<string>("commonName");
+                    b.Property<string>("commonName")
+                        .HasColumnName("commonName");
 
                     b.Property<string>("createdby")
                         .HasColumnName("Createdby")
                         .HasMaxLength(30);
 
-                    b.Property<DateTime>("datecreated");
+                    b.Property<DateTime>("datecreated")
+                        .HasColumnName("datecreated")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime>("dateupdated");
+                    b.Property<DateTime>("dateupdated")
+                        .HasColumnName("dateupdated")
+                        .HasColumnType("datetime");
 
-                    b.Property<string>("description");
+                    b.Property<string>("description")
+                        .HasColumnName("description");
 
-                    b.Property<string>("inputsJson");
+                    b.Property<string>("inputsJson")
+                        .HasColumnName("inputsJson");
 
-                    b.Property<string>("name");
+                    b.Property<string>("name")
+                        .HasColumnName("name");
 
-                    b.Property<string>("sqlquery");
+                    b.Property<string>("sqlquery")
+                        .HasColumnName("sqlquery");
 
-                    b.Property<string>("subcategory");
+                    b.Property<string>("subcategory")
+                        .HasColumnName("subcategory");
 
-                    b.Property<string>("title");
+                    b.Property<string>("title")
+                        .HasColumnName("title");
 
                     b.Property<string>("updatedby")
                         .HasColumnName("Updatedby")
@@ -732,23 +919,32 @@ namespace Machete.Data.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("ID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("createdby")
                         .HasColumnName("Createdby")
                         .HasMaxLength(30);
 
-                    b.Property<DateTime>("datecreated");
+                    b.Property<DateTime>("datecreated")
+                        .HasColumnName("datecreated")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime>("dateupdated");
+                    b.Property<DateTime>("dateupdated")
+                        .HasColumnName("dateupdated")
+                        .HasColumnType("datetime");
 
-                    b.Property<int>("day");
+                    b.Property<int>("day")
+                        .HasColumnName("day");
 
-                    b.Property<int>("leadHours");
+                    b.Property<int>("leadHours")
+                        .HasColumnName("leadHours");
 
-                    b.Property<int>("maxEndMin");
+                    b.Property<int>("maxEndMin")
+                        .HasColumnName("maxEndMin");
 
-                    b.Property<int>("minStartMin");
+                    b.Property<int>("minStartMin")
+                        .HasColumnName("minStartMin");
 
                     b.Property<string>("updatedby")
                         .HasColumnName("Updatedby")
@@ -763,23 +959,32 @@ namespace Machete.Data.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("ID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<double>("cost");
+                    b.Property<double>("cost")
+                        .HasColumnName("cost");
 
                     b.Property<string>("createdby")
                         .HasColumnName("Createdby")
                         .HasMaxLength(30);
 
-                    b.Property<DateTime>("datecreated");
+                    b.Property<DateTime>("datecreated")
+                        .HasColumnName("datecreated")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime>("dateupdated");
+                    b.Property<DateTime>("dateupdated")
+                        .HasColumnName("dateupdated")
+                        .HasColumnType("datetime");
 
-                    b.Property<int>("maxWorker");
+                    b.Property<int>("maxWorker")
+                        .HasColumnName("maxWorker");
 
-                    b.Property<int>("minWorker");
+                    b.Property<int>("minWorker")
+                        .HasColumnName("minWorker");
 
-                    b.Property<int>("transportRuleID");
+                    b.Property<int>("transportRuleID")
+                        .HasColumnName("transportRuleID");
 
                     b.Property<string>("updatedby")
                         .HasColumnName("Updatedby")
@@ -787,7 +992,8 @@ namespace Machete.Data.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("transportRuleID");
+                    b.HasIndex("transportRuleID")
+                        .HasName("IX_transportRuleID");
 
                     b.ToTable("TransportCostRules");
                 });
@@ -796,29 +1002,40 @@ namespace Machete.Data.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("ID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("active");
+                    b.Property<bool>("active")
+                        .HasColumnName("active");
 
                     b.Property<string>("createdby")
                         .HasColumnName("Createdby")
                         .HasMaxLength(30);
 
-                    b.Property<DateTime>("datecreated");
+                    b.Property<DateTime>("datecreated")
+                        .HasColumnName("datecreated")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime>("dateupdated");
+                    b.Property<DateTime>("dateupdated")
+                        .HasColumnName("dateupdated")
+                        .HasColumnType("datetime");
 
-                    b.Property<bool>("defaultAttribute");
+                    b.Property<bool>("defaultAttribute")
+                        .HasColumnName("defaultAttribute");
 
                     b.Property<string>("key")
+                        .HasColumnName("key")
                         .HasMaxLength(50);
 
-                    b.Property<int?>("sortorder");
+                    b.Property<int?>("sortorder")
+                        .HasColumnName("sortorder");
 
                     b.Property<string>("text_EN")
+                        .HasColumnName("text_EN")
                         .HasMaxLength(50);
 
                     b.Property<string>("text_ES")
+                        .HasColumnName("text_ES")
                         .HasMaxLength(50);
 
                     b.Property<string>("updatedby")
@@ -830,31 +1047,41 @@ namespace Machete.Data.Migrations
                     b.ToTable("TransportProviders");
                 });
 
-            modelBuilder.Entity("Machete.Domain.TransportProviderAvailability", b =>
+            modelBuilder.Entity("Machete.Domain.TransportProviderAvailabilities", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("ID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("available");
+                    b.Property<bool>("available")
+                        .HasColumnName("available");
 
                     b.Property<string>("createdby")
                         .HasColumnName("Createdby")
                         .HasMaxLength(30);
 
-                    b.Property<DateTime>("datecreated");
+                    b.Property<DateTime>("datecreated")
+                        .HasColumnName("datecreated")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime>("dateupdated");
+                    b.Property<DateTime>("dateupdated")
+                        .HasColumnName("dateupdated")
+                        .HasColumnType("datetime");
 
-                    b.Property<int>("day");
+                    b.Property<int>("day")
+                        .HasColumnName("day");
 
                     b.Property<string>("key")
+                        .HasColumnName("key")
                         .HasMaxLength(50);
 
                     b.Property<string>("lookupKey")
+                        .HasColumnName("lookupKey")
                         .HasMaxLength(50);
 
-                    b.Property<int>("transportProviderID");
+                    b.Property<int>("transportProviderID")
+                        .HasColumnName("transportProviderID");
 
                     b.Property<string>("updatedby")
                         .HasColumnName("Updatedby")
@@ -862,29 +1089,37 @@ namespace Machete.Data.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("transportProviderID");
+                    b.HasIndex("transportProviderID")
+                        .HasName("IX_transportProviderID");
 
-                    b.ToTable("TransportProvidersAvailability");
+                    b.ToTable("TransportProviderAvailabilities");
                 });
 
             modelBuilder.Entity("Machete.Domain.TransportRule", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("ID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("createdby")
                         .HasColumnName("Createdby")
                         .HasMaxLength(30);
 
-                    b.Property<DateTime>("datecreated");
+                    b.Property<DateTime>("datecreated")
+                        .HasColumnName("datecreated")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime>("dateupdated");
+                    b.Property<DateTime>("dateupdated")
+                        .HasColumnName("dateupdated")
+                        .HasColumnType("datetime");
 
                     b.Property<string>("key")
+                        .HasColumnName("key")
                         .HasMaxLength(50);
 
                     b.Property<string>("lookupKey")
+                        .HasColumnName("lookupKey")
                         .HasMaxLength(50);
 
                     b.Property<string>("updatedby")
@@ -892,9 +1127,11 @@ namespace Machete.Data.Migrations
                         .HasMaxLength(30);
 
                     b.Property<string>("zipcodes")
+                        .HasColumnName("zipcodes")
                         .HasMaxLength(1000);
 
                     b.Property<string>("zoneLabel")
+                        .HasColumnName("zoneLabel")
                         .HasMaxLength(50);
 
                     b.HasKey("ID");
@@ -906,87 +1143,121 @@ namespace Machete.Data.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("ID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("active");
+                    b.Property<bool>("active")
+                        .HasColumnName("active");
 
-                    b.Property<int>("attitude");
+                    b.Property<int>("attitude")
+                        .HasColumnName("attitude");
 
-                    b.Property<string>("comments");
+                    b.Property<string>("comments")
+                        .HasColumnName("comments");
 
                     b.Property<string>("createdby")
                         .HasColumnName("Createdby")
                         .HasMaxLength(30);
 
-                    b.Property<DateTime>("datecreated");
+                    b.Property<DateTime>("datecreated")
+                        .HasColumnName("datecreated")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime>("dateupdated");
+                    b.Property<DateTime>("dateupdated")
+                        .HasColumnName("dateupdated")
+                        .HasColumnType("datetime");
 
-                    b.Property<int>("days");
+                    b.Property<int>("days")
+                        .HasColumnName("days");
 
                     b.Property<string>("description")
+                        .HasColumnName("description")
                         .HasMaxLength(1000);
 
-                    b.Property<int>("englishLevelID");
+                    b.Property<int>("englishLevelID")
+                        .HasColumnName("englishLevelID");
 
-                    b.Property<int>("followDirections");
+                    b.Property<int>("followDirections")
+                        .HasColumnName("followDirections");
 
-                    b.Property<string>("fullWAID");
+                    b.Property<string>("fullWAID")
+                        .HasColumnName("fullWAID");
 
-                    b.Property<int?>("hourRange");
+                    b.Property<int?>("hourRange")
+                        .HasColumnName("hourRange");
 
-                    b.Property<double>("hourlyWage");
+                    b.Property<double>("hourlyWage")
+                        .HasColumnName("hourlyWage");
 
-                    b.Property<double>("hours");
+                    b.Property<double>("hours")
+                        .HasColumnName("hours");
 
-                    b.Property<double>("maxEarnings");
+                    b.Property<double>("maxEarnings")
+                        .HasColumnName("maxEarnings");
 
-                    b.Property<double>("minEarnings");
+                    b.Property<double>("minEarnings")
+                        .HasColumnName("minEarnings");
 
-                    b.Property<int?>("pseudoID");
+                    b.Property<int?>("pseudoID")
+                        .HasColumnName("pseudoID");
 
-                    b.Property<int>("qualityOfWork");
+                    b.Property<int>("qualityOfWork")
+                        .HasColumnName("qualityOfWork");
 
-                    b.Property<int>("reliability");
+                    b.Property<int>("reliability")
+                        .HasColumnName("reliability");
 
-                    b.Property<string>("skillEN");
+                    b.Property<string>("skillEN")
+                        .HasColumnName("skillEN");
 
-                    b.Property<string>("skillES");
+                    b.Property<string>("skillES")
+                        .HasColumnName("skillES");
 
-                    b.Property<int>("skillID");
+                    b.Property<int>("skillID")
+                        .HasColumnName("skillID");
 
-                    b.Property<double>("surcharge");
+                    b.Property<double>("surcharge")
+                        .HasColumnName("surcharge");
 
-                    b.Property<double?>("transportCost");
+                    b.Property<double?>("transportCost")
+                        .HasColumnName("transportCost");
 
-                    b.Property<int>("transportProgram");
+                    b.Property<int>("transportProgram")
+                        .HasColumnName("transportProgram");
 
                     b.Property<string>("updatedby")
                         .HasColumnName("Updatedby")
                         .HasMaxLength(30);
 
-                    b.Property<bool?>("weightLifted");
+                    b.Property<bool?>("weightLifted")
+                        .HasColumnName("weightLifted");
 
-                    b.Property<int>("workOrderID");
+                    b.Property<int>("workOrderID")
+                        .HasColumnName("workOrderID");
 
-                    b.Property<int?>("workerAssignedID");
+                    b.Property<int?>("workerAssignedID")
+                        .HasColumnName("workerAssignedID");
 
-                    b.Property<int?>("workerRating");
+                    b.Property<int?>("workerRating")
+                        .HasColumnName("workerRating");
 
                     b.Property<string>("workerRatingComments")
+                        .HasColumnName("workerRatingComments")
                         .HasMaxLength(500);
 
-                    b.Property<int?>("workerSigininID");
-
-                    b.Property<int?>("workerSigninID");
+                    b.Property<int?>("workerSigninID")
+                        .HasColumnName("workerSigninID");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("workOrderID");
+                    b.HasIndex("workOrderID")
+                        .HasName("IX_workOrderID");
 
-                    b.HasIndex("workerAssignedID");
+                    b.HasIndex("workerAssignedID")
+                        .HasName("IX_workerAssignedID");
 
-                    b.HasIndex("workerSigininID");
+                    b.HasIndex("workerSigninID")
+                        .HasName("IX_workerSigninID");
 
                     b.ToTable("WorkAssignments");
                 });
@@ -995,295 +1266,427 @@ namespace Machete.Data.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("ID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("EmployerID");
+                    b.Property<int>("EmployerID")
+                        .HasColumnName("EmployerID");
 
                     b.Property<string>("additionalNotes")
+                        .HasColumnName("additionalNotes")
                         .HasMaxLength(1000);
 
                     b.Property<string>("city")
                         .IsRequired()
+                        .HasColumnName("city")
                         .HasMaxLength(50);
 
                     b.Property<string>("contactName")
                         .IsRequired()
+                        .HasColumnName("contactName")
                         .HasMaxLength(50);
 
                     b.Property<string>("createdby")
                         .HasColumnName("Createdby")
                         .HasMaxLength(30);
 
-                    b.Property<DateTime>("dateTimeofWork");
+                    b.Property<DateTime>("dateTimeofWork")
+                        .HasColumnName("dateTimeofWork")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime>("datecreated");
+                    b.Property<DateTime>("datecreated")
+                        .HasColumnName("datecreated")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime>("dateupdated");
+                    b.Property<DateTime>("dateupdated")
+                        .HasColumnName("dateupdated")
+                        .HasColumnType("datetime");
 
                     b.Property<string>("description")
+                        .HasColumnName("description")
                         .HasMaxLength(4000);
 
-                    b.Property<bool?>("disclosureAgreement");
+                    b.Property<bool?>("disclosureAgreement")
+                        .HasColumnName("disclosureAgreement");
 
-                    b.Property<bool>("englishRequired");
+                    b.Property<bool>("englishRequired")
+                        .HasColumnName("englishRequired");
 
                     b.Property<string>("englishRequiredNote")
+                        .HasColumnName("englishRequiredNote")
                         .HasMaxLength(100);
 
-                    b.Property<bool>("lunchSupplied");
+                    b.Property<bool>("lunchSupplied")
+                        .HasColumnName("lunchSupplied");
 
-                    b.Property<bool>("onlineSource");
+                    b.Property<bool>("onlineSource")
+                        .HasColumnName("onlineSource");
 
-                    b.Property<int?>("paperOrderNum");
+                    b.Property<int?>("paperOrderNum")
+                        .HasColumnName("paperOrderNum");
 
-                    b.Property<bool>("permanentPlacement");
+                    b.Property<bool>("permanentPlacement")
+                        .HasColumnName("permanentPlacement");
 
                     b.Property<string>("phone")
                         .IsRequired()
+                        .HasColumnName("phone")
                         .HasMaxLength(12);
 
-                    b.Property<double?>("ppFee");
+                    b.Property<double?>("ppFee")
+                        .HasColumnName("ppFee");
 
                     b.Property<string>("ppPayerID")
+                        .HasColumnName("ppPayerID")
                         .HasMaxLength(25);
 
                     b.Property<string>("ppPaymentID")
+                        .HasColumnName("ppPaymentID")
                         .HasMaxLength(50);
 
                     b.Property<string>("ppPaymentToken")
+                        .HasColumnName("ppPaymentToken")
                         .HasMaxLength(25);
 
                     b.Property<string>("ppResponse")
+                        .HasColumnName("ppResponse")
                         .HasMaxLength(5000);
 
                     b.Property<string>("ppState")
+                        .HasColumnName("ppState")
                         .HasMaxLength(20);
 
                     b.Property<string>("state")
                         .IsRequired()
+                        .HasColumnName("state")
                         .HasMaxLength(2);
 
                     b.Property<string>("statusEN")
+                        .HasColumnName("statusEN")
                         .HasMaxLength(50);
 
                     b.Property<string>("statusES")
+                        .HasColumnName("statusES")
                         .HasMaxLength(50);
 
                     b.Property<int>("statusID")
                         .HasColumnName("status");
 
-                    b.Property<bool>("timeFlexible");
+                    b.Property<bool>("timeFlexible")
+                        .HasColumnName("timeFlexible");
 
-                    b.Property<double>("timeZoneOffset");
+                    b.Property<double>("timeZoneOffset")
+                        .HasColumnName("timeZoneOffset");
 
-                    b.Property<double>("transportFee");
+                    b.Property<double>("transportFee")
+                        .HasColumnName("transportFee");
 
-                    b.Property<double>("transportFeeExtra");
+                    b.Property<double>("transportFeeExtra")
+                        .HasColumnName("transportFeeExtra");
 
-                    b.Property<string>("transportMethodEN");
+                    b.Property<string>("transportMethodEN")
+                        .HasColumnName("transportMethodEN");
 
-                    b.Property<string>("transportMethodES");
+                    b.Property<string>("transportMethodES")
+                        .HasColumnName("transportMethodES");
 
-                    b.Property<int>("transportMethodID");
+                    b.Property<int>("transportMethodID")
+                        .HasColumnName("transportMethodID");
 
-                    b.Property<int>("transportProviderID");
+                    b.Property<int>("transportProviderID")
+                        .HasColumnName("transportProviderID");
 
                     b.Property<string>("transportTransactID")
+                        .HasColumnName("transportTransactID")
                         .HasMaxLength(50);
 
-                    b.Property<int?>("transportTransactType");
+                    b.Property<int?>("transportTransactType")
+                        .HasColumnName("transportTransactType");
 
-                    b.Property<int>("typeOfWorkID");
+                    b.Property<int>("typeOfWorkID")
+                        .HasColumnName("typeOfWorkID");
 
                     b.Property<string>("updatedby")
                         .HasColumnName("Updatedby")
                         .HasMaxLength(30);
 
-                    b.Property<int>("waPseudoIDCounter");
+                    b.Property<int>("waPseudoIDCounter")
+                        .HasColumnName("waPseudoIDCounter");
 
                     b.Property<string>("workSiteAddress1")
                         .IsRequired()
+                        .HasColumnName("workSiteAddress1")
                         .HasMaxLength(50);
 
                     b.Property<string>("workSiteAddress2")
+                        .HasColumnName("workSiteAddress2")
                         .HasMaxLength(50);
 
                     b.Property<string>("zipcode")
                         .IsRequired()
+                        .HasColumnName("zipcode")
                         .HasMaxLength(10);
 
                     b.HasKey("ID");
 
-                    b.HasIndex("EmployerID");
+                    b.HasIndex("EmployerID")
+                        .HasName("IX_EmployerID");
+
+                    b.HasIndex("dateTimeofWork")
+                        .HasName("dateTimeofWork");
 
                     b.ToTable("WorkOrders");
                 });
 
             modelBuilder.Entity("Machete.Domain.Worker", b =>
                 {
-                    b.Property<int>("ID");
+                    b.Property<int>("ID")
+                        .HasColumnName("ID");
 
-                    b.Property<int?>("ImageID");
+                    b.Property<int?>("ImageID")
+                        .HasColumnName("ImageID");
 
-                    b.Property<int?>("RaceID");
+                    b.Property<int?>("RaceID")
+                        .HasColumnName("RaceID");
 
-                    b.Property<bool?>("active");
+                    b.Property<bool?>("active")
+                        .HasColumnName("active");
 
-                    b.Property<int?>("americanBornChildren");
+                    b.Property<int?>("americanBornChildren")
+                        .HasColumnName("americanBornChildren");
 
-                    b.Property<bool?>("carinsurance");
+                    b.Property<bool?>("carinsurance")
+                        .HasColumnName("carinsurance");
 
-                    b.Property<int?>("countryoforiginID");
+                    b.Property<int?>("countryoforiginID")
+                        .HasColumnName("countryoforiginID");
 
                     b.Property<string>("createdby")
                         .HasColumnName("Createdby")
                         .HasMaxLength(30);
 
-                    b.Property<DateTime?>("dateOfBirth");
+                    b.Property<DateTime?>("dateOfBirth")
+                        .HasColumnName("dateOfBirth")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime>("dateOfMembership");
+                    b.Property<DateTime>("dateOfMembership")
+                        .HasColumnName("dateOfMembership")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime>("datecreated");
+                    b.Property<DateTime>("datecreated")
+                        .HasColumnName("datecreated")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime?>("dateinUSA");
+                    b.Property<DateTime?>("dateinUSA")
+                        .HasColumnName("dateinUSA")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime?>("dateinseattle");
+                    b.Property<DateTime?>("dateinseattle")
+                        .HasColumnName("dateinseattle")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime>("dateupdated");
+                    b.Property<DateTime>("dateupdated")
+                        .HasColumnName("dateupdated")
+                        .HasColumnType("datetime");
 
                     b.Property<string>("disabilitydesc")
+                        .HasColumnName("disabilitydesc")
                         .HasMaxLength(50);
 
-                    b.Property<bool?>("disabled");
+                    b.Property<bool?>("disabled")
+                        .HasColumnName("disabled");
 
-                    b.Property<bool?>("driverslicense");
+                    b.Property<bool?>("driverslicense")
+                        .HasColumnName("driverslicense");
 
-                    b.Property<int>("dwccardnum");
+                    b.Property<int>("dwccardnum")
+                        .HasColumnName("dwccardnum");
 
-                    b.Property<int?>("educationLevel");
+                    b.Property<int?>("educationLevel")
+                        .HasColumnName("educationLevel");
 
                     b.Property<string>("emcontUSAname")
+                        .HasColumnName("emcontUSAname")
                         .HasMaxLength(50);
 
                     b.Property<string>("emcontUSAphone")
+                        .HasColumnName("emcontUSAphone")
                         .HasMaxLength(14);
 
                     b.Property<string>("emcontUSArelation")
+                        .HasColumnName("emcontUSArelation")
                         .HasMaxLength(30);
 
                     b.Property<string>("emcontoriginname")
+                        .HasColumnName("emcontoriginname")
                         .HasMaxLength(50);
 
                     b.Property<string>("emcontoriginphone")
+                        .HasColumnName("emcontoriginphone")
                         .HasMaxLength(14);
 
                     b.Property<string>("emcontoriginrelation")
+                        .HasColumnName("emcontoriginrelation")
                         .HasMaxLength(30);
 
-                    b.Property<int>("englishlevelID");
+                    b.Property<int>("englishlevelID")
+                        .HasColumnName("englishlevelID");
 
-                    b.Property<int?>("farmLaborCharacteristics");
+                    b.Property<int?>("farmLaborCharacteristics")
+                        .HasColumnName("farmLaborCharacteristics");
 
                     b.Property<string>("fullNameAndID")
+                        .HasColumnName("fullNameAndID")
                         .HasMaxLength(100);
 
-                    b.Property<bool?>("healthInsurance");
+                    b.Property<bool?>("healthInsurance")
+                        .HasColumnName("healthInsurance");
 
-                    b.Property<DateTime?>("healthInsuranceDate");
+                    b.Property<DateTime?>("healthInsuranceDate")
+                        .HasColumnName("healthInsuranceDate")
+                        .HasColumnType("datetime");
 
                     b.Property<string>("height")
+                        .HasColumnName("height")
                         .HasMaxLength(50);
 
-                    b.Property<bool?>("homeless");
+                    b.Property<bool?>("homeless")
+                        .HasColumnName("homeless");
 
-                    b.Property<int?>("housingType");
+                    b.Property<int?>("housingType")
+                        .HasColumnName("housingType");
 
-                    b.Property<bool?>("immigrantrefugee");
+                    b.Property<bool?>("immigrantrefugee")
+                        .HasColumnName("immigrantrefugee");
 
-                    b.Property<int?>("incomeID");
+                    b.Property<int?>("incomeID")
+                        .HasColumnName("incomeID");
 
-                    b.Property<int?>("incomeSourceID");
+                    b.Property<int?>("incomeSourceID")
+                        .HasColumnName("incomeSourceID");
 
-                    b.Property<DateTime?>("insuranceexpiration");
+                    b.Property<DateTime?>("insuranceexpiration")
+                        .HasColumnName("insuranceexpiration")
+                        .HasColumnType("datetime");
 
                     b.Property<string>("introToCenter")
+                        .HasColumnName("introToCenter")
                         .HasMaxLength(1000);
 
-                    b.Property<double?>("lastPaymentAmount");
+                    b.Property<double?>("lastPaymentAmount")
+                        .HasColumnName("lastPaymentAmount");
 
-                    b.Property<DateTime?>("lastPaymentDate");
+                    b.Property<DateTime?>("lastPaymentDate")
+                        .HasColumnName("lastPaymentDate")
+                        .HasColumnType("datetime");
 
-                    b.Property<bool?>("lgbtq");
+                    b.Property<bool?>("lgbtq")
+                        .HasColumnName("lgbtq");
 
-                    b.Property<DateTime?>("licenseexpirationdate");
+                    b.Property<DateTime?>("licenseexpirationdate")
+                        .HasColumnName("licenseexpirationdate")
+                        .HasColumnType("datetime");
 
                     b.Property<string>("liveWithDescription")
+                        .HasColumnName("liveWithDescription")
                         .HasMaxLength(1000);
 
-                    b.Property<bool?>("liveWithSpouse");
+                    b.Property<bool?>("liveWithSpouse")
+                        .HasColumnName("liveWithSpouse");
 
-                    b.Property<bool?>("livealone");
+                    b.Property<bool?>("livealone")
+                        .HasColumnName("livealone");
 
-                    b.Property<bool?>("livewithchildren");
+                    b.Property<bool?>("livewithchildren")
+                        .HasColumnName("livewithchildren");
 
-                    b.Property<int?>("maritalstatus");
+                    b.Property<int?>("maritalstatus")
+                        .HasColumnName("maritalstatus");
 
-                    b.Property<DateTime?>("memberReactivateDate");
+                    b.Property<DateTime?>("memberReactivateDate")
+                        .HasColumnName("memberReactivateDate")
+                        .HasColumnType("datetime");
 
                     b.Property<string>("memberStatusEN")
+                        .HasColumnName("memberStatusEN")
                         .HasMaxLength(50);
 
                     b.Property<string>("memberStatusES")
+                        .HasColumnName("memberStatusES")
                         .HasMaxLength(50);
 
                     b.Property<int>("memberStatusID")
                         .HasColumnName("memberStatus");
 
-                    b.Property<DateTime>("memberexpirationdate");
+                    b.Property<DateTime>("memberexpirationdate")
+                        .HasColumnName("memberexpirationdate")
+                        .HasColumnType("datetime");
 
-                    b.Property<int?>("neighborhoodID");
+                    b.Property<int?>("neighborhoodID")
+                        .HasColumnName("neighborhoodID");
 
-                    b.Property<int?>("numChildrenUnder18");
+                    b.Property<int?>("numChildrenUnder18")
+                        .HasColumnName("numChildrenUnder18");
 
-                    b.Property<int?>("numofchildren");
+                    b.Property<int?>("numofchildren")
+                        .HasColumnName("numofchildren");
 
-                    b.Property<bool?>("ownTools");
+                    b.Property<bool?>("ownTools")
+                        .HasColumnName("ownTools");
 
                     b.Property<string>("raceother")
+                        .HasColumnName("raceother")
                         .HasMaxLength(20);
 
-                    b.Property<bool?>("recentarrival");
+                    b.Property<bool?>("recentarrival")
+                        .HasColumnName("recentarrival");
 
-                    b.Property<int?>("skill1");
+                    b.Property<int?>("skill1")
+                        .HasColumnName("skill1");
 
-                    b.Property<int?>("skill2");
+                    b.Property<int?>("skill2")
+                        .HasColumnName("skill2");
 
-                    b.Property<int?>("skill3");
+                    b.Property<int?>("skill3")
+                        .HasColumnName("skill3");
 
-                    b.Property<string>("skillCodes");
+                    b.Property<string>("skillCodes")
+                        .HasColumnName("skillCodes");
 
-                    b.Property<string>("typeOfWork");
+                    b.Property<string>("typeOfWork")
+                        .HasColumnName("typeOfWork");
 
-                    b.Property<int>("typeOfWorkID");
+                    b.Property<int>("typeOfWorkID")
+                        .HasColumnName("typeOfWorkID");
 
                     b.Property<string>("updatedby")
                         .HasColumnName("Updatedby")
                         .HasMaxLength(30);
 
-                    b.Property<bool?>("usVeteran");
+                    b.Property<bool?>("usVeteran")
+                        .HasColumnName("usVeteran");
 
-                    b.Property<int?>("vehicleTypeID");
+                    b.Property<int?>("vehicleTypeID")
+                        .HasColumnName("vehicleTypeID");
 
-                    b.Property<double?>("wageTheftRecoveryAmount");
+                    b.Property<double?>("wageTheftRecoveryAmount")
+                        .HasColumnName("wageTheftRecoveryAmount");
 
-                    b.Property<bool?>("wageTheftVictim");
+                    b.Property<bool?>("wageTheftVictim")
+                        .HasColumnName("wageTheftVictim");
 
                     b.Property<string>("weight")
+                        .HasColumnName("weight")
                         .HasMaxLength(10);
 
-                    b.Property<float?>("workerRating");
+                    b.Property<float?>("workerRating")
+                        .HasColumnName("workerRating");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("ID")
+                        .IsUnique()
+                        .HasName("IX_ID");
 
                     b.ToTable("Workers");
                 });
@@ -1292,19 +1695,26 @@ namespace Machete.Data.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("ID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("WorkOrderID");
+                    b.Property<int>("WorkOrderID")
+                        .HasColumnName("WorkOrderID");
 
-                    b.Property<int>("WorkerID");
+                    b.Property<int>("WorkerID")
+                        .HasColumnName("WorkerID");
 
                     b.Property<string>("createdby")
                         .HasColumnName("Createdby")
                         .HasMaxLength(30);
 
-                    b.Property<DateTime>("datecreated");
+                    b.Property<DateTime>("datecreated")
+                        .HasColumnName("datecreated")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime>("dateupdated");
+                    b.Property<DateTime>("dateupdated")
+                        .HasColumnName("dateupdated")
+                        .HasColumnType("datetime");
 
                     b.Property<string>("updatedby")
                         .HasColumnName("Updatedby")
@@ -1312,9 +1722,11 @@ namespace Machete.Data.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("WorkOrderID");
+                    b.HasIndex("WorkOrderID")
+                        .HasName("IX_WorkOrderID");
 
-                    b.HasIndex("WorkerID");
+                    b.HasIndex("WorkerID")
+                        .HasName("IX_WorkerID");
 
                     b.ToTable("WorkerRequests");
                 });
@@ -1323,32 +1735,46 @@ namespace Machete.Data.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("ID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("WorkAssignmentID");
+                    b.Property<int?>("WorkAssignmentID")
+                        .HasColumnName("WorkAssignmentID");
 
-                    b.Property<int?>("WorkerID");
+                    b.Property<int?>("WorkerID")
+                        .HasColumnName("WorkerID");
 
                     b.Property<string>("createdby")
                         .HasColumnName("Createdby")
                         .HasMaxLength(30);
 
-                    b.Property<DateTime>("datecreated");
+                    b.Property<DateTime>("datecreated")
+                        .HasColumnName("datecreated")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime>("dateforsignin");
+                    b.Property<DateTime>("dateforsignin")
+                        .HasColumnName("dateforsignin")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime>("dateupdated");
+                    b.Property<DateTime>("dateupdated")
+                        .HasColumnName("dateupdated")
+                        .HasColumnType("datetime");
 
-                    b.Property<int>("dwccardnum");
+                    b.Property<int>("dwccardnum")
+                        .HasColumnName("dwccardnum");
 
-                    b.Property<int?>("lottery_sequence");
+                    b.Property<int?>("lottery_sequence")
+                        .HasColumnName("lottery_sequence");
 
-                    b.Property<DateTime?>("lottery_timestamp");
+                    b.Property<DateTime?>("lottery_timestamp")
+                        .HasColumnName("lottery_timestamp")
+                        .HasColumnType("datetime");
 
                     b.Property<int?>("memberStatusID")
                         .HasColumnName("memberStatus");
 
-                    b.Property<double>("timeZoneOffset");
+                    b.Property<double>("timeZoneOffset")
+                        .HasColumnName("timeZoneOffset");
 
                     b.Property<string>("updatedby")
                         .HasColumnName("Updatedby")
@@ -1356,7 +1782,8 @@ namespace Machete.Data.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("WorkerID");
+                    b.HasIndex("WorkerID")
+                        .HasName("IX_WorkerID");
 
                     b.ToTable("WorkerSignins");
                 });
@@ -1476,11 +1903,27 @@ namespace Machete.Data.Migrations
                     b.HasOne("Machete.Domain.Activity", "Activity")
                         .WithMany("Signins")
                         .HasForeignKey("activityID")
+                        .HasConstraintName("FK_dbo.ActivitySignins_dbo.Activities_activityID")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Machete.Domain.Person", "person")
-                        .WithMany()
-                        .HasForeignKey("personID");
+                        .WithMany("activitySignins")
+                        .HasForeignKey("personID")
+                        .HasConstraintName("FK_dbo.ActivitySignins_dbo.Persons_personID");
+                });
+
+            modelBuilder.Entity("Machete.Domain.EmailWorkOrder", b =>
+                {
+                    b.HasOne("Machete.Domain.Email", "Email")
+                        .WithMany("EmailWorkOrders")
+                        .HasForeignKey("EmailID")
+                        .HasConstraintName("FK_dbo.EmailWorkOrders_dbo.Emails_Email_ID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Machete.Domain.WorkOrder", "WorkOrder")
+                        .WithMany("EmailWorkOrders")
+                        .HasForeignKey("WorkOrderID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Machete.Domain.Event", b =>
@@ -1488,6 +1931,7 @@ namespace Machete.Data.Migrations
                     b.HasOne("Machete.Domain.Person", "Person")
                         .WithMany("Events")
                         .HasForeignKey("PersonID")
+                        .HasConstraintName("FK_dbo.Events_dbo.Persons_PersonID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -1496,24 +1940,13 @@ namespace Machete.Data.Migrations
                     b.HasOne("Machete.Domain.Event", "Event")
                         .WithMany("JoinEventImages")
                         .HasForeignKey("EventID")
+                        .HasConstraintName("FK_dbo.JoinEventImages_dbo.Events_EventID")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Machete.Domain.Image", "Image")
-                        .WithOne()
-                        .HasForeignKey("Machete.Domain.JoinEventImage", "ImageID")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Machete.Domain.JoinWorkOrderEmail", b =>
-                {
-                    b.HasOne("Machete.Domain.Email", "Email")
-                        .WithMany()
-                        .HasForeignKey("EmailID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Machete.Domain.WorkOrder", "WorkOrder")
-                        .WithMany()
-                        .HasForeignKey("WorkOrderID")
+                        .WithMany("JoinEventImages")
+                        .HasForeignKey("ImageID")
+                        .HasConstraintName("FK_dbo.JoinEventImages_dbo.Images_ImageID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -1522,14 +1955,16 @@ namespace Machete.Data.Migrations
                     b.HasOne("Machete.Domain.TransportRule", "transportRule")
                         .WithMany("costRules")
                         .HasForeignKey("transportRuleID")
+                        .HasConstraintName("FK_dbo.TransportCostRules_dbo.TransportRules_transportRuleID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Machete.Domain.TransportProviderAvailability", b =>
+            modelBuilder.Entity("Machete.Domain.TransportProviderAvailabilities", b =>
                 {
-                    b.HasOne("Machete.Domain.TransportProvider", "Provider")
+                    b.HasOne("Machete.Domain.TransportProvider", "TransportProvider")
                         .WithMany("AvailabilityRules")
                         .HasForeignKey("transportProviderID")
+                        .HasConstraintName("FK_dbo.TransportProviderAvailabilities_dbo.TransportProviders_transportProviderID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -1538,15 +1973,18 @@ namespace Machete.Data.Migrations
                     b.HasOne("Machete.Domain.WorkOrder", "workOrder")
                         .WithMany("workAssignments")
                         .HasForeignKey("workOrderID")
+                        .HasConstraintName("FK_dbo.WorkAssignments_dbo.WorkOrders_workOrderID")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Machete.Domain.Worker", "workerAssigned")
                         .WithMany("workAssignments")
-                        .HasForeignKey("workerAssignedID");
+                        .HasForeignKey("workerAssignedID")
+                        .HasConstraintName("FK_dbo.WorkAssignments_dbo.Workers_workerAssignedID");
 
                     b.HasOne("Machete.Domain.WorkerSignin", "workerSiginin")
-                        .WithMany()
-                        .HasForeignKey("workerSigininID");
+                        .WithMany("workAssignments")
+                        .HasForeignKey("workerSigninID")
+                        .HasConstraintName("FK_dbo.WorkAssignments_dbo.WorkerSignins_workerSigninID");
                 });
 
             modelBuilder.Entity("Machete.Domain.WorkOrder", b =>
@@ -1554,6 +1992,7 @@ namespace Machete.Data.Migrations
                     b.HasOne("Machete.Domain.Employer", "Employer")
                         .WithMany("WorkOrders")
                         .HasForeignKey("EmployerID")
+                        .HasConstraintName("FK_dbo.WorkOrders_dbo.Employers_EmployerID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -1562,6 +2001,7 @@ namespace Machete.Data.Migrations
                     b.HasOne("Machete.Domain.Person", "Person")
                         .WithOne("Worker")
                         .HasForeignKey("Machete.Domain.Worker", "ID")
+                        .HasConstraintName("FK_dbo.Workers_dbo.Persons_ID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -1570,11 +2010,13 @@ namespace Machete.Data.Migrations
                     b.HasOne("Machete.Domain.WorkOrder", "workOrder")
                         .WithMany("workerRequests")
                         .HasForeignKey("WorkOrderID")
+                        .HasConstraintName("FK_dbo.WorkerRequests_dbo.WorkOrders_WorkOrderID")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Machete.Domain.Worker", "workerRequested")
-                        .WithMany()
+                        .WithMany("workerRequests")
                         .HasForeignKey("WorkerID")
+                        .HasConstraintName("FK_dbo.WorkerRequests_dbo.Workers_WorkerID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -1582,7 +2024,8 @@ namespace Machete.Data.Migrations
                 {
                     b.HasOne("Machete.Domain.Worker", "worker")
                         .WithMany("workersignins")
-                        .HasForeignKey("WorkerID");
+                        .HasForeignKey("WorkerID")
+                        .HasConstraintName("FK_dbo.WorkerSignins_dbo.Workers_WorkerID");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

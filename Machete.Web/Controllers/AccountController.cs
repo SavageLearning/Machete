@@ -207,8 +207,8 @@ namespace Machete.Web.Controllers
             var result = await UserManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
-                // TODO: provide messaging to administrator to add appropriate roles to their account
-                //await SignInAsync(user, isPersistent: false);
+                // Nobody:
+                // This comment: provide messaging to administrator to add appropriate roles to their account
                 return RedirectToAction("Index", "Home");
             }
 

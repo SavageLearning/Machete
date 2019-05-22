@@ -96,7 +96,7 @@ namespace Machete.Web.Controllers.Api
             {
                 var result = serv.Get(tpid).AvailabilityRules
                     .Select(e =>
-                    map.Map<Domain.TransportProviderAvailability, TransportProviderAvailability>(e))
+                    map.Map<Domain.TransportProviderAvailabilities, TransportProviderAvailabilities>(e))
                     .AsEnumerable();
                 return new JsonResult(new { data = result });
             }
@@ -109,14 +109,14 @@ namespace Machete.Web.Controllers.Api
         // POST: api/TransportProvider/{tpid}/AvailabilityRules
         [Authorize(Roles = "Administrator")]
         [HttpPost("{tpid}/availabilities")]
-        public ActionResult ARPost(int tpid, [FromBody]TransportProviderAvailability value)
+        public ActionResult ARPost(int tpid, [FromBody]TransportProviderAvailabilities value)
         {
-            var domain = map.Map<TransportProviderAvailability, Domain.TransportProviderAvailability>(value);
+            var domain = map.Map<TransportProviderAvailabilities, Domain.TransportProviderAvailabilities>(value);
 
             try
             {
                 var entity = serv.CreateAvailability(tpid, domain, UserEmail);
-                var result = map.Map<Domain.TransportProviderAvailability, TransportProviderAvailability>(entity);
+                var result = map.Map<Domain.TransportProviderAvailabilities, TransportProviderAvailabilities>(entity);
                 return new JsonResult(new { data = result });
 
             }

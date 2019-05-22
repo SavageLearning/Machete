@@ -7,7 +7,7 @@ namespace Machete.Test.Integration.Fluent
     public partial class FluentRecordBase
     {
         private ITransportProvidersAvailabilityService _servTPA;
-        private TransportProviderAvailability _tpa;
+        private TransportProviderAvailabilities _tpa;
 
         public FluentRecordBase AddTransportProviderAvailability(
     )
@@ -18,7 +18,7 @@ namespace Machete.Test.Integration.Fluent
 
             //
             // ARRANGE
-            _tpa = (TransportProviderAvailability)Records.transportProviderAvailability.Clone();
+            _tpa = (TransportProviderAvailabilities)Records.transportProviderAvailabilities.Clone();
 
             //
             // ACT
@@ -26,7 +26,7 @@ namespace Machete.Test.Integration.Fluent
             return this;
         }
 
-        public TransportProviderAvailability ToTransportProviderAvailability()
+        public TransportProviderAvailabilities ToTransportProviderAvailability()
         {
             if (_tpa == null) AddTransportProviderAvailability();
             return _tpa;

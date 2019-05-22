@@ -44,16 +44,16 @@ namespace Machete.Domain
         public virtual ICollection<WorkAssignment> workAssignments { get; set; }
         public virtual ICollection<WorkerRequest> workerRequests { get; set; }
 
-        private ICollection<JoinWorkOrderEmail> WorkOrderEmails { get; } = new List<JoinWorkOrderEmail>();
+        private ICollection<EmailWorkOrder> WorkOrderEmails { get; } = new List<EmailWorkOrder>();
         [NotMapped] public ICollection<Email> Emails;
 
         public WorkOrder()
         {
             waPseudoIDCounter = 0;
-            Emails = new JoinCollectionFacade<Email,JoinWorkOrderEmail>(
+            Emails = new JoinCollectionFacade<Email,EmailWorkOrder>(
                 WorkOrderEmails,
                 woe => woe.Email,
-                e => new JoinWorkOrderEmail { WorkOrder = this, Email = e }
+                e => new EmailWorkOrder { WorkOrder = this, Email = e }
             );
         }
         
@@ -148,6 +148,8 @@ namespace Machete.Domain
         public string ppPayerID { get; set; }
         [StringLength(20)]
         public string ppState { get; set; }
+
+        public virtual ICollection<EmailWorkOrder> EmailWorkOrders { get; set; }
     }
 
     public class WorkOrderSummary

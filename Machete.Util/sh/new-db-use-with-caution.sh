@@ -8,6 +8,11 @@ then
 fi
 
 sudo docker rm -f $MACHETE_SQL_DOCKER_CONTAINER
+
+if [ $? -ne 0 ]; then
+  sudo docker rm -f sqlserver
+fi
+
 sudo docker pull mcr.microsoft.com/mssql/server
 #sudo docker pull postgres
 

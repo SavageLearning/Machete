@@ -30,13 +30,6 @@ namespace Machete.Domain
 {
     public class Activity : Record
     {
-        public string idChild
-        {
-            get
-            {
-                return "asi" + this.ID + "-";
-            }
-        }
         public virtual ICollection<ActivitySignin> Signins { get; set; }
         //
         [Required, Column("name")]

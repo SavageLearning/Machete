@@ -153,6 +153,8 @@ namespace Machete.Domain
         {
             get { return this.memberStatusID == iExpelled ? true : false; }
         }
+
+        public virtual ICollection<WorkerRequest> workerRequests { get; set; }
     }
 }
 

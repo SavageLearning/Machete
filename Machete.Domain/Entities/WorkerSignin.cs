@@ -22,6 +22,7 @@
 // 
 #endregion
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -37,7 +38,8 @@ namespace Machete.Domain
         public int? lottery_sequence { get; set; }
         public virtual Worker worker { get; set; }
         public int? WorkerID { get; set; }
-
+        
+        public virtual ICollection<WorkAssignment> workAssignments { get; set; }
     }
     public abstract class Signin : Record
     {

@@ -32,7 +32,8 @@ namespace Machete.Domain
     {       
         public virtual Worker Worker { get; set; }
         public virtual ICollection<Event> Events { get; set; }
-
+        public virtual ICollection<ActivitySignin> activitySignins { get; set; }
+        
         public bool active { get; set; }
         [StringLength(50), Required]
         public string firstname1 { get; set; }

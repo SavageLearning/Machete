@@ -61,14 +61,14 @@ namespace Machete.Domain
         public Email()
         {
             statusID = Email.iPending;
-            WorkOrders = new JoinCollectionFacade<WorkOrder, JoinWorkOrderEmail>(
-                WorkOrderEmails,
+            WorkOrders = new JoinCollectionFacade<WorkOrder, EmailWorkOrder>(
+                EmailWorkOrders,
                 woe => woe.WorkOrder,
-                wo => new JoinWorkOrderEmail { Email = this, WorkOrder = wo }
+                wo => new EmailWorkOrder { Email = this, WorkOrder = wo }
             );
         }
 
-        private ICollection<JoinWorkOrderEmail> WorkOrderEmails { get; } = new List<JoinWorkOrderEmail>();
+        public virtual ICollection<EmailWorkOrder> EmailWorkOrders { get; } = new List<EmailWorkOrder>();
         [NotMapped] public ICollection<WorkOrder> WorkOrders { get; }
 
         [StringLength(50)]
@@ -115,15 +115,5 @@ namespace Machete.Domain
                 return this.AssociatedWorkOrders.OrderByDescending(wo => wo.paperOrderNum).FirstOrDefault();
             }
         }
-    }
-
-    public class JoinWorkOrderEmail : Record
-    {
-        public int WorkOrderID { get; set; }
-        public virtual WorkOrder WorkOrder { get; set; }
-
-        public int EmailID { get; set; }
-        public virtual Email Email { get; set; }
-
     }
 }

@@ -11,9 +11,9 @@ namespace Machete.Web.Maps.Api
             CreateMap<Domain.TransportProvider, TransportProviderViewModel>()
                 .ForMember(v => v.id, opt => opt.MapFrom(d => d.ID))
                 .ForMember(v => v.text, opt => opt.MapFrom(d => d.text_EN));
-            CreateMap<Domain.TransportProviderAvailability, TransportProviderAvailabilityViewModel>();
+            CreateMap<Domain.TransportProviderAvailabilities, TransportProviderAvailabilityViewModel>();
 
-            CreateMap<TransportProviderAvailabilityViewModel, Domain.TransportProviderAvailability>();
+            CreateMap<TransportProviderAvailabilityViewModel, Domain.TransportProviderAvailabilities>();
         }
     }
 }

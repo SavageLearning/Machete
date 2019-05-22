@@ -31,7 +31,7 @@ namespace Machete.Web.Controllers.Api
             try
             {
                 var result = serv.GetAll()
-                    .Select(e => map.Map<Domain.TransportProviderAvailability, TransportProviderAvailability>(e))
+                    .Select(e => map.Map<Domain.TransportProviderAvailabilities, TransportProviderAvailabilities>(e))
                     .AsEnumerable();
                 return new JsonResult(new { data = result });
             }

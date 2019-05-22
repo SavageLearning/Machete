@@ -39,7 +39,7 @@ namespace Machete.Data.Initialize
         {
             if (!db.Lookups.Any())
                 MacheteLookups.Initialize(db);
-            if (!db.TransportProviders.Any() || !db.TransportProvidersAvailability.Any())
+            if (!db.TransportProviders.Any() || !db.TransportProviderAvailabilities.Any())
                 MacheteTransports.Initialize(db);
             if (!db.Configs.Any())
                 MacheteConfigs.Initialize(db);

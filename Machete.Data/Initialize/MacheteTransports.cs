@@ -20,12 +20,12 @@ namespace Machete.Data.Initialize
                 context.SaveChanges();
             }
 
-            if (!context.TransportProvidersAvailability.Any()) {
+            if (!context.TransportProviderAvailabilities.Any()) {
                 var providers = context.TransportProviders.ToList();
                 foreach (var provider in providers) {
-                    provider.AvailabilityRules = new List<TransportProviderAvailability>();
+                    provider.AvailabilityRules = new List<TransportProviderAvailabilities>();
                     for (var dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
-                        provider.AvailabilityRules.Add(new TransportProviderAvailability {
+                        provider.AvailabilityRules.Add(new TransportProviderAvailabilities {
                             transportProviderID = provider.ID,
                             day = dayOfWeek,
                             available = dayOfWeek != 0 || (provider.key == "transport_pickup"),

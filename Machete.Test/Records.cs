@@ -311,7 +311,7 @@ namespace Machete.Test
             createdby = "TestInitializer",
             updatedby = "TestInitializer"
         };
-        public static TransportProviderAvailability transportProviderAvailability = new TransportProviderAvailability
+        public static TransportProviderAvailabilities transportProviderAvailabilities = new TransportProviderAvailabilities
         {
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime
