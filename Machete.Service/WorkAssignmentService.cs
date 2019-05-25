@@ -46,6 +46,7 @@ namespace Machete.Service
     {
         private readonly IWorkAssignmentRepository waRepo;
         private readonly IWorkerRepository wRepo;
+        private readonly IWorkOrderRepository _woRepo;
         private readonly IWorkerSigninRepository wsiRepo;
         private readonly IUnitOfWork unitOfWork;
         private readonly ILookupRepository lRepo;
@@ -54,7 +55,8 @@ namespace Machete.Service
         //
         public WorkAssignmentService(
             IWorkAssignmentRepository waRepo, 
-            IWorkerRepository wRepo, 
+            IWorkerRepository wRepo,
+            IWorkOrderRepository woRepo,
             ILookupRepository lRepo, 
             IWorkerSigninRepository wsiRepo,
             IUnitOfWork unitOfWork,
@@ -64,6 +66,7 @@ namespace Machete.Service
             this.waRepo = waRepo;
             this.unitOfWork = unitOfWork;
             this.wRepo = wRepo;
+            _woRepo = woRepo;
             this.lRepo = lRepo;
             this.wsiRepo = wsiRepo;
             this.map = map;
@@ -389,16 +392,22 @@ namespace Machete.Service
         }
         public override WorkAssignment Create(WorkAssignment record, string user)
         {
-            if (record.workOrder == null) throw new ArgumentNullException("workOrder object is null");
-            record.workOrder.waPseudoIDCounter++;
-            record.pseudoID = record.workOrder.waPseudoIDCounter;
-            updateComputedValues(ref record);
+            // no can lazy load virtual property in EF Core in this manner.
+            //if (record.workOrder == null) throw new ArgumentNullException("workOrder object is null");
+
+            var wo = _woRepo.GetById(record.workOrderID);
+            
+            wo.waPseudoIDCounter++;
+            record.pseudoID = wo.waPseudoIDCounter;
+            updateComputedValues(ref record, wo.paperOrderNum);
             return base.Create(record, user);
         }
 
         public void Save(WorkAssignment wa, int? workerAssignedID, string user)
         {
             //check if workerAssigned changed; if so, Unassign
+            var wo = _woRepo.GetById(wa.workOrderID);
+            
             int? origWorker = wa.workerAssignedID;
             if (workerAssignedID != origWorker)
                 Unassign(wa.ID, wa.workerSigninID, user);
@@ -409,7 +418,7 @@ namespace Machete.Service
                 wa.workerAssigned = wRepo.GetById((int)wa.workerAssignedID);
             }
             wa.updatedByUser(user);
-            updateComputedValues(ref wa);
+            updateComputedValues(ref wa, wo.paperOrderNum);
             log(wa.ID, user, "WorkAssignment edited");
             unitOfWork.SaveChanges();
         }
@@ -419,14 +428,13 @@ namespace Machete.Service
             Save(asmt, null, user);
         }
 
-        private void updateComputedValues(ref WorkAssignment record)
+        private void updateComputedValues(ref WorkAssignment record, int? paperOrderNum)
         {
             record.skillEN = lRepo.GetById(record.skillID).text_EN;
             record.skillES = lRepo.GetById(record.skillID).text_ES;
             record.minEarnings = (record.days * record.surcharge) + (record.hourlyWage * record.hours * record.days);
             record.maxEarnings = record.hourRange == null ? 0 : (record.days * record.surcharge) + (record.hourlyWage * (int)record.hourRange * record.days);
             var recordPseudoID = record.pseudoID ?? 0;
-            var paperOrderNum = record.workOrder.paperOrderNum ?? 0;
             record.fullWAID = string.Format("{0,5:D5}-{1,2:D2}", paperOrderNum, recordPseudoID);
         }
     }

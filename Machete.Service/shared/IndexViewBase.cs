@@ -545,15 +545,17 @@ namespace Machete.Service
             q = q.Where(p => DbFunctions.DiffMinutes(date, p.dateStart) <= 30 &&
                              DbFunctions.DiffMinutes(date, p.dateEnd) >= -30);
         }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="o"></param>
+        /// <param name="culture"></param>
         /// <param name="q"></param>
         /// <param name="lRepo"></param>
-        public static void search(viewOptions o, ref IQueryable<Activity> q)
+        public static void search(viewOptions o, string culture, ref IQueryable<Activity> q)
         {
-            switch(o.CI.TwoLetterISOLanguageName.ToUpperInvariant())
+            switch(culture.ToUpper())
             {
                 case "ES":
                     q = q.Where(p => p.notes.Contains(o.sSearch) ||
@@ -571,7 +573,7 @@ namespace Machete.Service
                         p.nameEN.ToString().Contains(o.sSearch) ||
                         p.typeEN.ToString().Contains(o.sSearch) ||
                         p.dateEnd.ToString().Contains(o.sSearch));
-                        break;
+                    break;
             }
 
         }

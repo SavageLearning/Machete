@@ -32,7 +32,7 @@ namespace Machete.Test.Integration.Fluent
             _wo.workAssignments = new List<WorkAssignment>();
             if (datecreated != null) _wo.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _wo.dateupdated = (DateTime)dateupdated;
-            if (paperordernum != null) _wo.paperOrderNum = paperordernum;
+            if (paperordernum == null) _wo.paperOrderNum = new Random().Next(10000, 99999);
             if (dateTimeOfWork != null) _wo.dateTimeofWork = (DateTime)dateTimeOfWork;
             if (status != null) _wo.statusID = (int)status;
             //

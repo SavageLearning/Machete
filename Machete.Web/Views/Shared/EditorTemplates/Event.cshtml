@@ -39,14 +39,14 @@
             @Html.LabelFor(model => model.dateFrom)
         </div>
         <div class="tb-field">
-            @Html.TextBox("dateFrom", Html.Encode(String.Format("{0:d}", Model.dateFrom)), new { id = idPrefix + "dateFrom", @class="ui-datepicker" })
+            @Html.TextBox("dateFrom", Html.Encode(Model.dateFrom.ToShortTextBoxDateString()), new { id = idPrefix + "dateFrom", @class="ui-datepicker" })
             @Html.ValidationMessageFor(model => model.dateFrom)
         </div>
         <div class="mui-event-edit-label tb-label">
             @Html.LabelFor(model => model.dateTo)
         </div>
         <div class="tb-field">
-            @Html.TextBox("dateTo", Html.Encode(String.Format("{0:d}", Model.dateTo)), new { id = idPrefix + "dateTo", @class = "ui-datepicker" })
+            @Html.TextBox("dateTo", Html.Encode(Model.dateTo.ToShortTextBoxDateString()), new { id = idPrefix + "dateTo", @class = "ui-datepicker" })
             @Html.ValidationMessageFor(model => model.dateTo)
         </div>
     </div>

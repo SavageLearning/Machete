@@ -61,6 +61,4 @@ namespace Machete.Test.UINav
     class WA : TabBar
     {
     }
-
-
 }

@@ -28,6 +28,7 @@ namespace Machete.Test.Integration.Fluent
             // ARRANGE
             _wa = (WorkAssignment)Records.assignment.Clone();
             _wa.workOrder = _wo;
+            _wa.workOrderID = _wo.ID;
 
             if (assignWorker) _wa.workerAssigned = AddWorker();
             if (datecreated != null) _wa.datecreated = (DateTime)datecreated;

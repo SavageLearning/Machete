@@ -58,11 +58,9 @@ namespace Machete.Data.Infrastructure
             DataContext.SaveChanges();
         }
 
-        // using this with mvc core DI causes the existing context to be disposed.
         public void Commit()
         {
             DataContext.SaveChanges();
-            databaseFactory.Dispose();
             dataContext = null;
         }
     }

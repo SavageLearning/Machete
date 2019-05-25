@@ -27,8 +27,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
+using Machete.Data;
 using Machete.Domain;
 using Machete.Service;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Machete.Web.Helpers
@@ -59,7 +62,7 @@ namespace Machete.Web.Helpers
         SelectList hours();
         SelectList skillLevels();
         List<SelectListItem> yesnoSelectList();
-        IEnumerable<string> getTeachers();
+        Task<IEnumerable<string>> getTeachers();
         string getConfig(string key);
     }
 
@@ -83,10 +86,20 @@ namespace Machete.Web.Helpers
         private ILookupService lServ;
         private IConfigService cfgServ;
         private ITransportProvidersService tpServ;
+
+        private UserManager<MacheteUser> _userManager;
+        private RoleManager<IdentityRole> _roleManager;
+
         //
         // Initialize once to prevent re-querying DB
         //
-        public Defaults(ILookupService lServ, IConfigService cfg, ITransportProvidersService tpServ)
+        public Defaults(
+            ILookupService lServ, 
+            IConfigService cfg, 
+            ITransportProvidersService tpServ,             
+            UserManager<MacheteUser> userManager,
+            RoleManager<IdentityRole> roleManager
+        )
         {
             cfgServ = cfg;
             this.lServ = lServ;
@@ -140,6 +153,9 @@ namespace Machete.Web.Helpers
             yesnoES = new List<SelectListItem>();
             yesnoES.Add(new SelectListItem { Selected = false, Text = "No", Value = "false" });
             yesnoES.Add(new SelectListItem { Selected = false, Text = "Sí", Value = "true" });
+
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
         public CultureInfo getCI()
         {
@@ -229,9 +245,11 @@ namespace Machete.Web.Helpers
             return cfgServ.getConfig(key);
         }
 
-        public IEnumerable<string> getTeachers()
+        public async Task<IEnumerable<string>> getTeachers()
         {
-            return lServ.GetTeachers();
+            var teachers = await _userManager.GetUsersInRoleAsync("Teacher");
+            var result = teachers.Select(teach => $"{teach.UserName}"); // TODO people are increasingly using emails; this creates a confusing interface
+            return result;
         }
         /// <summary>
         /// Get the SelectList for the specified lookup/category type.

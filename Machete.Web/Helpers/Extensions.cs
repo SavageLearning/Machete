@@ -33,12 +33,13 @@ namespace Machete.Web.Helpers
     public static class Extensions
     {
         public static string ToShortTextBoxDateString(this DateTime source)
-        {            
-            return source == DateTime.MinValue ? "" : source.ToShortDateString();
+        {
+            return source == DateTime.MinValue ? "" : source.ToString("MM/dd/yyyy");
         }
+        
         public static string ToShortTextBoxDateString(this DateTime? source)
         {
-            return source == null || source == DateTime.MinValue ? "" : source.Value.ToShortDateString();
+            return source == null ? "" : source.Value.ToString("MM/dd/yyyy");
         }
         
         //http://stackoverflow.com/questions/4649795/hiding-column-in-table-based-on-role-in-mvc

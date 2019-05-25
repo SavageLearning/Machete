@@ -129,7 +129,7 @@ namespace Machete.Test.Integration.Services
             dOptions.sSearch = teacher;
             //
             //Act
-            dataTableResult<DTO.ActivityList> result = frb.ToServ<IActivityService>().GetIndexView(dOptions);
+            dataTableResult<DTO.ActivityList> result = frb.ToServ<IActivityService>().GetIndexView(dOptions, "EN");
             //
             //Assert
             IEnumerable<DTO.ActivityList> query = result.query.ToList();
@@ -154,7 +154,7 @@ namespace Machete.Test.Integration.Services
 
             //
             //Act
-            dataTableResult<DTO.ActivityList> result = frb.ToServ<IActivityService>().GetIndexView(dOptions);
+            dataTableResult<DTO.ActivityList> result = frb.ToServ<IActivityService>().GetIndexView(dOptions, "EN");
             //
             //Assert
             IEnumerable<DTO.ActivityList> query = result.query.ToList();

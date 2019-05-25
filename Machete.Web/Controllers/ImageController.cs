@@ -22,6 +22,7 @@
 // 
 #endregion
 
+using System.Globalization;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Helpers;
@@ -36,34 +37,35 @@ namespace Machete.Web.Controllers
     public class ImageController : MacheteController
     {
         private readonly IImageService serv;
-        //
+        private CultureInfo _currentCulture;
+        private string _currentUrl;
+
         // GET: /Image/
         public ImageController(IImageService imageService)
         {
             serv = imageService;
         }
+        
         protected override void Initialize(ActionContext requestContext)
         {
             base.Initialize(requestContext);
             var httpContext = requestContext.HttpContext;
-            var currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
-            var currentUrl = UriHelper.BuildRelative(httpContext.Request.PathBase, httpContext.Request.Path, httpContext.Request.QueryString);        }
+            _currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
+            _currentUrl = UriHelper.BuildRelative(httpContext.Request.PathBase, httpContext.Request.Path, httpContext.Request.QueryString);
+        }
+
         /// <summary>
-        /// Get an image from the database as file content.
+        /// Gets an image from the database as file content.
         /// </summary>
-        /// <param name="ID"></param>
+        /// <param name="ID">The database ID of the image to be retrieved.</param>
         /// <returns></returns>
         [Authorize(Roles = "PhoneDesk, Manager, Teacher, Administrator, Check-in")]
-        /// 
         public FileContentResult GetImage(int ID)
         {
-            if (ID != 0)
-            {
-                Image image = serv.Get(ID);
-                return File(image.ImageData, image.ImageMimeType, image.filename);
-            }
+            if (ID == 0) return null;
 
-            return null; //File(new byte [1], "");
+            var image = serv.Get(ID);
+            return File(image.ImageData, image.ImageMimeType, image.filename);
         }
     }
 }

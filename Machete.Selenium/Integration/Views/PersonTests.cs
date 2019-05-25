@@ -28,11 +28,9 @@ namespace Machete.Test.Selenium.View
         public static void ClassInitialize(TestContext testContext) {
             string solutionDirectory = sharedUI.SolutionDirectory();
             //testdir = solutionDirectory + "\\Machete.test\\";
-            testimagefile = solutionDirectory + "\\jimmy_machete.jpg";
+            testimagefile = solutionDirectory + "/jimmy_machete.jpg";
             var mapperConfig = new MapperConfiguration(config => { config.ConfigureMvc(); });
             map = mapperConfig.CreateMapper();
-            
-            WebServer.StartIis();
         }
 
         [TestInitialize]
@@ -40,7 +38,7 @@ namespace Machete.Test.Selenium.View
         {
             frb = FluentRecordBaseFactory.Get();
 
-            driver = new ChromeDriver(ConfigurationManager.AppSettings["CHROMEDRIVERPATH"]);
+            driver = new ChromeDriver("/usr/local/bin");
             baseURL = "http://localhost:4213/";
             ui = new sharedUI(driver, baseURL, map);
             verificationErrors = new StringBuilder();
@@ -64,8 +62,7 @@ namespace Machete.Test.Selenium.View
             }
             Assert.AreEqual("", verificationErrors.ToString());
         }
-        [ClassCleanup]
-        public static void ClassCleanup() { WebServer.StopIis();  }
+
 
         [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Persons)]
         public void SePerson_create_person()

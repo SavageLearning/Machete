@@ -37,12 +37,12 @@ namespace Machete.Web.Maps
                             : (int?) Convert.ToInt32(dt.searchColName("status"))))
                 .ForMember(vo => vo.EmployerID,
                     opt => opt.MapFrom(dt =>
-                        string.IsNullOrEmpty(dt.searchColName("EID"))
+                        string.IsNullOrEmpty(dt.searchColName("eid"))
                             ? null
-                            : (int?) Convert.ToInt32(dt.searchColName("EID"))))
+                            : (int?) Convert.ToInt32(dt.searchColName("eid"))))
                 .ForMember(vo => vo.sortColName, opt => opt.MapFrom(dt => dt.sortColName()))
                 .ForMember(vo => vo.dwccardnum, opt => opt.MapFrom(dt => Convert.ToInt32(dt.dwccardnum)))
-                .ForMember(vo => vo.woid, opt => opt.MapFrom(dt => Convert.ToInt32(dt.searchColName("WOID"))))
+                .ForMember(vo => vo.woid, opt => opt.MapFrom(dt => Convert.ToInt32(dt.searchColName("woid"))))
                 .ForMember(vo => vo.date,
                     opt => opt.MapFrom(dt => dt.todaysdate == null ? null : (DateTime?) DateTime.Parse(dt.todaysdate)))
                 .ForMember(vo => vo.displayStart, opt => opt.MapFrom(dt => dt.iDisplayStart))

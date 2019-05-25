@@ -33,6 +33,7 @@ using Machete.Service;
 using Machete.Web.Helpers;
 using Machete.Web.ViewModel;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Activity = Machete.Domain.Activity;
 using ActivityList = Machete.Service.DTO.ActivityList;
@@ -86,7 +87,10 @@ namespace Machete.Web.Controllers
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             var userIdentity = new ClaimsIdentity("Cookies");
             if (!userIdentity.IsAuthenticated) vo.authenticated = false;
-            dataTableResult<ActivityList> list = serv.GetIndexView(vo);
+
+            var culture = Request.HttpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;            
+            
+            dataTableResult<ActivityList> list = serv.GetIndexView(vo, culture.TwoLetterISOLanguageName);
             var result = list.query
                 .Select(
                     e => map.Map<ActivityList, ViewModel.ActivityList>(e)

@@ -31,15 +31,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Machete.Data.Infrastructure
 {
-    //
-    //
-    public interface IDatabaseFactory : IDisposable
+    public interface IDatabaseFactory
     {
         MacheteContext Get();
         MacheteContext Get(Tenant tenant);
     }
-    //
-    //
+
     public class DatabaseFactory : IDatabaseFactory
     {
         readonly DbContextOptions<MacheteContext> options;
@@ -83,16 +80,6 @@ namespace Machete.Data.Infrastructure
                 objectID,
                 dbConnection.ConnectionString);
             Debug.WriteLine(sb.ToString());
-        }
-
-        public void Dispose()
-        {
-            if (macheteContext != null)
-            {
-                log_connection_count("DatabaseFactory.DisposeCore");
-                macheteContext.Dispose();
-                macheteContext = null;
-            }
         }
     }
 }

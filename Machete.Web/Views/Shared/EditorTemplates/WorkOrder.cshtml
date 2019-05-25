@@ -218,7 +218,7 @@
             <input type="button" value="@WorkOrder.requestRemove" class="formButton" id="removeRequestBtn-@(Model.ID)"/>
         </div>
         <div class="tb-field desc-field">
-            @* @Html.ListBox("workerRequests2", new SelectList(ViewBag.workerRequests, "Value", "Text"), new { id = "workerRequests2_WO-"+ Model.ID, tabindex = "22", style="min-width: 16em;"}) *@
+            @Html.ListBox("workerRequests2", new SelectList(ViewBag.workerRequests, "Value", "Text"), new { id = "workerRequests2_WO-"+ Model.ID, tabindex = "22", style="min-width: 16em;"})
         </div>
         <div class="tb-label desc-label">
             @Html.LabelFor(model => model.description)

@@ -26,7 +26,6 @@ namespace Machete.Test.Selenium.View
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext)
         {
-            WebServer.StartIis();
             var webMapperConfig = new MapperConfiguration(config => { config.ConfigureMvc(); });
             map = webMapperConfig.CreateMapper();
         }
@@ -35,7 +34,7 @@ namespace Machete.Test.Selenium.View
         public void SetupTest()
         {
             frb = FluentRecordBaseFactory.Get();
-            driver = new ChromeDriver(ConfigurationManager.AppSettings["CHROMEDRIVERPATH"]);
+            driver = new ChromeDriver("/usr/local/bin");
             baseURL = "http://localhost:4213/";
             ui = new sharedUI(driver, baseURL, map);
             verificationErrors = new StringBuilder();
@@ -45,7 +44,6 @@ namespace Machete.Test.Selenium.View
         [TestCleanup]
         public void TeardownTest()
         {
-            //
             // Loggoff
             Assert.AreEqual("", verificationErrors.ToString());
             ui.WaitForElement(By.LinkText("Logoff"));
@@ -58,12 +56,9 @@ namespace Machete.Test.Selenium.View
             {
                 // Ignore errors if unable to close the browser
             }
-
         }
-        [ClassCleanup]
-        public static void ClassCleanup() { WebServer.StopIis(); }
+
         /// <summary>
-        /// 
         /// 
         /// </summary>
         [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Employers)]
@@ -197,6 +192,5 @@ namespace Machete.Test.Selenium.View
             ui.WaitForElement(By.Id("workOrderListTab_" + _emp1.ID));
             Assert.IsTrue(ui.WaitForElementValue(By.XPath("//table[@id='workOrderTable_" + recID.ToString() + "']/tbody/tr/td[5]"), _wo.contactName));
         }
-
     }
 }

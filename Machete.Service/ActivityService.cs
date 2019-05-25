@@ -27,14 +27,16 @@ using Machete.Data.Infrastructure;
 using Machete.Domain;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using Machete.Service.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace Machete.Service
 {
     public interface IActivityService : IService<Activity>
     {
-        dataTableResult<DTO.ActivityList> GetIndexView(viewOptions o);
+        dataTableResult<ActivityList> GetIndexView(viewOptions o, string culture);
         void AssignList(int personID, List<int> actList, string user);
         void UnassignList(int personID, List<int> actList, string user);
     }
@@ -78,12 +80,11 @@ namespace Machete.Service
             record.typeES = lookupTextByID(record.typeID, "ES");
         }
 
-        public dataTableResult<DTO.ActivityList> GetIndexView(viewOptions o)
+        public dataTableResult<ActivityList> GetIndexView(viewOptions o, string culture)
         {
             var result = new dataTableResult<DTO.ActivityList>();
             IQueryable<Activity> q = dbset.AsNoTracking();
             
-
             if (o.personID > 0 && o.attendedActivities == false)
                 IndexViewBase.getUnassociated(o.personID, ref q, db);
             if (o.personID > 0 && o.attendedActivities == true)
@@ -94,7 +95,7 @@ namespace Machete.Service
                 IndexViewBase.unauthenticatedView((DateTime)o.date, ref q);
             }
 
-            if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
+            if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, culture, ref q);
 
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
             result.filteredCount = q.Count();

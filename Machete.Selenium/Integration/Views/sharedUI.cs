@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading;
 using Machete.Data.Initialize;
 using Machete.Test.Integration.Fluent;
+using Machete.Web.Helpers;
 
 namespace Machete.Test.Selenium.View
 {
@@ -20,8 +21,8 @@ namespace Machete.Test.Selenium.View
     {
         public IWebDriver _d;
         string _url;
-        public int maxwait = 10; // seconds
-        int sleepFor = 1000; //milliseconds
+        public int maxwait = 5; // seconds
+        int _sleepFor = 1000; //milliseconds
         IMapper map;
 
         public sharedUI(IWebDriver driver, string url, IMapper map)
@@ -161,7 +162,7 @@ namespace Machete.Test.Selenium.View
             SelectOption(By.Id(prefix + "memberStatusID"), "Active");
             SelectOption(By.Id(prefix + "neighborhoodID"), "Primary City");
             SelectOption(By.Id(prefix + "typeOfWorkID"), @"Day Worker Center");
-            SelectOption(By.Id(prefix + "englishlevelID"), "2");
+            SelectOption(By.Id(prefix + "englishlevelID"), "conversational (2)");
             SelectOption(By.Id(prefix + "incomeID"), @"Poor (Less than $15,000)");
             _d.FindElement(By.Id(prefix + "imagefile")).SendKeys(imagepath);
             _d.FindElement(By.Id("createWorkerBtn")).Click();
@@ -175,6 +176,9 @@ namespace Machete.Test.Selenium.View
         {
             WaitThenClickElement(By.Id("workerCreateTab"));
             WaitForElement(By.Id(_wkr.idPrefix + "memberStatusID"));
+            
+            Thread.Sleep(5000);
+            
             WaitThenClickElement(By.Id(_wkr.idPrefix + "memberStatusID"));
             SelectOption(By.Id(_wkr.idPrefix + "memberStatusID"), "Sanctioned");
             WaitThenClickElement(By.Id(_wkr.idPrefix + "SaveButton"));
@@ -189,16 +193,22 @@ namespace Machete.Test.Selenium.View
             Assert.IsTrue(result, "Create tab label not updated by formSubmit");            
             Assert.AreEqual(_wkr.dateOfMembership.ToShortDateString(), WaitForElement(By.Id(prefix + "dateOfMembership")).GetAttribute("value"));
             Assert.AreEqual(((DateTime)_wkr.dateOfBirth.Value).ToShortDateString(), WaitForElement(By.Id(prefix + "dateOfMembership")).GetAttribute("value"));
+            
+            Thread.Sleep(5000);
+            
             Assert.AreEqual(((DateTime)_wkr.dateinUSA).ToShortDateString(), WaitForElement(By.Id(prefix + "dateinUSA")).GetAttribute("value"));
             Assert.AreEqual(((DateTime)_wkr.dateinseattle).ToShortDateString(), WaitForElement(By.Id(prefix + "dateinseattle")).GetAttribute("value"));
             Assert.AreEqual(_wkr.memberexpirationdate.ToShortDateString(), WaitForElement(By.Id(prefix + "memberexpirationdate")).GetAttribute("value"));
             Assert.AreEqual(_wkr.height, WaitForElement(By.Id(prefix + "height")).GetAttribute("value"));
             Assert.AreEqual(_wkr.weight, WaitForElement(By.Id(prefix + "weight")).GetAttribute("value"));
+            
+            Thread.Sleep(5000);
+            
             Assert.AreEqual(_wkr.dwccardnum.ToString(), WaitForElement(By.Id(prefix + "dwccardnum")).GetAttribute("value"));
             Assert.AreEqual("Active", GetOptionText(WaitForElement(By.Id(prefix + "memberStatusID"))));
             Assert.AreEqual("Primary City", GetOptionText(WaitForElement(By.Id(prefix + "neighborhoodID"))));
             Assert.AreEqual(@"Day Worker Center", GetOptionText(WaitForElement(By.Id(prefix + "typeOfWorkID"))));
-            Assert.AreEqual("2", GetOptionText(WaitForElement(By.Id(prefix + "englishlevelID"))));
+            Assert.AreEqual("conversational (2)", GetOptionText(WaitForElement(By.Id(prefix + "englishlevelID"))));
             Assert.AreEqual(@"Poor (Less than $15,000)", GetOptionText(WaitForElement(By.Id(prefix + "incomeID"))));
             return true;
         }
@@ -256,7 +266,9 @@ namespace Machete.Test.Selenium.View
             }
             WaitForElement(By.Id(prefix + "notes")).SendKeys(_ev.notes);
             WaitThenClickElement(By.Id("eventCreateBtn"));
-            Thread.Sleep(1000); // need tabs to change; should build label and wait on it
+            
+            Thread.Sleep(5000); // need tabs to change; should build label and wait on it
+
             var selectedTab = _d.FindElements(By.CssSelector("li.ui-tabs-selected"))[1];
             IWebElement tabAnchor = selectedTab.FindElement(By.CssSelector("a"));
             _ev.ID = Convert.ToInt32(tabAnchor.GetAttribute("recordid"));
@@ -320,6 +332,8 @@ namespace Machete.Test.Selenium.View
             var dialog = WaitForElementExists(By.Id("duplicatesDialog"));
             if (dialog)
             {
+                // This always fails the first time, and I do not know why. Reproduce with completely clean dir;
+                // otherwise does not happen. Selenium pls
                 WaitForElement(By.Id("duplicateSaveBtn"));
                 _d.FindElement(By.Id("duplicateSaveBtn")).Click();
             }
@@ -500,7 +514,7 @@ namespace Machete.Test.Selenium.View
             Assert.AreEqual(_wo.transportProviderID, GetOptionIndex(By.Id(prefix + "transportMethodID")));
             //WaitForElement(By.Id(prefix + "transportTransactType"));
             //Assert.AreEqual(_wo.transportTransactType, GetOptionIndex(By.Id(prefix + "transportTransactType")));
-            WaitForElement(By.Id("workerRequests2_WO-" + _wo.ID.ToString()));
+            WaitForElement(By.Id("workerRequests2_WO-" + _wo.ID));
             if (_wo.workerRequests != null)
                 foreach (var request in _wo.workerRequests)
                 {
@@ -555,8 +569,14 @@ namespace Machete.Test.Selenium.View
             // Look for WA datatable to have a first row (at least one record)
             By walt = By.XPath("//table[@id='workAssignTable-wo-" + _wo.ID + "']/tbody/tr/td[1]");
             // The #####-## order number from the first column
+            
+            Thread.Sleep(5000);
+            
             var waltText = "Assignment #: " + WaitForElement(walt).Text;
             WaitForElementValue(walt, _wa.tablabel);
+            
+            Thread.Sleep(5000);
+            
             Assert.AreEqual(_wa.tablabel, waltText, "Unexpected PseudoID in assignment's list");
             Thread.Sleep(1000);
             WaitThenClickElement(By.Id("activateWorkOrderButton-" + _wo.ID));
@@ -844,9 +864,11 @@ namespace Machete.Test.Selenium.View
                     elem = IsElementPresent(by);
                     if (elem != null && elem.Displayed) return elem;
                 }
-                catch (Exception)
-                {  }
-                Thread.Sleep(sleepFor);
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Waiting for element {by}; Exception:\r\n{ex}\r\nInnerException:\r\n{ex.InnerException}");
+                }
+                Thread.Sleep(_sleepFor);
             }
             throw new NotFoundException();
         }
@@ -860,7 +882,7 @@ namespace Machete.Test.Selenium.View
                 if (elem) 
                     return true;
                 else 
-                    Thread.Sleep(sleepFor);
+                    Thread.Sleep(_sleepFor);
             }
             return false;
         }
@@ -887,7 +909,7 @@ namespace Machete.Test.Selenium.View
                 {
                     return false;
                 }
-                Thread.Sleep(sleepFor);
+                Thread.Sleep(_sleepFor);
             }
             return false;
         }
@@ -907,7 +929,7 @@ namespace Machete.Test.Selenium.View
                 }
                 catch (Exception)
                 { return false; }
-                Thread.Sleep(sleepFor);
+                Thread.Sleep(_sleepFor);
             }
             return false;
         }
@@ -923,7 +945,7 @@ namespace Machete.Test.Selenium.View
                 }
                 catch (Exception)
                 { return null; }
-                Thread.Sleep(sleepFor);
+                Thread.Sleep(_sleepFor);
             }
             return null;
         }

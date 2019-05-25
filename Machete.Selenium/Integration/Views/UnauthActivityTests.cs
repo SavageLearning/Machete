@@ -29,14 +29,13 @@ namespace Machete.Test.Selenium.View
         {
             var mapperConfig = new MapperConfiguration(config => { config.ConfigureMvc(); });
             map = mapperConfig.CreateMapper();
-            WebServer.StartIis();
         }
 
         [TestInitialize]
         public void SetupTest()
         {
             frb = FluentRecordBaseFactory.Get();
-            driver = new ChromeDriver(ConfigurationManager.AppSettings["CHROMEDRIVERPATH"]);
+            driver = new ChromeDriver("/usr/local/bin");
             baseURL = "http://localhost:4213/";
             ui = new sharedUI(driver, baseURL, map);
             verificationErrors = new StringBuilder();
@@ -56,9 +55,7 @@ namespace Machete.Test.Selenium.View
                 //ignoring errors if we can't close the browser.
             }
         }
-
-        [ClassCleanup]
-        public static void ClassCleanup() { WebServer.StopIis(); }
+        
 
         // BRIAN TODO
         // -------------------------------------------------------------------------logout
