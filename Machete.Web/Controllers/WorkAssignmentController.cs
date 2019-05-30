@@ -39,8 +39,7 @@ using WorkerSignin = Machete.Domain.WorkerSignin;
 
 namespace Machete.Web.Controllers
 {
-    [ElmahHandleError]
-    public class WorkAssignmentController : MacheteController
+        public class WorkAssignmentController : MacheteController
     {
         private readonly IWorkAssignmentService waServ;
         private readonly IWorkOrderService woServ;

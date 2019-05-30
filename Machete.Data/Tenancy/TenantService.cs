@@ -36,8 +36,6 @@ namespace Machete.Data.Tenancy
             
             foreach (var tenant in mapping.Tenants) 
                 tenants.Add(_configuration.GetTenant(tenant.Value));
-            if (mapping.AllowDefault)
-                tenants.Add(_configuration.GetTenant(mapping.Default));
 
             return tenants;
         }

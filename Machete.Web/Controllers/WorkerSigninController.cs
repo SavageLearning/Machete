@@ -34,8 +34,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Web.Controllers
 {
-    [ElmahHandleError]
-    public class WorkerSigninController : MacheteController
+        public class WorkerSigninController : MacheteController
     {
         private readonly IWorkerSigninService serv;
         private readonly IMapper map;

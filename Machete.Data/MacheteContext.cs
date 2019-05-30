@@ -31,7 +31,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Machete.Data.Dynamic;
+using Machete.Data.Identity;
 using Machete.Data.Tenancy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Activity = Machete.Domain.Activity;
 
@@ -53,7 +55,9 @@ using Activity = Machete.Domain.Activity;
 namespace Machete.Data
 {
     // http://stackoverflow.com/questions/22105583/why-is-asp-net-identity-identitydbcontext-a-black-box
-    public class MacheteContext : IdentityDbContext<MacheteUser>
+    public class MacheteContext : IdentityDbContext<MacheteUser, MacheteRole, string,
+                                      IdentityUserClaim<string>, MacheteUserRole, IdentityUserLogin<string>,
+                                      IdentityRoleClaim<string>, IdentityUserToken<string>>
     {
         private Tenant _tenant;
 
@@ -129,6 +133,43 @@ namespace Machete.Data
         {
             // https://stackoverflow.com/a/39577004/2496266
             base.OnModelCreating(modelBuilder);
+            
+            // IDENTITY //
+            modelBuilder.Entity<MacheteUser>(b =>
+            {
+                // Each User can have many UserClaims
+//                b.HasMany(e => e.Claims)
+//                    .WithOne()
+//                    .HasForeignKey(uc => uc.UserId)
+//                    .IsRequired();
+
+                // Each User can have many UserLogins
+                b.HasMany(e => e.Logins)
+                    .WithOne()
+                    .HasForeignKey(ul => ul.UserId)
+                    .IsRequired();
+
+                // Each User can have many UserTokens
+//                b.HasMany(e => e.Tokens)
+//                    .WithOne()
+//                    .HasForeignKey(ut => ut.UserId)
+//                    .IsRequired();
+
+                // Each User can have many entries in the UserRole join table
+                b.HasMany(e => e.UserRoles)
+                    .WithOne(e => e.User)
+                    .HasForeignKey(ur => ur.UserId)
+                    .IsRequired();
+            });
+
+            modelBuilder.Entity<MacheteRole>(b =>
+            {
+                // Each Role can have many entries in the UserRole join table
+                b.HasMany(e => e.UserRoles)
+                    .WithOne(e => e.Role)
+                    .HasForeignKey(ur => ur.RoleId)
+                    .IsRequired();
+            });
             
             // ENTITIES //
             modelBuilder.Entity<Activity>(entity =>

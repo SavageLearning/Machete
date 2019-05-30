@@ -31,7 +31,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Web.Controllers
 {
-    [ElmahHandleError]
     public class HomeController : Controller
     {
         [Authorize] // if unauthenticated, bounce back to login until we figure it out

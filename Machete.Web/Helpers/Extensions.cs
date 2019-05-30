@@ -25,6 +25,11 @@
 using System;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
+using Machete.Data.Identity;
+using Machete.Service;
+using Machete.Web.ViewModel;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -36,12 +41,12 @@ namespace Machete.Web.Helpers
         {
             return source == DateTime.MinValue ? "" : source.ToString("MM/dd/yyyy");
         }
-        
+
         public static string ToShortTextBoxDateString(this DateTime? source)
         {
             return source == null ? "" : source.Value.ToString("MM/dd/yyyy");
         }
-        
+
         //http://stackoverflow.com/questions/4649795/hiding-column-in-table-based-on-role-in-mvc
         public static bool IsInRole(this IHtmlHelper instance, params string[] roles)
         {
@@ -55,11 +60,31 @@ namespace Machete.Web.Helpers
             var errors = modelState.Values.SelectMany(entry => entry.Errors).ToString();
             throw new InvalidOperationException(errors);
         }
-        
+
         public static string getCI()
         {
             var upperInvariant = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant();
             return upperInvariant;
+        }
+
+        public static UserSettingsViewModel ToUserSettingsViewModel(this MacheteUser user, bool isHirer)
+        {
+            if (user == null) throw new ArgumentNullException(nameof(user));
+            
+            var userSettingsViewModel = new UserSettingsViewModel
+            {
+                ProviderUserKey = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                IsApproved = user.IsApproved ? "Yes" : "No",
+                IsLockedOut = user.IsLockedOut ? "Yes" : "No",
+                IsOnline = DbFunctions.DiffHours(user.LastLoginDate, DateTime.Now) < 1 ? "Yes" : "No",
+                CreationDate = user.CreateDate,
+                LastLoginDate = user.LastLoginDate,
+                IsHirer = isHirer
+            };
+            
+            return userSettingsViewModel;
         }
     }
 }

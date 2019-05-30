@@ -81,7 +81,9 @@ namespace Machete.Test.Integration.Fluent
                     logging.AddDebug();
                     logging.AddEventSourceLogger();
                 })
-                .UseStartup<Startup>().Build().CreateOrMigrateDatabase();
+                .UseStartup<Startup>().Build();
+                
+            webHost.CreateOrMigrateDatabase().GetAwaiter().GetResult();
                 
             var serviceScope = webHost.Services.CreateScope();
             

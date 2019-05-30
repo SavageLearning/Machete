@@ -33,8 +33,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Web.Controllers
 {
-    [ElmahHandleError]
-    public class ImageController : MacheteController
+        public class ImageController : MacheteController
     {
         private readonly IImageService serv;
         private CultureInfo _currentCulture;

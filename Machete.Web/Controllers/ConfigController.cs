@@ -39,8 +39,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Machete.Web.Controllers
 {
-    [ElmahHandleError]
-    public class LookupController : MacheteController
+        public class LookupController : MacheteController
     {
         private readonly ILookupService serv;
         private readonly IMapper map;

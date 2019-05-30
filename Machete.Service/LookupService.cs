@@ -37,7 +37,6 @@ namespace Machete.Service
         IEnumerable<DTO.LookupList> GetIndexView(viewOptions o);
         Lookup GetByKey(string category, string key);
         string textByID(int ID, string locale);
-        IEnumerable<string> GetTeachers();
         void populateStaticIds();
     }
 
@@ -152,11 +151,6 @@ namespace Machete.Service
             }
             //defaults to English
             return record.text_EN;
-        }
-
-        public IEnumerable<string> GetTeachers()
-        {
-            return lrepo.GetTeachers();
         }
     }
 }

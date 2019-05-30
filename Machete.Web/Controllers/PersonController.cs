@@ -36,8 +36,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Web.Controllers
 {
-    [ElmahHandleError]
-    public class PersonController : MacheteController
+        public class PersonController : MacheteController
     {
         private readonly IPersonService serv;
         private readonly IMapper map;

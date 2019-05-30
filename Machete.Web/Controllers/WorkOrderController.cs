@@ -40,8 +40,7 @@ using WorkOrdersList = Machete.Service.DTO.WorkOrdersList;
 
 namespace Machete.Web.Controllers
 {
-    [ElmahHandleError]
-    public class WorkOrderController : MacheteController
+        public class WorkOrderController : MacheteController
     {
         private readonly IWorkOrderService woServ;
         private readonly IMapper map;

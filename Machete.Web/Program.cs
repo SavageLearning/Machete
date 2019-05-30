@@ -17,9 +17,9 @@ namespace Machete.Web
         /// </summary>
         public static async Task Main(string[] args)
         {
-            IWebHost webhost = CreateWebHostBuilder(args).Build().CreateOrMigrateDatabase();
+            IWebHost webhost = CreateWebHostBuilder(args).Build();
 
-            await webhost.SeedUsersAsync();
+            await webhost.CreateOrMigrateDatabase();
 
             await webhost.RunAsync();
         }

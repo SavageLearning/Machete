@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using AutoMapper;
 using Machete.Data;
+using Machete.Data.Tenancy;
 using Machete.Web.Maps;
 using Machete.Web.Maps.Api;
 using Microsoft.AspNetCore.Builder;
@@ -43,8 +45,9 @@ namespace Machete.Web
         /// Defines the ASP.NET Core middleware pipeline. This method gets called by the runtime.
         /// </summary>
         public void ConfigureServices(IServiceCollection services)
-        {   
-            var connString = Configuration.GetConnectionString(StartupConfiguration.DefaultConnection);
+        {
+            var tenants = Configuration.GetSection("Tenants").Get<TenantMapping>();
+            var connString = Configuration.GetConnectionString(tenants.Tenants["default"]);
 
             services.ConfigureJwt(_signingKey, Configuration);
 
@@ -140,7 +143,7 @@ namespace Machete.Web
                 // https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
                 // https://en.wikipedia.org/wiki/ISO_3166-1
                 new CultureInfo("en-US"),
-                new CultureInfo("es-US"),
+                new CultureInfo("es-US")
                 // we use es-US because we are not fully equipped to support international dates.
             };
             app.UseRequestLocalization(new RequestLocalizationOptions

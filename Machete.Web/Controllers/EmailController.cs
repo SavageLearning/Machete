@@ -16,8 +16,7 @@ using Email = Machete.Domain.Email;
 
 namespace Machete.Web.Controllers
 {
-    [ElmahHandleError]
-    public class EmailController : MacheteController
+        public class EmailController : MacheteController
     {
         private readonly IEmailService serv;
         private readonly IMapper map;

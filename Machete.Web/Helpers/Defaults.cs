@@ -28,7 +28,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Machete.Data;
+using Machete.Data.Identity;
 using Machete.Domain;
 using Machete.Service;
 using Microsoft.AspNetCore.Identity;
@@ -88,7 +88,7 @@ namespace Machete.Web.Helpers
         private ITransportProvidersService tpServ;
 
         private UserManager<MacheteUser> _userManager;
-        private RoleManager<IdentityRole> _roleManager;
+        private RoleManager<MacheteRole> _roleManager;
 
         //
         // Initialize once to prevent re-querying DB
@@ -98,7 +98,7 @@ namespace Machete.Web.Helpers
             IConfigService cfg, 
             ITransportProvidersService tpServ,             
             UserManager<MacheteUser> userManager,
-            RoleManager<IdentityRole> roleManager
+            RoleManager<MacheteRole> roleManager
         )
         {
             cfgServ = cfg;

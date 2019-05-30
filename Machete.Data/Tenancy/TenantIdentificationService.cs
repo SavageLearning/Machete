@@ -25,9 +25,10 @@ namespace Machete.Data.Tenancy
         {
             var host = context?.Request.Host.Host;
             
-            var tenantName = _tenants.Tenants.FirstOrDefault(tenant => tenant.Key.Equals(host)).Value ?? _tenants.Default;
+            var tenantName = _tenants.Tenants.FirstOrDefault(tenant => tenant.Key.Equals(host)).Value 
+                          ?? _tenants.Tenants["default"];
             
-            if (tenantName == _tenants.Default && !_defaultAllowed)
+            if (tenantName == _tenants.Tenants["default"] && !_defaultAllowed)
                 throw new UnauthorizedAccessException("Requested default provider, but default not allowed. You have probably misconfigured a production host. Contact your administrator for assistance.");
             
             return tenantName;

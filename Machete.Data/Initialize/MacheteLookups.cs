@@ -208,14 +208,9 @@ namespace Machete.Data.Initialize
                 context.Lookups.Add(u);
             });
             context.Database.OpenConnection();
-            if (context.Database.GetDbConnection().GetType().Name == "SqlConnection")
-            {
-                context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT dbo.Lookups ON");
-                context.SaveChanges();
-                context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT dbo.Lookups OFF");
-            } else {
-                context.SaveChanges();
-            }
+            context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT dbo.Lookups ON");
+            context.SaveChanges();
+            context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT dbo.Lookups OFF");
         }
     }    
 }

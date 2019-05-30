@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Machete.Data;
+using Machete.Data.Identity;
 using Machete.Web.ViewModel.Api.Identity;
 
 namespace Machete.Web.Helpers.Api.Identity
@@ -48,7 +49,7 @@ namespace Machete.Web.Helpers.Api.Identity
                 new Claim(JwtRegisteredClaimNames.AuthTime, UnixEpochDateFor(jwtOptions.IssuedAt)),
                 new Claim(JwtRegisteredClaimNames.Amr, "cookies") // TODO determine programatically
             };
-            claims.AddRange(subject.Roles.Select(role => new Claim("role", role.Name)));
+            claims.AddRange(subject.UserRoles.Select(role => new Claim("role", role.Role.Name))); //TODO test
             claims.Add(new Claim("preferredUserName", preferredUserName));
 
             return new ClaimsIdentity(new GenericIdentity(subject.UserName, "Token"), claims);

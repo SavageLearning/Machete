@@ -32,7 +32,6 @@ namespace Machete.Data.Infrastructure
     //
     public interface IUnitOfWork
     {
-        void Commit();
         void SaveChanges();
     }
     //
@@ -56,12 +55,6 @@ namespace Machete.Data.Infrastructure
         public void SaveChanges()
         {
             DataContext.SaveChanges();
-        }
-
-        public void Commit()
-        {
-            DataContext.SaveChanges();
-            dataContext = null;
         }
     }
 }

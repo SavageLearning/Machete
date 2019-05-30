@@ -10,8 +10,7 @@ namespace Machete.Web.Controllers.Api
 {
     [Route("api/workassignments")]
     [ApiController]
-    [ElmahHandleError]
-    [Authorize]
+        [Authorize]
     public class WorkAssignmentsController : ControllerBase
     {
         private readonly IWorkAssignmentService serv;

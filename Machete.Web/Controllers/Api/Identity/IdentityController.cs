@@ -7,6 +7,7 @@ using System.Security.Authentication;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Machete.Data;
+using Machete.Data.Identity;
 using Machete.Web.Helpers.Api;
 using Machete.Web.Helpers.Api.Identity;
 using Machete.Web.ViewModel.Api.Identity;
@@ -54,12 +55,12 @@ namespace Machete.Web.Controllers.Api.Identity
 
         private readonly IJwtFactory _jwtFactory;
         private readonly JwtIssuerOptions _jwtOptions;
-        private readonly List<IdentityRole> _roles;
+        private readonly List<MacheteRole> _roles;
         private readonly IConfiguration _configuration;
 
         public IdentityController(UserManager<MacheteUser> userManager,
             SignInManager<MacheteUser> signInManager,
-            RoleManager<IdentityRole> roleManager,
+            RoleManager<MacheteRole> roleManager,
             IJwtFactory jwtFactory,
             IOptions<JwtIssuerOptions> jwtOptions,
             IConfiguration configuration
@@ -86,7 +87,7 @@ namespace Machete.Web.Controllers.Api.Identity
             foreach (var role in _roles)
             {
                 var hasRole = await _userManager.IsInRoleAsync(verifiedUser, role.Name);
-                if (hasRole) verifiedUser.Roles.Add(role);
+                if (hasRole) verifiedUser.UserRoles.Add(new MacheteUserRole { Role = role, User = verifiedUser }); // TODO completely untested
             }
             _jwtOptions.Issuer = Routes.GetHostFrom(Request).IdentityRoute();
             _jwtOptions.Nonce = Guid.NewGuid().ToString(); // corners were cut; this is supposed to identify the client

@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text;
+using Machete.Data.Identity;
 
 namespace Machete.Data
 {
@@ -73,13 +74,15 @@ namespace Machete.Data
     {
         void clearSelected(string category);
         Lookup GetByKey(string category, string key);
-        IEnumerable<string> GetTeachers();
     }
+    
     public interface IActivityRepository : IRepository<Activity> { }
+    
     public interface IActivitySigninRepository : IRepository<ActivitySignin>
     {
         ActivitySignin GetByPersonID(int actID, int personID);
     }
+    
     public class WorkerSigninRepository : RepositoryBase<WorkerSignin>, IWorkerSigninRepository
     {
         public WorkerSigninRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
@@ -88,6 +91,7 @@ namespace Machete.Data
             return dbset.Include(a => a.worker).AsNoTracking().AsQueryable();
         }
     }
+    
     public class ActivitySigninRepository : RepositoryBase<ActivitySignin>, IActivitySigninRepository
     {
         public ActivitySigninRepository(IDatabaseFactory databaseFactory)
@@ -105,9 +109,7 @@ namespace Machete.Data
             return q.FirstOrDefault();
         }
     }
-    /// <summary>
-    /// 
-    /// </summary>
+    
     public class ActivityRepository : RepositoryBase<Activity>, IActivityRepository
     {
         public ActivityRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
@@ -117,9 +119,7 @@ namespace Machete.Data
             return dbset.AsNoTracking().AsQueryable();
         }
     }
-    /// <summary>
-    /// 
-    /// </summary>
+    
     public class EmployerRepository : RepositoryBase<Employer>, IEmployerRepository
     {
         public EmployerRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
@@ -260,15 +260,6 @@ namespace Machete.Data
                     where (o.category.Equals(category) && o.key.Equals(key))
                     select o;
             return q.FirstOrDefault();
-        }
-        public IEnumerable<string> GetTeachers()
-        {
-            var teacherID = dbFactory.Get().Roles.First(r => r.Name == "Teacher").Id;
-            return dbFactory.Get().Users
-                .Where(u => u.Roles.Any(r => r.Id == teacherID))
-                .Select(x => x.UserName)
-                .Distinct()
-                .ToList();
         }
     }
 

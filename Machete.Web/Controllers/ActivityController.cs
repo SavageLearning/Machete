@@ -41,8 +41,7 @@ using ActivityList = Machete.Service.DTO.ActivityList;
 namespace Machete.Web.Controllers
 {
 
-    [ElmahHandleError]
-    public class ActivityController : MacheteController
+        public class ActivityController : MacheteController
     {
         private readonly IActivityService serv;
         private readonly IMapper map;

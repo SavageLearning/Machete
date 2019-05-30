@@ -39,8 +39,7 @@ using Employer = Machete.Domain.Employer;
 namespace Machete.Web.Controllers
 {
 
-    [ElmahHandleError]
-    public class EmployerController : MacheteController
+        public class EmployerController : MacheteController
     {
         private readonly IEmployerService _serv;
         private readonly IDefaults _defaults;

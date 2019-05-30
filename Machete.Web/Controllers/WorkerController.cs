@@ -36,8 +36,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Web.Controllers
 {
-    [ElmahHandleError]
-    public class WorkerController : MacheteController
+        public class WorkerController : MacheteController
     {
         private readonly IWorkerService serv;
         private readonly IImageService imageServ;

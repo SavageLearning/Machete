@@ -36,8 +36,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Web.Controllers
 {
-    [ElmahHandleError]
-    public class EventController : MacheteController
+        public class EventController : MacheteController
     {
         private readonly IEventService serv;
         private readonly IImageService iServ;
