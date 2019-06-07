@@ -10,6 +10,12 @@ using Newtonsoft.Json;
 
 namespace Machete.Data
 {
+    /// <summary>
+    /// In a reading of the code, you might be tempted to think of this as the "readonly" context. You would be wrong.
+    /// There is no "readonly" context. This is an ADO context; i.e., it's a context that doesn't use DbContext (EF) and
+    /// permits you to execute queries directly against the database. Use with extreme caution and perform secure code
+    /// reviews for any changes involving this class.
+    /// </summary>
     public static class MacheteAdoContext
     {
         private static string escapeQueryText(string query)
@@ -23,14 +29,18 @@ namespace Machete.Data
             }
         }
 
-        public static int Fill(string query, string connectionString, out DataTable dataTable)
+        public static DataTable Fill(string query, string connectionString)
         {
-            dataTable = new DataTable();
-            using (var adapter = new SqlDataAdapter(query, connectionString)) {
-                return adapter.Fill(dataTable);
+            using (var connection = new SqlConnection(connectionString))
+            {
+                var dataTable = new DataTable();
+                var adapter = new SqlDataAdapter();
+                adapter.SelectCommand = new SqlCommand(query, connection);
+                adapter.Fill(dataTable);
+                return dataTable;
             }
         }
-        
+
         public static List<QueryMetadata> getMetadata(string fromQuery, string connectionString)
         {
             var param = new SqlParameter("@query", escapeQueryText(fromQuery));

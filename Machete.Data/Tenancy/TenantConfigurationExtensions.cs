@@ -14,7 +14,8 @@ namespace Machete.Data.Tenancy
             return new Tenant
             {
                 Name = tenantName,
-                ConnectionString = configuration.GetConnectionString(tenantName)
+                ConnectionString = configuration.GetConnectionString(tenantName),
+                ReadOnlyConnectionString = configuration.GetConnectionString($"{tenantName}ReadOnly")
             };
         }
     }

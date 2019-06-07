@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Machete.Data.Identity
 {
-    public class MacheteRoleStore : IRoleStore<MacheteRole>
+    public class MacheteRoleStore : IQueryableRoleStore<MacheteRole>
     {
         private MacheteContext _dataContext;
         private DbSet<MacheteRole> _roles;
@@ -137,7 +137,9 @@ namespace Machete.Data.Identity
             
             return Task.FromResult(identityRole);
         }
-                
+        
+        public IQueryable<MacheteRole> Roles => _roles;
+
         public void Dispose() { }
     }
 }

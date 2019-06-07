@@ -10,11 +10,7 @@ namespace Machete.Test.Integration.Fluent
         private IWorkerSigninService _servWSI;
         private WorkerSignin _wsi;
 
-        public FluentRecordBase AddWorkerSignin(
-            Worker worker = null
-        //DateTime? datecreated = null,
-        //DateTime? dateupdated = null
-        )
+        public FluentRecordBase AddWorkerSignin(Worker worker = null)
         {
             // ARRANGE
             _servWSI = container.GetRequiredService<IWorkerSigninService>();

@@ -89,7 +89,6 @@ namespace Machete.Test.Integration.Services
             // 
             // Act
             var result = serv.Create(wo, "CreateOnlineOrder_WA_empty_throws_error");
-
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.OnlineOrders)]
@@ -115,8 +114,6 @@ namespace Machete.Test.Integration.Services
             // 
             // Act
             var result = serv.Create(wo, "CreateOnlineOrder_wrong_cost_throws_error");
-            //
-            // Assert
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.OnlineOrders)]

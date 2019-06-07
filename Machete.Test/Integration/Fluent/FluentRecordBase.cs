@@ -155,10 +155,8 @@ namespace Machete.Test.Integration.Fluent
 
         #region WorkerRequests
 
-        public FluentRecordBase AddWorkerRequest(
-            DateTime? datecreated = null,
-            DateTime? dateupdated = null
-        )
+        public FluentRecordBase AddWorkerRequest(Worker worker = null, DateTime? datecreated = null,
+            DateTime? dateupdated = null)
         {
             //
             // DEPENDENCIES
@@ -171,7 +169,7 @@ namespace Machete.Test.Integration.Fluent
             //_wr.workOrder = (WorkOrder)_wo.Clone();
             //_wr.workerRequested = (Worker)_w.Clone();
             _wr.workOrder = _wo;
-            _wr.workerRequested = AddWorker();
+            _wr.workerRequested = worker ?? AddWorker();
             if (datecreated != null) _wr.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _wr.dateupdated = (DateTime)dateupdated;
             

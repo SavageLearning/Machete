@@ -6,6 +6,7 @@ using System.Threading;
 using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
+using Machete.Web.Controllers.Api.Abstracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;

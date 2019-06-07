@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Machete.Domain;
 using Microsoft.AspNetCore.Identity;
@@ -28,6 +29,8 @@ namespace Machete.Data.Identity
 
         public virtual ICollection<MacheteUserRole> UserRoles { get; set; }
 
+        public virtual IList<MacheteUserClaim> Claims { get; set; }
+
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public Guid ApplicationId { get; set; }
@@ -39,7 +42,7 @@ namespace Machete.Data.Identity
         public override string Email
         {
             get => _email;
-            set { _email = value; NormalizedEmail = value; }
+            set { _email = value; NormalizedEmail = value.ToUpper(); }
         }
 
         public string LoweredEmail { get; set; }

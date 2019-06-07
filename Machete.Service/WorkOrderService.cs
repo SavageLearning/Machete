@@ -101,32 +101,32 @@ namespace Machete.Service
         /// <returns>WorkOrders associated with a given date that are active</returns>
         public IEnumerable<WorkOrder> GetActiveOrders(DateTime date, bool assignedOnly)
         {
-            IQueryable<WorkOrder> query = repo.GetAllQ();
-                            query = query.Where(wo => wo.statusID == WorkOrder.iActive 
-                                                   && wo.dateTimeofWork.Date == date.Date)
-                                    .AsQueryable();
-            List<WorkOrder> list = query.ToList();
-            List<WorkOrder> final = list.ToList();
-            if (!assignedOnly) return final;
-            int waCounter = 0;
-            foreach (WorkOrder wo in list)
+            var matching = repo.GetAllQ()
+                .Where(wo => wo.statusID == WorkOrder.iActive
+                          && wo.dateTimeofWork.Date == date.Date).ToList();
+
+            if (!assignedOnly) return matching;
+            
+            var result = new List<WorkOrder>();
+
+            foreach (WorkOrder wo in matching)
             {
-                waCounter = 0;
-                foreach (WorkAssignment wa in wo.workAssignments)
+                // WO must have at least one WA to be completed
+                if (wo.workAssignments.Count == 0) continue;
+
+                var nullAssignments = 0;
+
+                foreach (var wa in wo.workAssignments)
                 {
-                    waCounter++;
-                    if (wa.workerAssignedID == null)
-                    {
-                        final.Remove(wo);
-                        break;
-                    }
+                    if (wa.workerAssignedID == null) nullAssignments++;
                 }
-                if (waCounter == 0) // WO must have at least one WA to be completed
-                {
-                    final.Remove(wo);
-                }
+
+                if (nullAssignments > 0) continue;
+                
+                result.Add(wo);
             }
-            return final;
+
+            return result;
         }
         /// <summary>
         /// Complete active orders - change all WO status for a given date to complete

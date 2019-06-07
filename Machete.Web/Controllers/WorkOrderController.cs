@@ -99,7 +99,7 @@ namespace Machete.Web.Controllers
             // Retrieve WO/WA Summary based on parameters
             dataTableResult<WOWASummary> dtr = 
                 woServ.CombinedSummary(param.sSearch,
-                    Request.Form["sSortDir_0"] != "asc",
+                    Request.Query["sSortDir_0"] != "asc",
                     param.iDisplayStart,
                     param.iDisplayLength);
             //
@@ -284,10 +284,10 @@ namespace Machete.Web.Controllers
         /// <param name="assignedOnly">Optional flag: if True, only shows orders that are fully assigned</param>
         /// <returns>MVC Action Result</returns>
         [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult GroupView(DateTime dateTime, bool? assignedOnly)
+        public ActionResult GroupView(DateTime date, bool? assignedOnly)
         {
             WorkOrderGroupPrintView view = new WorkOrderGroupPrintView();
-            var v = woServ.GetActiveOrders(dateTime, assignedOnly ?? false);
+            var v = woServ.GetActiveOrders(date, assignedOnly ?? false);
             view.orders = v.Select(e => map.Map<WorkOrder, ViewModel.WorkOrder>(e)).ToList();
             foreach (var i in view.orders) // inelegant, but functional
             {
@@ -299,14 +299,14 @@ namespace Machete.Web.Controllers
         /// <summary>
         /// Completes all orders for a given day
         /// </summary>
-        /// <param name="dateTime">Date to perform action</param>
+        /// <param name="date">Date to perform action</param>
         /// <param name="userName">UserName performing action</param>
         /// <returns>MVC Action Result</returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult CompleteOrders(DateTime dateTime, string userName)
+        public ActionResult CompleteOrders(DateTime date, string userName)
         {
-            int count = woServ.CompleteActiveOrders(dateTime, userName);
+            int count = woServ.CompleteActiveOrders(date, userName);
             return Json(new
             {
                 completedCount = count

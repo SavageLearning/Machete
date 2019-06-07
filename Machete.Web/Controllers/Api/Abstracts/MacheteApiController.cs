@@ -1,8 +1,7 @@
-﻿using System.Security.Claims;
-using Machete.Web.Helpers.Api;
+﻿using Machete.Web.Helpers.Api;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Machete.Web.Controllers.Api
+namespace Machete.Web.Controllers.Api.Abstracts
 {
     [Route("api/[controller]")]
     [ApiController]

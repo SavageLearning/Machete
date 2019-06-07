@@ -94,18 +94,17 @@ namespace Machete.Test.Integration.Services
         /// <summary>
         /// Filter on requested grouping
         /// </summary>
-        [Ignore] // TODO: Fix this after dotnet core
+        [Ignore]
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
         public void GetIndexView_workerRequested()
         {
             // Arrange
-            frb.AddWorker(skill1: 63);
-            frb.AddWorkerSignin();
-            frb.AddWorkerRequest();
-            var w = frb.AddWorker();
+            var worker = frb.AddWorker(skill1: 63);
+            frb.AddWorkerSignin(worker);
+            frb.AddWorkerRequest(worker);
             //
             //Act
-            _dOptions.dwccardnum = w.dwccardnum;
+            _dOptions.dwccardnum = worker.dwccardnum;
             _dOptions.wa_grouping = "requested";
             var wsi = frb.ToServ<IWorkerSigninService>();
             dataTableResult<DTO.WorkerSigninList> result = wsi.GetIndexView(_dOptions);

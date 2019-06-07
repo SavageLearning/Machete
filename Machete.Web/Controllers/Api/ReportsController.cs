@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
-using System.Net;
 using AutoMapper;
 using Machete.Service;
-using Machete.Web.Helpers.Api;
+using Machete.Web.Controllers.Api.Abstracts;
+using Machete.Web.ViewModel.Api;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,51 +29,36 @@ namespace Machete.Web.Controllers.Api
         public ActionResult Get()
         {
             var result = serv.getList()
-                .Select(a => map.Map<Domain.ReportDefinition, Machete.Web.ViewModel.Api.ReportDefinition>(a));
+                .Select(a => map.Map<Domain.ReportDefinition, ViewModel.Api.ReportDefinition>(a));
 
             return new JsonResult( new { data = result } );
         }
         
+        /// <summary>
+        /// Get the report definition.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>JsonResult: { "data": [] }</returns>
         [Authorize(Roles = "Administrator")]
         [HttpGet]
         [Route("{id}")]
         public ActionResult Get(string id)
         {
-
             var result = serv.Get(id);
-            // TODO Use Automapper to return column deserialized
             return new JsonResult(new { data = result });
         }
-        
-        [Authorize(Roles = "Administrator")]
-        [HttpGet]
-        [Route("{id}/{beginDate}/{endDate}")]
-        public ActionResult Get(string id, DateTime? beginDate, DateTime? endDate)
-        {
-            return Get(id, beginDate, endDate, null);
-        }
 
         [Authorize(Roles = "Administrator")]
         [HttpGet]
-        [Route("{id}/{beginDate}")]
-        public ActionResult Get(string id, DateTime? beginDate)
+        [Route("{id?}")]
+        public ActionResult Get(
+            [FromRoute] string id,
+            [FromQuery] DateTime? beginDate, 
+            [FromQuery] DateTime? endDate,
+            [FromQuery] int? memberNumber
+        )
         {
-            return Get(id, beginDate, null, null);
-        }
-
-        [Authorize(Roles = "Administrator")]
-        [HttpGet]
-        [Route("{id}/{memberNumber}")]
-        public ActionResult Get(string id, int? memberNumber)
-        {
-            return Get(id, null, null, memberNumber);
-        }
-
-        [Authorize(Roles = "Administrator")]
-        [HttpGet]
-        [Route("{id}/{beginDate}/{endDate}/{memberNumber}")]
-        public ActionResult Get(string id, DateTime? beginDate, DateTime? endDate, int? memberNumber)
-        {
+            endDate = endDate?.AddDays(1); // date passed by TS does not reflect desired range, and is of type string...
             var result = serv.getQuery(
                 new Service.DTO.SearchOptions {
                     idOrName = id,
@@ -85,33 +70,40 @@ namespace Machete.Web.Controllers.Api
         }
 
         // POST api/values
+//        [Authorize(Roles = "Administrator")]
+//        [HttpPost("{data}")]
+//        public ActionResult Post(Machete.Web.ViewModel.Api.ReportQuery data)
+//        {
+//            string query = data.query;
+//            if (string.IsNullOrEmpty(query)) {
+//                if (query == string.Empty) { // query is blank
+//                    return StatusCode((int)HttpStatusCode.NoContent);
+//                } else { // query is null; query cannot be null
+//                    return StatusCode((int)HttpStatusCode.BadRequest);
+//                }
+//            }
+//            try {
+//                var validationMessages = serv.validateQuery(query);
+//                if (validationMessages.Count == 0) {
+//                    // "no modification needed"; http speak good human
+//                    return StatusCode((int)HttpStatusCode.NotModified);
+//                } else {
+//                    // 200; we wanted validation messages, and got them.
+//                    return new JsonResult(new { data = validationMessages });
+//                }
+//            } catch (Exception ex) {
+//                // SQL errors are expected but they will be returned as strings (200).
+//                // in this case, something happened that we were not expecting; return 500.
+//                var message = ex.Message;
+//                return StatusCode((int)HttpStatusCode.InternalServerError, message);
+//            }
+//        }
         [Authorize(Roles = "Administrator")]
         [HttpPost("{data}")]
-        public ActionResult Post(Machete.Web.ViewModel.Api.ReportQuery data)
+        public void Post(ReportQuery data)
         {
-            string query = data.query;
-            if (string.IsNullOrEmpty(query)) {
-                if (query == string.Empty) { // query is blank
-                    return StatusCode((int)HttpStatusCode.NoContent);
-                } else { // query is null; query cannot be null
-                    return StatusCode((int)HttpStatusCode.BadRequest);
-                }
-            }
-            try {
-                var validationMessages = serv.validateQuery(query);
-                if (validationMessages.Count == 0) {
-                    // "no modification needed"; http speak good human
-                    return StatusCode((int)HttpStatusCode.NotModified);
-                } else {
-                    // 200; we wanted validation messages, and got them.
-                    return new JsonResult(new { data = validationMessages });
-                }
-            } catch (Exception ex) {
-                // SQL errors are expected but they will be returned as strings (200).
-                // in this case, something happened that we were not expecting; return 500.
-                var message = ex.Message;
-                return StatusCode((int)HttpStatusCode.InternalServerError, message);
-            }
+            // I commented this out due to security concerns for which I did not have time to test.
+            // The functionality was never implemented in the UI.
         }
 
         // PUT api/values/5

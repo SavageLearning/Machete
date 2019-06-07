@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Linq;
 using Machete.Domain;
 using Machete.Service;
+using Machete.Web.Controllers.Api.Abstracts;
 using Machete.Web.Helpers.Api;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

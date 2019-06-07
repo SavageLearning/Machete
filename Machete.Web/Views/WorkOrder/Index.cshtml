@@ -1,4 +1,5 @@
 @using Machete.Domain
+@using Machete.Web.Helpers
 @using Microsoft.AspNetCore.Http.Extensions
 @using Microsoft.AspNetCore.Localization
 @using WorkOrder = Machete.Web.Resources.WorkOrder
@@ -20,7 +21,7 @@
     <div id="summaryList">
         <input type="button" id="printActiveBtn" class="formButton" value="@WorkOrders.printactive"/>
         <input type="button" id="printActiveAssignedBtn" class="formButton" value="@WorkOrders.printactiveassigned"/>
-        @Html.TextBox("activeDate", DateTime.Today.ToShortDateString(), new { style = "width: 6em;", @class = "ui-datepicker" })
+        @Html.TextBox("activeDate", DateTime.Today.ToShortTextBoxDateString(), new { style = "width: 6em;", @class = "ui-datepicker" })
         <input type="button" id="completeActiveBtn" class="formButton" value="@WorkOrders.completeactiveassigned"/>
         <table id="orderSummaryTable" class="display">
             <thead>
@@ -224,7 +225,8 @@
         $('#completeActiveBtn').click(function() {
             $.post("/WorkOrder/CompleteOrders",
                 {
-                    date: $('#activeDate').val()
+                    // Make sure that C# recognizes this as a DateTime value; i.e., return as Date().toJSON();
+                    date: (function () { var val = $('#activeDate').val().split('/'); return new Date(parseInt(val[2], 10), parseInt(val[0], 10) - 1, parseInt(val[1], 10)).toJSON(); })()
                 },
                 function (data) {
                         alert("Number of orders completed: "+data.completedCount);

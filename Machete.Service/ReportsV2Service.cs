@@ -6,7 +6,6 @@ using Machete.Service.DTO.Reports;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text;
@@ -23,7 +22,6 @@ namespace Machete.Service
         List<ReportDefinition> getList();
         ReportDefinition Get(string idOrName);
         List<QueryMetadata> getColumns(string tableName);
-        DataTable getDataTable(string query, DTO.SearchOptions o);
         void getXlsxFile(DTO.SearchOptions o, ref byte[] bytes);
         List<string> validateQuery(string query);
     }
@@ -41,8 +39,7 @@ namespace Machete.Service
         public List<dynamic> getQuery(DTO.SearchOptions o)
         {
             // if name, get id for report definition
-            int id = 0;
-            if (!Int32.TryParse(o.idOrName, out id))
+            if (!Int32.TryParse(o.idOrName, out var id))
             {
                 id = repo.GetManyQ(r => string.Equals(r.name, o.idOrName, StringComparison.OrdinalIgnoreCase)).First().ID;
             }
@@ -59,7 +56,7 @@ namespace Machete.Service
         public ReportDefinition Get(string idOrName)
         {
             int id = 0;
-            Domain.ReportDefinition result;
+            ReportDefinition result;
             // accept vanityname or ID
             if (Int32.TryParse(idOrName, out id))
             {
@@ -79,17 +76,11 @@ namespace Machete.Service
             return result;
         }
 
-        public DataTable getDataTable(string query, DTO.SearchOptions o)
-        {
-            var oo = map.Map<DTO.SearchOptions, Data.DTO.SearchOptions>(o);
-            return rRepo.getDataTable(query);
-        }
-
-
         public void getXlsxFile(DTO.SearchOptions o, ref byte[] bytes)
         {
             var oo = map.Map<DTO.SearchOptions, Data.DTO.SearchOptions>(o);
-            var tbl = rRepo.getDataTable(buildExportQuery(o));
+            var exportQuery = buildExportQuery(o);
+            var tbl = rRepo.getDataTable(exportQuery);
 
             using (ExcelPackage pck = new ExcelPackage())
             {
@@ -99,7 +90,7 @@ namespace Machete.Service
             }
         }
 
-        public string buildExportQuery(DTO.SearchOptions o)
+        private string buildExportQuery(DTO.SearchOptions o)
         {
             bool firstSelect = true;
             bool firstWhere = true;
@@ -113,6 +104,10 @@ namespace Machete.Service
                 query.Append(sanitizeColumnName(d.Key));
                 firstSelect = false;
             }
+
+            if (query.Length == 7) // just select
+                query.Append("*");
+            
             //
             query.Append(" FROM ").Append(o.name);
             //
@@ -137,7 +132,7 @@ namespace Machete.Service
                     query.Append(o.exportFilterField)
                         .Append(" < '")
                         .Append(((DateTime)o.endDate).ToShortDateString())
-                        .Append("' "); ;
+                        .Append("' ");
                 }
             }
             return query.ToString();

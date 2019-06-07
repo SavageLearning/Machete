@@ -83,8 +83,8 @@ namespace Machete.Web.Controllers
             {
                 foreach (var user in users)
                 {
-                    bool isHirer = await user.IsInRole("Hirer", _userManager);
-                    model.Add(user.ToUserSettingsViewModel(isHirer));
+                    //bool isHirer = await user.IsInRole("Hirer", _userManager);
+                    model.Add(user.ToUserSettingsViewModel(false));//isHirer
                 }
                 
                 return View(model);

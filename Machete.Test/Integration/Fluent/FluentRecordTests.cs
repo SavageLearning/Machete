@@ -39,13 +39,13 @@ namespace Machete.Test.Integration.Fluent
             var result = frb.ToWorkerSignin();
             Assert.IsInstanceOfType(result, typeof(WorkerSignin));
         }
-        [Ignore, TestMethod, TestCategory(TC.Fluent), TestCategory(TC.IT), TestCategory(TC.WorkOrders)]
+        [TestMethod, TestCategory(TC.Fluent), TestCategory(TC.IT), TestCategory(TC.WorkOrders)]
         public void FluentRecordBase_AddRepoWorkerRequest()
         {
             var result = frb.ToWorkerRequest();
             Assert.IsInstanceOfType(result, typeof(WorkerRequest));
         }
-        [Ignore, TestMethod, TestCategory(TC.Fluent), TestCategory(TC.IT), TestCategory(TC.Persons)]
+        [TestMethod, TestCategory(TC.Fluent), TestCategory(TC.IT), TestCategory(TC.Persons)]
         public void FluentRecordBase_AddRepoPerson()
         {
             var result = frb.AddPerson(testID: "FluentRecordBase_AddRepoPerson");

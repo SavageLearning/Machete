@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,7 +17,7 @@ namespace Machete.Data.Identity
     /// because Identity does not support multitenancy out of the box.
     /// </summary>
     public class MacheteUserStore : IUserStore<MacheteUser>, 
-                                  //IUserClaimStore<MacheteUser>, // nec. for JWT
+                                    IUserClaimStore<MacheteUser>, // nec. for JWT
                                     IUserLoginStore<MacheteUser>,
                                     IUserRoleStore<MacheteUser>,
                                     IUserPasswordStore<MacheteUser>,
@@ -28,6 +30,7 @@ namespace Machete.Data.Identity
         private DbSet<MacheteUser> _users; // IDbSet (Framework)
         private DbSet<MacheteRole> _roles;
         private DbSet<MacheteUserRole> _userRoles;
+        private DbSet<MacheteUserClaim> _userClaims;
 
         public MacheteUserStore(IDatabaseFactory factory)
         {
@@ -35,6 +38,7 @@ namespace Machete.Data.Identity
             _users = _dataContext.Users;
             _roles = _dataContext.Roles;
             _userRoles = _dataContext.UserRoles;
+            _userClaims = _dataContext.UserClaims;
         }
 
         public MacheteUserStore(MacheteContext assignedContext, bool isSeedInstance)
@@ -394,6 +398,64 @@ namespace Machete.Data.Identity
             return Task.CompletedTask;
         }
         
+        public async Task<IList<Claim>> GetClaimsAsync(MacheteUser user, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null) throw new ArgumentNullException(nameof(user));
+
+            return await _userClaims.Where(uc => uc.UserId.Equals(user.Id))
+                .Select(claim => claim.ToClaim())
+                .AsQueryable()
+                .ToListAsync(cancellationToken);
+        }
+
+        public Task AddClaimsAsync(MacheteUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null) throw new ArgumentNullException(nameof(user));
+
+            foreach (var claim in claims)
+            {
+                _userClaims.Add(new MacheteUserClaim
+                {
+                    ClaimType = claim.Type,
+                    ClaimValue = claim.Value,
+                    UserId = user.Id,
+                    User = user
+                });
+            }
+
+            _dataContext.SaveChanges();
+
+            return Task.CompletedTask;
+        }
+
+        public Task ReplaceClaimAsync(MacheteUser user, Claim claim, Claim newClaim, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null) throw new ArgumentNullException(nameof(user));
+
+            throw new NotImplementedException();
+        }
+
+        public Task RemoveClaimsAsync(MacheteUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null) throw new ArgumentNullException(nameof(user));
+
+            throw new NotImplementedException();
+        }
+
+        public Task<IList<MacheteUser>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            IList<MacheteUser> list = _userClaims.Where(uc => uc.ClaimValue == claim.Value).Select(uc => uc.User)
+                .ToList();
+
+            return Task.FromResult(list);
+        }
+
         public void Dispose() { }
     }
 }

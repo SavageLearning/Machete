@@ -1,4 +1,5 @@
 @model Machete.Web.ViewModel.WorkerSignin
+@using Machete.Web.Helpers
 @using Machete.Web.Resources
 @using Microsoft.AspNetCore.Http.Extensions
 @using Microsoft.AspNetCore.Localization
@@ -29,7 +30,7 @@
                     </div>
                     <div class="tb-field">
                         @Html.TextBox("dateforsignin",
-                            Html.Encode(String.Format("{0:mm/dd/yy}", DateTime.Today.ToShortDateString())),
+                            Html.Encode(String.Format("{0:mm/dd/yy}", DateTime.Today.ToShortTextBoxDateString())),
                             new { @class = "ui-datepicker wsi-datepicker", style = "width: 100px;" })
                         @Html.ValidationMessageFor(model => model.dateforsignin)
                     </div>

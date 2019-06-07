@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ using Machete.Data.Initialize;
 using Machete.Data.Repositories;
 using Machete.Data.Tenancy;
 using Machete.Service;
-using Machete.Web.Controllers.Api;
+using Machete.Web.Controllers.Api.Abstracts;
 using Machete.Web.Helpers;
 using Machete.Web.Helpers.Api;
 using Machete.Web.Helpers.Api.Identity;
@@ -51,8 +52,11 @@ namespace Machete.Web
                 {
                     var factory = serviceScope.ServiceProvider.GetService<IDatabaseFactory>();
                     var macheteContext = factory.Get(tenant);
+                    var readonlyBuilder = new SqlConnectionStringBuilder(tenant.ReadOnlyConnectionString);
+                    
                     await macheteContext.Database.MigrateAsync();
                     MacheteConfiguration.Seed(macheteContext);
+                    StartupConfiguration.AddDBReadOnlyUser(macheteContext, readonlyBuilder.Password);
                     await MacheteConfiguration.SeedAsync(macheteContext);
                 }
             }
@@ -309,6 +313,35 @@ namespace Machete.Web
             #endregion future use
 
             services.AddScoped<JwtIssuerOptions>();
+        }
+
+        private static void AddDBReadOnlyUser(MacheteContext context, string readonlyPassword)
+        {
+            var connection = context.Database.GetDbConnection();
+            if (connection.State == ConnectionState.Closed) connection.Open();
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = "sp_executesql";
+                command.CommandType = CommandType.StoredProcedure;
+                var param = command.CreateParameter();
+                param.ParameterName = "@statement";
+                param.Value = $@"
+CREATE LOGIN readonlyLogin WITH PASSWORD='{readonlyPassword}'
+CREATE USER readonlyUser FROM LOGIN readonlyLogin
+EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
+                    ";
+                command.Parameters.Add(param);
+                try
+                {
+                    command.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+                    var userAlreadyExists = ex.Errors[0].Number.Equals(15025);
+                    if (!userAlreadyExists)
+                        throw;
+                }
+            }
         }
 
         /// <summary>

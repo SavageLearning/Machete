@@ -24,6 +24,7 @@
     <PackageReference Include="BundlerMinifier.Core" Version="2.8.391" />
     <PackageReference Include="ElmahCore" Version="1.2.5" />
     <PackageReference Include="ElmahCore.Sql" Version="1.2.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.WebApiCompatShim" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="RestSharp" Version="106.6.5" />
   </ItemGroup>
@@ -138,6 +139,13 @@
     <_ContentIncludedByDefault Remove="published\published\published\published\published\published\bundleconfig.json" />
     <_ContentIncludedByDefault Remove="published\published\published\published\published\published\Machete.Web.deps.json" />
     <_ContentIncludedByDefault Remove="published\published\published\published\published\published\Machete.Web.runtimeconfig.json" />
+    <_ContentIncludedByDefault Remove="Views\Reports\Activities.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Reports\Employers.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Reports\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Reports\PrintView.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Reports\SSRS.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Reports\Summary.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Reports\Workers.cshtml" />
   </ItemGroup>
 
 </Project>

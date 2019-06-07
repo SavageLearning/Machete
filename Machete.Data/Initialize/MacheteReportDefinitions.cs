@@ -15,8 +15,6 @@ namespace Machete.Data.Initialize
 		public static List<ReportDefinition> _cache { get; } = new List<ReportDefinition>
 		{
 			#region REPORT DEFINITIONS
-
-			// DispatchesByJob
 			new ReportDefinition
 			{
 				name = "DispatchesByJob",
@@ -1560,8 +1558,7 @@ where jobcount is not null or actcount is not null or eslcount is not null
 				u.datecreated = DateTime.Now;
 				u.dateupdated = DateTime.Now;
 				u.createdby = "Init T. Script";
-				u.updatedby =
-					"Init T. Script"; // this next part is a little bit of a mess, but it is only run once during initialization.
+				u.updatedby = "Init T. Script";
 				u.columnsJson = MacheteAdoContext.getUIColumnsJson(u.sqlquery, connectionString);
 				if (u.inputsJson == null)
 				{
@@ -1580,40 +1577,6 @@ where jobcount is not null or actcount is not null or eslcount is not null
 			});
 			context.Database.OpenConnection();
     		context.SaveChanges();
-
-			AddDBReadOnlyUser(context);
-		}
-
-		private static void AddDBReadOnlyUser(MacheteContext context)
-		{
-			var connection = context.Database.GetDbConnection();
-			if (connection.State == ConnectionState.Closed) connection.Open();
-			using (var command = connection.CreateCommand())
-			{
-				command.CommandText = "sp_executesql";
-				command.CommandType = CommandType.StoredProcedure;
-				var param = command.CreateParameter();
-				param.ParameterName = "@statement";
-				param.Value = @"
-CREATE LOGIN readonlyLogin WITH PASSWORD='@testPassword1'
-CREATE USER readonlyUser FROM LOGIN readonlyLogin
-EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
-                    ";
-				command.Parameters.Add(param);
-				try
-				{
-					command.ExecuteNonQuery();
-				}
-				catch (SqlException ex)
-				{
-					var userAlreadyExists = ex.Errors[0].Number.Equals(15025);
-					if (!userAlreadyExists)
-						throw ex;
-				} // finally {
-
-				// context.Close();// unnecessary because it will be closed outside the using statement
-				// }
-			}
 		}
 	}
 }

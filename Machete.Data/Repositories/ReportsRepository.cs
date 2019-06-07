@@ -4,11 +4,12 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
+using Castle.Core.Internal;
 using Machete.Data.DTO;
 using Machete.Data.Dynamic;
 using Machete.Data.Infrastructure;
+using Machete.Data.Tenancy;
 using Machete.Domain;
-using Microsoft.Extensions.Configuration;
 
 namespace Machete.Data.Repositories
 {   
@@ -23,18 +24,30 @@ namespace Machete.Data.Repositories
 
     public class ReportsRepository : RepositoryBase<ReportDefinition>, IReportsRepository
     {
-        private string connectionString { get; }
+        private readonly string _readonlyConnectionString;
 
-        public ReportsRepository(IDatabaseFactory databaseFactory, IConfiguration configuration) : base(databaseFactory)
+        /// <summary>
+        /// A repository wrapping DbSet{ReportDefinition} and providing for direct queries against the database using
+        /// the MacheteAdoContext with a readonly connection string. Secure code reviews required for any changes to
+        /// this class.
+        /// </summary>
+        /// <param name="factory"></param>
+        /// <param name="tenantService"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public ReportsRepository(IDatabaseFactory factory, ITenantService tenantService) : base(factory)
         {
-            connectionString = configuration.GetConnectionString("ReadOnlyConnection");
+            var currentTenant = tenantService.GetCurrentTenant();
+            _readonlyConnectionString = currentTenant.ReadOnlyConnectionString;
+            
+            if (_readonlyConnectionString.IsNullOrEmpty()) throw new ArgumentNullException(
+                $"ReportsRepository requires valid currentTenant.ReadOnlyConnectionString; was: {currentTenant.ReadOnlyConnectionString ?? "null"}"
+            );
         }
-
 
         public List<dynamic> getDynamicQuery(int id, SearchOptions o)
         {
-            ReportDefinition report = dbset.Single(a => a.ID == id); // TODO move to ADO
-            List<QueryMetadata> meta = MacheteAdoContext.getMetadata(report.sqlquery, connectionString);
+            ReportDefinition report = dbset.Single(a => a.ID == id);
+            List<QueryMetadata> meta = MacheteAdoContext.getMetadata(report.sqlquery, _readonlyConnectionString);
             Type queryType = ILVoodoo.buildQueryType(meta);
             MethodInfo method = Type.GetType("Machete.Data.MacheteAdoContext")
                 .GetMethod("SqlQuery", new[] { typeof(string), typeof(string), typeof(SqlParameter[]) });
@@ -42,7 +55,7 @@ namespace Machete.Data.Repositories
 
             dynamic dynamicQuery = man.Invoke(null, new object[] {
                     report.sqlquery,
-                    connectionString,
+                    _readonlyConnectionString,
                     new[] {
                         new SqlParameter { ParameterName = "beginDate", Value = o.beginDate },
                         new SqlParameter { ParameterName = "endDate", Value = o.endDate },
@@ -60,24 +73,23 @@ namespace Machete.Data.Repositories
 
         public List<ReportDefinition> getList()
         {
-            return dbFactory.Get().ReportDefinitions.AsEnumerable().ToList(); // TODO move to ADO
+            return dbFactory.Get().ReportDefinitions.AsEnumerable().ToList();
         }
 
         public List<QueryMetadata> getColumns(string tableName)
         {
-            return MacheteAdoContext.getMetadata($"select top 0 * from {tableName}", connectionString);
+            return MacheteAdoContext.getMetadata($"select top 0 * from {tableName}", _readonlyConnectionString);
         }
 
         public DataTable getDataTable(string query)
         {
             // https://stackoverflow.com/documentation/epplus/8223/filling-the-document-with-data
-            MacheteAdoContext.Fill(query, connectionString, out var dataTable);
-            return dataTable;
+            return MacheteAdoContext.Fill(query, _readonlyConnectionString);
         }
 
         public List<string> validate(string query)
         {
-            return MacheteAdoContext.ValidateQuery(query, connectionString).ToList();
+            return MacheteAdoContext.ValidateQuery(query, _readonlyConnectionString).ToList();
         }
     }
 }

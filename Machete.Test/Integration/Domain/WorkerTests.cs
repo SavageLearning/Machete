@@ -58,14 +58,13 @@ namespace Machete.Test.Integration.Domain
         /// Inspecting how/when EntityFramework makes the link between parent/child records
         /// </summary>
         /// 
-        [Ignore]
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Workers), TestCategory(TC.Fluent)]
         public void Integration_Worker_add_worker_check_person_link() 
         {
             //Arrange
-            frb.AddWorker();
-            var person = frb.AddPerson();
             var worker = frb.AddWorker();
+            var person = worker.Person;
+            
             //Assert
             Assert.IsNotNull(person.Worker);
             Assert.IsNotNull(worker.Person);
