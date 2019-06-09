@@ -217,7 +217,7 @@ namespace Machete.Web.Controllers
         // POST: /WorkAssignment/Delete/5
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public JsonResult Delete(int id, FormCollection collection, string user)
+        public JsonResult Delete(int id, IFormCollection collection, string user)
         {
             waServ.Delete(id, user);
 
