@@ -22,13 +22,8 @@
 // 
 #endregion
 
-using System.Globalization;
-using Machete.Domain;
 using Machete.Service;
-using Machete.Web.Helpers;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Web.Controllers
@@ -36,21 +31,11 @@ namespace Machete.Web.Controllers
         public class ImageController : MacheteController
     {
         private readonly IImageService serv;
-        private CultureInfo _currentCulture;
-        private string _currentUrl;
 
         // GET: /Image/
         public ImageController(IImageService imageService)
         {
             serv = imageService;
-        }
-        
-        protected override void Initialize(ActionContext requestContext)
-        {
-            base.Initialize(requestContext);
-            var httpContext = requestContext.HttpContext;
-            _currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
-            _currentUrl = UriHelper.BuildRelative(httpContext.Request.PathBase, httpContext.Request.Path, httpContext.Request.QueryString);
         }
 
         /// <summary>

@@ -146,7 +146,7 @@ namespace Machete.Web.Controllers
             dataTableResult<WorkerSigninList> was = serv.GetIndexView(vo);
             var result = was.query
                 .Select(e => map.Map<WorkerSigninList, ViewModel.WorkerSigninList>(e))
-                .AsEnumerable();
+                .ToList();
             return Json(new
             {
                 param.sEcho,

@@ -34,6 +34,7 @@ namespace Machete.Service
     {
         IQueryable<Event> GetEvents(int? PID);
         dataTableResult<DTO.EventList> GetIndexView(viewOptions o);
+        void JoinEventImages(Event record, JoinEventImage joiner, string user);
     }
 
     // Business logic for Event record management
@@ -115,6 +116,11 @@ namespace Machete.Service
             record.eventTypeES = lRepo.GetById(record.eventTypeID).text_ES;
             record.eventTypeEN = lRepo.GetById(record.eventTypeID).text_EN;
             base.Save(record, user);
+        }
+
+        public void JoinEventImages(Event record, JoinEventImage joiner, string user)
+        {
+            record.JoinEventImages.Add(joiner);
         }
     }
 }
