@@ -57,11 +57,4 @@ namespace Machete.Service
             return value;
         }
     }
-
-    public static class SqlFunctions {
-        public static string StringConvert(decimal wsiDwccardnum)
-        {
-            return wsiDwccardnum.ToString();
-        }
-    }
 }

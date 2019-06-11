@@ -48,7 +48,7 @@ namespace Machete.Service
         }
         public static void search(viewOptions o, ref IQueryable<WorkerSignin> q)
         {
-            q = q.Where(wsi => SqlFunctions.StringConvert((decimal)wsi.dwccardnum).Contains(o.sSearch) ||
+            q = q.Where(wsi => wsi.dwccardnum.ToString().Contains(o.sSearch) ||
                             wsi.worker.Person.firstname1.Contains(o.sSearch) ||
                             wsi.worker.Person.firstname2.Contains(o.sSearch) ||
                             wsi.worker.Person.lastname1.Contains(o.sSearch) ||
@@ -238,7 +238,7 @@ namespace Machete.Service
             {
                 q = q
                     .Join(lRepo.GetAllQ(), wa => wa.skillID, sk => sk.ID, (wa, sk) => new { wa, sk })
-                    .Where(p => SqlFunctions.StringConvert((decimal)p.wa.workOrder.paperOrderNum).Contains(o.sSearch) ||
+                    .Where(p => p.wa.workOrder.paperOrderNum.ToString().Contains(o.sSearch) ||
                         p.wa.description.Contains(o.sSearch) ||
                         p.sk.text_EN.Contains(o.sSearch) ||
                         p.sk.text_ES.Contains(o.sSearch) ||
@@ -351,8 +351,8 @@ namespace Machete.Service
             else
             {
                 q = q
-                    .Where(p => SqlFunctions.StringConvert((decimal)p.ID).Contains(o.sSearch) ||
-                                SqlFunctions.StringConvert((decimal)p.paperOrderNum).Contains(o.sSearch) ||
+                    .Where(p => p.ID.ToString().Contains(o.sSearch) ||
+                                p.paperOrderNum.ToString().Contains(o.sSearch) ||
                                 p.contactName.Contains(o.sSearch) ||
                                 p.workSiteAddress1.Contains(o.sSearch) ||
                                 p.updatedby.Contains(o.sSearch));
@@ -464,7 +464,7 @@ namespace Machete.Service
         public static void search(viewOptions o, ref IQueryable<Person> q)
         {
             q = q
-                .Where(p => SqlFunctions.StringConvert((decimal)p.Worker.dwccardnum).Contains(o.sSearch) ||
+                .Where(p => p.Worker.dwccardnum.ToString().Contains(o.sSearch) ||
                             p.firstname1.Contains(o.sSearch) ||
                             p.firstname2.Contains(o.sSearch) ||
                             p.lastname1.Contains(o.sSearch) ||
@@ -507,7 +507,7 @@ namespace Machete.Service
         /// Returns a list of sanctioned or expelled workers.
         /// </summary>
         /// <param name="o"></param>
-        /// <param name="q"></param>
+        /// <param name="q"></param> // TODO chaim1221 grow up
         public static void getSExWorkers(viewOptions o, int s, int Ex, ref IQueryable<Person> q)
         {
             q = q.Where(x => x.Worker.memberStatusID == s || x.Worker.memberStatusID == Ex);
@@ -515,12 +515,11 @@ namespace Machete.Service
 
         public static void search(viewOptions o, ref IQueryable<Worker> q)
         {
-            q = q.Where(p => SqlFunctions.StringConvert((decimal)p.dwccardnum).Contains(o.sSearch) ||
+            q = q.Where(p => p.dwccardnum.ToString().Contains(o.sSearch) ||
                             p.Person.firstname1.Contains(o.sSearch) ||
                             p.Person.firstname2.Contains(o.sSearch) ||
                             p.Person.lastname1.Contains(o.sSearch) ||
-                            p.Person.lastname2.Contains(o.sSearch) //||
-                //DbFunctions.p.memberexpirationdate.ToString().Contains(o.sSearch)
+                            p.Person.lastname2.Contains(o.sSearch)
                             );
         }
         public static void sortOnColName(string name, bool descending, ref IQueryable<Worker> q)
@@ -579,7 +578,7 @@ namespace Machete.Service
         }
         public static void search(viewOptions o, ref IQueryable<ActivitySignin> q)
         {
-            q = q.Where(asi => SqlFunctions.StringConvert((decimal)asi.dwccardnum).Contains(o.sSearch) ||
+            q = q.Where(asi => asi.dwccardnum.ToString().Contains(o.sSearch) ||
                             asi.person.firstname1.Contains(o.sSearch) ||
                             asi.person.firstname2.Contains(o.sSearch) ||
                             asi.person.lastname1.Contains(o.sSearch) ||
