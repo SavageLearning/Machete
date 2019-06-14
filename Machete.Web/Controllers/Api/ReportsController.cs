@@ -53,7 +53,7 @@ namespace Machete.Web.Controllers.Api
         [Route("{id?}")]
         public ActionResult Get(
             [FromRoute] string id,
-            [FromQuery] DateTime? beginDate, 
+            [FromQuery] DateTime? beginDate,
             [FromQuery] DateTime? endDate,
             [FromQuery] int? memberNumber
         )

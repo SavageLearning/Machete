@@ -14,12 +14,14 @@ using Machete.Web.ViewModel.Api.Identity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using RestSharp;
 
 namespace Machete.Web.Controllers.Api.Identity
 {
@@ -58,7 +60,11 @@ namespace Machete.Web.Controllers.Api.Identity
         private readonly List<MacheteRole> _roles;
         private readonly IConfiguration _configuration;
 
-        public IdentityController(UserManager<MacheteUser> userManager,
+        const string CookieName = ".AspNetCore.Identity.Application";
+        const string CookieAuthenticationType = "Identity.Application";
+
+        public IdentityController(
+            UserManager<MacheteUser> userManager,
             SignInManager<MacheteUser> signInManager,
             RoleManager<MacheteRole> roleManager,
             IJwtFactory jwtFactory,
@@ -211,7 +217,10 @@ namespace Machete.Web.Controllers.Api.Identity
                 var user = await _userManager.FindByEmailAsync(profile.email);
                 if (user == null)
                 {
-                    var name = profile.name.Split(' ');
+                    var name = profile.name?.Split(' ');
+                    if (string.IsNullOrEmpty(profile.name))
+                        name = new[] { "", "" };
+                       
                     var macheteUser = new MacheteUser
                     {
                         UserName = profile.email,
@@ -262,18 +271,15 @@ namespace Machete.Web.Controllers.Api.Identity
         [AllowAnonymous]
         [HttpGet]
         [Route("logoff")]
-        public async Task<IActionResult> LogOff()
+        public async Task LogOff()
         {
-            // TODO: This still isn't working with the proxy. Figure out how to manually expire the cookies maybe?
-            await _signinManager.SignOutAsync();
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            HttpContext.Session.Clear();
+            // kill the mosquito with a 12 gauge shotgun:
             
-            return await Task.FromResult<IActionResult>(
-                new OkObjectResult(new { data = Routes.GetHostFrom(Request).V2AuthorizationEndpoint() })
-            );
+            await HttpContext.SignOutAsync(CookieAuthenticationType);
+            await _signinManager.SignOutAsync();
+            Response.Cookies.Delete(CookieName);
         }
-        
+
         [HttpGet]
         [Route(".well-known/openid-configuration")]
         public async Task<IActionResult> OpenIdConfiguration()

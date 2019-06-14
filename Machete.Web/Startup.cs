@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using AutoMapper;
 using Machete.Data;
@@ -21,6 +20,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Serialization;
+
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace Machete.Web
@@ -72,6 +73,7 @@ namespace Machete.Web
 
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/localization?view=aspnetcore-2.2#configure-localization
             services.AddMvc() // (config => { config.Filters.Add(new AuthorizeFilter()); }) // <~ for JWT auth
+                .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver())
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 .AddDataAnnotationsLocalization()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
@@ -200,6 +202,7 @@ namespace Machete.Web
 
             app.UseAuthentication();
 
+            // https://github.com/aspnet/Mvc/issues/4842
             app.UseMvc(routes => {
                 // keep separate for future api-only port:
                 routes.MapLegacyMvcRoutes();
