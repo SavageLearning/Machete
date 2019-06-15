@@ -7,13 +7,16 @@
 
     @using (Html.BeginForm("Edit", "Account", FormMethod.Post))
     {
-        @Html.AntiForgeryToken();
+        @Html.AntiForgeryToken()
+        
+        
         <p style="color:red;"><strong>@Html.ValidationSummary()</strong></p>
         <p style="color:red;"><strong>@Model.ErrorMessage</strong></p>
         <div class="tb-table" style="float: left;">
-            <fieldset>
+            <fieldset>    
                 <legend>Basic User Info</legend>
                 <div class="tb-row">
+                    @Html.HiddenFor(model => model.Id)
                     <div class="tb-label">
                         @Html.LabelFor(model => model.UserName)
                     </div>

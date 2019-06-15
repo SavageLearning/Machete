@@ -36,6 +36,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Converters;
 using NLog;
@@ -337,70 +338,72 @@ namespace Machete.Web.Controllers
         {
             var user = _context.Users.First(u => u.Id == id);
             if (user == null) return StatusCode(404);
-            return View(new EditUserViewModel(user));
+            var editUserViewModel = new EditUserViewModel(user);
+            
+            editUserViewModel.Id = id;
+            
+            return View(editUserViewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Manager")]
-        public async Task<ActionResult> Edit(EditUserViewModel model)
+        public async Task<ActionResult> Edit([Bind]EditUserViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var user = _context.Users.First(u => u.Id == model.Id);
-                var name = model.FirstName.Trim() + "." + model.LastName.Trim();
-                user.UserName = name;
-                user.LoweredUserName = name.ToLower();
+                var macheteUserName = model.FirstName.Trim() + "." + model.LastName.Trim();
+                user.UserName = macheteUserName;
+                user.LoweredUserName = macheteUserName.ToLower();
                 user.Email = model.Email.Trim();
                 user.LoweredEmail = model.Email.Trim().ToLower();
                 user.IsApproved = model.IsApproved;
                 user.IsLockedOut = model.IsLockedOut;
-                var state = ModelState["NewPassword"];
-                bool changePassword = !string.IsNullOrEmpty(state.AttemptedValue);
-                bool hasPassword = user.PasswordHash != null;
-                
-                // TODO this is unnecessarily complicated
-                if (changePassword && hasPassword)
+
+                var errors = await TryChangePassword(user, ModelState["NewPassword"].AttemptedValue);
+
+                if (!errors.Any())
                 {
-                    var remove = await _userManager.RemovePasswordAsync(user);
-                    if (remove.Succeeded)
-                    {
-                        var result = await _userManager.AddPasswordAsync(user, model.NewPassword);
-                        if (result.Succeeded)
-                        {
-                            user.LastPasswordChangedDate = DateTime.Today.AddMonths(-PasswordExpirationInMonths);
-                            ViewBag.Message = "Password successfully updated.";
-                        }
-                        else
-                        {
-                            throw new MacheteIntegrityException("You have to add a password if you remove one.");
-                        }
-                    }
-                    else
-                    {
-                        model.ErrorMessage = "Something went wrong with your password request. We should really learn to test our software. Sorry!";
-                        model.NewPassword = "";
-                        model.ConfirmPassword = "";
-                        return View(model);
-                    }
+                    _context.Entry(user).State = EntityState.Modified;
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction("Index");
                 }
-                else if (changePassword)
-                {
-                    model.ErrorMessage = "This user's password is managed by another service.";
-                    model.NewPassword = "";
-                    model.ConfirmPassword = "";
-                    return View(model);
-                }
-                _context.Entry(user).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+
+                errors.ForEach(error => ModelState.AddModelError("ErrorMessage", error));
             }
 
             // If we got this far, something failed, redisplay form
-            model.ErrorMessage = "Passwords must match.";
             model.NewPassword = "";
             model.ConfirmPassword = "";
             return View(model);
+        }
+
+        [NonAction]
+        private async Task<List<string>> TryChangePassword(MacheteUser user, string attemptedValue)
+        {
+            var errors = new List<string>();
+            
+            if (string.IsNullOrEmpty(attemptedValue)) return new List<string>();
+
+            if (string.IsNullOrEmpty(user.PasswordHash))
+                errors.Add("This user's password is managed by another service.");
+
+            var remove = await _userManager.RemovePasswordAsync(user);
+            if (!remove.Succeeded)
+                errors.Add("Something went wrong with your request. Contact an administrator for assistance.");
+
+            var result = await _userManager.AddPasswordAsync(user, attemptedValue);
+            if (!result.Succeeded)
+                errors.Add("Something went wrong with your request. Contact an administrator for assistance.");
+
+            if (errors.Any()) return errors;
+            
+            user.LastPasswordChangedDate = DateTime.Today.AddMonths(-PasswordExpirationInMonths);
+            ViewBag.Message = "Password successfully updated.";
+
+            return new List<string>();
         }
 
         // GET: Account/Delete

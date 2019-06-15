@@ -164,7 +164,7 @@ namespace Machete.Data.Identity
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null) throw new ArgumentNullException(nameof(user));
-            if (passwordHash == null) throw new ArgumentNullException(nameof(passwordHash));
+            //if (passwordHash == null) throw new ArgumentNullException(nameof(passwordHash));
 
             user.PasswordHash = passwordHash;
 

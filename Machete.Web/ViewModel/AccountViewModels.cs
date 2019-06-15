@@ -177,7 +177,7 @@ namespace Machete.Web.ViewModel
         [Compare("NewPassword", ErrorMessageResourceName = "PasswordCompare", ErrorMessageResourceType = typeof(ValidationStrings))]
         public string ConfirmPassword { get; set; }
 
-        public string Id { get; }
+        public string Id { get; set; }
 
         public string ErrorMessage { get; set; }
     }
