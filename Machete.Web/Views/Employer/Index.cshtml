@@ -164,7 +164,7 @@
             ],
             // callback populates html attr with row data from JSON
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                $(nRow).attr('recordid', aData['eid']);
+                $(nRow).attr('recordid', aData['EID']);
                 return nRow;
             }
         }).fnSetFilteringDelay(250);

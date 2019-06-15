@@ -78,11 +78,11 @@
                 "aoColumns": [
                     { "mDataProp": "tabref", "bSearchable": false, "bSortable": false, "bVisible": false },
                     { "mDataProp": "tablabel", "bSearchable": false, "bSortable": false, "bVisible": false },
-                    { "mDataProp": "eid", "bSearchable": false, "bSortable": false, "bVisible": false },
-                    { "mDataProp": "woid" },
+                    { "mDataProp": "EID", "bSearchable": false, "bSortable": false, "bVisible": false },
+                    { "mDataProp": "WOID" },
                     { "mDataProp": "dateTimeofWork" },
                     { "mDataProp": "status" },
-                    { "mDataProp": "wAcount" },
+                    { "mDataProp": "WAcount" },
                     { "mDataProp": "contactName" },
                     { "mDataProp": "workSiteAddress1" },
                     { "mDataProp": "dateupdated" },
@@ -91,7 +91,7 @@
                 "aoSearchCols" :  [null, null, { "sSearch": "@(Model.ID)" }, null, null, null, null, null, null],
                 "fnServerDataExtra": function() { return [{ name: "showOrdersWorkers", value: true }]},
                 "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                    if (aData['workers'] != null && aData['wAcount'] > 0) {                    
+                    if (aData['workers'] != null && aData['WAcount'] > 0) {                    
                         $('td:eq(3)', nRow).prepend('<img src="/Content/dataTables/details_open.png">');
                     }                
                     return nRow;
