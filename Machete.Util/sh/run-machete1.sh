@@ -27,4 +27,4 @@ dotnet user-secrets list --project=Machete.Web \
   | sed s/Authentication/MACHETE_Authentication/g \
   >> machete1env.list
 
-docker run -it --name machete1 --network machete-bridge -p 443:443 --env-file machete1env.list ndlonmachete/debian:1.14.44-beta
+docker run -it --name machete1 --network machete-bridge -p 443:443 --env-file machete1env.list ndlonmachete/debian:1.14.61
