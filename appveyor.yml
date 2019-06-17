@@ -79,6 +79,7 @@ before_build:
   - sh: npm run --silent build-local-dev
   - sh: npm run start-local-dev &
   - sh: cd ..
+  - sh: sed -i "s/APPVEYOR_VERSION/$APPVEYOR_BUILD_VERSION/" "./Machete.Web/Views/Home/Index.cshtml"
   - sh: dotnet build
 
 # (THIS is the build step)
