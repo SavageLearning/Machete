@@ -326,8 +326,8 @@ namespace Machete.Web
                 var param = command.CreateParameter();
                 param.ParameterName = "@statement";
                 param.Value = $@"
-CREATE LOGIN readonlyLogin WITH PASSWORD='{readonlyPassword}'
-CREATE USER readonlyUser FROM LOGIN readonlyLogin
+CREATE LOGIN readonlylogin WITH PASSWORD='{readonlyPassword}'
+CREATE USER readonlyuser FROM LOGIN readonlylogin
 EXEC sp_addrolemember 'db_datareader', 'readonlyuser';
                     ";
                 command.Parameters.Add(param);
