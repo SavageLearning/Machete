@@ -328,7 +328,7 @@ namespace Machete.Web
                 param.Value = $@"
 CREATE LOGIN readonlyLogin WITH PASSWORD='{readonlyPassword}'
 CREATE USER readonlyUser FROM LOGIN readonlyLogin
-EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
+EXEC sp_addrolemember 'db_datareader', 'readonlyuser';
                     ";
                 command.Parameters.Add(param);
                 try
@@ -337,7 +337,7 @@ EXEC sp_addrolemember 'db_datareader', 'readonlyUser';
                 }
                 catch (SqlException ex)
                 {
-                    var userAlreadyExists = ex.Errors[0].Number.Equals(15025);
+                    var userAlreadyExists = ex.Errors[0].Number.Equals(15025) || ex.Message.Contains("already exists");
                     if (!userAlreadyExists)
                         throw;
                 }
