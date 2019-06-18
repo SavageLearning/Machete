@@ -72,15 +72,16 @@ namespace Machete.Web
             services.AddSingleton(mapper);
 
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/localization?view=aspnetcore-2.2#configure-localization
-            services.AddMvc() // (config => { config.Filters.Add(new AuthorizeFilter()); }) // <~ for JWT auth
+            // https://github.com/aspnet/AspNetCore/issues/6332
+            services.AddMvc(options => { options.MaxValidationDepth = 32; }) // options.Filters.Add(new AuthorizeFilter()); }) // <~ for JWT auth
                 .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver())
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 .AddDataAnnotationsLocalization()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                            
             services.AddSpaStaticFiles(angularApp =>
             {
-                angularApp.RootPath = "dist"; // TODO
+                angularApp.RootPath = "dist";
             });            
 
             services.ConfigureDependencyInjection();
