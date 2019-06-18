@@ -2,13 +2,11 @@ using System;
 
 namespace Machete.Service
 {
+    /// <summary>
+    /// DO NOT UNDER ANY CIRCUMSTANCES ADD TO THIS CLASS. IT IS A HACK AND NEEDS TO DIE. Thanks.
+    /// </summary>
     public static class DbFunctions
     {
-        public static DateTime AddMonths(DateTime date, int interval)
-        {
-            return date.AddMonths(interval);
-        }
-
         public static int DiffMinutes(DateTime userDate, DateTime recordDate)
         {
             return (userDate - recordDate).Minutes;
@@ -21,7 +19,7 @@ namespace Machete.Service
 
         public static int DiffDays(DateTime userDate, DateTime recordDate)
         {
-            return (userDate - recordDate).Days;
+            return (userDate.Date - recordDate.Date).Days;
         }
 
         public static int DiffMonths(DateTime userDate, DateTime recordDate)
