@@ -49,10 +49,10 @@ namespace Machete.Service
         public static void search(viewOptions o, ref IQueryable<WorkerSignin> q)
         {
             q = q.Where(wsi => wsi.dwccardnum.ToString().Contains(o.sSearch) ||
-                            wsi.worker.Person.firstname1.Contains(o.sSearch) ||
-                            wsi.worker.Person.firstname2.Contains(o.sSearch) ||
-                            wsi.worker.Person.lastname1.Contains(o.sSearch) ||
-                            wsi.worker.Person.lastname2.Contains(o.sSearch)
+                            wsi.worker.Person.firstname1.ToUpper().Contains(o.sSearch.ToUpper()) ||
+                            wsi.worker.Person.firstname2.ToUpper().Contains(o.sSearch.ToUpper()) ||
+                            wsi.worker.Person.lastname1.ToUpper().Contains(o.sSearch.ToUpper()) ||
+                            wsi.worker.Person.lastname2.ToUpper().Contains(o.sSearch.ToUpper())
                             );
         }
         public static void search<T>(viewOptions o, ref IEnumerable<T> e, IEnumerable<Worker> wcache) where T : Signin
