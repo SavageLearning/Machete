@@ -21,7 +21,7 @@ namespace Machete.Test.Selenium.View
     {
         public IWebDriver _d;
         string _url;
-        public int maxwait = 5; // seconds
+        public int maxwait = 6; // seconds
         int _sleepFor = 1000; //milliseconds
         IMapper map;
 

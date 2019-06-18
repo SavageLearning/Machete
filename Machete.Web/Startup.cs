@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using AutoMapper;
 using Machete.Data;
 using Machete.Data.Tenancy;
+using Machete.Domain;
 using Machete.Web.Maps;
 using Machete.Web.Maps.Api;
 using Microsoft.AspNetCore.Builder;
@@ -14,6 +15,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -73,11 +75,19 @@ namespace Machete.Web
 
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/localization?view=aspnetcore-2.2#configure-localization
             // https://github.com/aspnet/AspNetCore/issues/6332
-            services.AddMvc(options => { options.MaxValidationDepth = 32; }) // options.Filters.Add(new AuthorizeFilter()); }) // <~ for JWT auth
-                .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver())
-                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-                .AddDataAnnotationsLocalization()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(options =>
+            {
+                options.MaxValidationDepth = 16; // if there is a recursive error, don't go crazy
+                options.ModelMetadataDetailsProviders
+                    .Add(new SuppressChildValidationMetadataProvider(typeof(WorkOrder)));
+                options.ModelMetadataDetailsProviders
+                    .Add(new SuppressChildValidationMetadataProvider(typeof(WorkAssignment)));
+                // options.Filters.Add(new AuthorizeFilter()); }) // <~ for JWT auth                    
+            })
+            .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver())
+            .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+            .AddDataAnnotationsLocalization()
+            .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
                             
             services.AddSpaStaticFiles(angularApp =>
             {
