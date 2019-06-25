@@ -538,44 +538,24 @@ namespace Machete.Service
         }
         #endregion
         #region ACTIVITIES
-        public static void unauthenticatedView(DateTime date, ref IQueryable<Activity> q)
-        {
-            // Shows classes within 30min of start and up to 30min after end
-            q = q.Where(p => DbFunctions.DiffMinutes(date, p.dateStart) <= 30 &&
-                             DbFunctions.DiffMinutes(date, p.dateEnd) >= -30);
-        }
-
         /// <summary>
-        /// 
+        /// Search text and date fields of an activity for a query. 
         /// </summary>
         /// <param name="o"></param>
-        /// <param name="culture"></param>
         /// <param name="q"></param>
         /// <param name="lRepo"></param>
-        public static void search(viewOptions o, string culture, ref IQueryable<Activity> q)
+        public static void search(viewOptions o, ref IQueryable<Activity> q)
         {
-            switch(culture.ToUpper())
-            {
-                case "ES":
-                    q = q.Where(p => p.notes.Contains(o.sSearch) ||
-                        p.teacher.Contains(o.sSearch) ||
-                        p.dateStart.ToString().Contains(o.sSearch) ||
-                        p.nameES.ToString().Contains(o.sSearch) ||
-                        p.typeES.ToString().Contains(o.sSearch) ||
-                        p.dateEnd.ToString().Contains(o.sSearch));
-                    break;
-                case "EN":
-                default:
-                    q = q.Where(p => p.notes.Contains(o.sSearch) ||
-                        p.teacher.Contains(o.sSearch) ||
-                        p.dateStart.ToString().Contains(o.sSearch) ||
-                        p.nameEN.ToString().Contains(o.sSearch) ||
-                        p.typeEN.ToString().Contains(o.sSearch) ||
-                        p.dateEnd.ToString().Contains(o.sSearch));
-                    break;
-            }
-
+            q = q.Where(p => p.notes.Contains(o.sSearch) ||
+                             p.teacher.Contains(o.sSearch) ||
+                             p.dateStart.ToString().Contains(o.sSearch) ||
+                             p.nameES.ToString().Contains(o.sSearch) ||
+                             p.typeES.ToString().Contains(o.sSearch) ||
+                             p.nameEN.ToString().Contains(o.sSearch) ||
+                             p.typeEN.ToString().Contains(o.sSearch) ||
+                             p.dateEnd.ToString().Contains(o.sSearch));
         }
+
         public static void search(viewOptions o, ref IQueryable<ActivitySignin> q)
         {
             q = q.Where(asi => asi.dwccardnum.ToString().Contains(o.sSearch) ||

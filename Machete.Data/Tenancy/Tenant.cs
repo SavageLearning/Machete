@@ -1,3 +1,4 @@
+
 namespace Machete.Data.Tenancy
 {
     public class Tenant
@@ -5,5 +6,6 @@ namespace Machete.Data.Tenancy
         public string Name { get; set; }
         public string ConnectionString { get; set; }
         public string ReadOnlyConnectionString { get; set; }
+        public string Timezone { get; set; }
     }
 }

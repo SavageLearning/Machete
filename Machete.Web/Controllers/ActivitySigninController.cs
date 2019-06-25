@@ -25,6 +25,7 @@
 using System;
 using System.Linq;
 using AutoMapper;
+using Machete.Data.Tenancy;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Service.DTO;
@@ -38,16 +39,19 @@ namespace Machete.Web.Controllers
     {
         private readonly IActivitySigninService serv;
         private readonly IMapper map;
-        private readonly IDefaults def;
+        private TimeZoneInfo _clientTimeZoneInfo;
+        private TimeZoneInfo _serverTimeZoneInfo;
 
         public ActivitySigninController(
-            IActivitySigninService serv, 
-            IDefaults def,
-            IMapper map)
+            IActivitySigninService serv,
+            IMapper map,
+            ITenantService tenantService
+        )
         {
             this.serv = serv;
             this.map = map;
-            this.def = def;
+            _clientTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(tenantService.GetCurrentTenant().Timezone);
+            _serverTimeZoneInfo = TimeZoneInfo.Local;
         }
 
         /// <summary>
@@ -72,14 +76,26 @@ namespace Machete.Web.Controllers
         public ActionResult Index(int dwccardnum, int activityID, string userName)
         {
             var _asi = new ActivitySignin();
-            _asi.dateforsignin = DateTime.Now;
+            
+            var serverTime = DateTime.Now;
+            var utcTime = TimeZoneInfo.ConvertTimeToUtc(serverTime, _serverTimeZoneInfo);
+            
+            _asi.dateforsignin = utcTime;
             _asi.activityID = activityID;
             _asi.dwccardnum = dwccardnum;
 
             //Get picture from checkin, show with next view
             string imageRef = serv.getImageRef(dwccardnum);
-            Worker w = serv.CreateSignin(_asi, userName);
 
+            Worker w;
+            try
+            {
+                w = serv.CreateSignin(_asi, userName);
+            }
+            catch (NullReferenceException)
+            {
+                return Json(new { jobSuccess = false });
+            }
             return Json(new
             {
                 memberExpired = w.isExpired,
@@ -109,6 +125,8 @@ namespace Machete.Web.Controllers
         {
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             dataTableResult<ActivitySigninList> list = serv.GetIndexView(vo);
+
+            MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
             var result = list.query
                 .Select(
                     e => map.Map<ActivitySigninList, ViewModel.ActivitySigninList>(e)

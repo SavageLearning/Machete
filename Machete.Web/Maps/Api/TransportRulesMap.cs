@@ -9,8 +9,8 @@ namespace Machete.Web.Maps.Api
         public TransportRulesMap()
         {
             CreateMap<Domain.TransportRule, Machete.Web.ViewModel.Api.TransportRule>()
-                .ForMember(v => v.id, opt => opt.MapFrom(d => d.ID));
-                //.ForMember(v => v.costRules, opt => opt.Ignore()); // bug involving lazy-loading, which disappeared???
+                .ForMember(v => v.id, opt => opt.MapFrom(d => d.ID))
+                .ForMember(v => v.costRules, opt => opt.Ignore()); // bug involving lazy-loading, which disappeared???
             CreateMap<Domain.TransportCostRule, TransportCostRuleViewModel>();
         }
     }

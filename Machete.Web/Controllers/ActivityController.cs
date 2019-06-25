@@ -25,9 +25,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using Machete.Data.Tenancy;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Helpers;
@@ -35,6 +35,7 @@ using Machete.Web.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using NUglify.Helpers;
 using Activity = Machete.Domain.Activity;
 using ActivityList = Machete.Service.DTO.ActivityList;
 
@@ -43,35 +44,34 @@ namespace Machete.Web.Controllers
 
         public class ActivityController : MacheteController
     {
-        private readonly IActivityService serv;
-        private readonly IMapper map;
-        private readonly IDefaults def;
+        private readonly IActivityService _serv;
+        private readonly IMapper _map;
+        private readonly IDefaults _defaults;
+        private readonly TimeZoneInfo _clientTimeZoneInfo;
+        private readonly TimeZoneInfo _serverTimeZoneInfo;
 
         public ActivityController(
             IActivityService aServ, 
-            IDefaults def,
-            IMapper map)
+            IDefaults defaults,
+            IMapper map,
+            ITenantService tenantService
+        )
         {
-            serv = aServ;
-            this.map = map;
-            this.def = def;
+            _serv = aServ;
+            _map = map;
+            _defaults = defaults;
+            _clientTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(tenantService.GetCurrentTenant().Timezone);
+            _serverTimeZoneInfo = TimeZoneInfo.Local;
         }
-        protected override void Initialize(ActionContext requestContext)
-        {
-            base.Initialize(requestContext);
-        }
+
         /// <summary>
-        /// 
+        ///  
         /// </summary>
         /// <returns></returns>
         [Authorize(Roles = "Administrator, Manager, Teacher")]
         public ActionResult Index()
         {
-            var model = new ActivityIndex();
-            if (User.IsInRole("Administrator") || User.IsInRole("Manager"))
-                model.authenticated = 1;
-            else model.authenticated = 0;
-            return View(model);
+            return View();
         }
 
         /// <summary>
@@ -79,21 +79,23 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
-        //[Authorize(Roles = "Administrator, Manager, Teacher")]
+        [Authorize(Roles = "Administrator, Manager, Teacher, Check-in")]
         public JsonResult AjaxHandler(jQueryDataTableParam param)
         {
             //Get all the records
-            var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
-            var userIdentity = new ClaimsIdentity("Cookies");
-            if (!userIdentity.IsAuthenticated) vo.authenticated = false;
+            var vo = _map.Map<jQueryDataTableParam, viewOptions>(param);
 
             var culture = Request.HttpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;            
             
-            dataTableResult<ActivityList> list = serv.GetIndexView(vo, culture.TwoLetterISOLanguageName);
+            dataTableResult<ActivityList> list = _serv.GetIndexView(vo, culture.TwoLetterISOLanguageName);
+
+            MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
+            
             var result = list.query
                 .Select(
-                    e => map.Map<ActivityList, ViewModel.ActivityList>(e)
+                    e => _map.Map<ActivityList, ViewModel.ActivityList>(e)
                 ).AsEnumerable();
+                
             return Json(new
             {
                 param.sEcho,
@@ -110,113 +112,125 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Teacher")]
         public ActionResult Create()
         {
-            var m = map.Map<Activity, ViewModel.Activity>(new Activity
+            var now = DateTime.Now;
+            var utcNow = TimeZoneInfo.ConvertTimeToUtc(now, _serverTimeZoneInfo);
+            var clientNow = TimeZoneInfo.ConvertTimeFromUtc(utcNow, _clientTimeZoneInfo);
+            
+            var activity = new Activity
             {
-                dateStart = DateTime.Now,
-                dateEnd = DateTime.Now.AddHours(1)
-            });
-            m.def = def;
+                dateStart = clientNow,
+                dateEnd = clientNow.AddHours(1)
+            };
+            var m = _map.Map<Activity, ViewModel.Activity>(activity);
+            m.def = _defaults;
+            
             return PartialView("Create", m);
         }
         /// <summary>
         /// POST: /Activity/Create
         /// </summary>
-        /// <param name="activ"></param>
+        /// <param name="activity"></param>
         /// <param name="userName"></param>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, Teacher")]
-        public async Task<JsonResult> Create(Activity activ, string userName)
+        public async Task<JsonResult> Create(Activity activity, string userName)
         {
-            if (await TryUpdateModelAsync(activ, "")) {
-                activ.firstID = activ.ID;
+            if (!await TryUpdateModelAsync(activity, "")) return Json(new {jobSuccess = false});
+            if (activity.dateEnd < activity.dateStart)
+                return Json(new { jobSuccess = false, rtnMessage = "End date must be greater than start date." });
+
+            // leave for now, can be substituted with a reference method
+            var assemblyType = _defaults.byKeys(LCategory.activityType, LActType.Assembly);
+            var assemblyName = _defaults.byKeys(LCategory.activityName, LActName.Assembly);
+            var orgMtgType = _defaults.byKeys(LCategory.activityType, LActType.OrgMtg);
+            var orgMtgName = _defaults.byKeys(LCategory.activityName, LActName.OrgMtg);
+            var activityNameEmpty = activity.nameID == 0;
+            activity.notes = activity.notes ?? "";
+
+            if (activity.typeID == assemblyType && activityNameEmpty) activity.nameID = assemblyName;
+            if (activity.typeID == orgMtgType && activityNameEmpty) activity.nameID = orgMtgName;
+            activity.firstID = activity.ID;
+            //
+
+            activity.dateStart = TimeZoneInfo.ConvertTimeToUtc(activity.dateStart, _clientTimeZoneInfo);
+            activity.dateEnd = TimeZoneInfo.ConvertTimeToUtc(activity.dateEnd, _clientTimeZoneInfo);
+            activity = _serv.Create(activity, userName);
     
-                if (activ.nameID == 0)
-                {
-                    if (activ.typeID == def.byKeys(LCategory.activityType, LActType.Assembly))
-                        activ.nameID = def.byKeys(LCategory.activityName, LActName.Assembly);
-                    else if (activ.typeID == def.byKeys(LCategory.activityType, LActType.OrgMtg))
-                        activ.nameID = def.byKeys(LCategory.activityName, LActName.OrgMtg);
-                    else
-                        throw new MacheteIntegrityException("Something went wrong with Activity Types.");
-                }
+            var result = _map.Map<Activity, ViewModel.Activity>(activity);
+            // there are no dates to worry about in this mapping
     
-                if (activ.dateEnd < activ.dateStart)
-                    return Json(new { jobSuccess = false, rtnMessage = "End date must be greater than start date." });
-    
-                Activity firstAct = serv.Create(activ, userName);
-                var result = map.Map<Activity, ViewModel.Activity>(firstAct);
-    
-                if (activ.recurring)
-                {
-                    result.tablabel = "Recurring event with " + firstAct.teacher;
-                    result.tabref = "/Activity/CreateMany/" + Convert.ToString(firstAct.ID);
-                }
-    
-                return Json(new
-                {
-                    sNewRef = result.tabref,
-                    sNewLabel = result.tablabel,
-                    iNewID = result.ID,
-                    jobSuccess = true
-                });
-            } else {
-                return Json(new { jobSuccess = false });
-            }
+            return Json(new
+            {
+                sNewRef = result.tabref,
+                sNewLabel = result.tablabel,
+                iNewID = result.ID,
+                jobSuccess = true
+            });
         }
 
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult CreateMany(int id)
         {
-            Activity firstAct = serv.Get(id);
-            var m = map.Map<Activity, ActivitySchedule>(firstAct);
-            m.def = def;
+            Activity firstAct = _serv.Get(id);
+
+            MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
+            MapperHelpers.Defaults = _defaults;
+            var m = _map.Map<Activity, ActivitySchedule>(firstAct);
+
             return PartialView("CreateMany", m);
         }
 
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager")]
-        public async Task<JsonResult> CreateMany(ActivitySchedule actSched, string userName)
+        public async Task<ViewResult> CreateMany(ActivitySchedule actSched, string userName)
         {
-            if (await TryUpdateModelAsync(actSched)) {
-                var firstActivity = serv.Get(actSched.firstID);
-                var instances = actSched.stopDate.Subtract(actSched.dateStart).Days;
-                var length = actSched.dateEnd.Subtract(actSched.dateStart).TotalMinutes;
-                
-                for (var i = 0; i <= instances; ++i) // This should skip right over firstAct.
-                {
-                    var date = actSched.dateStart.AddDays(i);
-                    var day = (int)date.DayOfWeek;
-
-                    if (day == 0 && !actSched.sunday) continue;
-                    if (day == 1 && !actSched.monday) continue;
-                    if (day == 2 && !actSched.tuesday) continue;
-                    if (day == 3 && !actSched.wednesday) continue;
-                    if (day == 4 && !actSched.thursday) continue;
-                    if (day == 5 && !actSched.friday) continue;
-                    if (day == 6 && !actSched.saturday) continue;
-                    var activ = new Activity();
-                    activ.nameID = actSched.name;
-                    activ.typeID = actSched.type;
-                    activ.dateStart = date;
-                    activ.dateEnd = date.AddMinutes(length);
-                    activ.recurring = true;
-                    activ.firstID = firstActivity.ID;
-                    activ.teacher = actSched.teacher;
-                    activ.notes = actSched.notes;
-
-                    serv.Create(activ, userName);
-                }
-                var result = map.Map<Activity, ViewModel.Activity>(firstActivity);
-                return Json(new
-                {
-                    sNewRef = result.tabref,
-                    sNewLabel = result.tablabel,
-                    iNewID = firstActivity.ID,
-                    jobSuccess = true
-                });
-            } else {
-                return Json(new { jobSuccess = false });
+            var instances = actSched.stopDate.Subtract(actSched.dateStart).Days;
+            if (!await TryUpdateModelAsync(actSched) || instances == 0) {
+                ModelState.AddModelError("ActivitySchedule", "Select an appropriate length of time for these events."); 
+                return View("CreateMany", actSched); //Json(new { jobSuccess = false });
             }
+
+            var length = actSched.dateEnd.Subtract(actSched.dateStart).TotalMinutes;
+            var utcDate = TimeZoneInfo.ConvertTimeToUtc(actSched.dateStart, _clientTimeZoneInfo);
+
+            for (var i = 1; i <= instances; i++) 
+            {
+                var currentDate = utcDate.AddDays(i);
+                var day = (int)currentDate.DayOfWeek;
+
+                if (day == 0 && !actSched.sunday) continue;
+                if (day == 1 && !actSched.monday) continue;
+                if (day == 2 && !actSched.tuesday) continue;
+                if (day == 3 && !actSched.wednesday) continue;
+                if (day == 4 && !actSched.thursday) continue;
+                if (day == 5 && !actSched.friday) continue;
+                if (day == 6 && !actSched.saturday) continue;
+
+                var activity = new Activity
+                {
+                    nameID = actSched.name,
+                    typeID = actSched.type,
+                    dateStart = currentDate,
+                    dateEnd = currentDate.AddMinutes(length),
+                    recurring = true,
+                    firstID = actSched.firstID,
+                    teacher = actSched.teacher,
+                    notes = actSched.notes ?? ""
+                };
+
+                _serv.Create(activity, userName);
+            }
+
+            // Machete: A series of good intentions, marinated in panic ~C
+//            var result = _map.Map<Activity, ViewModel.Activity>(firstActivity);
+//            return Json(new
+//            {
+//                sNewRef = result.tabref,
+//                sNewLabel = result.tablabel,
+//                iNewID = firstActivity.ID,
+//                jobSuccess = true
+//            });
+            return View("Index");
         }
         /// <summary>
         /// GET: /Activity/Edit/5
@@ -226,9 +240,13 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Teacher")]
         public ActionResult Edit(int id)
         {
-            var m = map.Map<Activity, ViewModel.Activity>(serv.Get(id));
-            m.def = def;
-            return PartialView("Edit", m);
+            var activity = _serv.Get(id);
+            var viewModel = _map.Map<Activity, ViewModel.Activity>(activity);
+            viewModel.def = _defaults;
+            viewModel.dateStart = TimeZoneInfo.ConvertTimeFromUtc(activity.dateStart, _clientTimeZoneInfo);
+            viewModel.dateEnd = TimeZoneInfo.ConvertTimeFromUtc(activity.dateEnd, _clientTimeZoneInfo);
+
+            return PartialView("Edit", viewModel);
         }
         /// <summary>
         /// POST: /Activity/Edit/5
@@ -238,17 +256,41 @@ namespace Machete.Web.Controllers
         /// <returns></returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, Teacher")]
-        public async Task<JsonResult> Edit(int id, string userName)
+        public async Task<JsonResult> Edit(Activity activity, string userName)
         {
-            var activity = serv.Get(id);
+            if (!await TryUpdateModelAsync(activity, "")) return Json(new {jobSuccess = false});
+            if (activity.dateEnd < activity.dateStart)
+                return Json(new { jobSuccess = false, rtnMessage = "End date must be greater than start date." });
+
+            // leave for now, can be substituted with a reference method
+            var assemblyType = _defaults.byKeys(LCategory.activityType, LActType.Assembly);
+            var assemblyName = _defaults.byKeys(LCategory.activityName, LActName.Assembly);
+            var orgMtgType = _defaults.byKeys(LCategory.activityType, LActType.OrgMtg);
+            var orgMtgName = _defaults.byKeys(LCategory.activityName, LActName.OrgMtg);
+            var activityNameEmpty = activity.nameID == 0;
+
+            if (activity.typeID == assemblyType && activityNameEmpty) activity.nameID = assemblyName;
+            if (activity.typeID == orgMtgType && activityNameEmpty) activity.nameID = orgMtgName;
+            activity.firstID = activity.ID;
+            activity.notes = activity.notes ?? "";
+
+            activity.dateStart = TimeZoneInfo.ConvertTimeToUtc(activity.dateStart, _clientTimeZoneInfo);
+            activity.dateEnd = TimeZoneInfo.ConvertTimeToUtc(activity.dateEnd, _clientTimeZoneInfo);
             
-            if (await TryUpdateModelAsync(activity)) {
-                serv.Save(activity, userName);
-                return Json(new { jobSuccess = true });
-            }
-            
-            return Json(new { jobSuccess = false });
+            _serv.Save(activity, userName);
+    
+            var result = _map.Map<Activity, ViewModel.Activity>(activity);
+            // there are no dates to worry about in this mapping
+    
+            return Json(new
+            {
+                sNewRef = result.tabref,
+                sNewLabel = result.tablabel,
+                iNewID = result.ID,
+                jobSuccess = true
+            });
         }
+
         /// <summary>
         /// POST /Activity/Delete/5
         /// </summary>
@@ -259,7 +301,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Teacher")]
         public JsonResult Delete(int id, string userName)
         {
-            serv.Delete(id, userName);
+            _serv.Delete(id, userName);
 
             return Json(new
             {
@@ -273,14 +315,14 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public JsonResult DeleteMany(int id, string userName)
         {
-            Activity firstToDelete = serv.Get(id);
-            List<int> allToDelete = serv.GetAll()
+            Activity firstToDelete = _serv.Get(id);
+            List<int> allToDelete = _serv.GetAll()
                 .Where(w => w.firstID == firstToDelete.firstID && w.dateStart >= firstToDelete.dateStart)
                 .Select(s => s.ID).ToList();
 
             foreach (int toDelete in allToDelete)
             {
-                serv.Delete(toDelete, userName);
+                _serv.Delete(toDelete, userName);
             }
 
             return Json(new
@@ -296,7 +338,7 @@ namespace Machete.Web.Controllers
         public JsonResult Assign(int personID, List<int> actList, string userName)
         {
             if (actList == null) throw new Exception("Activity List is null");
-            serv.AssignList(personID, actList, userName);
+            _serv.AssignList(personID, actList, userName);
 
             return Json(new
             {
@@ -310,7 +352,7 @@ namespace Machete.Web.Controllers
         public JsonResult Unassign(int personID, List<int> actList, string userName)
         {
             if (actList == null) throw new Exception("Activity List is null");
-            serv.UnassignList(personID, actList, userName);
+            _serv.UnassignList(personID, actList, userName);
 
             return Json(new
             {

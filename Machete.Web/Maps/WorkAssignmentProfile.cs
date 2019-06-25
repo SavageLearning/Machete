@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using AutoMapper;
+using Machete.Web.Helpers;
 using static Machete.Web.Helpers.Extensions;
 
 namespace Machete.Web.Maps
@@ -56,8 +57,8 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.hourRange, opt => opt.MapFrom(d => Convert.ToString(d.hourRange)))
                 .ForMember(v => v.days, opt => opt.MapFrom(d => Convert.ToString(d.days)))
                 .ForMember(v => v.dateupdated, opt => opt.MapFrom(d => Convert.ToString(d.dateupdated)))
-                .ForMember(v => v.dateTimeofWork, opt => opt.MapFrom(d => Convert.ToString(d.dateTimeofWork.AddHours(d.timeZoneOffset))))
-                .ForMember(v => v.timeofwork, opt => opt.MapFrom(d => d.dateTimeofWork.AddHours(d.timeZoneOffset).ToShortTimeString()))
+                .ForMember(v => v.dateTimeofWork, opt => opt.MapFrom(d => d.dateTimeofWork.UtcToClientString()))
+                .ForMember(v => v.timeofwork, opt => opt.MapFrom(d => d.dateTimeofWork.UtcToClient().ToShortTimeString()))
                 .ForMember(v => v.earnings, opt => opt.MapFrom(d => System.String.Format("${0:f2}", d.earnings)))
                 .ForMember(v => v.asmtStatus, opt => opt.MapFrom(d => AssignmentStatus(d)))
             ;

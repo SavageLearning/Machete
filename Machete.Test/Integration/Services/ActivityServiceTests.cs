@@ -124,7 +124,6 @@ namespace Machete.Test.Integration.Services
             var teacher = "teacher_" + frb.RandomString(4);
             frb.AddActivity(startTime: maxDate, endTime: maxDate.AddHours(1), teacher: teacher);
             frb.AddActivity(startTime: maxDate.AddHours(-4), endTime: maxDate.AddHours(-3));
-            dOptions.authenticated = true;
             dOptions.date = maxDate;
             dOptions.sSearch = teacher;
             //
@@ -147,7 +146,6 @@ namespace Machete.Test.Integration.Services
 
             frb.AddActivity(startTime: maxDate, endTime: maxDate.AddHours(1), teacher: teacher);
             frb.AddActivity(startTime: maxDate.AddHours(-4), endTime: maxDate.AddHours(-3));
-            dOptions.authenticated = true;
             //dOptions.date = maxDate;
             dOptions.attendedActivities = true;
             dOptions.sSearch = teacher;

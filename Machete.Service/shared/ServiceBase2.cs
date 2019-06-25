@@ -72,6 +72,7 @@ namespace Machete.Service
         public virtual void Save(T record, string user)
         {
             record.updatedByUser(user);
+            dbset.Update(record);
             log(record.ID, user, logPrefix + " edited");
         }
         /// <summary>

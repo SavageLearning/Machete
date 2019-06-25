@@ -23,7 +23,6 @@ namespace Machete.Web.ViewModel
         public string message { get; set; }
 
         public int? WorkAssignmentID { get; set; }
-        public DateTime? lottery_timestamp { get; set; }
         public int? lottery_sequence { get; set; }
         public virtual Worker worker { get; set; }
         public int? WorkerID { get; set; }

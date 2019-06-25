@@ -1,5 +1,4 @@
 @using Machete.Domain
-@using Machete.Web.Helpers
 @using Microsoft.AspNetCore.Http.Extensions
 @using Microsoft.AspNetCore.Localization
 @model Machete.Web.ViewModel.Activity
@@ -16,6 +15,8 @@
 }
 @Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID", id = idPrefix + "ID" })
 @Html.HiddenFor(model => model.firstID, new { @class = "hiddenRecID", id = Model.firstID + "isFirstID" })
+@Html.HiddenFor(model => model.datecreated)
+@Html.HiddenFor(model => model.dateupdated)
 <div class="tb-table" style="float: left;">
     <div class="tb-row">
         <div class="tb-label">
@@ -25,7 +26,7 @@
             @Html.DropDownListFor(model => model.typeID,
                 new SelectList(Model.def.getSelectList(LCategory.activityType), "Value", "Text", Model),
                 Shared.choose, new { tabindex = "1", id = idPrefix + "type" })
-            @Html.ValidationMessageFor(model => model.typeID);
+            @Html.ValidationMessageFor(model => model.typeID)
         </div>
     </div>
     <div class="tb-row" id="className">
@@ -36,7 +37,7 @@
             @Html.DropDownListFor(model => model.nameID,
                 new SelectList(Model.def.getSelectList(LCategory.activityName), "Value", "Text", Model),
                 Shared.choose, new { tabindex = "1", id = idPrefix + "name" })
-            @Html.ValidationMessageFor(model => model.nameID);
+            @Html.ValidationMessageFor(model => model.nameID)
         </div>
     </div>
     <div class="tb-row">
@@ -55,27 +56,25 @@
             @Html.LabelFor(model => model.dateEnd)
         </div>
         <div class="tb-field">
-            @Html.TextBox("dateEnd", Html.Encode(String.Format("{0:g}",
-                Model.dateEnd)),
-                new { id = idPrefix + "dateEnd" })
+            @Html.TextBox("dateEnd", Html.Encode($"{Model.dateEnd:g}"), new { id = idPrefix + "dateEnd" })
             @Html.ValidationMessageFor(model => model.dateEnd)
         </div>
     </div>
-    @if (Html.IsInRole("Teacher") && !Html.IsInRole("Administrator", "Manager"))
-    {
-        Model.recurring = false;
-    }
-    else
-    {
-        <div class="tb-row">
-            <div class="tb-label">
-                @Html.LabelFor(model => model.recurring)
-            </div>
-            <div class="tb-field">
-                @Html.CheckBox("recurring")
-            </div>
+    <div class="tb-row">
+        <div class="tb-label">
+            @Html.LabelFor(model => model.recurring)
         </div>
-    }
+        <div class="tb-field">
+            @if (Model.ID != 0)
+            {
+                @Html.CheckBoxFor(model => model.recurring, new { @onclick = "return false" })
+            }
+            else
+            {
+                @Html.CheckBoxFor(model => model.recurring)
+            }
+        </div>
+    </div>
     <div class="tb-row">
         <div class="tb-label">
             @Html.LabelFor(model => model.teacher)
@@ -123,25 +122,25 @@
 
         );
 
-    $("#@(idPrefix)dateStart").datetimepicker({
-        stepMinute: 15,
-        ampm: true,
-        hourMin: 6,
-        hourMax: 21,
-        minuteMin: 0,
-        minuteMax: 45,
-        minuteGrid: 15,
-        hourGrid: 4
-    });
-    $("#@(idPrefix)dateEnd").datetimepicker({
-        stepMinute: 15,
-        ampm: true,
-        hourMin: 8,
-        hourMax: 23,
-        minuteMin: 0,
-        minuteMax: 45,
-        minuteGrid: 15,
-        hourGrid: 4
-    });
+        $("#@(idPrefix)dateStart").datetimepicker({
+            stepMinute: 15,
+            ampm: true,
+            hourMin: 6,
+            hourMax: 21,
+            minuteMin: 0,
+            minuteMax: 45,
+            minuteGrid: 15,
+            hourGrid: 4
+        });
+        $("#@(idPrefix)dateEnd").datetimepicker({
+            stepMinute: 15,
+            ampm: true,
+            hourMin: 8,
+            hourMax: 23,
+            minuteMin: 0,
+            minuteMax: 45,
+            minuteGrid: 15,
+            hourGrid: 4
+        });
     });
 </script>

@@ -26,8 +26,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Machete.Data.Tenancy;
 using Machete.Domain;
 using Machete.Service;
+using Machete.Test.UnitTests.Controllers.Helpers;
 using Machete.Web.Controllers;
 using Machete.Web.Helpers;
 using Machete.Web.Maps;
@@ -55,6 +57,8 @@ namespace Machete.Test.UnitTests.Controllers
         private WorkOrder _fakeWorkOrder;
         private Mock<IModelBindingAdaptor> _adaptor;
         private WorkOrder _savedWorkOrder;
+        private Mock<ITenantService> _tenantService;
+        private readonly Tenant _tenant = UnitTestExtensions.TestingTenant;
 
         //
         [TestInitialize]
@@ -97,8 +101,12 @@ namespace Machete.Test.UnitTests.Controllers
             _adaptor = new Mock<IModelBindingAdaptor>();
             _adaptor.Setup(dependency => dependency.TryUpdateModelAsync(It.IsAny<Controller>(), It.IsAny<WorkOrder>()))
                 .Returns(Task.FromResult(true));
+
+            _tenantService = new Mock<ITenantService>();
+            _tenantService.Setup(service => service.GetCurrentTenant()).Returns(_tenant);
+            _tenantService.Setup(service => service.GetAllTenants()).Returns(new List<Tenant> {_tenant});
             
-            _controller = new WorkOrderController(_serv.Object, def.Object, map, _adaptor.Object);
+            _controller = new WorkOrderController(_serv.Object, def.Object, map, _adaptor.Object, _tenantService.Object);
         }
 
         //   Testing /Index functionality

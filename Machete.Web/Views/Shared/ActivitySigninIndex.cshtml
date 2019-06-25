@@ -22,6 +22,7 @@
         authenticated = 1;
     }
 }
+<!--suppress BadExpressionStatementJS, UnterminatedStatementJS -->
 <div id="@(idPrefix)Tabs">
     <ul>
         <li><a href="#container" id="@(idPrefix)ListTab" class="ListTab">@Activities.signinlistlink</a>
@@ -181,7 +182,8 @@
 		    },
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $(nRow).attr('ID', "asiRec-" +aData['recordid']);
-                if (@(authenticated) == 0) {
+                var blah = @(authenticated);
+                if (blah == 0) {
                     $(nRow).find('td:first-child').html('');
                 } else {
                     $(nRow).find('td:first-child').html('<a class="confirm_delete" href="/ActivitySignin/delete/'+aData['recordid']+'">Delete</a>');

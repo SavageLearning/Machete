@@ -23,27 +23,33 @@
 #endregion
 
 using System;
+using System.Globalization;
 using System.Linq;
 using AutoMapper;
-using Machete.Domain;
+using Machete.Data.Tenancy;
 using Machete.Service;
 using Machete.Service.DTO;
 using Machete.Web.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WorkerSignin = Machete.Web.ViewModel.WorkerSignin;
 
 namespace Machete.Web.Controllers
 {
         public class WorkerSigninController : MacheteController
     {
-        private readonly IWorkerSigninService serv;
-        private readonly IMapper map;
+        private readonly IWorkerSigninService _serv;
+        private readonly IMapper _map;
+        private readonly TimeZoneInfo _clientTimeZoneInfo;
 
-        public WorkerSigninController(IWorkerSigninService workerSigninService,
+        public WorkerSigninController(
+            IWorkerSigninService workerSigninService,
+            ITenantService tenantService,
             IMapper map)
         {
-            serv = workerSigninService;
-            this.map = map;
+            _serv = workerSigninService;
+            _clientTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(tenantService.GetCurrentTenant().Timezone);
+            _map = map;
         }
 
         //
@@ -51,8 +57,17 @@ namespace Machete.Web.Controllers
         // Initial page creation
         [Authorize(Roles = "Manager, Administrator, Check-in")]
         public ActionResult Index()
-        {        
-            return View();
+        {
+            var dateTime = DateTime.Now;
+            var serverTime = TimeZoneInfo.Local;
+            var dateforsignin = TimeZoneInfo.ConvertTimeToUtc(dateTime, serverTime);
+
+            var model = new WorkerSignin
+            {
+                dateforsignin = TimeZoneInfo.ConvertTime(dateforsignin, _clientTimeZoneInfo)
+            };
+
+            return View(model);
         }
         //
         // POST: /WorkerSignin/Index -- records a signin
@@ -60,53 +75,18 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Manager, Administrator, Check-in")]
         public ActionResult Index(int dwccardnum, DateTime dateforsignin, string userName)
         {
-            var wsi = serv.CreateSignin(dwccardnum, dateforsignin, userName);
-            var result = map.Map<WorkerSignin, ViewModel.WorkerSignin>(wsi);
-            return Json(result);
-
-        }
-        /// <summary>
-        /// This method invokes IWorkerSigninService.moveDown,
-        /// which moves a worker down in numerical order in the daily 
-        /// ('lottery') list,
-        /// and moves the proceeding (next) set member into their spot.
-        /// </summary>
-        /// <param name="id">The Worker ID of the person to be moved down.</param>
-        /// <param name="userName">The username of the person making the request.</param>
-        /// <returns>Json (bool jobSuccess, string status)</returns>
-        [UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult moveDown(int id, string userName)
-        {
-            serv.moveDown(id, userName);
-            return Json(new
+            try
             {
-                jobSuccess = true,
-                status = "OK", 
-                workerID = id
-            });
-        }
-
-        /// <summary>
-        /// This method invokes IWorkerSigninService.moveUp,
-        /// which moves a worker up in numerical order in the 
-        /// daily ('lottery') list,
-        /// and moves the preceeding set member into their spot.
-        /// </summary>
-        /// <param name="id">The Worker ID of the person to be moved down.</param>
-        /// <param name="userName">The username of the person making the request.</param>
-        /// <returns>Json (bool jobSuccess, string status)</returns>
-        [UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult moveUp(int id, string userName)
-        {
-            serv.moveUp(id, userName);
-            return Json(new
+                var dateforsigninUTC = TimeZoneInfo.ConvertTimeToUtc(dateforsignin, _clientTimeZoneInfo);
+                var wsi = _serv.CreateSignin(dwccardnum, dateforsigninUTC, userName);
+                var result = _map.Map<Domain.WorkerSignin, WorkerSignin>(wsi);
+                
+                return Json(result);
+            }
+            catch (NullReferenceException)
             {
-                jobSuccess = true,
-                status = "OK",
-                workerID = id
-            });
+                return Json(new { jobSuccess = false });
+            }
         }
 
         // GET: /WorkerSignin/Delete/5
@@ -120,7 +100,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Check-in")]
         public JsonResult Delete(int id, string userName)
         {
-            var record = serv.Get(id);
+            var record = _serv.Get(id);
             if (record.WorkAssignmentID != null)
             {
                 return Json(new
@@ -130,7 +110,7 @@ namespace Machete.Web.Controllers
                     });
             }
 
-            serv.Delete(id, userName);            
+            _serv.Delete(id, userName);            
             return Json(new
             {
                 jobSuccess = true,
@@ -142,17 +122,69 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Check-in")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
-            var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
-            dataTableResult<WorkerSigninList> was = serv.GetIndexView(vo);
+            var clientdate = DateTime.Parse(param.todaysdate); // name misleading; selected date
+            var utcdate = TimeZoneInfo.ConvertTimeToUtc(clientdate, _clientTimeZoneInfo);
+            param.todaysdate = utcdate.ToString(CultureInfo.InvariantCulture);
+
+            var vo = _map.Map<jQueryDataTableParam, viewOptions>(param);
+
+            dataTableResult<WorkerSigninList> was = _serv.GetIndexView(vo);
+
+            MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
             var result = was.query
-                .Select(e => map.Map<WorkerSigninList, ViewModel.WorkerSigninList>(e))
+                .Select(e => _map.Map<WorkerSigninList, ViewModel.WorkerSigninList>(e))
                 .ToList();
+                
             return Json(new
             {
                 param.sEcho,
                 iTotalRecords = was.totalCount,
                 iTotalDisplayRecords = was.filteredCount,
                 aaData = result
+            });
+        }
+        
+        /// <summary>
+        /// This method invokes IWorkerSigninService.moveDown,
+        /// which moves a worker down in numerical order in the daily 
+        /// ('lottery') list,
+        /// and moves the proceeding (next) set member into their spot.
+        /// </summary>
+        /// <param name="id">The Worker ID of the person to be moved down.</param>
+        /// <param name="userName">The username of the person making the request.</param>
+        /// <returns>Json (bool jobSuccess, string status)</returns>
+        [UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager")]
+        public ActionResult moveDown(int id, string userName)
+        {
+            _serv.moveDown(id, userName);
+            return Json(new
+            {
+                jobSuccess = true,
+                status = "OK", 
+                workerID = id
+            });
+        }
+
+        /// <summary>
+        /// This method invokes IWorkerSigninService.moveUp,
+        /// which moves a worker up in numerical order in the 
+        /// daily ('lottery') list,
+        /// and moves the prece    eding set member into their spot.
+        /// </summary>
+        /// <param name="id">The Worker ID of the person to be moved down.</param>
+        /// <param name="userName">The username of the person making the request.</param>
+        /// <returns>Json (bool jobSuccess, string status)</returns>
+        [UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager")]
+        public ActionResult moveUp(int id, string userName)
+        {
+            _serv.moveUp(id, userName);
+            return Json(new
+            {
+                jobSuccess = true,
+                status = "OK",
+                workerID = id
             });
         }
     }

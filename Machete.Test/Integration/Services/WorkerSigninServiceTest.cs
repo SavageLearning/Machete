@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using FluentAssertions.Extensions;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Test.Integration.Fluent;
@@ -67,9 +68,12 @@ namespace Machete.Test.Integration.Services
             var wsi = frb.ToWorkerSignin();
             // Act
             var result = frb.ToServ<IWorkerSigninService>().GetSignin(w.dwccardnum, wsi.dateforsignin);
+            var wsiDate = new DateTime(wsi.dateforsignin.Year, wsi.dateforsignin.Month, wsi.dateforsignin.Day, wsi.dateforsignin.Hour, wsi.dateforsignin.Minute, wsi.dateforsignin.Second);
+            var resultDate = new DateTime(result.dateforsignin.Year, result.dateforsignin.Month, result.dateforsignin.Day, result.dateforsignin.Hour, result.dateforsignin.Minute, result.dateforsignin.Second);
+            
             // Assert
             Assert.AreEqual(w.dwccardnum, result.dwccardnum);
-            Assert.AreEqual(wsi.dateforsignin, result.dateforsignin);
+            Assert.AreEqual(wsiDate, resultDate);
         }
         /// <summary>
         /// Filters WSI IndexView based on dwccardnum option. should return all records.

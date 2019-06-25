@@ -167,6 +167,7 @@ namespace Machete.Web
             services.AddScoped<IWorkOrderRepository, WorkOrderRepository>();
             services.AddScoped<IScheduleRuleRepository, ScheduleRuleRepository>();
             services.AddScoped<ITransportRuleRepository, TransportRuleRepository>();
+            services.AddScoped<ITransportCostRuleRepository, TransportCostRuleRepository>();
             services.AddScoped<ITransportProvidersRepository, TransportProvidersRepository>();
             services.AddScoped<ITransportProvidersAvailabilityRepository, TransportProvidersAvailabilityRepository>();
 
@@ -183,6 +184,7 @@ namespace Machete.Web
             services.AddScoped<IReportsV2Service, ReportsV2Service>();
             services.AddScoped<IScheduleRuleService, ScheduleRuleService>();
             services.AddScoped<ITransportRuleService, TransportRuleService>();
+            services.AddScoped<ITransportCostRuleService, TransportCostRuleService>();
             services.AddScoped<ITransportProvidersService, TransportProvidersService>();
             services.AddScoped<ITransportProvidersAvailabilityService, TransportProvidersAvailabilityService>();
             services.AddScoped<IWorkAssignmentService, WorkAssignmentService>();

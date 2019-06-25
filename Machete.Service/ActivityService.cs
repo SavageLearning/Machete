@@ -62,7 +62,6 @@ namespace Machete.Service
             updateComputedFields(ref record);
             var result = base.Create(record, user);
             db.SaveChanges();
-            //db.Dispose();
             return result;
         }
 
@@ -70,6 +69,7 @@ namespace Machete.Service
         {
             updateComputedFields(ref record);
             base.Save(record, user);
+            db.SaveChanges();
         }
 
         private void updateComputedFields(ref Activity record)
@@ -89,13 +89,8 @@ namespace Machete.Service
                 IndexViewBase.getUnassociated(o.personID, ref q, db);
             if (o.personID > 0 && o.attendedActivities == true)
                 IndexViewBase.getAssociated(o.personID, ref q, db);
-            if (!o.authenticated)
-            {
-                if (o.date == null) o.date = DateTime.Now;
-                IndexViewBase.unauthenticatedView((DateTime)o.date, ref q);
-            }
 
-            if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, culture, ref q);
+            if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
 
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
             result.filteredCount = q.Count();

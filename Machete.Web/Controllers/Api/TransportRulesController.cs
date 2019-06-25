@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using Machete.Domain;
@@ -7,6 +8,7 @@ using Machete.Web.Controllers.Api.Abstracts;
 using Machete.Web.Helpers.Api;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TransportCostRule = Machete.Web.ViewModel.Api.TransportCostRule;
 using TransportRule = Machete.Web.ViewModel.Api.TransportRule;
 
 namespace Machete.Web.Controllers.Api
@@ -16,11 +18,16 @@ namespace Machete.Web.Controllers.Api
     public class TransportRulesController : MacheteApiController
     {
         private readonly ITransportRuleService serv;
+        private readonly ITransportCostRuleService _costServ;
         private readonly IMapper map;
 
-        public TransportRulesController(ITransportRuleService serv, IMapper map)
+        public TransportRulesController(
+            ITransportRuleService serv,
+            ITransportCostRuleService costServ, 
+            IMapper map)
         {
             this.serv = serv;
+            _costServ = costServ;
             this.map = map;
         }
 
@@ -33,8 +40,33 @@ namespace Machete.Web.Controllers.Api
             try
             {
                 var result = serv.GetAll()
-                    .Select(e => map.Map<Domain.TransportRule, Machete.Web.ViewModel.Api.TransportRule>(e))
-                    .AsEnumerable();
+                    .Select(e => map.Map<Domain.TransportRule, ViewModel.Api.TransportRule>(e))
+                    .ToList();
+
+                var transportCostRules = _costServ.GetAll().ToList();
+                foreach (var p in result)
+                {
+                    var pCostRules = transportCostRules.Where(costRule => costRule.transportRuleID == p.id).ToList();
+                    p.costRules = new List<TransportCostRule>();
+
+                    // TODO mapper
+                    foreach (var q in pCostRules)
+                    {
+                        p.costRules.Add(new TransportCostRule
+                        {
+                            cost = q.cost,
+                            createdby = q.createdby,
+                            datecreated = q.datecreated,
+                            dateupdated = q.dateupdated,
+                            id = q.ID,
+                            maxWorker = q.maxWorker,
+                            minWorker = q.minWorker,
+                            transportRuleId = q.transportRuleID,
+                            updatedby = q.updatedby
+                        });
+                    }
+                }    
+                
                 return new JsonResult(new { data = result });
             }
             catch (Exception ex)

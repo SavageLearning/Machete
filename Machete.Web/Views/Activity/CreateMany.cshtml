@@ -8,8 +8,7 @@
     string idPrefix = recType + Model.firstID + " - ";
 }
     
-@using (Html.BeginForm("CreateMany", "Activity", FormMethod.Post,
-                        new { @id = "activityCreateManyForm" }))
+@using (Html.BeginForm())
 {
     <div>
         <input type="submit" id="@(idPrefix)SaveBtn" class="formButton saveBtn"

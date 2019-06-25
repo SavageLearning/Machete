@@ -11,13 +11,14 @@
     var currentUrl = UriHelper.BuildRelative(httpContext.Request.PathBase, httpContext.Request.Path, httpContext.Request.QueryString);    
     var recType = "activity";
 }
+
 @if (Html.IsInRole("Administrator", "Manager", "PhoneDesk", "Check-in", "User", "Teacher"))
 {
     using (Html.BeginForm("Edit", "Activity", FormMethod.Post,
                             new { @class = "edittab-form EditPost", id = "ActivityTab-" + Model.ID }))
     {
         <input type="submit" value="@Activities.editsubmit" class="formButton saveBtn"/>
-        if (Html.IsInRole("Administrator", "Manager") || Html.IsInRole("Teacher"))
+        if (Html.IsInRole("Administrator", "Manager", "Teacher"))
         {
             <input id="deleteActivityButton-@Model.ID" type="button" value="@Activities.deletesubmit" 
                     class="formButton deleteButton" />
@@ -29,15 +30,14 @@
         }
         <br />    
         @Html.ValidationSummary(true)
-        @Html.EditorForModel()
-
+        @Html.EditorForModel("Activity")
     }
     if (Html.IsInRole("Administrator", "Manager", "Teacher"))
     {
         using (Html.BeginForm("Delete", "Activity", FormMethod.Post,
                                 new { @class = "edittab-form DeletePost", id = "DeleteActivity-" + Model.ID }))
         {
-            @Html.HiddenFor(model => model.ID);
+            @Html.HiddenFor(model => model.ID)
         }
     }
     if (Html.IsInRole("Administrator", "Manager"))
@@ -45,11 +45,11 @@
         using (Html.BeginForm("DeleteMany", "Activity", FormMethod.Post,
                                 new { @class = "edittab-form DeletePost", id = "DeleteManyActivity-" + Model.ID }))
         {
-            @Html.HiddenFor(model => model.ID);
+            @Html.HiddenFor(model => model.ID)
         }
     }
 }
-@await Html.PartialAsync("ActivitySigninIndex", new ActivitySignin { activityID = Model.ID})
+@await Html.PartialAsync("ActivitySigninIndex", new ActivitySignin { activityID = Model.ID })
 <script type="text/javascript">
     $(document).ready(function () {
         $('#viewActivity-@Model.ID').click(function () {
@@ -57,49 +57,40 @@
         });
         $('.formButton').button();
         $('#activityName').focus();
-
-        //Checks Html.Role_AM() == true
-        if (@Html.IsInRole("Administrator", "Manager", "Teacher")) {
-
-            //
-            // machete UI detect changes on forms in tabs   
-            $("#ActivityTab-@(Model.ID)").mUI('formDetectChanges', {
-                recType: "@(recType)",
+        //
+        // machete UI detect changes on forms in tabs   
+        $("#ActivityTab-@(Model.ID)").mUI('formDetectChanges', {
+            recType: "@(recType)",
+            formLevel: 1,
+            changeConfirm: "@Shared.changeConfirm",
+            changeTitle: "@Shared.changeTitle"
+        });
+        //
+        // validation for elements added after page load
+        $.validator.unobtrusive.parseDynamicContent($('#ActivityTab-@Model.ID'));
+        //
+        // delete button confirmation
+        $("#deleteActivityButton-@Model.ID").mUI('formClickDelete', {
+            ok: "@(Activities.deletesubmit)",
+            confirm: '@(Activities.deleteconfirmation)',
+            title: '@(Activities.deletetitle)',
+            form: $('#DeleteActivity-@Model.ID')
+        });
+    
+        //
+        // edit form submit
+        $('#ActivityTab-@Model.ID').mUI('tabFormSubmit',
+            {
+                create: false,
+                selectTab: 0,
                 formLevel: 1,
-                changeConfirm: "@Shared.changeConfirm",
-                changeTitle: "@Shared.changeTitle"
+                callback: function() { $('#activityTable').dataTable().fnDraw(); }
             });
-            //
-            // validation for elements added after page load
-            $.validator.unobtrusive.parseDynamicContent($('#ActivityTab-@Model.ID'));
-            //
-            // delete button confirmation
-            $("#deleteActivityButton-@Model.ID").mUI('formClickDelete', {
-                ok: "@(Activities.deletesubmit)",
-                confirm: '@(Activities.deleteconfirmation)',
-                title: '@(Activities.deletetitle)',
-                form: $('#DeleteActivity-@Model.ID')
-            });
-        
-            //
-            // edit form submit
-            $('#ActivityTab-@Model.ID').mUI('tabFormSubmit',
-                {
-                    create: false,
-                    selectTab: 0,
-                    formLevel: 1,
-                    callback: function() { $('#activityTable').dataTable().fnDraw(); }
-                });
-        }
-
-        if (@Html.IsInRole("Administrator", "Manager")) {
-            $("#deleteAllActivityButton-@Model.firstID").mUI('formClickDelete', {
-                ok: "@(Activities.deleteallsubmit)",
-                confirm: '@(Activities.deleteallconfirmation)',
-                title: '@(Activities.deletetitle)',
-                form: $('#DeleteManyActivity-@Model.ID')
-            });
-        
-        }
+        $("#deleteAllActivityButton-@Model.firstID").mUI('formClickDelete', {
+            ok: "@(Activities.deleteallsubmit)",
+            confirm: '@(Activities.deleteallconfirmation)',
+            title: '@(Activities.deletetitle)',
+            form: $('#DeleteManyActivity-@Model.ID')
+        });
     });
 </script>

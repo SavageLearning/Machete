@@ -15,7 +15,8 @@ namespace Machete.Data.Tenancy
             {
                 Name = tenantName,
                 ConnectionString = configuration.GetConnectionString(tenantName),
-                ReadOnlyConnectionString = configuration.GetConnectionString($"{tenantName}ReadOnly")
+                ReadOnlyConnectionString = configuration.GetConnectionString($"{tenantName}ReadOnly"),
+                Timezone = configuration.GetSection("Timezones")[tenantName]
             };
         }
     }

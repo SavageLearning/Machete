@@ -31,28 +31,7 @@ namespace Machete.Web.ViewModel
 {
     public class ActivitySchedule : Record
     {
-        public ActivitySchedule() { }
         public IDefaults def;
-
-        //public ActivitySchedule(Domain.Activity firstAct)
-        //{
-        //    idString = "activity";
-        //    this.firstID = firstAct.ID;
-        //    this.name = firstAct.nameID;
-        //    this.type = firstAct.typeID;
-        //    this.dateStart = firstAct.dateStart;
-        //    this.dateEnd = firstAct.dateEnd;
-        //    this.teacher = firstAct.teacher;
-        //    this.notes = firstAct.notes;
-        //}
-
-        public string idChild
-        {
-            get
-            {
-                return "asi" + this.ID + "-";
-            }
-        }
 
         public int firstID { get; set; }
                 

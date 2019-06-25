@@ -18,7 +18,6 @@ namespace Machete.Web.Maps
             config.CreateMap<jQueryDataTableParam, viewOptions>()
                 .ForMember(vo => vo.CI, opt => opt.Ignore())
                 .ForMember(vo => vo.employerGuid, opt => opt.Ignore()) // API-only option
-                .ForMember(vo => vo.authenticated, opt => opt.Ignore())
                 .ForMember(vo => vo.personID, opt => opt.MapFrom(dt => dt.personID ?? 0))
                 .ForMember(vo => vo.emailID,
                     opt => opt.MapFrom(dt =>

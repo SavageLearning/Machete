@@ -26,7 +26,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Machete.Data.Tenancy;
 using Machete.Service;
+using Machete.Test.UnitTests.Controllers.Helpers;
 using Machete.Web.Controllers;
 using Machete.Web.Helpers;
 using Machete.Web.Maps;
@@ -36,6 +38,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Extensions = Machete.Web.Helpers.Extensions;
 using ViewModel = Machete.Web.ViewModel;
 
 namespace Machete.Test.UnitTests.Controllers
@@ -56,6 +59,8 @@ namespace Machete.Test.UnitTests.Controllers
         WorkAssignmentController _controller;
         private int _fakeId;
         private Mock<IModelBindingAdaptor> _adaptor;
+        private Mock<ITenantService> _tenantService;
+        private Tenant _tenant = UnitTestExtensions.TestingTenant;
 
         [TestInitialize]
         public void TestInitialize()
@@ -67,14 +72,18 @@ namespace Machete.Test.UnitTests.Controllers
             _def = new Mock<IDefaults>();
             var mapperConfig = new MapperConfiguration(config => { config.ConfigureMvc(); });
             _map = mapperConfig.CreateMapper();
+            
             _adaptor = new Mock<IModelBindingAdaptor>();
-
             _adaptor.Setup(dependency => 
                     dependency.TryUpdateModelAsync(It.IsAny<MacheteController>(), It.IsAny<object>()))
                 .Returns(Task.FromResult(true));
             
+            _tenantService = new Mock<ITenantService>();
+            _tenantService.Setup(service => service.GetCurrentTenant()).Returns(_tenant);
+            _tenantService.Setup(service => service.GetAllTenants()).Returns(new List<Tenant> {_tenant});
+            
             _controller = new WorkAssignmentController(_waServ.Object, _woServ.Object, _wsiServ.Object, _def.Object,
-                _map, _adaptor.Object);
+                _map, _adaptor.Object, _tenantService.Object);
 
             _fakeId = 12345;
         }
