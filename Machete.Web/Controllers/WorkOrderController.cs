@@ -263,6 +263,8 @@ namespace Machete.Web.Controllers
             var workOrder = _woServ.Get(id);
             var modelUpdated = await _adaptor.TryUpdateModelAsync(this, workOrder);
             if (!modelUpdated) return StatusCode(500);
+
+            workOrder.dateTimeofWork = TimeZoneInfo.ConvertTimeToUtc(workOrder.dateTimeofWork, _clientTimeZoneInfo);
             
             _woServ.Save(workOrder, workerRequestList, userName);
             

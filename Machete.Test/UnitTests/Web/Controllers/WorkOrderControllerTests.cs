@@ -189,6 +189,8 @@ namespace Machete.Test.UnitTests.Controllers
             //Act
             var result = await _controller.Edit(_testid, "UnitTest", list);
             
+            var utcTime = TimeZoneInfo.ConvertTimeToUtc(Convert.ToDateTime("1/1/2019 12:00:00 AM"),
+                              TimeZoneInfo.FindSystemTimeZoneById(_tenant.Timezone));
             //Assert
             Assert.AreEqual(_fakeWorkOrder, _savedWorkOrder);
             Assert.AreEqual("blah", _savedWorkOrder.workSiteAddress1);
@@ -197,11 +199,10 @@ namespace Machete.Test.UnitTests.Controllers
             Assert.AreEqual("123-456-7890", _savedWorkOrder.phone);
             Assert.AreEqual("12345-6789", _savedWorkOrder.zipcode);
             Assert.AreEqual(1, _savedWorkOrder.typeOfWorkID);
-            Assert.AreEqual(Convert.ToDateTime("1/1/2019 12:00:00 AM"), _savedWorkOrder.dateTimeofWork);
+            Assert.AreEqual(utcTime, _savedWorkOrder.dateTimeofWork);
             Assert.AreEqual(1, _savedWorkOrder.transportMethodID);
             Assert.AreEqual(20.00, _savedWorkOrder.transportFee);
             //Assert.AreEqual(5, savedworkOrder.workerRequests.Count()); // TODO investigate wr broken?
-
         }
 
         /// <summary>
