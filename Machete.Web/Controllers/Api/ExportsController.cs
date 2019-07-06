@@ -1,9 +1,9 @@
-
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Machete.Service;
 using Machete.Service.DTO;
+using Machete.Web.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
@@ -100,8 +100,8 @@ namespace Machete.Web.Controllers.Api
             {
                 name = tablename,
                 exportFilterField = filterField == "undefined" ? null : filterField, // TODO Enum
-                beginDate = beginDate,
-                endDate = endDate,
+                beginDate = beginDate.ToUtcDatetime(),
+                endDate = endDate.ToUtcDatetime(),
                 exportIncludeOptions = includeOptions
             };
 
@@ -116,11 +116,8 @@ namespace Machete.Web.Controllers.Api
 //            response.Content.Headers.ContentDisposition.FileName = tablename + ".xlsx";
 //            response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/ms-excel");
 //            response.Content.Headers.ContentLength = bytes.Length;
-//            response.StatusCode = HttpStatusCode.OK;
-            
-//            return new ResponseMessageResult(response); //<~ loses the content
-            //return File(bytes, "application/ms-excel"); //<~ WORKS but JavaScript complains it is not Json
-            return new FileContentResult(bytes, new MediaTypeHeaderValue("application/ms-excel")); // File() calls it
+//            response.StatusCode = HttpStatusCode.OK;            
+            return new FileContentResult(bytes, new MediaTypeHeaderValue("application/ms-excel"));
         }
 
         // PUT api/values/5

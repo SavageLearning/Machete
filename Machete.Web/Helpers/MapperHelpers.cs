@@ -16,6 +16,18 @@ namespace Machete.Web.Helpers
         public static string UtcToClientString(this DateTime date) =>
             date.UtcToClient().ToString(CultureInfo.InvariantCulture);
             
+        public static string UtcToClientString(this DateTime date, string s) => 
+            date.UtcToClient().ToString(s, CultureInfo.InvariantCulture);
+        
+        public static DateTime ClientToUtc(this DateTime date) =>
+            TimeZoneInfo.ConvertTimeToUtc(date, ClientTimeZoneInfo);            
+        
+        public static DateTime ToUtcDateTime(this string dateString) => 
+            DateTime.SpecifyKind(Convert.ToDateTime(dateString), DateTimeKind.Unspecified).ClientToUtc();
+
+        public static DateTime? ToUtcDatetime(this DateTime? date) =>
+            date?.ClientToUtc();
+
         public static string ComputeOrderStatus(WorkOrdersList d)
         {
             if (d.statusID == WorkOrder.iActive) return LOrderStatus.Active;

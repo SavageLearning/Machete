@@ -1,13 +1,14 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using AutoMapper;
-using Machete.Domain;
+using Machete.Data.Tenancy;
 using Machete.Service;
 using Machete.Web.Controllers.Api.Abstracts;
-using Machete.Web.Helpers.Api;
+using Machete.Web.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DTO = Machete.Service.DTO;
-using WorkOrder = Machete.Web.ViewModel.Api.WorkOrder;
+// ReSharper disable RedundantTypeArgumentsOfMethod
 
 namespace Machete.Web.Controllers.Api
 {
@@ -15,16 +16,16 @@ namespace Machete.Web.Controllers.Api
     [ApiController]
     public class WorkOrdersController : MacheteApiController
     {
-        private readonly IWorkOrderService serv;
-        private readonly IWorkAssignmentService waServ;
-        private readonly IMapper map;
+        private readonly IWorkOrderService _serv;
+        private readonly IMapper _map;
+        private readonly TimeZoneInfo _clientTimeZoneInfo;
 
-        public WorkOrdersController(IWorkOrderService workOrderService, IWorkAssignmentService workAssignmentService,
+        public WorkOrdersController(IWorkOrderService workOrderService, ITenantService tenantService,
             IMapper map)
         {
-            this.serv = workOrderService;
-            this.waServ = workAssignmentService;
-            this.map = map;
+            _serv = workOrderService;
+            _map = map;
+            _clientTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(tenantService.GetCurrentTenant().Timezone);
         }
 
 
@@ -38,10 +39,13 @@ namespace Machete.Web.Controllers.Api
             vo.displayLength = 10;
             vo.displayStart = 0;
             vo.employerGuid = UserSubject;
-            dataTableResult<DTO.WorkOrdersList> list = serv.GetIndexView(vo);
+            dataTableResult<DTO.WorkOrdersList> list = _serv.GetIndexView(vo);
+            
+            MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
+            
             var result = list.query
                 .Select(
-                    e => map.Map<DTO.WorkOrdersList, Machete.Web.ViewModel.Api.WorkOrder>(e)
+                    e => _map.Map<DTO.WorkOrdersList, ViewModel.Api.WorkOrder>(e)
                 ).AsEnumerable();            
             return new JsonResult(new { data =  result });
         }
@@ -52,28 +56,30 @@ namespace Machete.Web.Controllers.Api
         [Route("{id}")]
         public ActionResult Get(int id)
         {
-            var result = map.Map<Domain.WorkOrder, WorkOrder>(serv.Get(id));
+            MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
+        
+            var result = _map.Map<Domain.WorkOrder, ViewModel.Api.WorkOrder>(_serv.Get(id));
             return new JsonResult(new { data = result });
         }
 
         // POST api/values
         [Authorize(Roles = "Administrator")]
         [HttpPost("")]
-        public void Post([FromBody]WorkOrder order)
+        public void Post([FromBody]ViewModel.Api.WorkOrder order)
         {
-            var domain = map.Map<WorkOrder, Domain.WorkOrder>(order);
-            serv.Save(domain, UserEmail);
+            var domain = _map.Map<ViewModel.Api.WorkOrder, Domain.WorkOrder>(order);
+            _serv.Save(domain, UserEmail);
         }
 
         // PUT api/values/5
         [Authorize(Roles = "Administrator")]
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]WorkOrder order)
+        public void Put(int id, [FromBody]ViewModel.Api.WorkOrder order)
         {
-            var domain = serv.Get(order.id);
+            var domain = _serv.Get(order.id);
             // TODO employers must only be able to edit their record
-            map.Map<WorkOrder, Domain.WorkOrder>(order, domain);
-            serv.Save(domain,UserEmail);
+            _map.Map<ViewModel.Api.WorkOrder, Domain.WorkOrder>(order, domain);
+            _serv.Save(domain,UserEmail);
         }
 
         // DELETE api/values/5

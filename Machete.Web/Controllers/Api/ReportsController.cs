@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Linq;
 using AutoMapper;
+using Machete.Data.Tenancy;
 using Machete.Service;
 using Machete.Web.Controllers.Api.Abstracts;
-using Machete.Web.ViewModel.Api;
+using Machete.Web.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,12 +14,16 @@ namespace Machete.Web.Controllers.Api
     [ApiController]
     public class ReportsController : MacheteApiController
     {
-        private readonly IReportsV2Service serv;
-        private readonly IMapper map;
-        public ReportsController(IReportsV2Service serv, IMapper map)
+        private readonly IReportsV2Service _serv;
+        private readonly IMapper _map;
+        private TimeZoneInfo _clientTimeZoneInfo;
+
+        public ReportsController(IReportsV2Service serv, ITenantService tenantService, IMapper map)
         {
-            this.serv = serv;
-            this.map = map;
+            _serv = serv;
+            _map = map;
+            
+            _clientTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(tenantService.GetCurrentTenant().Timezone);
         }
 
         // GET api/<controller>
@@ -28,8 +33,8 @@ namespace Machete.Web.Controllers.Api
         [Route("")]
         public ActionResult Get()
         {
-            var result = serv.getList()
-                .Select(a => map.Map<Domain.ReportDefinition, ViewModel.Api.ReportDefinition>(a));
+            var result = _serv.getList()
+                .Select(a => _map.Map<Domain.ReportDefinition, ViewModel.Api.ReportDefinition>(a));
 
             return new JsonResult( new { data = result } );
         }
@@ -44,7 +49,7 @@ namespace Machete.Web.Controllers.Api
         [Route("{id}")]
         public ActionResult Get(string id)
         {
-            var result = serv.Get(id);
+            var result = _serv.Get(id);
             return new JsonResult(new { data = result });
         }
 
@@ -58,12 +63,12 @@ namespace Machete.Web.Controllers.Api
             [FromQuery] int? memberNumber
         )
         {
-            endDate = endDate?.AddDays(1); // date passed by TS does not reflect desired range, and is of type string...
-            var result = serv.getQuery(
+            endDate = endDate?.AddDays(1); // date passed does not reflect desired range, and is of type string...
+            var result = _serv.getQuery(
                 new Service.DTO.SearchOptions {
                     idOrName = id,
-                    endDate = endDate,
-                    beginDate = beginDate,
+                    endDate = endDate.ToUtcDatetime(),
+                    beginDate = beginDate.ToUtcDatetime(),
                     dwccardnum = memberNumber
                 });
             return new JsonResult(new { data = result });
@@ -100,7 +105,7 @@ namespace Machete.Web.Controllers.Api
 //        }
         [Authorize(Roles = "Administrator")]
         [HttpPost("{data}")]
-        public void Post(ReportQuery data)
+        public void Post(ViewModel.Api.ReportQuery data)
         {
             // I commented this out due to security concerns for which I did not have time to test.
             // The functionality was never implemented in the UI.

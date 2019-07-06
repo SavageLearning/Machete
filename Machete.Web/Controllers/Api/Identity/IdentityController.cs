@@ -163,7 +163,6 @@ namespace Machete.Web.Controllers.Api.Identity
                 var redirectUri = $"{host}id/signin-google"; // TODO
                 var appSecret = _configuration["Authentication:Google:ClientSecret"];
 
-// TODO refactor; I apologize for the copy-paste code but we are out of time for auth
                 var content = new StringContent($@"
 {{
   ""code"": ""{viewModel.Code}"",
@@ -184,7 +183,6 @@ namespace Machete.Web.Controllers.Api.Identity
             return await Task.FromResult<IActionResult>(new RedirectResult(host.V2AuthorizationEndpoint()));
         }
 
-      //private
         private async Task SigninByEmailAsync(HttpResponseMessage tokenResponse, HttpClient httpClient, string provider, string redirectUri)
         {
             var tokenResponseContent = tokenResponse.Content.ReadAsStringAsync();

@@ -1,10 +1,9 @@
 ﻿using System.Linq;
 using AutoMapper;
 using Machete.Service;
-using Machete.Web.Helpers.Api;
+using Machete.Service.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using DTO = Machete.Service.DTO;
 
 namespace Machete.Web.Controllers.Api
 {
@@ -16,8 +15,7 @@ namespace Machete.Web.Controllers.Api
         private readonly IWorkAssignmentService serv;
         private readonly IMapper map;
 
-        public WorkAssignmentsController(IWorkAssignmentService employerService, IWorkOrderService workorderService,
-            IMapper map)
+        public WorkAssignmentsController(IWorkAssignmentService employerService, IMapper map)
         {
             this.serv = employerService;
             this.map = map;
@@ -31,10 +29,10 @@ namespace Machete.Web.Controllers.Api
             var vo = new viewOptions();
             vo.displayLength = 10;
             vo.displayStart = 0;
-            dataTableResult<DTO.WorkAssignmentsList> list = serv.GetIndexView(vo);
+            dataTableResult<WorkAssignmentsList> list = serv.GetIndexView(vo);
             var result = list.query
                 .Select(
-                    e => map.Map<DTO.WorkAssignmentsList, Machete.Web.ViewModel.Api.WorkAssignment>(e)
+                    e => map.Map<WorkAssignmentsList, Machete.Web.ViewModel.Api.WorkAssignment>(e)
                 ).AsEnumerable();
             return new JsonResult(new { data =  result });
         }

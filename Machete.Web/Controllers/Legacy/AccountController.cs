@@ -25,11 +25,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Machete.Data;
 using Machete.Data.Identity;
 using Machete.Service;
 using Machete.Web.Helpers;
+using Machete.Web.Helpers.Api;
 using Machete.Web.Resources;
 using Machete.Web.ViewModel;
 using Microsoft.AspNetCore.Authorization;
@@ -131,6 +133,8 @@ namespace Machete.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                await VerifyClaimsExistFor(model.UserName);
+
                 var result = await _signinManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
                 
                 if (result?.Succeeded == true)
@@ -478,6 +482,22 @@ namespace Machete.Web.Controllers
         {
             await _signinManager.SignOutAsync();
             return RedirectToAction("Login", "Account");
+        }
+        
+        //https://www.c-sharpcorner.com/article/claim-based-and-policy-based-authorization-with-asp-net-core-2-1/
+        private async Task VerifyClaimsExistFor(string username)
+        {
+            // They are probably using an email, but not necessarily. Either way, it should be "username" in the db.
+            var user = await _userManager.FindByNameAsync(username);
+            
+            var claims = await _userManager.GetClaimsAsync(user);
+            var claimsList = claims.Select(claim => claim.Type).ToList();
+            
+            if (!claimsList.Contains(CAType.nameidentifier))
+                await _userManager.AddClaimAsync(user, new Claim(CAType.nameidentifier, user.Id));           
+            if (!claimsList.Contains(CAType.email))
+                await _userManager.AddClaimAsync(user, new Claim(CAType.email, user.Email));
+            // In the above we use the user.Email regardless of UserName. TODO inform them if a discrepancy exists.
         }
 
         public enum ManageMessageId

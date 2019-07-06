@@ -4,15 +4,16 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using AutoMapper;
+using Machete.Data.Tenancy;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Controllers.Api.Abstracts;
+using Machete.Web.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Authenticators;
-using WorkOrder = Machete.Web.ViewModel.Api.WorkOrder;
 
 namespace Machete.Web.Controllers.Api
 {
@@ -27,6 +28,8 @@ namespace Machete.Web.Controllers.Api
         private readonly string paypalId;
         private readonly string paypalSecret;
         private readonly string paypalUrl;
+        private TimeZoneInfo _clientTimeZoneInfo;
+        private TimeZoneInfo _serverTimeZoneInfo;
 
         private Employer Employer => eServ.Get(guid: UserSubject) ??
             throw new MacheteNullObjectException($"Not found: employer record; no employer record associated with claim {UserSubject}");
@@ -35,6 +38,7 @@ namespace Machete.Web.Controllers.Api
             IOnlineOrdersService serv, 
             IEmployerService eServ,
             IWorkOrderService woServ,
+            ITenantService tenantService,
             IMapper map,
             IConfigService cServ)
         {
@@ -46,6 +50,9 @@ namespace Machete.Web.Controllers.Api
             paypalId = cServ.getConfig(Cfg.PaypalId);
             paypalSecret = cServ.getConfig(Cfg.PaypalSecret);
             paypalUrl = cServ.getConfig(Cfg.PaypalUrl);
+            
+            _clientTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(tenantService.GetCurrentTenant().Timezone);
+            _serverTimeZoneInfo = TimeZoneInfo.Local;
         }
 
         // GET: api/onlineorders
@@ -60,9 +67,12 @@ namespace Machete.Web.Controllers.Api
             vo.employerGuid = UserSubject;
             vo.CI = Thread.CurrentThread.CurrentCulture;
             dataTableResult<Service.DTO.WorkOrdersList> list = woServ.GetIndexView(vo);
+            
+            MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
+            
             var result = list.query
                 .Select(
-                    e => map.Map<Service.DTO.WorkOrdersList, Machete.Web.ViewModel.Api.WorkOrder>(e)
+                    e => map.Map<Service.DTO.WorkOrdersList, ViewModel.Api.WorkOrder>(e)
                 ).AsEnumerable();
             return new JsonResult(new { data = result });
         }
@@ -149,13 +159,10 @@ namespace Machete.Web.Controllers.Api
                 woServ.Save(order, UserEmail);
             }
 
-            var result = postExecute(data); // TODO fix
-            //var payment = JsonConvert.DeserializeObject<PayPal.Api.Payment>(result);
+            var result = postExecute(data);
             order.ppResponse = result;
-            //order.ppState = payment.state;
-            //order.ppFee = Double.Parse(payment.transactions.Single().amount.total);
             woServ.Save(order, UserEmail);
-            return new JsonResult(new { thingIs = "You seriously need to fix this." });//payment);
+            return new JsonResult(result);
         }
 
         [NonAction]
