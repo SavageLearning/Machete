@@ -8,7 +8,7 @@ version: '1.14.{build}'
 #  only:
 #  except:
 
-#skip_tags: false
+skip_tags: true
 #skip_non_tags: false
 #skip_commits:
 #only_commits
