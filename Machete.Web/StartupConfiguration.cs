@@ -11,6 +11,7 @@ using Machete.Data.Infrastructure;
 using Machete.Data.Initialize;
 using Machete.Data.Repositories;
 using Machete.Data.Tenancy;
+using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Controllers.Api.Abstracts;
 using Machete.Web.Helpers;
@@ -22,6 +23,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -355,5 +358,23 @@ EXEC sp_addrolemember 'db_datareader', 'readonlyuser';
         /// A static configuration object representing the computed string value "Resources".
         /// </summary>
         public static string ResourcesFolder => "Resources";
+
+        public static MvcOptions SuppressChildValidationForOneToManyRelationships(this MvcOptions options)
+        {
+            options
+                .AddModelMetadataDetailsProviderFor(typeof(WorkOrder)) // Employer::WorkOrder
+                .AddModelMetadataDetailsProviderFor(typeof(WorkAssignment)) // WorkOrder::WorkAssignment (also, Worker)
+                .AddModelMetadataDetailsProviderFor(typeof(WorkerSignin)) // Worker::WorkerSignin
+                .AddModelMetadataDetailsProviderFor(typeof(Event)) // Worker::Event
+                .AddModelMetadataDetailsProviderFor(typeof(Image)) // Event::Image
+                .AddModelMetadataDetailsProviderFor(typeof(ActivitySignin)); // Activity::ActivitySignin (also, Worker)
+            return options;
+        }
+
+        public static MvcOptions AddModelMetadataDetailsProviderFor(this MvcOptions options, Type type)
+        {
+            options.ModelMetadataDetailsProviders.Add(new SuppressChildValidationMetadataProvider(type));
+            return options;
+        }
     }
 }

@@ -79,14 +79,8 @@ namespace Machete.Web
             services.AddMvc(options =>
             {
                 options.MaxValidationDepth = 8; // if there is a recursive error, don't go crazy
-                options.ModelMetadataDetailsProviders
-                    .Add(new SuppressChildValidationMetadataProvider(typeof(WorkOrder)));
-                options.ModelMetadataDetailsProviders
-                    .Add(new SuppressChildValidationMetadataProvider(typeof(WorkAssignment)));
-                options.ModelMetadataDetailsProviders
-                    .Add(new SuppressChildValidationMetadataProvider(typeof(WorkerSignin)));
-                    options.ModelMetadataDetailsProviders
-                    .Add(new SuppressChildValidationMetadataProvider(typeof(ActivitySignin)));
+                options.SuppressChildValidationForOneToManyRelationships();
+                
                 // options.Filters.Add(new AuthorizeFilter()); }) // <~ for JWT auth                    
             })
             .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver())
