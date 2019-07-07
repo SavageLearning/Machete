@@ -265,8 +265,8 @@ namespace Machete.Data.Identity
                 _dataContext.UserRoles.FirstOrDefault(userRole => userRole.RoleId == identityRole.Id && userRole.UserId == user.Id);
 
             _userRoles.Remove(identityUserRole);
-
-            _users.Update(user);
+            
+            _dataContext.SaveChanges();
             
             return Task.CompletedTask;
         }
