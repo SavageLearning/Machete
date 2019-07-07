@@ -434,11 +434,10 @@ namespace Machete.Web.Controllers
         public ActionResult UserRoles(string id)
         {
             var userBeingModified = _context.Users.First(u => u.Id == id);
-            List<MacheteRole> allRoles = _roleManager.Roles.ToList();
+            List<MacheteRole> allRoles = _roleManager.Roles.Where(role => role.NormalizedName != "HIRER").ToList();
             return View(new SelectUserRolesViewModel(userBeingModified, allRoles, _userManager));
         }
 
-        // note to self 2019-01-18; this part is working, don't touch it.
         [HttpPost]
         [Authorize(Roles = "Administrator, Manager")]
         [ValidateAntiForgeryToken]
