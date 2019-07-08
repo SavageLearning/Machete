@@ -39,13 +39,13 @@ environment:
   MSBUILDDISABLENODEREUSE: 1
   DOCKER_PASSWORD:
     secure: q4kZwveA7LCpRBLmWNpf5Q==
+  GIT_TOKEN:
+    secure: WoIqsKHZzodqR8cN62TpxSR7mnTUBy5gGp+xD6VBCwxUnVO4QmWzM/XPXclqM6ie
 
 #matrix: [...]
 #cache:
-
 #services:
 #  - mssql2014
-
 stack:
   - node 12
 
@@ -58,9 +58,7 @@ install:
   - docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=passw0rD!' --network machete-bridge -p 1433:1433 --name sqlserver -d mcr.microsoft.com/mssql/server
 
 #assembly_info: (change assembly values, e.g., visibility)
-
 #nuget: (custom feed)
-
 platform: Any CPU
 
 configuration:
@@ -68,7 +66,6 @@ configuration:
 
 # MSBuild settings; NOT a build step
 #build: 
-
 # dotnet build includes restore
 before_build:
   - sh: node --version
@@ -82,24 +79,21 @@ before_build:
   - sh: sed -i "s/APPVEYOR_VERSION/$APPVEYOR_BUILD_VERSION/" "./Machete.Web/Views/Home/Index.cshtml"
   - sh: dotnet build
 
-# (THIS is the build step)
+# THIS is the build step
 build_script:
   - sh: dotnet test Machete.Test
 
 after_build:
-  - sh: cd Machete.Web
-  - sh: dotnet publish -o published
-  - sh: cd ..
+  - sh: cd Machete.Web && dotnet publish -o published && cd ..
   - sh: if [ $APPVEYOR_REPO_BRANCH == 'master' ]; then docker build -t ndlonmachete/debian:$APPVEYOR_BUILD_VERSION .; fi
   - sh: if [ $APPVEYOR_REPO_BRANCH != 'master' ]; then docker build -t ndlonmachete/debian:$APPVEYOR_BUILD_VERSION-beta .; fi
   - sh: docker images
   - sh: docker login -u chaim1221 -p "$DOCKER_PASSWORD"
   - sh: if [ $APPVEYOR_REPO_BRANCH == 'master' ]; then docker push ndlonmachete/debian:$APPVEYOR_BUILD_VERSION; fi
   - sh: if [ $APPVEYOR_REPO_BRANCH != 'master' ]; then docker push ndlonmachete/debian:$APPVEYOR_BUILD_VERSION-beta; fi
+  - sh: if [ $APPVEYOR_REPO_BRANCH == 'master' ]; then cd github && node github.js create-machete-release && cd ..; fi
 
 #before_package:
-
-# This may make it unnecessary to split up Machete.Test; TODO try it out
 #test:
 #  assemblies:
 #    only:
@@ -109,11 +103,9 @@ after_build:
 #    only:
 #      - UI
 #      - E2E
-
 #before_test:
 #test_script:
 #after_test:
-
 #artifacts:
 #deploy:
 #before_deploy:
@@ -125,6 +117,7 @@ after_build:
 notifications:
   - provider: Slack
     incoming_webhook: https://hooks.slack.com/services/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
+
 # ...or using auth token
 # - provider: Slack
 #   auth_token:

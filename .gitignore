@@ -65,3 +65,5 @@ Machete\.Web/Content/Machete\.min\.css
 Machete\.Web/Published
 
 machete1env.list
+
+node_modules/
