@@ -91,7 +91,7 @@ after_build:
   - sh: docker login -u chaim1221 -p "$DOCKER_PASSWORD"
   - sh: if [ $APPVEYOR_REPO_BRANCH == 'master' ]; then docker push ndlonmachete/debian:$APPVEYOR_BUILD_VERSION; fi
   - sh: if [ $APPVEYOR_REPO_BRANCH != 'master' ]; then docker push ndlonmachete/debian:$APPVEYOR_BUILD_VERSION-beta; fi
-  - sh: if [ $APPVEYOR_REPO_BRANCH == 'master' ]; then cd github && node github.js create-machete-release && cd ..; fi
+  - sh: if [ $APPVEYOR_REPO_BRANCH == 'master' ]; then cd github && npm install && node github.js create-machete-release && cd ..; fi
 
 #before_package:
 #test:
