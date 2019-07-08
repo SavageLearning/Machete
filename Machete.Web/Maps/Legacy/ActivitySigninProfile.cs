@@ -36,9 +36,7 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.dwccardnum, opt => opt.MapFrom(d => Convert.ToString(d.dwccardnum)))
                 .ForMember(v => v.expirationDate, opt => opt.MapFrom(d=> d.expirationDate.ToShortDateString()))
                 .ForMember(v => v.memberStatus, opt => opt.MapFrom(d => getCI() == "ES" ? d.memberStatusES : d.memberStatusEN))
-                .ForMember(v => v.dateforsignin, opt => opt.MapFrom(d =>
-                    d.dateforsignin.UtcToClient().ToShortDateString()
-                ))
+                .ForMember(v => v.dateforsignin, opt => opt.MapFrom(d => d.dateforsignin.UtcToClientString()))
                 .ForMember(v => v.memberInactive, opt => opt.MapFrom(d => d.memberStatusID == Domain.Worker.iInactive))
                 .ForMember(v => v.memberExpelled, opt => opt.MapFrom(d => d.memberStatusID == Domain.Worker.iExpelled))
                 .ForMember(v => v.memberExpired, opt => opt.MapFrom(d => d.memberStatusID == Domain.Worker.iExpired))

@@ -25,6 +25,7 @@ using Machete.Domain;
 using Machete.Web;
 using Machete.Web.Helpers;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Machete.Web.ViewModel
@@ -83,5 +84,7 @@ namespace Machete.Web.ViewModel
         [Helpers.LocalizedDisplayName("stopDate", NameResourceType = typeof(Resources.ActivitySchedule))]
         [Required(ErrorMessageResourceName = "dateEndrequired", ErrorMessageResourceType = typeof(Resources.ActivitySchedule))]
         public DateTime stopDate { get; set; }
+
+        public IList<string> teachers { get; set; }
     }
 }

@@ -28,8 +28,7 @@ namespace Machete.Web.Controllers.Api
         private readonly string paypalId;
         private readonly string paypalSecret;
         private readonly string paypalUrl;
-        private TimeZoneInfo _clientTimeZoneInfo;
-        private TimeZoneInfo _serverTimeZoneInfo;
+        private readonly TimeZoneInfo _clientTimeZoneInfo;
 
         private Employer Employer => eServ.Get(guid: UserSubject) ??
             throw new MacheteNullObjectException($"Not found: employer record; no employer record associated with claim {UserSubject}");
@@ -52,7 +51,6 @@ namespace Machete.Web.Controllers.Api
             paypalUrl = cServ.getConfig(Cfg.PaypalUrl);
             
             _clientTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(tenantService.GetCurrentTenant().Timezone);
-            _serverTimeZoneInfo = TimeZoneInfo.Local;
         }
 
         // GET: api/onlineorders

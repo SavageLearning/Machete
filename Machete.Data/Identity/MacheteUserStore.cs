@@ -291,17 +291,15 @@ namespace Machete.Data.Identity
             return Task.FromResult(userRole != null);
         }
 
-        public async Task<IList<MacheteUser>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
+        public Task<IList<MacheteUser>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
         {
-            IList<MacheteUser> macheteUsers = new List<MacheteUser>();
+            var userRole = _roles.FirstOrDefault(role => role.Name == roleName);
+            
+            var userIDs = _userRoles.Where(joinTable => joinTable.RoleId == userRole.Id).Select(joinTable => joinTable.UserId);
+            
+            IList<MacheteUser> macheteUsers = _users.Where(user => userIDs.Contains(user.Id)).ToList();
 
-            foreach (var user in _users)
-            {
-                var condition = await IsInRoleAsync(user, roleName, cancellationToken);
-                if (condition) macheteUsers.Add(user);
-            }
-
-            return macheteUsers;
+            return Task.FromResult(macheteUsers);
         }
 
         public Task SetEmailAsync(MacheteUser user, string email, CancellationToken cancellationToken)

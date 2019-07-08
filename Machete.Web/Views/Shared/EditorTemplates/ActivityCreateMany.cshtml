@@ -64,7 +64,7 @@
         </div>
         <div class="tb-field">
             @Html.DropDownListFor(model => model.teacher, 
-                new SelectList(await Model.def.getTeachers(), Model.teacher),
+                new SelectList(Model.teachers, Model.teacher),
                 Shared.choose, new { tabindex = "1", id = idPrefix + "teacher" })
         </div>
     </div>

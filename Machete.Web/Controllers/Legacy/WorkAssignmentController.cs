@@ -90,16 +90,12 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
-            if (param.todaysdate != null) {
-                var clientDate = DateTime.Parse(param.todaysdate);
-                var utcDate = TimeZoneInfo.ConvertTimeToUtc(clientDate, _clientTimeZoneInfo);
-                param.todaysdate = utcDate.ToString(CultureInfo.InvariantCulture);
-            }
+            MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
+
             //Get all the records
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             dataTableResult<WorkAssignmentsList> was = waServ.GetIndexView(vo);
 
-            MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
             var result = was.query
                 .Select(e => map.Map<WorkAssignmentsList, ViewModel.WorkAssignmentsList>(e))
                 .AsEnumerable();

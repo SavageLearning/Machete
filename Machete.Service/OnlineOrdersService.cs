@@ -1,11 +1,7 @@
-using AutoMapper;
-using Machete.Data.Infrastructure;
 using Machete.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Machete.Service
 {
@@ -18,29 +14,21 @@ namespace Machete.Service
 
     public class OnlineOrdersService : IOnlineOrdersService
     {
-        private readonly IMapper map;
         private readonly IWorkOrderService woserv;
-        private readonly IWorkAssignmentService waserv;
         private readonly ITransportRuleService trServ;
         private readonly ITransportProvidersService tpServ;
-        private readonly ILookupService lServ;
 
 
         public OnlineOrdersService(
             IWorkOrderService woServ,
-            IWorkAssignmentService waServ,
             ITransportRuleService trServ,
-            ITransportProvidersService tpServ,
-            ILookupService lServ,
-            IMapper map)
+            ITransportProvidersService tpServ
+        )
         {
-            this.map = map;
             //this.eserv = eServ;
             this.woserv = woServ;
-            this.waserv = waServ;
             this.trServ = trServ;
             this.tpServ = tpServ;
-            this.lServ = lServ;
         }
 
         public WorkOrder Get(int id)
@@ -110,12 +98,6 @@ namespace Machete.Service
                 if (wa.transportCost != costRule.cost)
                     throw new MacheteValidationException("Unexpected transport cost from client");
             }
-
-            return true;
-        }
-
-        public bool validateSkillsRules(WorkOrder order)
-        {
 
             return true;
         }

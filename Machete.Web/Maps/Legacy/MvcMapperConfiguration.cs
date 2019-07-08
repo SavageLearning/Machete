@@ -42,8 +42,7 @@ namespace Machete.Web.Maps
                 .ForMember(vo => vo.sortColName, opt => opt.MapFrom(dt => dt.sortColName()))
                 .ForMember(vo => vo.dwccardnum, opt => opt.MapFrom(dt => Convert.ToInt32(dt.dwccardnum)))
                 .ForMember(vo => vo.woid, opt => opt.MapFrom(dt => Convert.ToInt32(dt.searchColName("WOID"))))
-                .ForMember(vo => vo.date,
-                    opt => opt.MapFrom(dt => dt.todaysdate == null ? null : (DateTime?) DateTime.Parse(dt.todaysdate)))
+                .ForMember(vo => vo.date, opt => opt.MapFrom(dt => MapperHelpers.DataTablesToUtc(dt.todaysdate)))
                 .ForMember(vo => vo.displayStart, opt => opt.MapFrom(dt => dt.iDisplayStart))
                 .ForMember(vo => vo.displayLength, opt => opt.MapFrom(dt => dt.iDisplayLength))
                 .ForMember(vo => vo.orderDescending, opt => opt.MapFrom(dt => dt.sSortDir_0 != "asc"));

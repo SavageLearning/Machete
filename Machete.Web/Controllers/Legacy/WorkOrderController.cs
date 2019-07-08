@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -101,6 +102,12 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult AjaxSummary(jQueryDataTableParam param)
         {
+            if (param.todaysdate != null) {
+                var clientDate = DateTime.Parse(param.todaysdate);
+                var utcDate = TimeZoneInfo.ConvertTimeToUtc(clientDate, _clientTimeZoneInfo);
+                param.todaysdate = utcDate.ToString(CultureInfo.InvariantCulture);
+            }
+
             // Retrieve WO/WA Summary based on parameters
             dataTableResult<WOWASummary> dtr = 
                 _woServ.CombinedSummary(param.sSearch,
@@ -144,11 +151,12 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
+            MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
+
             var vo = _map.Map<jQueryDataTableParam, viewOptions>(param);
             //Get all the records
             var dataTableResult = _woServ.GetIndexView(vo);
 
-            MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
             var result = dataTableResult.query
                 .Select(
                     e => _map.Map<WorkOrdersList, ViewModel.WorkOrdersList>(e)
@@ -169,10 +177,8 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Create(int employerId)
         {
-            var serverNow = DateTime.Now;
-            var utcNow = TimeZoneInfo.ConvertTimeToUtc(serverNow, _serverTimeZoneInfo);
-            //var clientNow = TimeZoneInfo.ConvertTimeFromUtc(utcNow, _clientTimeZoneInfo);
-            
+            var utcNow = DateTime.UtcNow;
+
             var workOrder = new WorkOrder
             {
                 EmployerID = employerId,

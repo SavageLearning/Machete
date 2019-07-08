@@ -61,15 +61,19 @@ namespace Machete.Domain
         public Email()
         {
             statusID = Email.iPending;
-            WorkOrders = new JoinCollectionFacade<WorkOrder, EmailWorkOrder>(
-                EmailWorkOrders,
-                woe => woe.WorkOrder,
-                wo => new EmailWorkOrder { Email = this, WorkOrder = wo }
-            );
         }
 
         public virtual ICollection<EmailWorkOrder> EmailWorkOrders { get; } = new List<EmailWorkOrder>();
-        [NotMapped] public ICollection<WorkOrder> WorkOrders { get; }
+        [NotMapped] public ICollection<WorkOrder> WorkOrders {
+            get
+            {
+                return new JoinCollectionFacade<WorkOrder, EmailWorkOrder>(
+                    EmailWorkOrders,
+                    woe => woe.WorkOrder,
+                    wo => new EmailWorkOrder { Email = this, WorkOrder = wo }
+                );
+            }
+        }
 
         [StringLength(50)]
         public string emailFrom { get; set; }

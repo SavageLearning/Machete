@@ -27,7 +27,6 @@ using Machete.Domain;
 using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -44,8 +43,10 @@ namespace Machete.Service
         #region SIGNINS
         public static void diffDays<T>(viewOptions o, ref IQueryable<T> q) where T : Signin
         {
-            q = q.Where(p => DbFunctions.DiffDays(p.dateforsignin, (DateTime)o.date) == 0);
+            // good intentions marinated in panic
+            q = q.Where(p => p.dateforsignin.Date == o.date.Value.Date);
         }
+        
         public static void search(viewOptions o, ref IQueryable<WorkerSignin> q)
         {
             q = q.Where(wsi => wsi.dwccardnum.ToString().Contains(o.sSearch) ||
@@ -55,16 +56,7 @@ namespace Machete.Service
                             wsi.worker.Person.lastname2.ToUpper().Contains(o.sSearch.ToUpper())
                             );
         }
-        public static void search<T>(viewOptions o, ref IEnumerable<T> e, IEnumerable<Worker> wcache) where T : Signin
-        {
-            e = e.Join(wcache, s => s.dwccardnum, w => w.dwccardnum, (s, w) => new { s, w })
-                .Where(p => p.w.dwccardnum.ToString().ContainsOIC(o.sSearch) ||
-                            p.w.Person.firstname1.ContainsOIC(o.sSearch) ||
-                            p.w.Person.firstname2.ContainsOIC(o.sSearch) ||
-                            p.w.Person.lastname1.ContainsOIC(o.sSearch) ||
-                            p.w.Person.lastname2.ContainsOIC(o.sSearch))
-                .Select(a => a.s);
-        }
+
         public static void dwccardnum<T>(viewOptions o, ref IQueryable<T> q) where T : Signin
         {
             q = q.Where(wsi => wsi.dwccardnum == o.dwccardnum)
@@ -138,20 +130,20 @@ namespace Machete.Service
                     .Where(jj => jj.sk.typeOfWorkID == o.typeofwork_grouping)
                     .Select(jj => jj.wa);
         }
-        public static void diffDays(viewOptions o, ref IQueryable<WorkAssignment> q)
+        public static void diffDays(DateTime date, ref IQueryable<WorkAssignment> q)
         {
             DateTime sunday;
-            if (o.date.Value.DayOfWeek == DayOfWeek.Saturday)
+            if (date.DayOfWeek == DayOfWeek.Saturday)
             {
-                sunday = o.date.Value.AddDays(1);
+                sunday = date.AddDays(1);
                 q = q.Where(p => 
-                    DbFunctions.DiffDays(p.workOrder.dateTimeofWork, (DateTime)o.date) == 0
-                 || DbFunctions.DiffDays(p.workOrder.dateTimeofWork, sunday) == 0
+                    p.workOrder.dateTimeofWork.Date >= date.Date
+                 && p.workOrder.dateTimeofWork.Date <= sunday.Date
                 );
             }
             else
             {
-                q = q.Where(p => DbFunctions.DiffDays(p.workOrder.dateTimeofWork, (DateTime)o.date) == 0);
+                q = q.Where(p => p.workOrder.dateTimeofWork.Date == date.Date);
             }
         }
         public static void WOID(viewOptions o, ref IQueryable<WorkAssignment> q)
@@ -172,7 +164,6 @@ namespace Machete.Service
         }
         public static void waGrouping(viewOptions o, ref IQueryable<WorkAssignment> q, ILookupRepository lRepo)
         {
-            //var completedID = LookupCache.getByKeys(LCategory.orderstatus, LOrderStatus.Completed);
             switch (o.wa_grouping)
             {
                 case "open": q = q.Where(p => p.workerAssignedID == null 

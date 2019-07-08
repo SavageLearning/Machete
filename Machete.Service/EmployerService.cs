@@ -26,7 +26,6 @@ using AutoMapper.QueryableExtensions;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Machete.Service

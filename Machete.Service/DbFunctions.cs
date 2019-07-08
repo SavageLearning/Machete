@@ -7,11 +7,6 @@ namespace Machete.Service
     /// </summary>
     public static class DbFunctions
     {
-        public static int DiffMinutes(DateTime userDate, DateTime recordDate)
-        {
-            return (userDate - recordDate).Minutes;
-        }
-        
         public static int DiffHours(DateTime userDate, DateTime recordDate)
         {
             return (userDate - recordDate).Hours;

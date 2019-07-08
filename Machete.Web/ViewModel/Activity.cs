@@ -66,6 +66,8 @@ namespace Machete.Web.ViewModel
         [LocalizedDisplayName("notes", NameResourceType = typeof(Resources.Activity))]
         [StringLength(4000, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Activity))]
         public string notes { get; set; }
+        
+        public IList<string> teachers { get; set; }
     }
 
     public class ActivityList

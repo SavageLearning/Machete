@@ -27,7 +27,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using Machete.Data.Identity;
 using Machete.Domain;
 using Machete.Service;
@@ -62,7 +61,6 @@ namespace Machete.Web.Helpers
         SelectList hours();
         SelectList skillLevels();
         List<SelectListItem> yesnoSelectList();
-        Task<IEnumerable<string>> getTeachers();
         string getConfig(string key);
     }
 
@@ -245,12 +243,6 @@ namespace Machete.Web.Helpers
             return cfgServ.getConfig(key);
         }
 
-        public async Task<IEnumerable<string>> getTeachers()
-        {
-            var teachers = await _userManager.GetUsersInRoleAsync("Teacher");
-            var result = teachers.Select(teach => $"{teach.UserName}"); // TODO people are increasingly using emails; this creates a confusing interface
-            return result;
-        }
         /// <summary>
         /// Get the SelectList for the specified lookup/category type.
         /// </summary>

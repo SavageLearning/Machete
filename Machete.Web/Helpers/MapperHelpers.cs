@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using Machete.Domain;
 using Machete.Service.DTO;
@@ -8,7 +9,14 @@ namespace Machete.Web.Helpers
     internal static class MapperHelpers
     {
         public static TimeZoneInfo ClientTimeZoneInfo { get; set; }
+        
         public static IDefaults Defaults { get; set; }
+        
+        public static IList<string> UserNames { get; set; }
+        
+        public static DateTime StartDate { get; set; }
+        
+        public static DateTime EndDate { get; set; }
 
         public static DateTime UtcToClient(this DateTime date) =>
             TimeZoneInfo.ConvertTimeFromUtc(date, ClientTimeZoneInfo);
@@ -22,6 +30,13 @@ namespace Machete.Web.Helpers
         public static DateTime ClientToUtc(this DateTime date) =>
             TimeZoneInfo.ConvertTimeToUtc(date, ClientTimeZoneInfo);            
         
+        public static DateTime? DataTablesToUtc(string date)
+        {
+            if (string.IsNullOrEmpty(date)) return null;
+            var dateTime = (DateTime?) DateTime.Parse(date);
+            return dateTime.ToUtcDatetime();
+        }
+
         public static DateTime ToUtcDateTime(this string dateString) => 
             DateTime.SpecifyKind(Convert.ToDateTime(dateString), DateTimeKind.Unspecified).ClientToUtc();
 

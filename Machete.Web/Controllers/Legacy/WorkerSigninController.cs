@@ -122,15 +122,12 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Check-in")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
-            var clientdate = DateTime.Parse(param.todaysdate); // name misleading; selected date
-            var utcdate = TimeZoneInfo.ConvertTimeToUtc(clientdate, _clientTimeZoneInfo);
-            param.todaysdate = utcdate.ToString(CultureInfo.InvariantCulture);
-
+            MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
+            
             var vo = _map.Map<jQueryDataTableParam, viewOptions>(param);
 
             dataTableResult<WorkerSigninList> was = _serv.GetIndexView(vo);
 
-            MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
             var result = was.query
                 .Select(e => _map.Map<WorkerSigninList, ViewModel.WorkerSigninList>(e))
                 .ToList();

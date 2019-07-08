@@ -91,7 +91,7 @@ namespace Machete.Service
             IQueryable<WorkAssignment> q = waRepo.GetAllQ();
             //
             // 
-            if (o.date != null) IndexViewBase.diffDays(o, ref q);
+            if (o.date != null) IndexViewBase.diffDays((DateTime) o.date, ref q);
             if (o.typeofwork_grouping > 0) IndexViewBase.typeOfWork(o, ref q, lRepo);
             if (o.woid > 0) IndexViewBase.WOID(o, ref q);
             if (o.personID > 0) IndexViewBase.WID(o, ref q);

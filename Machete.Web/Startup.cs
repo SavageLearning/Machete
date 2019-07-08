@@ -6,7 +6,6 @@ using System.Security.Cryptography;
 using AutoMapper;
 using Machete.Data;
 using Machete.Data.Tenancy;
-using Machete.Domain;
 using Machete.Web.Maps;
 using Machete.Web.Maps.Api;
 using Microsoft.AspNetCore.Builder;
@@ -15,15 +14,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using WorkerSignin = Machete.Web.ViewModel.WorkerSignin;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -76,6 +74,7 @@ namespace Machete.Web
 
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/localization?view=aspnetcore-2.2#configure-localization
             // https://github.com/aspnet/AspNetCore/issues/6332
+            // https://stackoverflow.com/questions/34753498/self-referencing-loop-detected-in-asp-net-core
             services.AddMvc(options =>
             {
                 options.MaxValidationDepth = 8; // if there is a recursive error, don't go crazy
@@ -83,7 +82,11 @@ namespace Machete.Web
                 
                 // options.Filters.Add(new AuthorizeFilter()); }) // <~ for JWT auth                    
             })
-            .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver())
+            .AddJsonOptions(options =>
+            {
+                options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            })
             .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
             .AddDataAnnotationsLocalization()
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);

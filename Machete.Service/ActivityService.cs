@@ -36,7 +36,7 @@ namespace Machete.Service
 {
     public interface IActivityService : IService<Activity>
     {
-        dataTableResult<ActivityList> GetIndexView(viewOptions o, string culture);
+        dataTableResult<ActivityList> GetIndexView(viewOptions o);
         void AssignList(int personID, List<int> actList, string user);
         void UnassignList(int personID, List<int> actList, string user);
     }
@@ -80,7 +80,7 @@ namespace Machete.Service
             record.typeES = lookupTextByID(record.typeID, "ES");
         }
 
-        public dataTableResult<ActivityList> GetIndexView(viewOptions o, string culture)
+        public dataTableResult<ActivityList> GetIndexView(viewOptions o)
         {
             var result = new dataTableResult<DTO.ActivityList>();
             IQueryable<Activity> q = dbset.AsNoTracking();

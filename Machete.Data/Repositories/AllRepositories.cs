@@ -27,7 +27,6 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text;
-using Machete.Data.Identity;
 
 namespace Machete.Data
 {
