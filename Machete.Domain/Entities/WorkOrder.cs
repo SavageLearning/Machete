@@ -89,9 +89,8 @@ namespace Machete.Domain
         [StringLength(12)]
         [Required, RegularExpression(@"^$|^[\d]{3,3}-[\d]{3,3}-[\d]{4,4}$")]
         public string phone { get; set; }
+
         // Work program (e.g. HHH, DWC, etc)
-        // TODO: investigate deleting this - it doesn't appear in the WO interface
-        //[Required]
         public int typeOfWorkID { get; set; }
         // Flag indicating if english is required for at least one worker
         public bool englishRequired { get; set; }

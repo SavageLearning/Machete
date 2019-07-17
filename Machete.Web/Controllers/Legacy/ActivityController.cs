@@ -29,7 +29,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Machete.Data.Identity;
 using Machete.Data.Tenancy;
-using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Helpers;
 using Machete.Web.ViewModel;

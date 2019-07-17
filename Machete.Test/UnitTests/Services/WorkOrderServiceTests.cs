@@ -28,8 +28,10 @@ using System.Linq;
 using AutoMapper;
 using Machete.Data;
 using Machete.Data.Infrastructure;
+using Machete.Data.Tenancy;
 using Machete.Domain;
 using Machete.Service;
+using Machete.Test.UnitTests.Controllers.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -52,6 +54,7 @@ namespace Machete.Test.UnitTests.Services
         Mock<ITransportProvidersService> _tpServ;
         WorkOrderService _serv;
         string user;
+        Mock<ITenantService> _tenantService;
 
         public WorkOrderServiceTests()
         {
@@ -90,7 +93,11 @@ namespace Machete.Test.UnitTests.Services
             _lRepo = new Mock<ILookupRepository>();
             _cfg = new Mock<IConfigService>();
             _tpServ = new Mock<ITransportProvidersService>();
-            _serv = new WorkOrderService(_repo.Object, _waServ.Object, _tpServ.Object, _wrServ.Object, _wServ.Object, _lRepo.Object, _uow.Object, _map.Object, _cfg.Object );
+            _tenantService = new Mock<ITenantService>();
+            
+            _tenantService.Setup(service => service.GetCurrentTenant()).Returns(UnitTestExtensions.TestingTenant);
+            
+            _serv = new WorkOrderService(_repo.Object, _waServ.Object, _tpServ.Object, _wrServ.Object, _wServ.Object, _lRepo.Object, _uow.Object, _map.Object, _cfg.Object, _tenantService.Object);
             user = "UnitTest";
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
@@ -139,7 +146,18 @@ namespace Machete.Test.UnitTests.Services
             _lRepo.Setup(r => r.GetById(It.IsAny<int>())).Returns(_l);
             _tpServ.Setup(r => r.Get(It.IsAny<int>())).Returns(_tp);
 
-            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _tpServ.Object, _wrServ.Object, _wServ.Object, _lRepo.Object, _uow.Object, _map.Object, _cfg.Object);
+            var _serv = new WorkOrderService(
+                _repo.Object, 
+                _waServ.Object, 
+                _tpServ.Object, 
+                _wrServ.Object, 
+                _wServ.Object, 
+                _lRepo.Object, 
+                _uow.Object, 
+                _map.Object, 
+                _cfg.Object, 
+                _tenantService.Object
+            );
             //
             //Act
             var result = _serv.Create(_wo, user);
@@ -167,7 +185,7 @@ namespace Machete.Test.UnitTests.Services
             _repo.Setup(r => r.Delete(It.IsAny<WorkOrder>())).Callback((WorkOrder p) => { dp = p; });
             _repo.Setup(r => r.GetById(id)).Returns(_wo);
             _waServ = new Mock<IWorkAssignmentService>();
-            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _tpServ.Object, _wrServ.Object, _wServ.Object, _lRepo.Object, _uow.Object, _map.Object, _cfg.Object);
+            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _tpServ.Object, _wrServ.Object, _wServ.Object, _lRepo.Object, _uow.Object, _map.Object, _cfg.Object, _tenantService.Object);
             //
             //Act
             _serv.Delete(id, user);
@@ -195,7 +213,7 @@ namespace Machete.Test.UnitTests.Services
             _tpServ = new Mock<ITransportProvidersService>();
             var _tp = (TransportProvider)Records.transportProvider.Clone();
             _tpServ.Setup(r => r.Get(It.IsAny<int>())).Returns(_tp);
-            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _tpServ.Object, _wrServ.Object, _wServ.Object, _lRepo.Object, _uow.Object, _map.Object, _cfg.Object);
+            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _tpServ.Object, _wrServ.Object, _wServ.Object, _lRepo.Object, _uow.Object, _map.Object, _cfg.Object, _tenantService.Object);
             //
             //Act
             _serv.Save(_wo, user);
@@ -250,8 +268,8 @@ namespace Machete.Test.UnitTests.Services
             string user = "";
             _repo.Setup(r => r.GetById(testid)).Returns(fakeworkOrder);
 
-            _wrServ.Setup(x => x.GetByWorkerID(testid, 1)).Returns(wr1);
-            _wrServ.Setup(x => x.GetByWorkerID(testid, 2)).Returns(wr2);
+            _wrServ.Setup(x => x.GetByID(testid, 1)).Returns(wr1);
+            _wrServ.Setup(x => x.GetByID(testid, 2)).Returns(wr2);
             _wrServ.Setup(x => x.Delete(It.IsAny<int>(), It.IsAny<string>()));
             _tpServ.Setup(x => x.Get(It.IsAny<int>())).Returns(_tp);
             _tpServ.Setup(x => x.Get(It.IsAny<int>())).Returns(_tp);

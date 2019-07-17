@@ -27,8 +27,10 @@ using System.Collections.Generic;
 using AutoMapper;
 using Machete.Data;
 using Machete.Data.Infrastructure;
+using Machete.Data.Tenancy;
 using Machete.Domain;
 using Machete.Service;
+using Machete.Test.UnitTests.Controllers.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -46,31 +48,15 @@ namespace Machete.Test.UnitTests.Services
         private Mock<IWorkerRepository> wRepo;
         private Mock<IWorkerSigninRepository> wsiRepo;
         private WorkAssignmentService waServ;
-        private Mock<IWorkerRequestRepository> wrRepo;
         private Mock<IMapper> _map;
         private Mock<IWorkOrderRepository> woRepo;
         private TestContext testContextInstance;
+        private Mock<ITenantService> _tenantService;
 
         public WorkAssignmentTests()
         {
         }
 
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
 
         [TestInitialize]
         public void TestInitialize()
@@ -80,10 +66,12 @@ namespace Machete.Test.UnitTests.Services
             wRepo = new Mock<IWorkerRepository>();
             lRepo = new Mock<ILookupRepository>();
             wsiRepo = new Mock<IWorkerSigninRepository>();
-            wrRepo = new Mock<IWorkerRequestRepository>();
             _map = new Mock<IMapper>();
             woRepo = new Mock<IWorkOrderRepository>();
-            waServ = new WorkAssignmentService(waRepo.Object, wRepo.Object, woRepo.Object, lRepo.Object, wsiRepo.Object, uow.Object, _map.Object);
+            _tenantService = new Mock<ITenantService>();
+            _tenantService.Setup(service => service.GetCurrentTenant()).Returns(UnitTestExtensions.TestingTenant);            
+            
+            waServ = new WorkAssignmentService(waRepo.Object, wRepo.Object, woRepo.Object, lRepo.Object, wsiRepo.Object, uow.Object, _map.Object, _tenantService.Object);
             
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WAs)]

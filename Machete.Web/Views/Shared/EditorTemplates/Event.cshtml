@@ -31,7 +31,7 @@
                 @Html.DropDownListFor(model => model.eventTypeID,
                     new SelectList(Model.def.getSelectList(LCategory.eventtype), "Value", "Text", Model),
                     Shared.choose, new { tabindex = "2", id = idPrefix + "eventType" })
-                @Html.ValidationMessageFor(model => model.eventTypeID);
+                @Html.ValidationMessageFor(model => model.eventTypeID)
             </div>
             @Html.ValidationMessageFor(model => model.eventTypeID)
         </div>

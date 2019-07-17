@@ -10,9 +10,6 @@
 @{
     var httpContext = ViewContext.HttpContext;
     var currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
-    var currentUrl = UriHelper.BuildRelative(httpContext.Request.PathBase, httpContext.Request.Path, httpContext.Request.QueryString);
-
-    var lang = currentCulture.TwoLetterISOLanguageName;
     var recType = "worker";
     var idPrefix = recType + Model.ID + "-";
 }
@@ -50,7 +47,7 @@
                 @Html.DropDownListFor(model => model.memberStatusID,
                     new SelectList(Model.def.getSelectList(LCategory.memberstatus), "Value",
                     "Text", Model), Shared.choose,
-                    new { tabindex = "2", @class = "workerEditor", id = idPrefix + "memberStatusID" });
+                    new { tabindex = "2", @class = "workerEditor", id = idPrefix + "memberStatusID" })
                 @Html.ValidationMessageFor(model => model.memberStatusID)
             </div>
             <div class="tb-label">
@@ -70,7 +67,7 @@
                 @Html.DropDownListFor(model => model.englishlevelID,
                     new SelectList(Model.def.getSelectList(LCategory.language),
                     "Value", "Text", Model), Shared.choose,
-                    new { tabindex = "3", @class = "workerEditor", id = idPrefix + "englishlevelID" });
+                    new { tabindex = "3", @class = "workerEditor", id = idPrefix + "englishlevelID" })
                 @Html.ValidationMessageFor(model => model.memberStatusID)
             </div>
             <div class="tb-label">
@@ -128,7 +125,7 @@
                 @Html.DropDownListFor(model => model.typeOfWorkID,
                     new SelectList(Model.def.getSelectList(LCategory.worktype), "Value",
                     "Text", Model), Shared.choose,
-                    new { tabindex = "6", @class = "workerEditor", id = idPrefix + "typeOfWorkID" });
+                    new { tabindex = "6", @class = "workerEditor", id = idPrefix + "typeOfWorkID" })
                 @Html.ValidationMessageFor(model => model.memberStatusID)
             </div>
         </div>
@@ -190,7 +187,7 @@
                 @Html.DropDownListFor(model => model.neighborhoodID,
                     new SelectList(Model.def.getSelectList(LCategory.neighborhood),
                     "Value", "Text", Model), Shared.choose,
-                    new { tabindex = "20", @class = "workerEditor", id = idPrefix + "neighborhoodID" });
+                    new { tabindex = "20", @class = "workerEditor", id = idPrefix + "neighborhoodID" })
                 @Html.ValidationMessageFor(model => model.neighborhoodID)
             </div>
             <div class="tb-label">
@@ -200,7 +197,7 @@
                 @Html.DropDownListFor(model => model.housingType,
                     new SelectList(Model.def.getSelectList(LCategory.housingType),
                     "Value", "Text", Model), Shared.choose,
-                    new { tabindex = "22", @class = "workerEditor", id = idPrefix + "housingType" });
+                    new { tabindex = "22", @class = "workerEditor", id = idPrefix + "housingType" })
                 @Html.ValidationMessageFor(model => model.housingType)
             </div>
         </div>
@@ -242,7 +239,7 @@
             </div>
             <div class="tb-field">
                 @Html.DropDownListFor(model => model.countryoforiginID, new SelectList(Model.def.getSelectList(LCategory.countryoforigin), "Value", "Text", Model), Shared.choose, new { tabindex = "31", @class = "workerEditor", id = idPrefix + "countryoforiginID" })
-                @Html.ValidationMessageFor(model => model.countryoforiginID);
+                @Html.ValidationMessageFor(model => model.countryoforiginID)
             </div>
             <div class="tb-label">
                 @Html.LabelFor(model => model.dateinseattle)
@@ -275,7 +272,7 @@
                     new SelectList(Model.def.getSelectList(LCategory.educationLevel),
                         "Value", "Text", Model), Shared.choose,
                     new { tabindex = "40", @class = "workerEditor", id = idPrefix + "educationLevel" })
-                @Html.ValidationMessageFor(model => model.educationLevel);
+                @Html.ValidationMessageFor(model => model.educationLevel)
             </div>
             <div class="tb-label">
                 @Html.LabelFor(model => model.farmLaborCharacteristics)
@@ -285,7 +282,7 @@
                     new SelectList(Model.def.getSelectList(LCategory.farmLabor),
                         "Value", "Text", Model), Shared.choose,
                     new { tabindex = "41", @class = "workerEditor", id = idPrefix + "farmLaborCharacteristics" })
-                @Html.ValidationMessageFor(model => model.farmLaborCharacteristics);
+                @Html.ValidationMessageFor(model => model.farmLaborCharacteristics)
             </div>
         </div>
         <div class="tb-row">
@@ -300,7 +297,7 @@
                     new SelectList(Model.def.getSelectList(LCategory.maritalstatus),
                         "Value", "Text", Model), Shared.choose,
                     new { tabindex = "50", @class = "workerEditor", id = idPrefix + "maritalstatus" })
-                @Html.ValidationMessageFor(model => model.maritalstatus);
+                @Html.ValidationMessageFor(model => model.maritalstatus)
             </div>
             <div class="tb-label">
                 @Html.LabelFor(model => model.americanBornChildren)
@@ -311,7 +308,7 @@
                     new SelectList(Model.def.getSelectList(LCategory.usBornChildren),
                         "Value", "Text", Model), Shared.choose,
                     new { tabindex = "55", @class = "workerEditor", id = idPrefix + "maritalstatus" })
-                @Html.ValidationMessageFor(model => model.americanBornChildren);
+                @Html.ValidationMessageFor(model => model.americanBornChildren)
             </div>
         </div>
         <div class="tb-row">
@@ -340,7 +337,7 @@
                 @Html.DropDownListFor(model => model.livewithchildren, new SelectList(Model.def.yesnoSelectList(),
                     "Value", "Text", Model),
                     new { tabindex = "52", @class = "workerEditor", id = idPrefix + "livewithchildren" })
-                @Html.ValidationMessageFor(model => model.livewithchildren))
+                @Html.ValidationMessageFor(model => model.livewithchildren)
             </div>
             <div class="tb-label">
                 @Html.LabelFor(model => model.numChildrenUnder18)
@@ -369,7 +366,7 @@
                     new SelectList(Model.def.getSelectList(LCategory.income),
                         "Value", "Text", Model), Shared.choose,
                     new { tabindex = "58", @class = "workerEditor", id = idPrefix + "incomeID" })
-                @Html.ValidationMessageFor(model => model.incomeID);
+                @Html.ValidationMessageFor(model => model.incomeID)
             </div>
         </div>
         <div class="tb-row">
@@ -388,7 +385,7 @@
                     new SelectList(Model.def.getSelectList(LCategory.incomeSourceID),
                         "Value", "Text", Model), Shared.choose, 
                     new { tabindex = "59", @class = "workerEditor", id = idPrefix + "incomeSourceID" })
-                @Html.ValidationMessageFor(model => model.incomeSourceID);
+                @Html.ValidationMessageFor(model => model.incomeSourceID)
             </div>
         </div>
         <div class="tb-row">
@@ -439,8 +436,8 @@
                 @Html.DropDownListFor(model => model.vehicleTypeID,
                     new SelectList(Model.def.getSelectList(LCategory.vehicleTypeID),
                         "Value", "Text", Model), Shared.choose,
-                    new { tabindex = "62", @class = "workerEditor", id = idPrefix + "vehicleTypeID" }))
-                @Html.ValidationMessageFor(model => model.vehicleTypeID);
+                    new { tabindex = "62", @class = "workerEditor", id = idPrefix + "vehicleTypeID" })
+                @Html.ValidationMessageFor(model => model.vehicleTypeID)
             </div>
         </div>
         <div class="tb-row">

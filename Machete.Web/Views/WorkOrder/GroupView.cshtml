@@ -1,10 +1,6 @@
 @model Machete.Web.ViewModel.WorkOrderGroupPrintView
-@using Machete.Web.ViewModel           
-@using Machete.Web.Resources
-@using Machete.Web.Helpers
-@using System.Globalization
-           
-@if (Model.orders.Count() == 0)
+
+@if (!Model.orders.Any())
 {
     <h3> @Html.Encode(Machete.Web.Resources.WorkOrders.groupviewerror) </h3>
 }

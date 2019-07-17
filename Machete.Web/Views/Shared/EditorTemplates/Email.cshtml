@@ -24,7 +24,7 @@
                 @Html.DropDownListFor(model => model.statusID,
                     new SelectList(Model.def.getSelectList(LCategory.emailstatus), "Value", "Text", Model),
                     Shared.choose, new { id = Model.idPrefix + "status" })
-                @Html.ValidationMessageFor(model => model.statusID);
+                @Html.ValidationMessageFor(model => model.statusID)
             </div>
         }
         else

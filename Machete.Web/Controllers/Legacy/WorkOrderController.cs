@@ -45,11 +45,11 @@ namespace Machete.Web.Controllers
         public class WorkOrderController : MacheteController
     {
         private readonly IWorkOrderService _woServ;
+        private readonly IWorkerRequestService _reqServ;
         private readonly IMapper _map;
         private readonly IDefaults _defaults;
         private readonly IModelBindingAdaptor _adaptor;
         private readonly TimeZoneInfo _clientTimeZoneInfo;
-        private readonly TimeZoneInfo _serverTimeZoneInfo;
 
         /// <summary>
         /// The Work Order controller is responsible for handling all REST actions related to the
@@ -57,12 +57,14 @@ namespace Machete.Web.Controllers
         /// employers (hirers/2.0).
         /// </summary>
         /// <param name="woServ">Work Order service</param>
+        /// <param name="reqServ">Req serv</param>
         /// <param name="defaults">Default config values</param>
         /// <param name="map">AutoMapper service</param>
         /// <param name="adaptor"></param>
         /// <param name="tenantService"></param>
         public WorkOrderController(
             IWorkOrderService woServ,
+            IWorkerRequestService reqServ,
             IDefaults defaults,
             IMapper map,
             IModelBindingAdaptor adaptor,
@@ -70,11 +72,11 @@ namespace Machete.Web.Controllers
         )
         {
             _woServ = woServ;
+            _reqServ = reqServ;
             _map = map;
             _adaptor = adaptor;
             _defaults = defaults;
             _clientTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(tenantService.GetCurrentTenant().Timezone);
-            _serverTimeZoneInfo = TimeZoneInfo.Local;
         }
         /// <summary>
         /// Initialize controller
@@ -118,7 +120,7 @@ namespace Machete.Web.Controllers
             //return what's left to datatables
             var result = from p in dtr.query
                          select new[] {
-                             $"{TimeZoneInfo.ConvertTimeFromUtc(p.date ?? DateTime.UtcNow, _clientTimeZoneInfo):MM/dd/yyyy hh:mm zz}",
+                             $"{p.date ?? TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _clientTimeZoneInfo):MM/dd/yyyy}",
                              p.weekday,
                              p.pending_wo > 0 ? p.pending_wo.ToString(): null,
                              p.pending_wa > 0 ? p.pending_wa.ToString(): null,
@@ -130,7 +132,7 @@ namespace Machete.Web.Controllers
                              p.cancelled_wa > 0 ? p.cancelled_wa.ToString(): null,
                              p.expired_wo > 0 ? p.expired_wo.ToString(): null,
                              p.expired_wa > 0 ? p.expired_wa.ToString(): null
-                         };
+                         }.ToList();
 
             return Json(new
             {
@@ -186,33 +188,53 @@ namespace Machete.Web.Controllers
                 transportMethodID = _defaults.getDefaultID(LCategory.transportmethod),
                 typeOfWorkID = _defaults.getDefaultID(LCategory.worktype),
                 statusID = _defaults.getDefaultID(LCategory.orderstatus),
-                timeFlexible = true
+                timeFlexible = true,
+                workerRequests = new List<WorkerRequest>()
             };
+            ViewBag.workerRequests = workOrder.workerRequests?.Select(a => 
+                new SelectListItem
+                {
+                    Value = a.WorkerID.ToString(), 
+                    Text = a.workerRequested.dwccardnum.ToString() + ' ' + 
+                           a.workerRequested.Person.firstname1 + ' ' + 
+                           a.workerRequested.Person.lastname1 
+                }
+            );
 
             MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
             MapperHelpers.Defaults = _defaults;
             var wo = _map.Map<WorkOrder, ViewModel.WorkOrder>(workOrder);
 
-            ViewBag.workerRequests = new List<SelectListItem>();
             return PartialView("Create", wo);
         }
+
         /// <summary>
         /// POST: /WorkOrder/Create
         /// </summary>
         /// <param name="wo">WorkOrder to create</param>
         /// <param name="userName">User performing action</param>
+        /// <param name="workerRequests"></param>
         /// <returns>JSON Object representing new Work Order</returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public async Task<ActionResult> Create(WorkOrder wo, string userName)
+        public async Task<ActionResult> Create(WorkOrder wo, string userName, [FromForm] List<int> workerRequests)
         {
             ModelState.ThrowIfInvalid();
             var modelUpdated = await _adaptor.TryUpdateModelAsync(this, wo);
             if (!modelUpdated) return StatusCode(500);
+            
+            List<Domain.WorkerRequest> wRequests = new List<Domain.WorkerRequest>();
+
+            foreach (var workerID in workerRequests)
+            {
+                wRequests.Add(new WorkerRequest { WorkerID = workerID });
+            }
+
+            //wo.workerRequests = wRequests;
 
             wo.dateTimeofWork = TimeZoneInfo.ConvertTimeToUtc(wo.dateTimeofWork, _clientTimeZoneInfo);
 
-            var workOrder = _woServ.Create(wo, userName);
+            var workOrder = _woServ.Create(wo, wRequests, userName);
 
             MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
             var result = _map.Map<WorkOrder, ViewModel.WorkOrder>(workOrder);
@@ -221,7 +243,6 @@ namespace Machete.Web.Controllers
                 sNewLabel = result.tablabel,
                 iNewID = result.ID
             });
-
         }
         /// <summary>
         /// GET: /WorkOrder/Edit/ID
@@ -258,17 +279,26 @@ namespace Machete.Web.Controllers
         /// <param name="id">WorkOrder ID</param>
         /// <param name="userName">UserName performing action</param>
         /// <param name="workerRequestList">List of workers requested</param>
+        /// <param name="workerRequests">List of workers requested</param>
         /// <returns>MVC Action Result</returns>
         //[Bind(Exclude = "workerRequests")]
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public async Task<ActionResult> Edit(int id, string userName, List<WorkerRequest> workerRequestList)
+        public async Task<ActionResult> Edit(int id, string userName, List<int> workerRequests)
         {
             ModelState.ThrowIfInvalid();
             
             var workOrder = _woServ.Get(id);
             var modelUpdated = await _adaptor.TryUpdateModelAsync(this, workOrder);
             if (!modelUpdated) return StatusCode(500);
+            
+            List<WorkerRequest> workerRequestList = _reqServ.GetAllByWorkOrderID(workOrder.ID);
+
+            foreach (var workerID in workerRequests)
+            {
+                if (!workerRequestList.Any(workerRequest => workerRequest.WorkerID == workerID))
+                    workerRequestList.Add(new WorkerRequest { WorkerID = workerID });
+            }
 
             workOrder.dateTimeofWork = TimeZoneInfo.ConvertTimeToUtc(workOrder.dateTimeofWork, _clientTimeZoneInfo);
             

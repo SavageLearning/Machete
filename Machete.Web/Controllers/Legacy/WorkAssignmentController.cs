@@ -23,7 +23,6 @@
 #endregion
 
 using System;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -48,8 +47,8 @@ namespace Machete.Web.Controllers
         private readonly IWorkerSigninService wsiServ;
         private readonly IMapper map;
         private readonly IDefaults _defaults;
-        private IModelBindingAdaptor _adaptor;
-        private TimeZoneInfo _clientTimeZoneInfo;
+        private readonly IModelBindingAdaptor _adaptor;
+        private readonly TimeZoneInfo _clientTimeZoneInfo;
 
         public WorkAssignmentController(
             IWorkAssignmentService workAssignmentService,

@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Machete.Data.Tenancy;
@@ -84,7 +85,7 @@ namespace Machete.Test.UnitTests.Controllers
             _savedWorkOrder = new WorkOrder();
 
             _serv = new Mock<IWorkOrderService>();
-            _serv.Setup(p => p.Create(_fakeWorkOrder, "UnitTest", null)).Returns(() => _fakeWorkOrder);
+            _serv.Setup(p => p.Create(_fakeWorkOrder, It.IsAny<List<WorkerRequest>>(), "UnitTest", null)).Returns(() => _fakeWorkOrder);
             _serv.Setup(p => p.Get(_testid)).Returns(_fakeWorkOrder);
             _serv.Setup(x => x.Save(It.IsAny<WorkOrder>(), It.IsAny<List<WorkerRequest>>(), It.IsAny<string>()))
                 .Callback((WorkOrder p, List<WorkerRequest> wr, string str) => {
@@ -105,8 +106,12 @@ namespace Machete.Test.UnitTests.Controllers
             _tenantService = new Mock<ITenantService>();
             _tenantService.Setup(service => service.GetCurrentTenant()).Returns(_tenant);
             _tenantService.Setup(service => service.GetAllTenants()).Returns(new List<Tenant> {_tenant});
+
+            Mock<IWorkerRequestService> req = new Mock<IWorkerRequestService>();
+            req.Setup(service => service.GetByID(It.IsAny<int>(), It.IsAny<int>())).Returns(new WorkerRequest());
+            req.Setup(service => service.GetAllByWorkOrderID(It.IsAny<int>())).Returns(new List<WorkerRequest>());
             
-            _controller = new WorkOrderController(_serv.Object, def.Object, map, _adaptor.Object, _tenantService.Object);
+            _controller = new WorkOrderController(_serv.Object, req.Object, def.Object, map, _adaptor.Object, _tenantService.Object);
         }
 
         //   Testing /Index functionality
@@ -136,7 +141,7 @@ namespace Machete.Test.UnitTests.Controllers
             //Arrange
 
             //Act
-            var result = await _controller.Create(_fakeWorkOrder, "UnitTest") as JsonResult;
+            var result = await _controller.Create(_fakeWorkOrder, "UnitTest", new List<int>()) as JsonResult;
             
             //Assert
             Assert.IsNotNull(result);
@@ -154,7 +159,7 @@ namespace Machete.Test.UnitTests.Controllers
 
             //Act
             _controller.ModelState.AddModelError("this is supposed to um...", "throw");
-            await _controller.Create(workOrder, "UnitTest");
+            await _controller.Create(workOrder, "UnitTest", new List<int>());
             
             //Assert
         }
@@ -187,7 +192,7 @@ namespace Machete.Test.UnitTests.Controllers
             };
             
             //Act
-            var result = await _controller.Edit(_testid, "UnitTest", list);
+            var result = await _controller.Edit(_testid, "UnitTest", list.Select(x => x.ID).ToList());
             
             var utcTime = TimeZoneInfo.ConvertTimeToUtc(Convert.ToDateTime("1/1/2019 12:00:00 AM"),
                               TimeZoneInfo.FindSystemTimeZoneById(_tenant.Timezone));
@@ -220,7 +225,7 @@ namespace Machete.Test.UnitTests.Controllers
 
             //Act    
             _controller.ModelState.AddModelError("hell to the", "NO");
-            await _controller.Edit(_testid, "UnitTest", list);
+            await _controller.Edit(_testid, "UnitTest", list.Select(x => x.ID).ToList());
 
             //Assert
         }

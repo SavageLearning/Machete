@@ -6,17 +6,15 @@
     string idPrefix = recType + Model.ID + "-";
     string empPrefix = empRecType + Model.EmployerID + "-";
 }
-@using (Html.BeginForm("Create", "WorkOrder", FormMethod.Post, 
-                        new { @id = "workOrderCreateForm" }))
+@using (Html.BeginForm("Create", "WorkOrder", FormMethod.Post, new { id = "workOrderCreateForm" }))
 {
     <input type="button" id="@(idPrefix)copyEmployerInfo" class="formButton"
            value="@WorkOrders.copyemployerinfo" tabindex="9" />
     <input type="submit" id="@(idPrefix)SaveBtn" class="formButton saveBtn"
            value="@WorkOrders.createsubmit" tabindex="9"/>
 
-
     @Html.ValidationSummary(true)
-    @Html.EditorForModel()   
+    @Html.EditorForModel()
 }
 <script type="text/javascript">
     $(document).ready(function () {

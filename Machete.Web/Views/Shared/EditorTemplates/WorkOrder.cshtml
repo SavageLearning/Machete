@@ -1,6 +1,5 @@
 @using Machete.Domain
 @using Machete.Web.Resources
-@using Microsoft.AspNetCore.Http.Extensions
 @using Microsoft.AspNetCore.Localization
 @using WorkOrder = Machete.Web.Resources.WorkOrder
 @using Worker = Machete.Web.Resources.Worker
@@ -10,7 +9,6 @@
 @{
     var httpContext = ViewContext.HttpContext;
     var currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
-    var currentUrl = UriHelper.BuildRelative(httpContext.Request.PathBase, httpContext.Request.Path, httpContext.Request.QueryString);
 
     string recType = "WO";
     string idPrefix = recType + Model.ID + "-";
@@ -43,7 +41,7 @@
         <div class="tb-field">
             @Html.DropDownListFor(model => model.statusID, new SelectList(Model.def.getSelectList(LCategory.orderstatus),
                 "Value", "Text", Model), Shared.choose, new { tabindex = "2", id = idPrefix + "status" })
-            @Html.ValidationMessageFor(model => model.statusID);
+            @Html.ValidationMessageFor(model => model.statusID)
         </div>
         <div class="tb-label">
             @Html.LabelFor(model => model.timeFlexible)
@@ -122,7 +120,7 @@
             @Html.DropDownListFor(model => model.transportProviderID,
                 new SelectList(Model.def.getTransportationMethodList(),
                     "Value", "Text", Model), Shared.choose, new { tabindex = "16", id = idPrefix + "transportMethodID" })
-            @Html.ValidationMessageFor(model => model.transportProviderID);
+            @Html.ValidationMessageFor(model => model.transportProviderID)
         </div>
     </div>
     <div class="tb-row">
@@ -218,7 +216,10 @@
             <input type="button" value="@WorkOrder.requestRemove" class="formButton" id="removeRequestBtn-@(Model.ID)"/>
         </div>
         <div class="tb-field desc-field">
-            @Html.ListBox("workerRequests2", new SelectList(ViewBag.workerRequests, "Value", "Text"), new { id = "workerRequests2_WO-"+ Model.ID, tabindex = "22", style="min-width: 16em;"})
+            @Html.ListBoxFor(model => model.workerRequests,
+                new SelectList(ViewBag.workerRequests, "Value", "Text"),
+                    new { id = "workerRequests2_WO-"+ Model.ID, tabindex = "22", style="min-width: 16em;"}
+            )
         </div>
         <div class="tb-label desc-label">
             @Html.LabelFor(model => model.description)
@@ -233,7 +234,6 @@
 <!-- LOAD MANAGER INFO PARTIAL FORM -->
 @await Html.PartialAsync("ManagerInfo")
 <!-- LOAD ADMINISTRATOR INFO PARTIAL FORM -->
-
 
 <div id="workerDialog-@(Model.ID)" title="@WorkOrder.requestTitle">
     <table id="workerTable-@(Model.ID)" class="display" style="display: none">

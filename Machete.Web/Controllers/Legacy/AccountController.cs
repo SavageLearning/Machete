@@ -29,20 +29,16 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Machete.Data;
 using Machete.Data.Identity;
-using Machete.Service;
 using Machete.Web.Helpers;
 using Machete.Web.Helpers.Api;
 using Machete.Web.Resources;
 using Machete.Web.ViewModel;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Converters;
 using NLog;
-using DbFunctions = Machete.Service.DbFunctions;
+using HelperUserRoles = Machete.Web.Helpers.UserRoles;
 
 namespace Machete.Web.Controllers
 {
@@ -76,32 +72,31 @@ namespace Machete.Web.Controllers
         public async Task<IActionResult> Index()
         {
             List<UserSettingsViewModel> model = new List<UserSettingsViewModel>();
+
             // Hirer accounts use email addresses as username, so the list filters out usernames that are
             // email addresses because this View only exists to modify internal Machete user accounts
-            var users = _context.Users;
-            if (users == null)
-                throw new ArgumentNullException();
+            var hirers = await _userManager.GetUsersInRoleAsync(HelperUserRoles.Hirer);
+            var hirerIDs = hirers.Select(hirer => hirer.Id).ToList();
             
             if (User.Identity.Name == "jadmin" || User.Identity.Name.Contains("ndlon"))
             {
-                foreach (var user in users)
+                foreach (var user in _context.Users)
                 {
-                    //bool isHirer = await user.IsInRole("Hirer", _userManager);
-                    model.Add(user.ToUserSettingsViewModel(false));//isHirer
+                    var isHirer = hirerIDs.Contains(user.Id);
+                    model.Add(user.ToUserSettingsViewModel(isHirer));
                 }
                 
                 return View(model);
             }
+            
 
-            foreach (var user in users)
+            foreach (var user in _context.Users)
             {
                 if (user.UserName.Equals("jadmin") || user.UserName.Contains("ndlon")) continue;
                 
-                bool isHirer = await user.IsInRole("Hirer", _userManager);
-
-                if (isHirer) continue;
-                
-                model.Add(user.ToUserSettingsViewModel(isHirer));
+                if (hirerIDs.Contains(user.Id)) continue;
+                   
+                model.Add(user.ToUserSettingsViewModel(false));
             }
 
             return View(model);

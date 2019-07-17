@@ -27,21 +27,19 @@ using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
 using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using System.Text;
+
 // ReSharper disable ReplaceWithSingleCallToCount
 
 namespace Machete.Service
 {
-    public interface IWorkerSigninService : ISigninService<Domain.WorkerSignin>
+    public interface IWorkerSigninService : ISigninService<WorkerSignin>
     {
-        Domain.WorkerSignin GetSignin(int dwccardnum, DateTime date);
-        bool moveDown(int id, string user);
-        bool moveUp(int id, string user);
+        WorkerSignin GetSignin(int dwccardnum, DateTime date);
+        void moveDown(int id, string user);
+        void moveUp(int id, string user);
         dataTableResult<DTO.WorkerSigninList> GetIndexView(viewOptions o);
-        Domain.WorkerSignin CreateSignin(int dwccardnum, DateTime dateforsignin, string user);
+        WorkerSignin CreateSignin(int dwccardnum, DateTime dateforsignin, string user);
     }
 
     public class WorkerSigninService : SigninServiceBase<WorkerSignin>, IWorkerSigninService
@@ -57,15 +55,15 @@ namespace Machete.Service
             IConfigService cfg)
             : base(repo, wServ, iServ, wrServ, uow, map, cfg)
         {
-            this.logPrefix = "WorkerSignin";
+            logPrefix = "WorkerSignin";
         }
         /// <summary>
-        /// 
+        /// Get a single signin by DWC card number and date.
         /// </summary>
         /// <param name="dwccardnum"></param>
         /// <param name="date"></param>
         /// <returns>WorkerSignin</returns>
-        public Domain.WorkerSignin GetSignin(int dwccardnum, DateTime date)
+        public WorkerSignin GetSignin(int dwccardnum, DateTime date)
         {
             return repo.GetAllQ().FirstOrDefault(r => r.dwccardnum == dwccardnum &&
                             r.dateforsignin.Date == date.Date);
@@ -79,15 +77,14 @@ namespace Machete.Service
         /// <param name="id">The Worker ID of the entry to be moved.</param>
         /// <param name="user">The username of the person making the request.</param>
         /// <returns>bool</returns>
-        public bool moveDown(int id, string user)
+        public void moveDown(int id, string user)
         {
             WorkerSignin wsiDown = repo.GetById(id); // 4
             DateTime date = wsiDown.dateforsignin;
 
             int nextID = (wsiDown.lottery_sequence ?? 0) + 1; // 5
 
-            if (nextID == 1)
-                return false;
+            if (nextID == 1) return;
             //this can't happen with current GUI settings (10/10/2013)
 
             var firstOrDefault = repo.GetAllQ()
@@ -102,8 +99,6 @@ namespace Machete.Service
 
             Save(wsiUp, user);
             Save(wsiDown, user);
-
-            return true;
         }
 
         /// <summary>
@@ -114,15 +109,14 @@ namespace Machete.Service
         /// <param name="id">The Worker ID of the entry to be moved.</param>
         /// <param name="user">The username of the person making the request.</param>
         /// <returns>bool</returns>
-        public bool moveUp(int id, string user)
+        public void moveUp(int id, string user)
         {
             WorkerSignin wsiUp = repo.GetById(id); // 4
             DateTime date = wsiUp.dateforsignin;
 
             int prevID = (wsiUp.lottery_sequence ?? 0) - 1; // 3
 
-            if (prevID < 1)
-                return false;
+            if (prevID < 1) return;
 
             var firstOrDefault = repo.GetAllQ()
                 .Where(up => up.lottery_sequence == prevID
@@ -138,8 +132,6 @@ namespace Machete.Service
 
             Save(wsiUp, user);
             Save(wsiDown, user);
-
-            return true;
         }
        
         /// <summary>
@@ -151,7 +143,7 @@ namespace Machete.Service
         {
             //
             var result = new dataTableResult<DTO.WorkerSigninList>();
-            IQueryable<Domain.WorkerSignin> q = repo.GetAllQ();
+            IQueryable<WorkerSignin> q = repo.GetAllQ();
             //
             if (o.date != null) IndexViewBase.diffDays(o, ref q);                
             if (o.typeofwork_grouping != null) IndexViewBase.typeOfWork(o, ref q);
@@ -182,7 +174,7 @@ namespace Machete.Service
         /// </summary>
         /// <param name="signin"></param>
         /// <param name="user"></param>
-        public virtual Domain.WorkerSignin CreateSignin(int dwccardnum, DateTime dateforsignin, string user)
+        public virtual WorkerSignin CreateSignin(int dwccardnum, DateTime dateforsignin, string user)
         {
             //Search for worker with matching card number
             Worker wfound = wServ.GetMany(d => d.dwccardnum == dwccardnum).FirstOrDefault();

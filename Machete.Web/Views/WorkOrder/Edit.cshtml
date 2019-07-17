@@ -1,19 +1,12 @@
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
-@using Microsoft.AspNetCore.Http.Extensions
-@using Microsoft.AspNetCore.Localization
 @using WorkOrder = Machete.Domain.WorkOrder
 @model Machete.Web.ViewModel.WorkOrder
 
 @{
-    var httpContext = ViewContext.HttpContext;
-    var currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
-    var currentUrl = UriHelper.BuildRelative(httpContext.Request.PathBase, httpContext.Request.Path, httpContext.Request.QueryString);
-
     string recType = "WO";
     string empRecType = "employer";
     string idPrefix = recType + Model.ID + "-";
-    string empPrefix = empRecType + Model.EmployerID + "-";
     int editDisable = 0;
     if (!Html.IsInRole("Administrator", "Manager") && Html.IsInRole("Administrator", "Manager", "PhoneDesk") && Model.dateTimeofWork < DateTime.Today)
     {

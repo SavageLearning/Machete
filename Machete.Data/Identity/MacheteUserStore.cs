@@ -283,7 +283,7 @@ namespace Machete.Data.Identity
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null) throw new ArgumentNullException(nameof(user));
-
+            
             var identityRole = _roles.FirstOrDefault(role => role.NormalizedName == roleName.ToUpper());
 
             var userRole = _userRoles.FirstOrDefault(join => join.RoleId == identityRole.Id && join.UserId == user.Id);
@@ -293,6 +293,9 @@ namespace Machete.Data.Identity
 
         public Task<IList<MacheteUser>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (roleName == null) throw new ArgumentNullException(nameof(roleName));
+
             var userRole = _roles.FirstOrDefault(role => role.Name == roleName);
             
             var userIDs = _userRoles.Where(joinTable => joinTable.RoleId == userRole.Id).Select(joinTable => joinTable.UserId);

@@ -40,7 +40,7 @@ namespace Machete.Domain
     {
         bool IEqualityComparer<WorkerRequest>.Equals(WorkerRequest x, WorkerRequest y)
         {
-            return x.WorkerID == y.WorkerID ? true : false;
+            return x.WorkerID == y.WorkerID;
         }
         int IEqualityComparer<WorkerRequest>.GetHashCode(WorkerRequest obj)
         {

@@ -31,6 +31,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Machete.Data.Tenancy;
 
 namespace Machete.Service
 {
@@ -38,7 +39,6 @@ namespace Machete.Service
     {
         IEnumerable<WorkOrder> GetActiveOrders(DateTime date, bool assignedOnly);
         IQueryable<WorkOrderSummary> GetSummary(string search);
-        IQueryable<WorkOrderSummary> GetSummary();
         int CompleteActiveOrders(DateTime date, string user);
         dataTableResult<WOWASummary> CombinedSummary(string search,
             bool orderDescending,
@@ -59,6 +59,7 @@ namespace Machete.Service
         private readonly ILookupRepository lRepo;
         private readonly IConfigService cfg;
         private readonly ITransportProvidersService tpServ;
+        private readonly TimeZoneInfo _clientTimeZoneInfo;
 
         /// <summary>
         /// Business logic object for WorkOrder record management. Contains logic specific
@@ -73,6 +74,7 @@ namespace Machete.Service
         /// <param name="uow">Unit of Work</param>
         /// <param name="map"></param>
         /// <param name="cfg"></param>
+        /// <param name="tenantService"></param>
         public WorkOrderService(IWorkOrderRepository repo, 
                                 IWorkAssignmentService waServ,
                                 ITransportProvidersService tpServ,
@@ -81,7 +83,9 @@ namespace Machete.Service
                                 ILookupRepository lRepo,
                                 IUnitOfWork uow,
                                 IMapper map,
-                                IConfigService cfg) : base(repo, uow)
+                                IConfigService cfg,
+                                ITenantService tenantService
+        ) : base(repo, uow)
         {
             this.waServ = waServ;
             this.wrServ = wrServ;
@@ -91,6 +95,7 @@ namespace Machete.Service
             this.cfg = cfg;
             this.tpServ = tpServ;
             this.logPrefix = "WorkOrder";
+            _clientTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(tenantService.GetCurrentTenant().Timezone);
         }
 
         /// <summary>
@@ -111,7 +116,7 @@ namespace Machete.Service
 
             foreach (WorkOrder wo in matching)
             {
-                // WO must have at least one WA to be completed
+                // WO must have at least one WA to be marked active
                 if (wo.workAssignments.Count == 0) continue;
 
                 var nullAssignments = 0;
@@ -179,28 +184,22 @@ namespace Machete.Service
         /// <summary>
         /// Retrieve WO summary results - count of work orders with each status type for each date
         /// </summary>
-        /// <returns>Work Order summary results</returns>
-        public IQueryable<WorkOrderSummary> GetSummary()
-        {
-            return GetSummary(null);
-        }
-        /// <summary>
-        /// Retrieve WO summary results - count of work orders with each status type for each date
-        /// </summary>
         /// <param name="search">Search string criteria</param>
         /// <returns>Work Order summary results</returns>
         public IQueryable<WorkOrderSummary> GetSummary(string search)
         {
+            var workOrders = repo.GetAllQ();
+            
             IQueryable<WorkOrder> query;
-            if (!string.IsNullOrEmpty(search)) 
-                query = IndexViewBase.filterDateTimeOfWork(repo.GetAllQ(), search);            
-            else query = repo.GetAllQ();
+            if (string.IsNullOrEmpty(search)) query = workOrders;
+            else query = IndexViewBase.filterDateTimeOfWork(workOrders, search);
+            
             var group_query = from wo in query
                             group wo by new { 
-                                dateSoW = wo.dateTimeofWork.Date,                                              
+                                dateSoW = TimeZoneInfo.ConvertTimeFromUtc(wo.dateTimeofWork, _clientTimeZoneInfo).Date,                                              
                                 wo.statusID
                             } into dayGroup
-                            select new WorkOrderSummary()
+                            select new WorkOrderSummary
                             {
                                 date = dayGroup.Key.dateSoW,
                                 status = dayGroup.Key.statusID,
@@ -266,10 +265,13 @@ namespace Machete.Service
 
         private void updateComputedValues(ref WorkOrder record)
         {
-            record.statusES = lRepo.GetById(record.statusID).text_ES;
-            record.statusEN = lRepo.GetById(record.statusID).text_EN;
-            record.transportMethodEN = tpServ.Get(record.transportProviderID).text_EN;
-            record.transportMethodES = tpServ.Get(record.transportProviderID).text_ES;
+            var lookup = lRepo.GetById(record.statusID);
+            var transportProvider = tpServ.Get(record.transportProviderID);
+
+            record.statusES = lookup.text_ES;
+            record.statusEN = lookup.text_EN;
+            record.transportMethodEN = transportProvider.text_EN;
+            record.transportMethodES = transportProvider.text_ES;
         }
 
         public void Save(WorkOrder workOrder, List<WorkerRequest> wrList, string user)
@@ -277,7 +279,7 @@ namespace Machete.Service
             // Stale requests to remove
             foreach (var rem in workOrder.workerRequests.Except(wrList, new WorkerRequestComparer()).ToArray())
             {
-                var request = wrServ.GetByWorkerID(workOrder.ID, rem.WorkerID);
+                var request = wrServ.GetByID(workOrder.ID, rem.WorkerID);
                 wrServ.Delete(request.ID, user);
                 workOrder.workerRequests.Remove(rem);
             }
@@ -317,41 +319,38 @@ namespace Machete.Service
             int displayStart,
             int displayLength)
         {
-
-            IEnumerable<WorkOrderSummary> woResult;
-            IEnumerable<WorkAssignmentSummary> waResult;
-            IEnumerable<WOWASummary> q;
             var result = new dataTableResult<WOWASummary>();
             //pulling from DB here because the joins grind it to a halt
             // TODO: investigate how to do a left join - results only appear when there are WA assigned to WO
-            woResult = GetSummary(search).AsEnumerable();
-            waResult = waServ.GetSummary(search).AsEnumerable();
-                q = woResult.Join(waResult,
-                            wo => new { wo.date, wo.status },
-                            wa => new { wa.date, wa.status },
-                            (wo, wa) => new
-                            {
-                                wo.date,
-                                wo.status,
-                                wo_count = wo.count,
-                                wa_count = wa.count
-                            })
-            .GroupBy(gb => gb.date)
-            .Select(g => new WOWASummary
-            {
-                date = g.Key,
-                weekday = Convert.ToDateTime(g.Key).ToString("dddd"),
-                pending_wo = g.Where(c => c.status == WorkOrder.iPending).Sum(d => d.wo_count),
-                pending_wa = g.Where(c => c.status == WorkOrder.iPending).Sum(d => d.wa_count),
-                active_wo = g.Where(c => c.status == WorkOrder.iActive).Sum(d => d.wo_count),
-                active_wa = g.Where(c => c.status == WorkOrder.iActive).Sum(d => d.wa_count),
-                completed_wo = g.Where(c => c.status == WorkOrder.iCompleted).Sum(d => d.wo_count),
-                completed_wa = g.Where(c => c.status == WorkOrder.iCompleted).Sum(d => d.wa_count),
-                cancelled_wo = g.Where(c => c.status == WorkOrder.iCancelled).Sum(d => d.wo_count),
-                cancelled_wa = g.Where(c => c.status == WorkOrder.iCancelled).Sum(d => d.wa_count),
-                expired_wo = g.Where(c => c.status == WorkOrder.iExpired).Sum(d => d.wo_count),
-                expired_wa = g.Where(c => c.status == WorkOrder.iExpired).Sum(d => d.wa_count)
-            });
+            var woResult = GetSummary(search).AsEnumerable();
+            var waResult = waServ.GetSummary(search).AsEnumerable();
+            
+            var q = woResult.Join(waResult,
+                    wo => new { wo.date, wo.status },
+                    wa => new { wa.date, wa.status },
+                    (wo, wa) => new
+                    {
+                        wo.date,
+                        wo.status,
+                        wo_count = wo.count,
+                        wa_count = wa.count
+                    })
+                .GroupBy(gb => gb.date)
+                .Select(g => new WOWASummary
+                {
+                    date = g.Key,
+                    weekday = Convert.ToDateTime(g.Key).ToString("dddd"),
+                    pending_wo = g.Where(c => c.status == WorkOrder.iPending).Sum(d => d.wo_count),
+                    pending_wa = g.Where(c => c.status == WorkOrder.iPending).Sum(d => d.wa_count),
+                    active_wo = g.Where(c => c.status == WorkOrder.iActive).Sum(d => d.wo_count),
+                    active_wa = g.Where(c => c.status == WorkOrder.iActive).Sum(d => d.wa_count),
+                    completed_wo = g.Where(c => c.status == WorkOrder.iCompleted).Sum(d => d.wo_count),
+                    completed_wa = g.Where(c => c.status == WorkOrder.iCompleted).Sum(d => d.wa_count),
+                    cancelled_wo = g.Where(c => c.status == WorkOrder.iCancelled).Sum(d => d.wo_count),
+                    cancelled_wa = g.Where(c => c.status == WorkOrder.iCancelled).Sum(d => d.wa_count),
+                    expired_wo = g.Where(c => c.status == WorkOrder.iExpired).Sum(d => d.wo_count),
+                    expired_wa = g.Where(c => c.status == WorkOrder.iExpired).Sum(d => d.wa_count)
+                });
 
             // Sort results on date (depending on orderDescending input parameter)
                 if (orderDescending)

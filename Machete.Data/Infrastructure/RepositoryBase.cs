@@ -103,8 +103,7 @@ namespace Machete.Data.Infrastructure
         //              compile-time type of the instance determines implem. to invoke             
         public virtual T Add(T entity)
         {
-            var poofball = _dbset.Add(entity).Entity;
-            return poofball; // TODO Chaim plz
+            return _dbset.Add(entity).Entity;
         }
       
         public virtual void Delete(T entity)

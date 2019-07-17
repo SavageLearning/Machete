@@ -28,6 +28,7 @@ using Machete.Data.Infrastructure;
 using Machete.Domain;
 using System;
 using System.Linq;
+using Machete.Data.Tenancy;
 
 namespace Machete.Service
 {
@@ -51,8 +52,8 @@ namespace Machete.Service
         private readonly IUnitOfWork unitOfWork;
         private readonly ILookupRepository lRepo;
         private readonly IMapper map;
-        //
-        //
+        private readonly TimeZoneInfo _clientTimeZoneInfo;
+
         public WorkAssignmentService(
             IWorkAssignmentRepository waRepo, 
             IWorkerRepository wRepo,
@@ -60,8 +61,9 @@ namespace Machete.Service
             ILookupRepository lRepo, 
             IWorkerSigninRepository wsiRepo,
             IUnitOfWork unitOfWork,
-            IMapper map
-            ) : base(waRepo, unitOfWork)
+            IMapper map,
+            ITenantService tenantService
+        ) : base(waRepo, unitOfWork)
         {
             this.waRepo = waRepo;
             this.unitOfWork = unitOfWork;
@@ -71,6 +73,7 @@ namespace Machete.Service
             this.wsiRepo = wsiRepo;
             this.map = map;
             this.logPrefix = "WorkAssignment";
+            _clientTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(tenantService.GetCurrentTenant().Timezone);
         }
         /// <summary>
         ///
@@ -134,13 +137,14 @@ namespace Machete.Service
             if (!string.IsNullOrEmpty(search))
                 IndexViewBase.filterOnDatePart(search, ref query);
 
-            var sum_query = from wa in query //LINQ
+            var sum_query = from wa in query
                             group wa by new
                             {
-                                dateSoW = wa.workOrder.dateTimeofWork.Date,                               
+                                dateSoW = TimeZoneInfo
+                                    .ConvertTimeFromUtc(wa.workOrder.dateTimeofWork, _clientTimeZoneInfo).Date,                               
                                 wa.workOrder.statusID
                             } into dayGroup
-                            select new WorkAssignmentSummary()
+                            select new WorkAssignmentSummary
                             {
                                 date = dayGroup.Key.dateSoW,
                                 status = dayGroup.Key.statusID,

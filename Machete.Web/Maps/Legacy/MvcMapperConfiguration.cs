@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using AutoMapper;
 using Machete.Service;
 using Machete.Service.DTO;

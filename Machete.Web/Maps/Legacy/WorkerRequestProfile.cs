@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using static Machete.Web.Helpers.Extensions;
 
 namespace Machete.Web.Maps
 {

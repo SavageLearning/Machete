@@ -21,6 +21,9 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+
+using System.Collections.Generic;
+using System.Linq;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
@@ -29,7 +32,8 @@ namespace Machete.Service
 {
     public interface IWorkerRequestService : IService<WorkerRequest>
     {
-        WorkerRequest GetByWorkerID(int woid, int wrid);
+        WorkerRequest GetByID(int workOrderID, int workerID);
+        List<WorkerRequest> GetAllByWorkOrderID(int workOrderID);
     }
     public class WorkerRequestService : ServiceBase<WorkerRequest>, IWorkerRequestService
     {
@@ -41,10 +45,14 @@ namespace Machete.Service
             this.wrRepo = repo;
         }
 
-        public WorkerRequest GetByWorkerID(int woid, int wkrid)
+        public WorkerRequest GetByID(int workOrderID, int workerID)
         {
-            return wrRepo.GetByWorkerID(woid, wkrid);
+            return wrRepo.GetByID(workOrderID, workerID);
         }
 
+        public List<WorkerRequest> GetAllByWorkOrderID(int workOrderID)
+        {
+            return wrRepo.GetManyQ(workerRequests => workerRequests.WorkOrderID == workOrderID).ToList();
+        }
     }
 }

@@ -69,7 +69,7 @@ namespace Machete.Test.Integration.Services
         {
             //
             //Arrange
-            var Date = frb.ToServ<IWorkOrderService>().GetSummary().OrderByDescending(o => o.date).First().date.Value.AddDays(1);
+            var Date = frb.ToServ<IWorkOrderService>().GetSummary(null).OrderByDescending(o => o.date).First().date.Value.AddDays(1);
             frb.AddWorkOrder(status: WorkOrder.iCancelled, dateTimeOfWork: Date).AddWorkAssignment()
                .AddWorkOrder(status: WorkOrder.iPending, dateTimeOfWork: Date).AddWorkAssignment()
                .AddWorkOrder(status: WorkOrder.iCompleted, dateTimeOfWork: Date).AddWorkAssignment()
@@ -96,7 +96,7 @@ namespace Machete.Test.Integration.Services
             bool orderdescending = true;
             int displayStart = 0;
             int displayLength = 50;
-            var Date = frb.ToServ<IWorkOrderService>().GetSummary().OrderByDescending(o => o.date).First().date.Value.AddDays(1);
+            var Date = frb.ToServ<IWorkOrderService>().GetSummary(null).OrderByDescending(o => o.date).First().date.Value.AddDays(1);
             frb.AddWorkOrder(status: WorkOrder.iCancelled, dateTimeOfWork: Date).AddWorkAssignment()
                .AddWorkOrder(status: WorkOrder.iPending, dateTimeOfWork: Date).AddWorkAssignment().AddWorkAssignment()
                .AddWorkOrder(status: WorkOrder.iCompleted, dateTimeOfWork: Date).AddWorkAssignment().AddWorkAssignment()
@@ -139,7 +139,7 @@ namespace Machete.Test.Integration.Services
             //
             //Arrange
             // get find latest workorder, get date from it, and add a day (make sure we're only records for this test)
-            var Date = frb.ToServ<IWorkOrderService>().GetSummary().OrderByDescending(a => a.date).First().date.Value.AddDays(1);
+            var Date = frb.ToServ<IWorkOrderService>().GetSummary(null).OrderByDescending(a => a.date).First().date.Value.AddDays(1);
 
             frb.AddWorkOrder(dateTimeOfWork: Date).AddWorkOrder(dateTimeOfWork: Date).AddWorkOrder(dateTimeOfWork: Date);
             frb.AddWorkOrder(dateTimeOfWork: Date).AddWorkOrder(dateTimeOfWork: Date).AddWorkOrder(dateTimeOfWork: Date);

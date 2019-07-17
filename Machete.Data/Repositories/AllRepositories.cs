@@ -56,7 +56,7 @@ namespace Machete.Data
     }
     public interface IWorkOrderRepository : IRepository<WorkOrder> { }
     public interface IWorkerRequestRepository : IRepository<WorkerRequest> {
-        WorkerRequest GetByWorkerID(int woid, int workerID);
+        WorkerRequest GetByID(int woid, int workerID);
     }
     public interface IWorkerRepository : IRepository<Worker>
     {
@@ -172,7 +172,7 @@ namespace Machete.Data
             return dbset.Include(a => a.workerRequested).AsNoTracking().AsQueryable();
         }
 
-        public WorkerRequest GetByWorkerID(int woid, int workerID)
+        public WorkerRequest GetByID(int woid, int workerID)
         {
             var q = from o in dbset.AsQueryable()
                     where (o.WorkOrderID.Equals(woid) && o.WorkerID.Equals(workerID))

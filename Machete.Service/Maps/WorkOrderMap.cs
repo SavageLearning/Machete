@@ -1,10 +1,5 @@
 using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Web;
-using DTO = Machete.Service.DTO;
 
 namespace Machete.Service
 {
