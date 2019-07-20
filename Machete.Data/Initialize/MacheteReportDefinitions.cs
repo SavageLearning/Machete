@@ -80,6 +80,50 @@ where  datetimeofwork >= @beginDate
 and datetimeofwork < @endDate
 and l.text_en = 'Completed'"
 			},
+			// SigninsAndEarningsReport
+			new ReportDefinition()
+			{
+				name = "SigninsAndEarningsReport",
+				commonName = "Signins and earnings report",
+				description = "General replacement for the V1 reports function of earnings and dispatches by day.",
+				category = "Dispatches",
+				sqlquery = @";with cte as (
+    select convert(varchar, wo.datetimeofwork, 23)    as workdate,
+           sum(wa.hours)                              as [hours],
+           sum(wa.hours * wa.hourlyWage)              as [TotalIncome],
+           AVG((wa.hours * wa.hourlywage) / NULLIF(wa.hours, 0)) as [average]
+
+    from WorkOrders wo
+             join WorkAssignments wa
+                  on wa.workOrderID = wo.id
+
+    group by convert(varchar, wo.datetimeofwork, 23)
+)
+
+select convert(varchar, wsi.dateforsignin, 23) as dateforsignin
+     , (
+    select count(distinct dwccardnum)
+    from dbo.WorkerSignins wsinner
+    where convert(varchar, wsinner.dateforsignin, 23) <= convert(varchar, wsi.dateforsignin, 23)
+      and wsinner.dateforsignin >= @beginDate
+    --group by dateforsignin
+)                                              as [active]
+     , count(w.dwccardnum)                     as [signins]
+     , avg(cte.hours)                          as [hours]
+     , FORMAT(avg(cte.TotalIncome), 'C')       as [totalIncome]
+     , FORMAT(avg(cte.average), 'C')           as [average]
+from dbo.workers w
+         join dbo.WorkerSignins wsi
+              on wsi.WorkerID = w.id
+         join cte
+              on cte.workdate = convert(varchar, dateforsignin, 23)
+
+where dateforsignin >= @beginDate
+  and dateforsignin <= @endDate
+
+group by convert(varchar, dateforsignin, 23);
+"
+			},
 			// WorkersByIncome
 			new ReportDefinition
 			{

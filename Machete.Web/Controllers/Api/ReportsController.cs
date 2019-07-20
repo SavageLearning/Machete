@@ -63,6 +63,7 @@ namespace Machete.Web.Controllers.Api
             [FromQuery] int? memberNumber
         )
         {
+            MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
             endDate = endDate?.AddDays(1); // date passed does not reflect desired range, and is of type string...
             var result = _serv.getQuery(
                 new Service.DTO.SearchOptions {
