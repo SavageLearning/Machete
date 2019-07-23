@@ -157,7 +157,12 @@ namespace Machete.Data
         public WorkOrderRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
         override public IQueryable<WorkOrder> GetAllQ()
         {
-            return dbset.Include(a => a.workAssignments).Include(a => a.workerRequests).AsNoTracking().AsQueryable();
+            return dbset.Include(a => a.Employer)
+                .Include(a => a.workAssignments)
+                .ThenInclude(a => a.workerAssigned)
+                .Include(a => a.workerRequests)
+                //.AsNoTracking()
+                .AsQueryable();
         }
     }
     /// <summary>
@@ -209,7 +214,11 @@ namespace Machete.Data
 
         override public IQueryable<WorkAssignment> GetAllQ()
         {
-            return dbset.Include(a => a.workOrder).Include(b => b.workOrder.Employer).Include(b => b.workerAssigned).AsNoTracking().AsQueryable();
+            return dbset.Include(a => a.workOrder)
+                .Include(b => b.workOrder.Employer)
+                .Include(b => b.workerAssigned)
+                .AsNoTracking()
+                .AsQueryable();
         }
     }
     /// <summary>

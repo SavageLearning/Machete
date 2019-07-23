@@ -130,6 +130,7 @@ namespace Machete.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(_tenant.ConnectionString);
+            optionsBuilder.UseLazyLoadingProxies();
             
             base.OnConfiguring(optionsBuilder);
         }

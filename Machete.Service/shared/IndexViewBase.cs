@@ -40,13 +40,16 @@ namespace Machete.Service
         private static Regex isTimeSpecific = new Regex(@"^\s*\d{1,2}[\/-_]\d{1,2}[\/-_]\d{2,4}\s+\d{1,2}:\d{1,2}");
         private static Regex isDaySpecific = new Regex(@"^\s*\d{1,2}\/\d{1,2}\/\d{2,4}");
         private static Regex isMonthSpecific = new Regex(@"^\s*\d{1,2}\/\d{4,4}");
-        #region SIGNINS
-        public static void diffDays<T>(viewOptions o, ref IQueryable<T> q) where T : Signin
-        {
-            // good intentions marinated in panic
-            q = q.Where(p => p.dateforsignin.Date == o.date.Value.Date);
-        }
         
+        
+        
+        public static DateTime DateBasedOn(this DateTime date, TimeZoneInfo clientTimeZoneInfo) =>
+            TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(date, DateTimeKind.Unspecified), clientTimeZoneInfo).Date;
+
+        public static DateTime DateTimeFrom(this DateTime date, TimeZoneInfo clientTimeZoneInfo) =>
+            TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(date, DateTimeKind.Unspecified), clientTimeZoneInfo);
+        
+        #region SIGNINS
         public static void search(viewOptions o, ref IQueryable<WorkerSignin> q)
         {
             q = q.Where(wsi => wsi.dwccardnum.ToString().Contains(o.sSearch) ||

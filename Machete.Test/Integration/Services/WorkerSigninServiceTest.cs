@@ -50,7 +50,11 @@ namespace Machete.Test.Integration.Services
             {
                 CI = new CultureInfo("en-US", false),
                 sSearch = "",
-                date = DateTime.Today,
+                date = TimeZoneInfo
+                    .ConvertTimeToUtc(
+                        DateTime.SpecifyKind(DateTime.Today, DateTimeKind.Unspecified),
+                        frb.ClientTimeZoneInfo
+                    ),
                 dwccardnum = null,
                 woid = null,
                 orderDescending = true,

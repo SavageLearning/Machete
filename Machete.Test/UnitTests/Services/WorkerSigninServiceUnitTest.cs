@@ -28,8 +28,10 @@ using System.Linq;
 using AutoMapper;
 using Machete.Data;
 using Machete.Data.Infrastructure;
+using Machete.Data.Tenancy;
 using Machete.Domain;
 using Machete.Service;
+using Machete.Test.UnitTests.Controllers.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -59,22 +61,6 @@ namespace Machete.Test.UnitTests.Services
         }
 
         private TestContext testContextInstance;
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
 
         [TestInitialize()]
         public void TestInitialize()
@@ -119,12 +105,16 @@ namespace Machete.Test.UnitTests.Services
             _cServ = new Mock<IConfigService>();
         }
 
+        // 2019 TODO not sure what we are testing here; a WSI without a worker match literally should not succeed
         [Ignore, TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
         public void Create_WSI_without_worker_match_succeeds()
         {
             //
             //Arrange
-            var _serv = new WorkerSigninService(_wsiRepo.Object, _wServ.Object, _iServ.Object, _wrServ.Object, _uow.Object, _map.Object, _cServ.Object);
+            var tenantService = new Mock<ITenantService>();
+            tenantService.Setup(service => service.GetCurrentTenant()).Returns(UnitTestExtensions.TestingTenant);
+
+            var _serv = new WorkerSigninService(_wsiRepo.Object, _wServ.Object, _iServ.Object, _wrServ.Object, _uow.Object, _map.Object, _cServ.Object, tenantService.Object);
             var _signin = new WorkerSignin { dwccardnum = 66666, dateforsignin = DateTime.Today };
             WorkerSignin _cbsignin = new WorkerSignin();
             _wsiRepo.Setup(s => s.Add(It.IsAny<WorkerSignin>())).Callback((WorkerSignin s) => { _cbsignin = s; });
@@ -136,24 +126,27 @@ namespace Machete.Test.UnitTests.Services
             Assert.AreEqual(_signin, _cbsignin);
         }
 
-        [Ignore, TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
         public void Create_WSI_with_worker_match_succeeds()
         {
             //
             //Arrange
-            int fakeid = 66666;
-            var _serv = new WorkerSigninService(_wsiRepo.Object, _wServ.Object, _iServ.Object, _wrServ.Object, _uow.Object, _map.Object, _cServ.Object);
-            var _signin = new WorkerSignin() { dwccardnum = fakeid, dateforsignin = DateTime.Today };
-            WorkerSignin _cbsignin = new WorkerSignin();
+            const int fakeid = 66666;
+            var tenantService = new Mock<ITenantService>();
+            tenantService.Setup(service => service.GetCurrentTenant()).Returns(UnitTestExtensions.TestingTenant);
+            var _signin = new WorkerSignin { dwccardnum = fakeid, dateforsignin = DateTime.Today };
+            
+            var _serv = new WorkerSigninService(_wsiRepo.Object, _wServ.Object, _iServ.Object, _wrServ.Object, _uow.Object, _map.Object, _cServ.Object, tenantService.Object);
+            
+            var _cbsignin = new WorkerSignin();
             _wsiRepo.Setup(s => s.Add(It.IsAny<WorkerSignin>())).Callback((WorkerSignin s) => { _cbsignin = s; });
             //
             //Act
             _serv.CreateSignin(fakeid, DateTime.Today, "UnitTest");
             //
             //Assert
-            Assert.AreEqual(_signin, _cbsignin);
-            Assert.IsNotNull(_signin.dwccardnum);
-            Assert.AreEqual(_signin.dwccardnum, fakeid);
+            Assert.AreEqual(_signin.dwccardnum, _cbsignin.dwccardnum);
+            Assert.AreEqual(_signin.dateforsignin, _cbsignin.dateforsignin);
         }
 
         // TODO2017: Doesn't need to be a unit test; testing use of LINQ mostly

@@ -73,8 +73,6 @@ namespace Machete.Web.Controllers
         {
             List<UserSettingsViewModel> model = new List<UserSettingsViewModel>();
 
-            // Hirer accounts use email addresses as username, so the list filters out usernames that are
-            // email addresses because this View only exists to modify internal Machete user accounts
             var hirers = await _userManager.GetUsersInRoleAsync(HelperUserRoles.Hirer);
             var hirerIDs = hirers.Select(hirer => hirer.Id).ToList();
             

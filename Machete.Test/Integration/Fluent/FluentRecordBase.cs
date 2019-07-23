@@ -28,6 +28,7 @@ using System.Text;
 using AutoMapper;
 using Machete.Data;
 using Machete.Data.Repositories;
+using Machete.Data.Tenancy;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Web;
@@ -42,6 +43,8 @@ namespace Machete.Test.Integration.Fluent
 {
     public partial class FluentRecordBase : IDisposable
     {
+        public TimeZoneInfo ClientTimeZoneInfo { get; }
+    
         private IWorkerService _servW;
         private IImageService _servI;
         private IWorkerRequestService _servWR;
@@ -90,13 +93,12 @@ namespace Machete.Test.Integration.Fluent
             container = serviceScope.ServiceProvider;
 
             ToServ<ILookupService>().populateStaticIds();
+            
+            ClientTimeZoneInfo = TimeZoneInfo
+                .FindSystemTimeZoneById(serviceScope.ServiceProvider.GetRequiredService<ITenantService>().GetCurrentTenant().Timezone);
         }
 
-        public void Dispose()
-        {
-//            if (_dbContext == null) _dbContext = container.GetRequiredService<MacheteContext>();
-//            _dbContext.Dispose();
-        }
+        public void Dispose() { }
 
         public MacheteContext ToFactory()
         {

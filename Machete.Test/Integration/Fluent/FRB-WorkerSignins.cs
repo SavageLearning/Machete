@@ -17,8 +17,13 @@ namespace Machete.Test.Integration.Fluent
             var _w = worker ?? AddWorker();
 
             //
-            // ACT
-            _wsi = _servWSI.CreateSignin(_w.dwccardnum, DateTime.Now, _user);
+            // ACT (convert to UTC, as the client would)
+            _wsi = _servWSI.CreateSignin(
+                _w.dwccardnum,
+                TimeZoneInfo
+                    .ConvertTimeToUtc(DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified), ClientTimeZoneInfo),
+                _user
+            );
             return this;
         }
 
