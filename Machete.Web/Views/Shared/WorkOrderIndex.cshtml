@@ -7,7 +7,6 @@
 @{
     var httpContext = ViewContext.HttpContext;
     var currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
-    var currentUrl = UriHelper.BuildRelative(httpContext.Request.PathBase, httpContext.Request.Path, httpContext.Request.QueryString);
 
     string recType = "WO";
     string idPrefix = recType + Model.ID + "-";
@@ -131,8 +130,8 @@
             sOut += '<tbody>';
             for (var i in wkrList)
             {
-                var wkr = wkrList[i];// below; was: WID
-                sOut += '<tr><td>'+wkr.wid+'</td><td>'+wkr.name+'</td><td>'+wkr.skill+'</td><td>'+wkr.hours+'</td><td>'+wkr.wage+'</td></tr>';
+                var wkr = wkrList[i];
+                sOut += '<tr><td>'+wkr.WID+'</td><td>'+wkr.name+'</td><td>'+wkr.skill+'</td><td>'+wkr.hours+'</td><td>'+wkr.wage+'</td></tr>';
             }
             sOut += '</tbody></table>';     
             return sOut;

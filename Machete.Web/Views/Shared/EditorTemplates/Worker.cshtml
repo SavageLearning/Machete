@@ -65,7 +65,7 @@
             </div>
             <div class="tb-field">
                 @Html.DropDownListFor(model => model.englishlevelID,
-                    new SelectList(Model.def.getSelectList(LCategory.language),
+                    new SelectList(Model.def.skillLevels(),
                     "Value", "Text", Model), Shared.choose,
                     new { tabindex = "3", @class = "workerEditor", id = idPrefix + "englishlevelID" })
                 @Html.ValidationMessageFor(model => model.memberStatusID)

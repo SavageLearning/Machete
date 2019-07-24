@@ -162,7 +162,7 @@ namespace Machete.Test.Selenium.View
             SelectOption(By.Id(prefix + "memberStatusID"), "Active");
             SelectOption(By.Id(prefix + "neighborhoodID"), "Primary City");
             SelectOption(By.Id(prefix + "typeOfWorkID"), @"Day Worker Center");
-            SelectOption(By.Id(prefix + "englishlevelID"), "conversational (2)");
+            SelectOption(By.Id(prefix + "englishlevelID"), "1");
             SelectOption(By.Id(prefix + "incomeID"), @"Poor (Less than $15,000)");
             _d.FindElement(By.Id(prefix + "imagefile")).SendKeys(imagepath);
             _d.FindElement(By.Id("createWorkerBtn")).Click();
@@ -208,7 +208,7 @@ namespace Machete.Test.Selenium.View
             Assert.AreEqual("Active", GetOptionText(WaitForElement(By.Id(prefix + "memberStatusID"))));
             Assert.AreEqual("Primary City", GetOptionText(WaitForElement(By.Id(prefix + "neighborhoodID"))));
             Assert.AreEqual(@"Day Worker Center", GetOptionText(WaitForElement(By.Id(prefix + "typeOfWorkID"))));
-            Assert.AreEqual("conversational (2)", GetOptionText(WaitForElement(By.Id(prefix + "englishlevelID"))));
+            Assert.AreEqual("1", GetOptionText(WaitForElement(By.Id(prefix + "englishlevelID"))));
             Assert.AreEqual(@"Poor (Less than $15,000)", GetOptionText(WaitForElement(By.Id(prefix + "incomeID"))));
             return true;
         }
