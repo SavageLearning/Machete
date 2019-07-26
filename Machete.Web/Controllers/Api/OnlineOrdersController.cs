@@ -103,6 +103,8 @@ namespace Machete.Web.Controllers.Api
         [HttpPost("")]
         public ActionResult Post([FromBody]ViewModel.Api.WorkOrder viewmodel)
         {
+            MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
+            
             var workOrder = map.Map<ViewModel.Api.WorkOrder, Domain.WorkOrder>(viewmodel);
             workOrder.Employer = Employer;
             workOrder.EmployerID = Employer.ID;
