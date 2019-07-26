@@ -84,7 +84,7 @@ namespace Machete.Web.Controllers
             }
             //return what's left to datatables
             var result = list.query
-                .Select(e => _map.Map<EmployersList, EmployerList>(e))
+                .Select(e => _map.Map<Service.DTO.EmployersList, ViewModel.EmployerList>(e))
                 .AsEnumerable();
             return Json(new
             {

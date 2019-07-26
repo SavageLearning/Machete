@@ -189,9 +189,9 @@ namespace Machete.Web.Controllers
                 typeOfWorkID = _defaults.getDefaultID(LCategory.worktype),
                 statusID = _defaults.getDefaultID(LCategory.orderstatus),
                 timeFlexible = true,
-                workerRequests = new List<WorkerRequest>()
+                workerRequestsDDD = new List<WorkerRequest>()
             };
-            ViewBag.workerRequests = workOrder.workerRequests?.Select(a => 
+            ViewBag.workerRequests = workOrder.workerRequestsDDD?.Select(a => 
                 new SelectListItem
                 {
                     Value = a.WorkerID.ToString(), 
@@ -256,7 +256,7 @@ namespace Machete.Web.Controllers
             WorkOrder workOrder = _woServ.Get(id);
             
             // Retrieve Worker Requests associated with Work Order
-            var workerRequests = workOrder.workerRequests;
+            var workerRequests = workOrder.workerRequestsDDD;
             var selectListItems = workerRequests?.Select(a => 
                 new SelectListItem
                 {
@@ -353,13 +353,19 @@ namespace Machete.Web.Controllers
         {
             var utcDate = TimeZoneInfo.ConvertTimeToUtc(date, _clientTimeZoneInfo);
 
-            var v = _woServ.GetActiveOrders(utcDate, assignedOnly ?? false);
+            var v = _woServ.GetActiveOrders(utcDate, assignedOnly ?? false).ToList();
             
             MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
             MapperHelpers.Defaults = _defaults;
+            List<ViewModel.WorkOrder> foo = new List<ViewModel.WorkOrder>();
+            foreach (var item in v)
+            {
+                foo.Add(_map.Map<Domain.WorkOrder, ViewModel.WorkOrder>(item));
+            }
+            //var erders = v.Select(e => _map.Map<WorkOrder, ViewModel.WorkOrder>(e)).ToList();
             var view = new WorkOrderGroupPrintView
             {
-                orders = v.Select(e => _map.Map<WorkOrder, ViewModel.WorkOrder>(e)).ToList()
+                orders = foo
             };
 
             return View(view);

@@ -30,7 +30,7 @@ namespace Machete.Test.Integration.Fluent
             _wa.workOrder = _wo;
             _wa.workOrderID = _wo.ID;
 
-            if (assignWorker) _wa.workerAssigned = AddWorker();
+            if (assignWorker) _wa.workerAssignedDDD = AddWorker();
             if (datecreated != null) _wa.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _wa.dateupdated = (DateTime)dateupdated;
             if (desc != null) _wa.description = desc;

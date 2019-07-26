@@ -210,13 +210,13 @@
     </div>
     <div class="tb-row">
         <div class="tb-label desc-label">
-            @Html.LabelFor(model => model.workerRequests)
+            @Html.LabelFor(model => model.workerRequestsAAA)
             <br />
             <input type="button" value="@WorkOrder.requestAdd" class="formButton" id="addRequestBtn-@(Model.ID)"/>
             <input type="button" value="@WorkOrder.requestRemove" class="formButton" id="removeRequestBtn-@(Model.ID)"/>
         </div>
         <div class="tb-field desc-field">
-            @Html.ListBoxFor(model => model.workerRequests,
+            @Html.ListBoxFor(model => model.workerRequestsAAA,
                 new SelectList(ViewBag.workerRequests, "Value", "Text"),
                     new { id = "workerRequests2_WO-"+ Model.ID, tabindex = "22", style="min-width: 16em;"}
             )

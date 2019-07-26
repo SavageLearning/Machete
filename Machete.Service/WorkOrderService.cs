@@ -32,6 +32,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Machete.Data.Tenancy;
+using Microsoft.EntityFrameworkCore;
 
 namespace Machete.Service
 {
@@ -60,6 +61,7 @@ namespace Machete.Service
         private readonly IConfigService cfg;
         private readonly ITransportProvidersService tpServ;
         private readonly TimeZoneInfo _clientTimeZoneInfo;
+        private new readonly IWorkOrderRepository repo;
 
         /// <summary>
         /// Business logic object for WorkOrder record management. Contains logic specific
@@ -87,6 +89,7 @@ namespace Machete.Service
                                 ITenantService tenantService
         ) : base(repo, uow)
         {
+            this.repo = repo;
             this.waServ = waServ;
             this.wrServ = wrServ;
             this.wServ = wServ;
@@ -106,9 +109,9 @@ namespace Machete.Service
         /// <returns>WorkOrders associated with a given date that are active</returns>
         public IEnumerable<WorkOrder> GetActiveOrders(DateTime date, bool assignedOnly)
         {
-            var matching = repo.GetAllQ()
-                .Where(wo => wo.statusID == WorkOrder.iActive
-                          && wo.dateTimeofWork.Date == date.Date).ToList();
+            var matching = repo.GetActiveOrders(date);
+//                .Where(wo => wo.statusID == WorkOrder.iActive
+//                          && wo.dateTimeofWork.Date == date.Date).ToList();
 
             if (!assignedOnly) return matching;
             
@@ -223,7 +226,7 @@ namespace Machete.Service
             updateComputedValues(ref workOrder);
             workOrder.createdByUser(username);
             var createdWorkOrder = repo.Add(workOrder);
-            createdWorkOrder.workerRequests = new Collection<WorkerRequest>();
+            createdWorkOrder.workerRequestsDDD = new Collection<WorkerRequest>();
             if (workerRequestList != null)
             {
                 foreach (var workerRequest in workerRequestList)
@@ -232,7 +235,7 @@ namespace Machete.Service
                     workerRequest.workerRequested = wServ.Get(workerRequest.WorkerID);
                     workerRequest.updatedByUser(username);
                     workerRequest.createdByUser(username);
-                    createdWorkOrder.workerRequests.Add(workerRequest);
+                    createdWorkOrder.workerRequestsDDD.Add(workerRequest);
                 }
             }
             uow.SaveChanges();
@@ -277,21 +280,21 @@ namespace Machete.Service
         public void Save(WorkOrder workOrder, List<WorkerRequest> wrList, string user)
         {
             // Stale requests to remove
-            foreach (var rem in workOrder.workerRequests.Except(wrList, new WorkerRequestComparer()).ToArray())
+            foreach (var rem in workOrder.workerRequestsDDD.Except(wrList, new WorkerRequestComparer()).ToArray())
             {
                 var request = wrServ.GetByID(workOrder.ID, rem.WorkerID);
                 wrServ.Delete(request.ID, user);
-                workOrder.workerRequests.Remove(rem);
+                workOrder.workerRequestsDDD.Remove(rem);
             }
 
             // New requests to add
-            foreach (var add in wrList.Except(workOrder.workerRequests, new WorkerRequestComparer()))
+            foreach (var add in wrList.Except(workOrder.workerRequestsDDD, new WorkerRequestComparer()))
             {
                 add.workOrder = workOrder;
                 add.workerRequested = wServ.Get(add.WorkerID);
                 add.updatedByUser(user);
                 add.createdByUser(user);
-                workOrder.workerRequests.Add(add);
+                workOrder.workerRequestsDDD.Add(add);
             }
 
             Save(workOrder, user);

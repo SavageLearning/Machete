@@ -235,7 +235,7 @@ namespace Machete.Test.UnitTests.Services
             int testid = 4242;
             WorkOrder fakeworkOrder = new WorkOrder();
             var workerRequest = new List<WorkerRequest>();
-            fakeworkOrder.workerRequests = workerRequest;
+            fakeworkOrder.workerRequestsDDD = workerRequest;
             fakeworkOrder.ID = testid;
             WorkerRequest wr1 = new WorkerRequest
             {
@@ -279,13 +279,13 @@ namespace Machete.Test.UnitTests.Services
             
             //Assert
             //Assert.AreEqual(fakeworkOrder, savedworkOrder);
-            Assert.AreEqual(fakeworkOrder.workerRequests.Count(), 5);
-            Assert.AreEqual(fakeworkOrder.workerRequests.Count(a => a.WorkerID == 12345), 1);
-            Assert.AreEqual(fakeworkOrder.workerRequests.Count(a => a.WorkerID == 30002), 1);
-            Assert.AreEqual(fakeworkOrder.workerRequests.Count(a => a.WorkerID == 30311), 1);
-            Assert.AreEqual(fakeworkOrder.workerRequests.Count(a => a.WorkerID == 30420), 1);
-            Assert.AreEqual(fakeworkOrder.workerRequests.Count(a => a.WorkerID == 30421), 1);
-            Assert.AreEqual(fakeworkOrder.workerRequests.Count(a => a.WorkerID == 12346), 0);
+            Assert.AreEqual(fakeworkOrder.workerRequestsDDD.Count(), 5);
+            Assert.AreEqual(fakeworkOrder.workerRequestsDDD.Count(a => a.WorkerID == 12345), 1);
+            Assert.AreEqual(fakeworkOrder.workerRequestsDDD.Count(a => a.WorkerID == 30002), 1);
+            Assert.AreEqual(fakeworkOrder.workerRequestsDDD.Count(a => a.WorkerID == 30311), 1);
+            Assert.AreEqual(fakeworkOrder.workerRequestsDDD.Count(a => a.WorkerID == 30420), 1);
+            Assert.AreEqual(fakeworkOrder.workerRequestsDDD.Count(a => a.WorkerID == 30421), 1);
+            Assert.AreEqual(fakeworkOrder.workerRequestsDDD.Count(a => a.WorkerID == 12346), 0);
         }
 
     }

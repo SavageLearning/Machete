@@ -32,7 +32,7 @@ namespace Machete.Web.ViewModel
         public virtual ICollection<WorkAssignment> workAssignments { get; set; }
 
         [LocalizedDisplayName("workerRequests", NameResourceType = typeof(Resources.WorkOrder))]
-        public virtual ICollection<WorkerRequest> workerRequests { get; set; }
+        public virtual ICollection<WorkerRequest> workerRequestsAAA { get; set; }
         public virtual ICollection<Email> Emails { get; set; }
 
         // Constructor

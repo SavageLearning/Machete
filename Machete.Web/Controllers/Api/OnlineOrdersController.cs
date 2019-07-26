@@ -94,16 +94,16 @@ namespace Machete.Web.Controllers.Api
 
             // TODO: Not mapping to view object throws JsonSerializationException, good to test error
             // handling with...(delay in error)
-            var result = map.Map<Domain.WorkOrder, WorkOrder>(order);
+            ViewModel.WorkOrder result = map.Map<Domain.WorkOrder, ViewModel.WorkOrder>(order);
             return new JsonResult(new { data = result });
         }
 
         // POST: api/OnlineOrders
         [Authorize(Roles = "Administrator, Hirer")]
         [HttpPost("")]
-        public ActionResult Post([FromBody]WorkOrder viewmodel)
+        public ActionResult Post([FromBody]ViewModel.WorkOrder viewmodel)
         {
-            var workOrder = map.Map<WorkOrder, Domain.WorkOrder>(viewmodel);
+            var workOrder = map.Map<ViewModel.WorkOrder, Domain.WorkOrder>(viewmodel);
             workOrder.Employer = Employer;
             workOrder.EmployerID = Employer.ID;
             workOrder.onlineSource = true;
@@ -128,7 +128,7 @@ namespace Machete.Web.Controllers.Api
                 };
                 return BadRequest(res);
             }
-            var result = map.Map<Domain.WorkOrder, WorkOrder>(newOrder);
+            ViewModel.WorkOrder result = map.Map<Domain.WorkOrder, ViewModel.WorkOrder>(newOrder);
             return new JsonResult(new { data = result });
         }
 

@@ -84,7 +84,7 @@ namespace Machete.Service
             var wa = waRepo.GetById(id);
             if (wa.workerAssignedID != null)
             {
-                wa.workerAssigned = wRepo.GetById((int)wa.workerAssignedID);
+                wa.workerAssignedDDD = wRepo.GetById((int)wa.workerAssignedID);
             }         
             return wa;
         }
@@ -419,7 +419,7 @@ namespace Machete.Service
             // if changed from orphan assignment
             if (workerAssignedID != null)
             {
-                wa.workerAssigned = wRepo.GetById((int)wa.workerAssignedID);
+                wa.workerAssignedDDD = wRepo.GetById((int)wa.workerAssignedID);
             }
             wa.updatedByUser(user);
             updateComputedValues(ref wa, wo.paperOrderNum);

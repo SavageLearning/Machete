@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Security.Cryptography;
 using AutoMapper;
+using AutoMapper.EquivalencyExpression;
 using Machete.Data;
 using Machete.Data.Tenancy;
 using Machete.Web.Maps;
@@ -63,9 +64,19 @@ namespace Machete.Web
             });
 
             services.ConfigureAuthentication(Configuration);
-
+//            Mapper.Initialize(cfg =>
+//            {
+//                cfg.ConfigureApi();
+//                cfg.ConfigureMvc();
+//                cfg.AddCollectionMappers();
+//                // Configuration code
+//            });
+//
+//            services.AddAutoMapper();
             var mapperConfig = new MapperConfiguration(maps =>
             {
+                maps.AllowNullCollections = true;
+                maps.CreateMissingTypeMaps = false;
                 maps.ConfigureMvc();
                 maps.ConfigureApi();
             });
@@ -77,7 +88,7 @@ namespace Machete.Web
             // https://stackoverflow.com/questions/34753498/self-referencing-loop-detected-in-asp-net-core
             services.AddMvc(options =>
             {
-                options.MaxValidationDepth = 8; // if there is a recursive error, don't go crazy
+                options.MaxValidationDepth = 4; // if there is a recursive error, don't go crazy
                 options.SuppressChildValidationForOneToManyRelationships();
                 
                 // options.Filters.Add(new AuthorizeFilter()); }) // <~ for JWT auth                    

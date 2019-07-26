@@ -176,7 +176,7 @@ namespace Machete.Service
                                                && p.workOrder.statusID == WorkOrder.iActive); break;
                 case "requested":
                     q = q.Where(p => p.workerAssignedID == null 
-                                  && p.workOrder.workerRequests.Any() == true 
+                                  && p.workOrder.workerRequestsDDD.Any() == true 
                                   && p.workOrder.statusID == WorkOrder.iActive);
 
                     break;
@@ -185,7 +185,7 @@ namespace Machete.Service
                                     sk => sk.ID,
                                     (wa, sk) => new { wa, sk })
                              .Where(jj => jj.sk.speciality == true 
-                                       && jj.wa.workerAssigned == null 
+                                       && jj.wa.workerAssignedDDD == null 
                                        && jj.wa.workOrder.statusID == WorkOrder.iActive)
                              .Select(jj => jj.wa);
                     break;
@@ -323,7 +323,7 @@ namespace Machete.Service
                 case "description": q = descending ? q.OrderByDescending(p => p.description) : q.OrderBy(p => p.description); break;
                 case "updatedby": q = descending ? q.OrderByDescending(p => p.updatedby) : q.OrderBy(p => p.updatedby); break;
                 case "dateupdated": q = descending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated); break;
-                case "assignedWorker": q = descending ? q.OrderByDescending(p => p.workerAssigned == null ? 0 : p.workerAssigned.dwccardnum) : q.OrderBy(p => p.workerAssigned == null ? 0 : p.workerAssigned.dwccardnum); break;
+                case "assignedWorker": q = descending ? q.OrderByDescending(p => p.workerAssignedDDD == null ? 0 : p.workerAssignedDDD.dwccardnum) : q.OrderBy(p => p.workerAssignedDDD == null ? 0 : p.workerAssignedDDD.dwccardnum); break;
                 default: q = descending ? q.OrderByDescending(p => p.workOrder.dateTimeofWork) : q.OrderBy(p => p.workOrder.dateTimeofWork); break;
             }
         }

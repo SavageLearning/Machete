@@ -31,7 +31,9 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.idString, opt => opt.Ignore())
                 .ForMember(v => v.datecreatedstring, opt => opt.Ignore())
                 .ForMember(v => v.workAssignments, opt => opt.MapFrom(d => d.workAssignments)).MaxDepth(3)
-                .ForMember(v => v.workerRequests, opt => opt.MapFrom(d => d.workerRequests))
+                //.ForMember(v => v.workAssignments, opt => opt.Condition(d => d.workAssignments.Count > 0)).MaxDepth(3)
+                .ForMember(v => v.workerRequestsAAA, opt => opt.MapFrom(d => d.workerRequestsDDD))
+                //.ForMember(v => v.workerRequestsAAA, opt => opt.Condition(d => d.workerRequestsDDD.Count > 0))
                 ;
             //
             //

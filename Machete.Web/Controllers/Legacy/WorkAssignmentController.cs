@@ -156,7 +156,7 @@ namespace Machete.Web.Controllers
             WorkAssignment _assignment = waServ.Get(id);
             WorkAssignment duplicate = (WorkAssignment)_assignment.Clone();
             duplicate.ID = 0;
-            duplicate.workerAssigned = null;
+            duplicate.workerAssignedDDD = null;
             duplicate.workerAssignedID = null;
             duplicate.workerSiginin = null;
             duplicate.workerSigninID = null;

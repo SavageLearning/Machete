@@ -67,3 +67,5 @@ Machete\.Web/Published
 machete1env.list
 
 node_modules/
+
+Machete\.Web/appsettings\.json

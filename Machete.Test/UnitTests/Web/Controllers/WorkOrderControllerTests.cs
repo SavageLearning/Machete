@@ -218,7 +218,7 @@ namespace Machete.Test.UnitTests.Controllers
         public async Task edit_post_invalid_throws_exception()
         {
             //Arrange
-            var workOrder = new WorkOrder { workerRequests = _workerRequest };
+            var workOrder = new WorkOrder { workerRequestsDDD = _workerRequest };
             _testid = 4242;
             _serv.Setup(p => p.Get(_testid)).Returns(workOrder);
             var list = new List<WorkerRequest>();

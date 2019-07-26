@@ -13,12 +13,12 @@ namespace Machete.Service
                 .ForMember(v => v.WAOrphanedCount,      opt => opt.MapFrom(d => d.workAssignments.Count(wa => wa.workerAssignedID != null && wa.workerSigninID == null)))
                 .ForMember(v => v.emailSentCount,       opt => opt.MapFrom(d => d.Emails.Where(e => e.statusID == Domain.Email.iSent || e.statusID == Domain.Email.iReadyToSend).Count()))
                 .ForMember(v => v.emailErrorCount,      opt => opt.MapFrom(d => d.Emails.Where(e => e.statusID == Domain.Email.iTransmitError).Count()))
-                .ForMember(v => v.workers,              opt => opt.MapFrom(d => d.workAssignments.Where(wa => wa.workerAssigned != null )))
+                .ForMember(v => v.workers,              opt => opt.MapFrom(d => d.workAssignments.Where(wa => wa.workerAssignedDDD != null )))
             ;
             //
             CreateMap<Domain.WorkAssignment, DTO.WorkerAssignedList>()
-                .ForMember(v => v.WID, opt => opt.MapFrom(d => d.workerAssigned.dwccardnum))
-                .ForMember(v => v.name, opt => opt.MapFrom(d => d.workerAssigned.Person.fullName))
+                .ForMember(v => v.WID, opt => opt.MapFrom(d => d.workerAssignedDDD.dwccardnum))
+                .ForMember(v => v.name, opt => opt.MapFrom(d => d.workerAssignedDDD.Person.fullName))
                 .ForMember(v => v.wage, opt => opt.MapFrom(d => d.hourlyWage))
                 ;       
         } 

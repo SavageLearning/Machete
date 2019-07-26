@@ -63,7 +63,7 @@ namespace Machete.Web.Controllers.Api
         [HttpPost("")]
         public void Post([FromBody]TransportProvider value)
         {
-            var domain = map.Map<TransportProvider, Domain.TransportProvider>(value);
+            var domain = map.Map<ViewModel.Api.TransportProvider, Domain.TransportProvider>(value);
             serv.Save(domain, UserEmail);
         }
 

@@ -440,8 +440,8 @@ namespace Machete.Test.Selenium.View
             SelectOptionByIndex(By.Id(prefix + "lunchSupplied"), _wo.lunchSupplied ? 2 : 1);
             
             Thread.Sleep(1000); //prevent race condition
-            if (_wo.workerRequests != null)
-                foreach (var request in _wo.workerRequests)
+            if (_wo.workerRequestsAAA != null)
+                foreach (var request in _wo.workerRequestsAAA)
                 {
                     WaitThenClickElement(By.Id("addRequestBtn-" + _wo.ID));
                     ReplaceElementText(By.XPath("//*[@id='workerTable-0_filter']/label/input"), request.ID.ToString());
@@ -515,8 +515,8 @@ namespace Machete.Test.Selenium.View
             //WaitForElement(By.Id(prefix + "transportTransactType"));
             //Assert.AreEqual(_wo.transportTransactType, GetOptionIndex(By.Id(prefix + "transportTransactType")));
             WaitForElement(By.Id("workerRequests2_WO-" + _wo.ID));
-            if (_wo.workerRequests != null)
-                foreach (var request in _wo.workerRequests)
+            if (_wo.workerRequestsAAA != null)
+                foreach (var request in _wo.workerRequestsAAA)
                 {
                     WaitForElementValue(By.XPath("//*[@id='workerRequests2_WO-" + _wo.ID + "']/option"), request.workerRequested.fullNameAndID);
                 }

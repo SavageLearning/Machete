@@ -389,10 +389,10 @@ else
 
 @Html.DisplayForModel()
 <div class="tb-label">
-    @Html.LabelFor(model => model.workerRequests)
+    @Html.LabelFor(model => model.workerRequestsAAA)
 </div>
 <div class="tb-field">
-    @foreach (var req in Model.workerRequests)
+    @foreach (var req in Model.workerRequestsAAA)
     {
         @String.Format(req.workerRequested.dwccardnum + "--" + req.workerRequested.fullName) // TODO verify
         <br />

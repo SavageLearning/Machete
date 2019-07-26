@@ -79,7 +79,7 @@ namespace Machete.Web.Controllers
             {
                 var dateforsigninUTC = TimeZoneInfo.ConvertTimeToUtc(dateforsignin, _clientTimeZoneInfo);
                 var wsi = _serv.CreateSignin(dwccardnum, dateforsigninUTC, userName);
-                var result = _map.Map<Domain.WorkerSignin, WorkerSignin>(wsi);
+                var result = _map.Map<Domain.WorkerSignin, ViewModel.WorkerSignin>(wsi);
                 return Json(result);
             }
             catch (NullReferenceException)

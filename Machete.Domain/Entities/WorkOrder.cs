@@ -41,7 +41,7 @@ namespace Machete.Domain
         public virtual Employer Employer { get; set; }
 
         public virtual ICollection<WorkAssignment> workAssignments { get; set; }
-        public virtual ICollection<WorkerRequest> workerRequests { get; set; }
+        public virtual ICollection<WorkerRequest> workerRequestsDDD { get; set; }
 
         private ICollection<EmailWorkOrder> WorkOrderEmails { get; } = new List<EmailWorkOrder>();
         [NotMapped] public ICollection<Email> Emails;

@@ -17,13 +17,13 @@ namespace Machete.Web.Maps
                     + System.String.Format("{0,5:D5}-{1,2:D2}", d.workOrder.paperOrderNum, d.pseudoID)))
                 .ForMember(v => v.def, opt => opt.Ignore())
                 .ForMember(v => v.idString, opt => opt.Ignore())
-                .ForMember(v => v.isWorkerAssigned, opt => opt.MapFrom(d => d.workerAssigned == null ? false : true))
+                .ForMember(v => v.isWorkerAssigned, opt => opt.MapFrom(d => d.workerAssignedDDD == null ? false : true))
                 .ForMember(v => v.assignedWorkerDwccardnum, 
-                           opt => opt.MapFrom(d => d.workerAssigned == null ? null : (int?)d.workerAssigned.dwccardnum))
+                           opt => opt.MapFrom(d => d.workerAssignedDDD == null ? null : (int?)d.workerAssignedDDD.dwccardnum))
                 .ForMember(v => v.assignedWorkerFullname, 
                            opt => opt.MapFrom(
-                               d => d.workerAssigned != null && d.workerAssigned.Person != null 
-                               ? d.workerAssigned.Person.fullName : null))
+                               d => d.workerAssignedDDD != null && d.workerAssignedDDD.Person != null 
+                               ? d.workerAssignedDDD.Person.fullName : null))
                 .ForMember(v => v.workOrder_DateTimeOfWork, opt => opt.MapFrom(d => d.workOrder.dateTimeofWork))
                 .MaxDepth(3)
             ;
@@ -32,12 +32,13 @@ namespace Machete.Web.Maps
                  .ForMember(v => v.earnings, opt => opt.MapFrom(d => d.minEarnings))
                  .ForMember(v => v.maxEarnings, opt => opt.MapFrom(d => d.maxEarnings))
                  .ForMember(v => v.paperOrderNum, opt => opt.MapFrom(d => d.workOrder.paperOrderNum))
-                 .ForMember(v => v.assignedWorker, opt => opt.MapFrom(d => d.workerAssigned == null ? null : d.workerAssigned.Person.fullName))
+                 .ForMember(v => v.assignedWorker, opt => opt.MapFrom(d => d.workerAssignedDDD == null ? null : d.workerAssignedDDD.Person.fullName))
                  .ForMember(v => v.requestedList, opt => opt.MapFrom(d => 
-                    d.workOrder.workerRequests.Select( a=> a.workerRequested.fullNameAndID)))
+                    d.workOrder.workerRequestsDDD.Select( a=> a.workerRequested.fullNameAndID)))
                  .ForMember(v => v.dateTimeofWork, opt => opt.MapFrom(d => d.workOrder.dateTimeofWork))
                  .ForMember(v => v.WOstatus, opt => opt.MapFrom(d => d.workOrder.statusID))
                  .ForMember(v => v.timeZoneOffset, opt => opt.MapFrom(d => d.workOrder.timeZoneOffset))
+                 .ForMember(v => v.workerAssignedDWCCardnum, opt => opt.MapFrom(d => d.workerAssignedDDD.dwccardnum))
 
             ;
             CreateMap<Service.DTO.WorkAssignmentsList, ViewModel.WorkAssignmentsList>()

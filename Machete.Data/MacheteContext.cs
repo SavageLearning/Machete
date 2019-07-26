@@ -130,7 +130,7 @@ namespace Machete.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(_tenant.ConnectionString);
-            optionsBuilder.UseLazyLoadingProxies();
+            //optionsBuilder.UseLazyLoadingProxies();
             
             base.OnConfiguring(optionsBuilder);
         }
@@ -1068,7 +1068,7 @@ namespace Machete.Data
                     .HasForeignKey(d => d.workOrderID)
                     .HasConstraintName("FK_dbo.WorkAssignments_dbo.WorkOrders_workOrderID");
 
-                entity.HasOne(d => d.workerAssigned)
+                entity.HasOne(d => d.workerAssignedDDD)
                     .WithMany(p => p.workAssignments)
                     .HasForeignKey(d => d.workerAssignedID)
                     .HasConstraintName("FK_dbo.WorkAssignments_dbo.Workers_workerAssignedID");
@@ -1081,6 +1081,12 @@ namespace Machete.Data
 
             modelBuilder.Entity<WorkOrder>(entity =>
             {
+                entity.HasMany(e => e.workerRequestsDDD)
+                    .WithOne(e => e.workOrder);
+
+                entity.HasMany(e => e.workAssignments)
+                    .WithOne(e => e.workOrder);
+                
                 entity.HasIndex(e => e.dateTimeofWork)
                     .HasName("dateTimeofWork");
 
@@ -1254,7 +1260,7 @@ namespace Machete.Data
                 entity.Property(e => e.WorkerID).HasColumnName("WorkerID");
 
                 entity.HasOne(d => d.workOrder)
-                    .WithMany(p => p.workerRequests)
+                    .WithMany(p => p.workerRequestsDDD)
                     .HasForeignKey(d => d.WorkOrderID)
                     .HasConstraintName("FK_dbo.WorkerRequests_dbo.WorkOrders_WorkOrderID");
 
