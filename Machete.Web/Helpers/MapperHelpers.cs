@@ -18,8 +18,8 @@ namespace Machete.Web.Helpers
         
         public static DateTime EndDate { get; set; }
 
-        public static DateTime UtcToClient(this DateTime date) =>
-            TimeZoneInfo.ConvertTimeFromUtc(date, ClientTimeZoneInfo);
+        public static DateTime UtcToClient(this DateTime date) => // Specify Utc because the method says it explicitly
+            TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(date, DateTimeKind.Utc), ClientTimeZoneInfo);
 
         public static string UtcToClientString(this DateTime date) =>
             date.UtcToClient().ToString(CultureInfo.InvariantCulture);

@@ -217,7 +217,7 @@ namespace Machete.Web.Controllers
         /// <returns>JSON Object representing new Work Order</returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public async Task<ActionResult> Create(WorkOrder wo, string userName, [FromForm] List<int> workerRequests)
+        public async Task<ActionResult> Create(WorkOrder wo, string userName, [FromForm] List<int> workerRequestsAAA)
         {
             ModelState.ThrowIfInvalid();
             var modelUpdated = await _adaptor.TryUpdateModelAsync(this, wo);
@@ -225,7 +225,7 @@ namespace Machete.Web.Controllers
             
             List<Domain.WorkerRequest> wRequests = new List<Domain.WorkerRequest>();
 
-            foreach (var workerID in workerRequests)
+            foreach (var workerID in workerRequestsAAA)
             {
                 wRequests.Add(new WorkerRequest { WorkerID = workerID });
             }

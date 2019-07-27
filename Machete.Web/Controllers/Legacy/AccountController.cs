@@ -124,9 +124,15 @@ namespace Machete.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
+            _levent.Level = LogLevel.Info;
+            _levent.Message = "Logon failed for " + model.UserName;
+            _logger.Log(_levent);            
+
             if (ModelState.IsValid)
             {
-                await VerifyClaimsExistFor(model.UserName);
+                var user = await VerifyClaimsExistFor(model.UserName);
+                
+                if (user == null) return View(model);
 
                 var result = await _signinManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
                 
@@ -144,9 +150,6 @@ namespace Machete.Web.Controllers
             }
 
             // If we got this far, something failed, redisplay form
-            _levent.Level = LogLevel.Info;
-            _levent.Message = "Logon failed for " + model.UserName;
-            _logger.Log(_levent);            
             return View(model);
         }
 
@@ -477,10 +480,12 @@ namespace Machete.Web.Controllers
         }
         
         //https://www.c-sharpcorner.com/article/claim-based-and-policy-based-authorization-with-asp-net-core-2-1/
-        private async Task VerifyClaimsExistFor(string username)
+        private async Task<MacheteUser> VerifyClaimsExistFor(string username)
         {
             // They are probably using an email, but not necessarily. Either way, it should be "username" in the db.
             var user = await _userManager.FindByNameAsync(username);
+            
+            if (user == null) return user;
             
             var claims = await _userManager.GetClaimsAsync(user);
             var claimsList = claims.Select(claim => claim.Type).ToList();
@@ -490,6 +495,8 @@ namespace Machete.Web.Controllers
             if (!claimsList.Contains(CAType.email))
                 await _userManager.AddClaimAsync(user, new Claim(CAType.email, user.Email));
             // In the above we use the user.Email regardless of UserName. TODO inform them if a discrepancy exists.
+            
+            return user;
         }
 
         public enum ManageMessageId
