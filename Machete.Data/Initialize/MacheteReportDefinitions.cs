@@ -1496,7 +1496,6 @@ where a.datestart > @beginDate
 and a.datestart < @enddate
 order by count desc"
 			},
-			// 
 			new ReportDefinition
 			{
 				name = "UniqueDispatchedWorkers",
@@ -1516,15 +1515,16 @@ order by count desc"
 	group by dwccardnum, fullname
 	order by [Job count] desc"
 			},
+
 			new ReportDefinition
 			{
-				name = "MemberAttendanceMetrics",
-				commonName = "Member Attendance metrics",
-				description =
-					"A list of unique members within a given time period, with counts of dispatches, activities, and ESL classes for the period.",
+				name = "MemberAttendanceSiginMetrics",
+				commonName = "Member Attendance and Signin metrics",
+				description ="A list of unique members within a given time period, with counts of dispatches, activities, sign ins and ESL classes for the period.",
 				category = "Attendance",
 				sqlquery =
-					@"with jobs (dwccardnum, Jobcount)
+			@"
+			;with jobs (dwccardnum, Jobcount)
 as
 (
 	SELECT dwccardnum, count(*) as [Jobcount]
@@ -1533,7 +1533,7 @@ as
 	JOIN dbo.Workers Ws on WAs.workerAssignedID = Ws.ID
 	join dbo.lookups l on l.id = wos.status
 	WHERE dateTimeofWork >= @begindate 
-	and dateTimeofWork <= @EnDdate
+	and dateTimeofWork < @enddate
 	and l.text_EN = 'Completed'
 	group by dwccardnum
 ),
@@ -1543,7 +1543,7 @@ as
 	select dwccardnum, count(*) as [actcount]
 	from activitysignins asi
 	where dateforsignin >= @begindate
-	and dateforsignin <= @enddate
+	and dateforsignin < @enddate
 	group by dwccardnum
 ),
 esl (dwccardnum, eslcount)
@@ -1555,9 +1555,22 @@ as
 
 	where aa.nameen in ('English Class 1', 'English Class 2', 'Somos Vecinos')
 	and asi1.dateforsignin >= @begindate
-	and asi1.dateforsignin <= @enddate
+	and asi1.dateforsignin < @enddate
 	group by asi1.dwccardnum
 ),
+
+signins (dwccardnum, signincount)
+as
+(
+
+	select wsi.dwccardnum, count(*) as [signincount]
+	from WorkerSignins wsi
+
+	Where wsi.dateforsignin >= @begindate
+	and wsi.dateforsignin < @enddate
+	group by wsi.dwccardnum
+),
+
 cardnums (dwccardnum)
 as
 (
@@ -1566,19 +1579,25 @@ as
 	  select dwccardnum from act
 	  union
 	  select dwccardnum from esl
+	  union
+	  select dwccardnum from signins
 	
 )
 select distinct(cn.dwccardnum) [Member number]
 , p.fullname [Member name]
+, case when w.homeless = 0 then 'no' when w.homeless is null then 'unknown' else 'yes' end as [Homeless]
+, cast(isnull([signincount],0) as int) as [Sign Ins]
 , cast(isnull([jobcount],0) as int) as  [Dispatches]
 , cast(isnull([actcount],0) as int) as [Activities]
 , cast(isnull([eslcount],0) as int) as [ESL]
+
 from cardnums cn 
 join workers w on cn.dwccardnum = w.dwccardnum
 join persons p on w.id = p.id
 left join jobs on cn.dwccardnum = jobs.dwccardnum
 left join act on jobs.dwccardnum = act.dwccardnum
 left join esl on esl.dwccardnum = jobs.dwccardnum
+left join signins on signins.dwccardnum = jobs.dwccardnum
 
 where jobcount is not null or actcount is not null or eslcount is not null
 "
