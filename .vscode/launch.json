@@ -5,12 +5,34 @@
    "version": "0.2.0",
    "configurations": [
         {
+          "name": ".NET Core Launch (web)",
+          "type": "coreclr",
+          "request": "launch",
+          "preLaunchTask": "build",
+          // If you have changed target frameworks, make sure to update the program path.
+          "program": "${workspaceFolder}/Machete.Web/bin/Debug/netcoreapp2.2/Machete.Web.dll",
+          "args": [],
+          "cwd": "${workspaceFolder}/Machete.Web",
+          "stopAtEntry": false,
+          // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
+          "serverReadyAction": {
+            "action": "openExternally",
+            "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"                
+          },
+          "env": {
+            "ASPNETCORE_ENVIRONMENT": "Development"
+          },
+          "sourceFileMap": {
+            "/Views": "${workspaceFolder}/Views"
+          }
+        },
+        {
             "name": ".NET Core Launch (console)",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/Machete.Test/bin/Debug/netcoreapp2.1/Machete.Test.dll",
+            "program": "${workspaceFolder}/Machete.Test/bin/Debug/netcoreapp2.2/Machete.Test.dll",
             "args": [],
             "cwd": "${workspaceFolder}/Machete.Test",
             // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
@@ -24,5 +46,5 @@
             "request": "attach",
             "processId": "${command:pickProcess}"
         }
-    ,]
+    ]
 }
