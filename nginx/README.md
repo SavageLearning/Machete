@@ -10,7 +10,10 @@ that it includes with this line:
 ```
     include /etc/nginx/conf.d/*.conf;
 ```  
-  
+The file controls, among other things, logging; instructions for APM style logging can be found
+[in the NginX docs](https://www.nginx.com/blog/using-nginx-logging-for-application-performance-monitoring/).
+The goal is to implement better logging over time.
+
 `conf.d/`  
 Named after the `/etc/nginx/conf.d/` directory in the Machete nginx container, this directory
 contains example setup files, each of which contain a single server directive. Each directive
