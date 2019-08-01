@@ -1496,7 +1496,6 @@ where a.datestart > @beginDate
 and a.datestart < @enddate
 order by count desc"
 			},
-			// 
 			new ReportDefinition
 			{
 				name = "UniqueDispatchedWorkers",
@@ -1516,15 +1515,14 @@ order by count desc"
 	group by dwccardnum, fullname
 	order by [Job count] desc"
 			},
+
 			new ReportDefinition
 			{
-				name = "MemberAttendanceMetrics",
-				commonName = "Member Attendance metrics",
-				description =
-					"A list of unique members within a given time period, with counts of dispatches, activities, and ESL classes for the period.",
+				name = "MemberAttendanceSiginMetrics",
+				commonName = "Member Attendance and Signin metrics",
+				description ="A list of unique members within a given time period, with counts of dispatches, activities, sign ins and ESL classes for the period.",
 				category = "Attendance",
-				sqlquery =
-					@"with jobs (dwccardnum, Jobcount)
+				sqlquery = @";with jobs (dwccardnum, Jobcount)
 as
 (
 	SELECT dwccardnum, count(*) as [Jobcount]
@@ -1533,7 +1531,7 @@ as
 	JOIN dbo.Workers Ws on WAs.workerAssignedID = Ws.ID
 	join dbo.lookups l on l.id = wos.status
 	WHERE dateTimeofWork >= @begindate 
-	and dateTimeofWork <= @EnDdate
+	and dateTimeofWork < @enddate
 	and l.text_EN = 'Completed'
 	group by dwccardnum
 ),
@@ -1543,7 +1541,7 @@ as
 	select dwccardnum, count(*) as [actcount]
 	from activitysignins asi
 	where dateforsignin >= @begindate
-	and dateforsignin <= @enddate
+	and dateforsignin < @enddate
 	group by dwccardnum
 ),
 esl (dwccardnum, eslcount)
@@ -1555,9 +1553,22 @@ as
 
 	where aa.nameen in ('English Class 1', 'English Class 2', 'Somos Vecinos')
 	and asi1.dateforsignin >= @begindate
-	and asi1.dateforsignin <= @enddate
+	and asi1.dateforsignin < @enddate
 	group by asi1.dwccardnum
 ),
+
+signins (dwccardnum, signincount)
+as
+(
+
+	select wsi.dwccardnum, count(*) as [signincount]
+	from WorkerSignins wsi
+
+	Where wsi.dateforsignin >= @begindate
+	and wsi.dateforsignin < @enddate
+	group by wsi.dwccardnum
+),
+
 cardnums (dwccardnum)
 as
 (
@@ -1566,22 +1577,170 @@ as
 	  select dwccardnum from act
 	  union
 	  select dwccardnum from esl
+	  union
+	  select dwccardnum from signins
 	
 )
 select distinct(cn.dwccardnum) [Member number]
 , p.fullname [Member name]
+, case when w.homeless = 0 then 'no' when w.homeless is null then 'unknown' else 'yes' end as [Homeless]
+, cast(isnull([signincount],0) as int) as [Sign Ins]
 , cast(isnull([jobcount],0) as int) as  [Dispatches]
 , cast(isnull([actcount],0) as int) as [Activities]
 , cast(isnull([eslcount],0) as int) as [ESL]
+
 from cardnums cn 
 join workers w on cn.dwccardnum = w.dwccardnum
 join persons p on w.id = p.id
 left join jobs on cn.dwccardnum = jobs.dwccardnum
 left join act on jobs.dwccardnum = act.dwccardnum
 left join esl on esl.dwccardnum = jobs.dwccardnum
+left join signins on signins.dwccardnum = jobs.dwccardnum
 
-where jobcount is not null or actcount is not null or eslcount is not null
-"
+where jobcount is not null or actcount is not null or eslcount is not null"
+			},
+
+			new ReportDefinition 
+			{
+				name = "HHHEmployerMetrics",
+				commonName = "Metrics for HHH Employers",
+				description ="A list of employers who hired workers from HHH program within selected time range and metrics",
+				category = "Attendance",
+				sqlquery = @";with referredByName (referredByLU, Aid)
+as
+(	select 
+	ISNULL(l.text_EN, '') as [referredByLU]
+	, a.id as [Aid]
+	FROM employers a
+	left join lookups l
+	on a.referredby = l.id
+)
+
+SELECT 
+distinct(a.name) as [Employer Name]
+, a.address1 + ' ' + ISNULL(a.address2, '') + ' ' + a.city + ', ' + a.state as [Address Lines]
+, a.zipcode as [ZipCode]
+, a.phone as [Primary Phone]
+, ISNULL((CASE WHEN ISNULL(a.cellphone, '') not in (a.phone) THEN a.cellphone END), '') as [Secondary Phone]
+--have to use created by, beacuse employer emails are not being passed
+, ISNULL((CASE WHEN a.Createdby like '%@%' THEN a.Createdby ELSE a.email END), '') as [Email]
+, CASE WHEN a.receiveUpdates = 1 THEN 'y' ELSE '' END as [Receive Updates]
+, CASE when a.Createdby like '%@%' THEN 'y' ELSE '' END AS [Created Profile Online]
+, refN.referredByLU + CASE WHEN refN.referredByLU != '' AND a.[referredbyOther] IS NOT NULL THEN ': ' ELSE ' ' END + ISNULL(a.[referredbyOther], '') as [Referred by]
+, count(b.id) as [# of Orders Made]
+, count(d.id) as [Workers hired]
+, count(distinct(d.id)) as [Unique Workers]
+, count(d.id) - count(distinct(d.id)) as [Repeat Hires]
+, SUM(CASE WHEN b.onlineSource = 1 THEN 1 ELSE 0 END) as [Online Orders]
+, format(max(b.dateTimeofWork), 'd') as [Last Hired]
+
+
+FROM employers a
+inner join referredByName refN
+on a.id = refN.Aid
+inner join workorders b
+on a.id=b.employerid
+inner join workassignments c
+on b.paperordernum=c.workorderid
+inner join persons d
+on c.workerassignedid=d.id
+inner join workers e
+on e.id=d.id
+
+
+WHERE b.datetimeofwork >= @begindate
+AND b.datetimeofwork < @enddate
+AND b.status = 44
+AND e.typeOfWork = 'hhh'
+
+Group by 
+a.name
+, a.address1
+, a.address2
+, a.city
+, a.state
+, a.zipcode
+, a.Createdby
+, a.email
+, a.phone
+, a.cellphone
+, a.[receiveUpdates]
+, a.Createdby
+, refN.referredByLU
+, a.[referredbyOther]
+
+order by format(max(b.dateTimeofWork), 'd')"
+			},
+
+			new ReportDefinition {
+				name = "DWCEmployerMetrics",
+				commonName = "Metrics for DWC Employers",
+				description ="A list of employers who hired workers from DWC program within selected time range and metrics",
+				category = "Attendance",
+				sqlquery = @";with referredByName (referredByLU, Aid)
+as
+(	select 
+	ISNULL(l.text_EN, '') as [referredByLU]
+	, a.id as [Aid]
+	FROM employers a
+	left join lookups l
+	on a.referredby = l.id
+)
+
+SELECT 
+distinct(a.name) as [Employer Name]
+, a.address1 + ' ' + ISNULL(a.address2, '') + ' ' + a.city + ', ' + a.state as [Address Lines]
+, a.zipcode as [ZipCode]
+, a.phone as [Primary Phone]
+, ISNULL((CASE WHEN ISNULL(a.cellphone, '') not in (a.phone) THEN a.cellphone END), '') as [Secondary Phone]
+--have to use created by, beacuse employer emails are not being passed
+, ISNULL((CASE WHEN a.Createdby like '%@%' THEN a.Createdby ELSE a.email END), '') as [Email]
+, CASE WHEN a.receiveUpdates = 1 THEN 'y' ELSE '' END as [Receive Updates]
+, CASE when a.Createdby like '%@%' THEN 'y' ELSE '' END AS [Created Profile Online]
+, refN.referredByLU + CASE WHEN refN.referredByLU != '' AND a.[referredbyOther] IS NOT NULL THEN ': ' ELSE ' ' END + ISNULL(a.[referredbyOther], '') as [Referred by]
+, count(b.id) as [# of Orders Made]
+, count(d.id) as [Workers hired]
+, count(distinct(d.id)) as [Unique Workers]
+, count(d.id) - count(distinct(d.id)) as [Repeat Hires]
+, SUM(CASE WHEN b.onlineSource = 1 THEN 1 ELSE 0 END) as [Online Orders]
+, format(max(b.dateTimeofWork), 'd') as [Last Hired]
+
+
+FROM employers a
+inner join referredByName refN
+on a.id = refN.Aid
+inner join workorders b
+on a.id=b.employerid
+inner join workassignments c
+on b.paperordernum=c.workorderid
+inner join persons d
+on c.workerassignedid=d.id
+inner join workers e
+on e.id=d.id
+
+
+WHERE b.datetimeofwork >= @begindate
+AND b.datetimeofwork < @enddate
+AND b.status = 44
+AND e.typeOfWork = 'dwc'
+
+Group by 
+a.name
+, a.address1
+, a.address2
+, a.city
+, a.state
+, a.zipcode
+, a.Createdby
+, a.email
+, a.phone
+, a.cellphone
+, a.[receiveUpdates]
+, a.Createdby
+, refN.referredByLU
+, a.[referredbyOther]
+
+order by format(max(b.dateTimeofWork), 'd')"
 			}
 
 			#endregion
