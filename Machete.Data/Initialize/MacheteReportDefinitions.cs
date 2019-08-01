@@ -1522,9 +1522,7 @@ order by count desc"
 				commonName = "Member Attendance and Signin metrics",
 				description ="A list of unique members within a given time period, with counts of dispatches, activities, sign ins and ESL classes for the period.",
 				category = "Attendance",
-				sqlquery =
-			@"
-			;with jobs (dwccardnum, Jobcount)
+				sqlquery = @";with jobs (dwccardnum, Jobcount)
 as
 (
 	SELECT dwccardnum, count(*) as [Jobcount]
@@ -1599,19 +1597,16 @@ left join act on jobs.dwccardnum = act.dwccardnum
 left join esl on esl.dwccardnum = jobs.dwccardnum
 left join signins on signins.dwccardnum = jobs.dwccardnum
 
-where jobcount is not null or actcount is not null or eslcount is not null
-"
+where jobcount is not null or actcount is not null or eslcount is not null"
 			},
+
 			new ReportDefinition 
 			{
 				name = "HHHEmployerMetrics",
 				commonName = "Metrics for HHH Employers",
 				description ="A list of employers who hired workers from HHH program within selected time range and metrics",
 				category = "Attendance",
-				sqlquery =
-				@"
-			
-;with referredByName (referredByLU, Aid)
+				sqlquery = @";with referredByName (referredByLU, Aid)
 as
 (	select 
 	ISNULL(l.text_EN, '') as [referredByLU]
@@ -1619,29 +1614,25 @@ as
 	FROM employers a
 	left join lookups l
 	on a.referredby = l.id
-	--order by l.text_EN
 )
 
 SELECT 
 distinct(a.name) as [Employer Name]
-, a.address1
-, ISNULL(a.address2, '') as [address2]
-, a.city
-, a.state
+, a.address1 + ' ' + ISNULL(a.address2, '') + ' ' + a.city + ', ' + a.state as [Address Lines]
 , a.zipcode as [ZipCode]
 , a.phone as [Primary Phone]
-, ISNULL(a.cellphone, '') as [Secondary Phone]
-, ISNULL(a.email, '') as [Email]
-, CASE WHEN a.receiveUpdates = 1 THEN 'yes' ELSE 'no' END as [Receive Updates]
-, CASE when a.Createdby like '%@%' THEN 'true' ELSE 'false' END AS [Created Profile Online]
-, refN.referredByLU as [referred by]
-, ISNULL(a.[referredbyOther], '') as [referredbyOther]
+, ISNULL((CASE WHEN ISNULL(a.cellphone, '') not in (a.phone) THEN a.cellphone END), '') as [Secondary Phone]
+--have to use created by, beacuse employer emails are not being passed
+, ISNULL((CASE WHEN a.Createdby like '%@%' THEN a.Createdby ELSE a.email END), '') as [Email]
+, CASE WHEN a.receiveUpdates = 1 THEN 'y' ELSE '' END as [Receive Updates]
+, CASE when a.Createdby like '%@%' THEN 'y' ELSE '' END AS [Created Profile Online]
+, refN.referredByLU + CASE WHEN refN.referredByLU != '' AND a.[referredbyOther] IS NOT NULL THEN ': ' ELSE ' ' END + ISNULL(a.[referredbyOther], '') as [Referred by]
 , count(b.id) as [# of Orders Made]
-, count(d.id) as [Number of workers hired]
+, count(d.id) as [Workers hired]
 , count(distinct(d.id)) as [Unique Workers]
-, count(d.id) - count(distinct(d.id)) as [Workers Hired More than once]
-, SUM(CASE WHEN b.onlineSource = 1 THEN 1 ELSE 0 END) as [# of Orders made online]
-, format(max(b.dateTimeofWork), 'd') as [lastHiredDate]
+, count(d.id) - count(distinct(d.id)) as [Repeat Hires]
+, SUM(CASE WHEN b.onlineSource = 1 THEN 1 ELSE 0 END) as [Online Orders]
+, format(max(b.dateTimeofWork), 'd') as [Last Hired]
 
 
 FROM employers a
@@ -1660,8 +1651,6 @@ on e.id=d.id
 WHERE b.datetimeofwork >= @begindate
 AND b.datetimeofwork < @enddate
 AND b.status = 44
---AND b.status = 44
---AND a.email IS NOT NULL
 AND e.typeOfWork = 'hhh'
 
 Group by 
@@ -1671,19 +1660,88 @@ a.name
 , a.city
 , a.state
 , a.zipcode
+, a.Createdby
 , a.email
 , a.phone
 , a.cellphone
-, CASE WHEN a.[receiveUpdates] = 1 THEN 'yes' ELSE 'no' END
-, CASE when a.Createdby like '%@%' THEN 'true' ELSE 'false' END
+, a.[receiveUpdates]
+, a.Createdby
 , refN.referredByLU
 , a.[referredbyOther]
 
---order by a.name
---order by count(d.id) - count(distinct(d.id)) desc --order by Repeat Hires
-order by format(max(b.dateTimeofWork), 'd')
-"
-		}
+order by format(max(b.dateTimeofWork), 'd')"
+			},
+
+			new ReportDefinition {
+				name = "DWCEmployerMetrics",
+				commonName = "Metrics for DWC Employers",
+				description ="A list of employers who hired workers from DWC program within selected time range and metrics",
+				category = "Attendance",
+				sqlquery = @";with referredByName (referredByLU, Aid)
+as
+(	select 
+	ISNULL(l.text_EN, '') as [referredByLU]
+	, a.id as [Aid]
+	FROM employers a
+	left join lookups l
+	on a.referredby = l.id
+)
+
+SELECT 
+distinct(a.name) as [Employer Name]
+, a.address1 + ' ' + ISNULL(a.address2, '') + ' ' + a.city + ', ' + a.state as [Address Lines]
+, a.zipcode as [ZipCode]
+, a.phone as [Primary Phone]
+, ISNULL((CASE WHEN ISNULL(a.cellphone, '') not in (a.phone) THEN a.cellphone END), '') as [Secondary Phone]
+--have to use created by, beacuse employer emails are not being passed
+, ISNULL((CASE WHEN a.Createdby like '%@%' THEN a.Createdby ELSE a.email END), '') as [Email]
+, CASE WHEN a.receiveUpdates = 1 THEN 'y' ELSE '' END as [Receive Updates]
+, CASE when a.Createdby like '%@%' THEN 'y' ELSE '' END AS [Created Profile Online]
+, refN.referredByLU + CASE WHEN refN.referredByLU != '' AND a.[referredbyOther] IS NOT NULL THEN ': ' ELSE ' ' END + ISNULL(a.[referredbyOther], '') as [Referred by]
+, count(b.id) as [# of Orders Made]
+, count(d.id) as [Workers hired]
+, count(distinct(d.id)) as [Unique Workers]
+, count(d.id) - count(distinct(d.id)) as [Repeat Hires]
+, SUM(CASE WHEN b.onlineSource = 1 THEN 1 ELSE 0 END) as [Online Orders]
+, format(max(b.dateTimeofWork), 'd') as [Last Hired]
+
+
+FROM employers a
+inner join referredByName refN
+on a.id = refN.Aid
+inner join workorders b
+on a.id=b.employerid
+inner join workassignments c
+on b.paperordernum=c.workorderid
+inner join persons d
+on c.workerassignedid=d.id
+inner join workers e
+on e.id=d.id
+
+
+WHERE b.datetimeofwork >= @begindate
+AND b.datetimeofwork < @enddate
+AND b.status = 44
+AND e.typeOfWork = 'dwc'
+
+Group by 
+a.name
+, a.address1
+, a.address2
+, a.city
+, a.state
+, a.zipcode
+, a.Createdby
+, a.email
+, a.phone
+, a.cellphone
+, a.[receiveUpdates]
+, a.Createdby
+, refN.referredByLU
+, a.[referredbyOther]
+
+order by format(max(b.dateTimeofWork), 'd')"
+			}
 
 			#endregion
 		};
