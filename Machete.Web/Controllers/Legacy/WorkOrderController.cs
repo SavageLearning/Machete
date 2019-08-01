@@ -284,7 +284,7 @@ namespace Machete.Web.Controllers
         //[Bind(Exclude = "workerRequests")]
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public async Task<ActionResult> Edit(int id, string userName, List<int> workerRequests)
+        public async Task<ActionResult> Edit(int id, string userName, List<int> workerRequestsAAA)
         {
             ModelState.ThrowIfInvalid();
             
@@ -294,7 +294,7 @@ namespace Machete.Web.Controllers
             
             List<WorkerRequest> workerRequestList = _reqServ.GetAllByWorkOrderID(workOrder.ID);
 
-            foreach (var workerID in workerRequests)
+            foreach (var workerID in workerRequestsAAA)
             {
                 if (!workerRequestList.Any(workerRequest => workerRequest.WorkerID == workerID))
                     workerRequestList.Add(new WorkerRequest { WorkerID = workerID });
