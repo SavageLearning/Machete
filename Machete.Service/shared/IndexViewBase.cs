@@ -203,11 +203,14 @@ namespace Machete.Service
         public static void filterOnDatePart(string search, DateTime parsedTime, ref IQueryable<WorkAssignment> query)
         {
             if (isMonthSpecific.IsMatch(search))  //Regex for month/year
-                query = query.Where(p => DbFunctions.DiffMonths(p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
+                query = query.Where(p => SqlServerDbFunctionsExtensions
+                                             .DateDiffMonth(null, p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
             if (isDaySpecific.IsMatch(search))  //Regex for day/month/year
-                query = query.Where(p => DbFunctions.DiffDays(p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
+                query = query.Where(p => SqlServerDbFunctionsExtensions
+                                             .DateDiffDay(null, p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
             if (isTimeSpecific.IsMatch(search)) //Regex for day/month/year time
-                query = query.Where(p => DbFunctions.DiffHours(p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
+                query = query.Where(p => SqlServerDbFunctionsExtensions
+                                             .DateDiffHour(null, p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
             //throw new ArgumentException("Date string not valid for Month,Day, or Hour pattern");
 
         }
@@ -336,11 +339,14 @@ namespace Machete.Service
             if (isDateTime = DateTime.TryParse(o.sSearch, out parsedTime))
             {
                 if (isMonthSpecific.IsMatch(o.sSearch))  //Regex for month/year
-                    q = q.Where(p => DbFunctions.DiffMonths(p.dateTimeofWork, parsedTime) == 0 ? true : false);
+                    q = q.Where(p => SqlServerDbFunctionsExtensions
+                                         .DateDiffMonth(null, p.dateTimeofWork, parsedTime) == 0 ? true : false);
                 if (isDaySpecific.IsMatch(o.sSearch))  //Regex for day/month/year
-                    q = q.Where(p => DbFunctions.DiffDays(p.dateTimeofWork, parsedTime) == 0 ? true : false);
+                    q = q.Where(p => SqlServerDbFunctionsExtensions
+                                         .DateDiffDay(null, p.dateTimeofWork, parsedTime) == 0 ? true : false);
                 if (isTimeSpecific.IsMatch(o.sSearch)) //Regex for day/month/year time
-                    q = q.Where(p => DbFunctions.DiffHours(p.dateTimeofWork, parsedTime) == 0 ? true : false);
+                    q = q.Where(p => SqlServerDbFunctionsExtensions
+                                         .DateDiffHour(null, p.dateTimeofWork, parsedTime) == 0 ? true : false);
             }
             else
             {
@@ -383,11 +389,14 @@ namespace Machete.Service
             if (DateTime.TryParse(search, out parsedTime))
             {
                 if (isMonthSpecific.IsMatch(search))  //Regex for month/year
-                    return query.Where(p => DbFunctions.DiffMonths(p.dateTimeofWork, parsedTime) == 0 ? true : false);
+                    return query.Where(p => SqlServerDbFunctionsExtensions
+                                                .DateDiffMonth(null, p.dateTimeofWork, parsedTime) == 0 ? true : false);
                 if (isDaySpecific.IsMatch(search))  //Regex for day/month/year
-                    return query.Where(p => DbFunctions.DiffDays(p.dateTimeofWork, parsedTime) == 0 ? true : false);
+                    return query.Where(p => SqlServerDbFunctionsExtensions
+                                                .DateDiffDay(null, p.dateTimeofWork, parsedTime) == 0 ? true : false);
                 if (isTimeSpecific.IsMatch(search)) //Regex for day/month/year time
-                    return query.Where(p => DbFunctions.DiffHours(p.dateTimeofWork, parsedTime) == 0 ? true : false);
+                    return query.Where(p => SqlServerDbFunctionsExtensions
+                                                .DateDiffHour(null, p.dateTimeofWork, parsedTime) == 0 ? true : false);
             }
             return query;
         }

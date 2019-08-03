@@ -29,7 +29,6 @@ using Machete.Data;
 using Machete.Data.Initialize;
 using Machete.Test.Integration.Fluent;
 using Microsoft.Extensions.DependencyInjection;
-using DbFunctions = Machete.Service.DbFunctions;
 
 namespace Machete.Test.Integration.Data
 {
@@ -56,7 +55,8 @@ namespace Machete.Test.Integration.Data
             // Act
             var q = frb.ToFactory().WorkerSignins.AsQueryable();
             q = q.Where(r => r.dwccardnum == signin.dwccardnum
-                             && DbFunctions.DiffDays(r.dateforsignin, signin.dateforsignin) == 0);           
+                             && SqlServerDbFunctionsExtensions
+                                 .DateDiffDay(null, r.dateforsignin, signin.dateforsignin) == 0);           
             WorkerSignin result = q.FirstOrDefault();
             // Assert
             Assert.IsNotNull(result.ID);

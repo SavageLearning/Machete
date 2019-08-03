@@ -32,6 +32,7 @@ using Machete.Web.ViewModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace Machete.Web.Helpers
 {
@@ -78,7 +79,8 @@ namespace Machete.Web.Helpers
                 Email = user.Email,
                 IsApproved = user.IsApproved ? "Yes" : "No",
                 IsLockedOut = user.IsLockedOut ? "Yes" : "No",
-                IsOnline = DbFunctions.DiffHours(user.LastLoginDate, DateTime.Now) < 1 ? "Yes" : "No",
+                IsOnline = SqlServerDbFunctionsExtensions
+                               .DateDiffHour(null, user.LastLoginDate, DateTime.Now) < 1 ? "Yes" : "No",
                 CreationDate = user.CreateDate,
                 LastLoginDate = user.LastLoginDate,
                 IsHirer = isHirer
