@@ -551,12 +551,10 @@ namespace Machete.Service
         {
             q = q.Where(p => p.notes.Contains(o.sSearch) ||
                              p.teacher.Contains(o.sSearch) ||
-                             p.dateStart.ToString().Contains(o.sSearch) ||
-                             p.nameES.ToString().Contains(o.sSearch) ||
-                             p.typeES.ToString().Contains(o.sSearch) ||
-                             p.nameEN.ToString().Contains(o.sSearch) ||
-                             p.typeEN.ToString().Contains(o.sSearch) ||
-                             p.dateEnd.ToString().Contains(o.sSearch));
+                             p.nameES.Contains(o.sSearch) ||
+                             p.typeES.Contains(o.sSearch) ||
+                             p.nameEN.Contains(o.sSearch) ||
+                             p.typeEN.Contains(o.sSearch));
         }
 
         public static void search(viewOptions o, ref IQueryable<ActivitySignin> q)
