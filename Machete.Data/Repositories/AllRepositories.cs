@@ -163,15 +163,6 @@ namespace Machete.Data
     {
         public WorkOrderRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
         
-        override public IQueryable<WorkOrder> GetAllQ()
-        {
-            return dbset.Include(a => a.Employer)
-                .Include(a => a.workAssignments)
-                .ThenInclude(a => a.workerAssignedDDD)
-                .Include(a => a.workerRequestsDDD)
-                .AsNoTracking()
-                .AsQueryable();
-        }
         public IEnumerable<WorkOrder> GetActiveOrders(DateTime date)
         {
             return dbset.Where(wo => wo.statusID == WorkOrder.iActive
