@@ -292,13 +292,15 @@ namespace Machete.Web.Controllers
             var modelUpdated = await _adaptor.TryUpdateModelAsync(this, workOrder);
             if (!modelUpdated) return StatusCode(500);
             
-            List<WorkerRequest> workerRequestList = _reqServ.GetAllByWorkOrderID(workOrder.ID);
+            var workerRequestList = _reqServ.GetAllByWorkOrderID(workOrder.ID).ToList();
+
+            for (var i = workerRequestList.Count - 1; i >= 0; i--)
+                if (!workerRequestsAAA.Contains(workerRequestList[i].WorkerID))
+                    workerRequestList.RemoveAt(i);
 
             foreach (var workerID in workerRequestsAAA)
-            {
                 if (!workerRequestList.Any(workerRequest => workerRequest.WorkerID == workerID))
-                    workerRequestList.Add(new WorkerRequest { WorkerID = workerID });
-            }
+                    workerRequestList.Add(new WorkerRequest {WorkerID = workerID});
 
             workOrder.dateTimeofWork = TimeZoneInfo.ConvertTimeToUtc(workOrder.dateTimeofWork, _clientTimeZoneInfo);
             
