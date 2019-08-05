@@ -1,16 +1,10 @@
-﻿using Machete.Data;
-using Machete.Domain;
+﻿using Machete.Domain;
 using Machete.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Practices.Unity;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Machete.Test.Integration
+namespace Machete.Test.Integration.Fluent
 {
-    public partial class FluentRecordBase : IDisposable
+    public partial class FluentRecordBase
     {
         private ITransportProvidersService _servTP;
         private TransportProvider _tp;
@@ -20,7 +14,7 @@ namespace Machete.Test.Integration
         {
             //
             // DEPENDENCIES
-            _servTP = container.Resolve<ITransportProvidersService>();
+            _servTP = container.GetRequiredService<ITransportProvidersService>();
 
             //
             // ARRANGE

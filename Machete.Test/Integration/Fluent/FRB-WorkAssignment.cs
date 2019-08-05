@@ -1,16 +1,12 @@
-﻿using Machete.Data;
+﻿using System;
 using Machete.Domain;
 using Machete.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Practices.Unity;
+using Microsoft.Extensions.DependencyInjection;
+using ViewModel = Machete.Web.ViewModel;
 
-namespace Machete.Test.Integration
+namespace Machete.Test.Integration.Fluent
 {
-    public partial class FluentRecordBase : IDisposable
+    public partial class FluentRecordBase
     {
         private IWorkAssignmentService _servWA;
         private WorkAssignment _wa;
@@ -27,13 +23,14 @@ namespace Machete.Test.Integration
             //
             // DEPENDENCIES
             if (_wo == null) AddWorkOrder();
-            if (assignWorker == true && _w == null) AddWorker();
-            _servWA = container.Resolve<IWorkAssignmentService>();
+            _servWA = container.GetRequiredService<IWorkAssignmentService>();
             //
             // ARRANGE
             _wa = (WorkAssignment)Records.assignment.Clone();
             _wa.workOrder = _wo;
-            if (assignWorker) _wa.workerAssigned = _w;
+            _wa.workOrderID = _wo.ID;
+
+            if (assignWorker) _wa.workerAssignedDDD = AddWorker();
             if (datecreated != null) _wa.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _wa.dateupdated = (DateTime)dateupdated;
             if (desc != null) _wa.description = desc;
@@ -51,18 +48,18 @@ namespace Machete.Test.Integration
             return _wa;
         }
 
-        public Web.ViewModel.WorkAssignment CloneWorkAssignment()
+        public ViewModel.WorkAssignment CloneWorkAssignment()
         {
-            AddMapper();
-            var wa = _webMap.Map<Machete.Domain.WorkAssignment, Web.ViewModel.WorkAssignment>
+            ToWebMapper();
+            var wa = _webMap.Map<WorkAssignment, ViewModel.WorkAssignment>
                 ((WorkAssignment)Records.assignment.Clone());
             wa.description = RandomString(10);
             return wa;
         }
 
-        public Machete.Domain.WorkAssignment CloneDomainWorkAssignment()
+        public WorkAssignment CloneDomainWorkAssignment()
         {
-            var wa = (Machete.Domain.WorkAssignment)Records.assignment.Clone();
+            var wa = (WorkAssignment)Records.assignment.Clone();
             wa.description = RandomString(10);
             return wa;
         }

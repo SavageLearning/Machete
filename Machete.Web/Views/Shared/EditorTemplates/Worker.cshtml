@@ -1,225 +1,521 @@
-﻿@model Machete.Web.ViewModel.Worker
+@model Machete.Web.ViewModel.Worker
+
+@using Machete.Domain
 @using Machete.Web.Helpers
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.Localization
 @using Machete.Web.Resources
+
+
 @{
-    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
-    string lang = CI.TwoLetterISOLanguageName;
-    string recType = "worker";
-    string idPrefix = recType + Model.ID + "-";
+    var httpContext = ViewContext.HttpContext;
+    var currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
+    var recType = "worker";
+    var idPrefix = recType + Model.ID + "-";
 }
+
 @Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID" })
+
 <div class="mui-edit-block">
     <div class="tb-table">
-        <div class "tb-row">
+        <div class="tb-row">
             <h4>Worker Details</h4>
         </div>
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.dwccardnum)
-            @Html.mUITableTextBoxFor(model => model.dwccardnum,
-                new { @tabindex = "1", @class = "workerEditor", @id = idPrefix + "dwccardnum" })
-            @Html.mUITableLabelFor(model => model.dateOfMembership)
-            @Html.mUITableDateTextBoxFor(m => m.dateOfMembership,
-                new { @tabindex = "4", @class = "ui-datepicker workerEditor", id = idPrefix + "dateOfMembership" })
+            <div class="tb-label">
+                @Html.LabelFor(model => model.dwccardnum)
+            </div>
+            <div class="tb-field">
+                @Html.TextBoxFor(model => model.dwccardnum,
+                    new { tabindex = "1", @class = "workerEditor", id = idPrefix + "dwccardnum" })
+                @Html.ValidationMessageFor(model => model.dwccardnum)
+            </div>
+            <div class="tb-label">
+                @Html.LabelFor(model => model.dateOfMembership)
+            </div>
+            <div class="tb-field">
+                @Html.TextBox("dateOfMembership", Model.dateOfMembership.ToShortTextBoxDateString(),
+                    new { tabindex = "4", @class = "ui-datepicker workerEditor", id = idPrefix + "dateOfMembership" })
+                @Html.ValidationMessageFor(model => model.dateOfMembership)
+            </div>
         </div>
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.memberStatusID)
-            @Html.mUITableDropDownListFor(model => model.memberStatusID, Model.def.getSelectList(Machete.Domain.LCategory.memberstatus),
-                new { tabindex = "2", @class = "workerEditor", id = idPrefix + "memberStatusID" })
-            @Html.mUITableLabelFor(model => model.memberexpirationdate)
-            @Html.mUITableDateTextBoxFor(m => m.memberexpirationdate,
-                new { tabindex = "5", @class = "ui-datepicker workerEditor",  id = idPrefix + "memberexpirationdate" })
+            <div class="tb-label">
+                @Html.LabelFor(model => model.memberStatusID)
+            </div>
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.memberStatusID,
+                    new SelectList(Model.def.getSelectList(LCategory.memberstatus), "Value",
+                    "Text", Model), Shared.choose,
+                    new { tabindex = "2", @class = "workerEditor", id = idPrefix + "memberStatusID" })
+                @Html.ValidationMessageFor(model => model.memberStatusID)
+            </div>
+            <div class="tb-label">
+                @Html.LabelFor(model => model.memberexpirationdate)
+            </div>
+            <div class="tb-field">
+                @Html.TextBox("memberexpirationdate", Model.memberexpirationdate.ToShortTextBoxDateString(),
+                    new { tabindex = "5", @class = "ui-datepicker workerEditor",  id = idPrefix + "memberexpirationdate" })
+                @Html.ValidationMessageFor(model => model.memberexpirationdate)
+            </div>
         </div>
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.englishlevelID)
-            @Html.mUITableDropDownListFor(model => model.englishlevelID, Model.def.skillLevels(),
-                new { tabindex = "3", @class = "workerEditor", id = idPrefix + "englishlevelID" })
-            @Html.mUITableLabelFor(model => model.memberReactivateDate)
-            @Html.mUITableDateTextBoxFor(m => m.memberReactivateDate,
-                new { tabindex = "6", @class = "ui-datepicker workerEditor",  id = idPrefix + "memberReactivateDate" })
+            <div class="tb-label">
+                @Html.LabelFor(model => model.englishlevelID)
+            </div>
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.englishlevelID,
+                    new SelectList(Model.def.skillLevels(),
+                    "Value", "Text", Model), Shared.choose,
+                    new { tabindex = "3", @class = "workerEditor", id = idPrefix + "englishlevelID" })
+                @Html.ValidationMessageFor(model => model.memberStatusID)
+            </div>
+            <div class="tb-label">
+                @Html.LabelFor(model => model.memberReactivateDate)
+            </div>
+            <div class="tb-field">
+                @Html.TextBox("memberReactivateDate", Model.memberReactivateDate.ToShortTextBoxDateString(),
+                    new { tabindex = "6", @class = "ui-datepicker workerEditor", id = idPrefix + "memberReactivateDate" })
+                @Html.ValidationMessageFor(model => model.memberReactivateDate)
+            </div>
         </div>
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.lastPaymentDate)
-            @Html.mUITableDateTextBoxFor(m => m.lastPaymentDate,
-                new { tabindex = "4", @class = "ui-datepicker workerEditor",  id = idPrefix + "lastPaymentDate" })
-            @Html.mUITableLabelFor(model => model.lastPaymentAmount)
-            @Html.mUITableTextBoxFor(model => model.lastPaymentAmount,
-                new { @tabindex = "7", @class = "workerEditor", @id = idPrefix + "lastPaymentAmount" })
+            <div class="tb-label">
+                @Html.LabelFor(model => model.lastPaymentDate)
+            </div>
+            <div class="tb-field">
+                @Html.TextBox("lastPaymentDate", Model.lastPaymentDate.ToShortTextBoxDateString(),
+                    new { tabindex = "4", @class = "ui-datepicker workerEditor", id = idPrefix + "lastPaymentDate" })
+                @Html.ValidationMessageFor(model => model.lastPaymentDate)
+            </div>
+            <div class="tb-label">
+                @Html.LabelFor(model => model.lastPaymentAmount)
+            </div>
+            <div class="tb-field">
+                @Html.TextBoxFor(model => model.lastPaymentAmount,
+                    new { tabindex = "7", @class = "workerEditor", id = idPrefix + "lastPaymentAmount" })
+                @Html.ValidationMessageFor(model => model.lastPaymentAmount)
+            </div>
         </div>
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.ownTools)
-            @Html.mUIDropDownYesNoFor(model => model.ownTools, Model.def.yesnoSelectList(), new { tabindex = "5", @class = "workerEditor", id = idPrefix + "ownTools" })
-            @Html.mUITableLabelFor(model => model.introToCenter)
-            @Html.mUITableTextBoxFor(model => model.introToCenter,
-                new { @tabindex = "8", @class = "workerEditor", @id = idPrefix + "introToCenter" })
+            <div class="tb-label">
+                @Html.LabelFor(model => model.ownTools)
+            </div>
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.ownTools, new SelectList(Model.def.yesnoSelectList(),
+                    "Value", "Text", Model), Shared.choose,
+                    new { tabindex = "5", @class = "workerEditor", id = idPrefix + "ownTools" })
+                @Html.ValidationMessageFor(model => model.ownTools)
+            </div>
+            <div class="tb-label">
+                @Html.LabelFor(model => model.introToCenter)
+            </div>
+            <div class="tb-field">
+                @Html.TextBoxFor(model => model.introToCenter, new { tabindex = "8", @class = "workerEditor", id = idPrefix + "introToCenter" })
+                @Html.ValidationMessageFor(model => model.introToCenter)
+            </div>
         </div>
     </div>
     <div class="tb-table">
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.typeOfWorkID)
-            @Html.mUITableDropDownListFor(model => model.typeOfWorkID, Model.def.getSelectList(Machete.Domain.LCategory.worktype), 
-                new { tabindex = "6", @class = "workerEditor", id = idPrefix + "typeOfWorkID" })
+            <div class="tb-label">
+                @Html.LabelFor(model => model.typeOfWorkID)
+            </div>
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.typeOfWorkID,
+                    new SelectList(Model.def.getSelectList(LCategory.worktype), "Value",
+                    "Text", Model), Shared.choose,
+                    new { tabindex = "6", @class = "workerEditor", id = idPrefix + "typeOfWorkID" })
+                @Html.ValidationMessageFor(model => model.memberStatusID)
+            </div>
         </div>
     </div>
     <div class="tb-table">
-        <div class "tb-row">
+        <div class="tb-row">
             <h4>Demographics</h4>
         </div>
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.RaceID)
-            @Html.mUITableDropDownListFor(model => model.RaceID, Model.def.getSelectList(Machete.Domain.LCategory.race),
-                new { tabindex = "10", @class = "workerEditor", id = idPrefix + "RaceID" })
-            @Html.mUITableLabelFor(model => model.height)
-            @Html.mUITableTextBoxFor(m => m.height, new { @class = "workerEditor", id = idPrefix + "height", tabindex = "13" })
+            <div class="tb-label">
+                @Html.LabelFor(model => model.RaceID)
+            </div>
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.RaceID, new SelectList(Model.def.getSelectList(LCategory.race), "Value", "Text", Model), Shared.choose, new { tabindex = "10", @class = "workerEditor", id = idPrefix + "RaceID" });
+                @Html.ValidationMessageFor(model => model.RaceID)
+            </div>
+            <div class="tb-label">
+                @Html.LabelFor(model => model.height)
+            </div>
+            <div class="tb-field">
+                @Html.TextBoxFor(model => model.height, new { @class = "workerEditor", id = idPrefix + "height", tabindex = "13" })
+                @Html.ValidationMessageFor(model => model.height)
+            </div>
         </div>
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.raceother)
-            @Html.mUITableTextBoxFor(m => m.raceother, 
-                new { tabindex = "11",@class = "workerEditor", id = idPrefix + "raceother" })
-            @Html.mUITableLabelFor(model => model.weight)
-            @Html.mUITableTextBoxFor(m => m.weight, new { @class = "workerEditor", id = idPrefix + "weight", tabindex = "14" })
+            <div class="tb-label">
+                @Html.LabelFor(model => model.raceother)
+            </div>
+            <div class="tb-field">
+                @Html.TextBoxFor(model => model.raceother, new { tabindex = "11",@class = "workerEditor", id = idPrefix + "raceother" })
+                @Html.ValidationMessageFor(model => model.raceother)
+            </div>
+            <div class="tb-label">
+                @Html.LabelFor(model => model.weight)
+            </div>
+            <div class="tb-field">
+                @Html.TextBoxFor(model => model.weight, new { @class = "workerEditor", id = idPrefix + "weight", tabindex = "14" })
+                @Html.ValidationMessageFor(model => model.weight)
+            </div>
         </div>
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.dateOfBirth)
-            @Html.mUITableDateTextBoxFor(m => m.dateOfBirth, new { @class = "ui-datepicker workerEditor", tabindex = "12", id = idPrefix + "dateOfBirth" })
+            <div class="tb-label">
+                @Html.LabelFor(model => model.dateOfBirth)
+            </div>
+            <div class="tb-field">
+                @Html.TextBox("dateOfBirth", Model.dateOfBirth.ToShortTextBoxDateString(),
+                    new { @class = "ui-datepicker workerEditor", tabindex = "12", id = idPrefix + "dateOfBirth" })
+                @Html.ValidationMessageFor(model => model.dateOfBirth)
+            </div>
         </div>
-        <div class "tb-row">
+        <div class="tb-row">
             <h4>Housing</h4>
         </div>
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.neighborhoodID)
-            @Html.mUITableDropDownListFor(model => model.neighborhoodID, Model.def.getSelectList(Machete.Domain.LCategory.neighborhood),
+            <div class="tb-label">
+                @Html.LabelFor(model => model.neighborhoodID)
+            </div>
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.neighborhoodID,
+                    new SelectList(Model.def.getSelectList(LCategory.neighborhood),
+                    "Value", "Text", Model), Shared.choose,
                     new { tabindex = "20", @class = "workerEditor", id = idPrefix + "neighborhoodID" })
-            @Html.mUITableLabelFor(model => model.housingType)
-            @Html.mUITableDropDownListFor(model => model.housingType, Model.def.getSelectList(Machete.Domain.LCategory.housingType),
+                @Html.ValidationMessageFor(model => model.neighborhoodID)
+            </div>
+            <div class="tb-label">
+                @Html.LabelFor(model => model.housingType)
+            </div>
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.housingType,
+                    new SelectList(Model.def.getSelectList(LCategory.housingType),
+                    "Value", "Text", Model), Shared.choose,
                     new { tabindex = "22", @class = "workerEditor", id = idPrefix + "housingType" })
+                @Html.ValidationMessageFor(model => model.housingType)
+            </div>
         </div>
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.homeless)
-            @Html.mUIDropDownYesNoFor(model => model.homeless, Model.def.yesnoSelectList(), new { @tabindex = "21", @class = "workerEditor", @id = idPrefix + "homeless" })
+            <div class="tb-label">
+                @Html.LabelFor(model => model.homeless)
+            </div>
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.homeless, new SelectList(Model.def.yesnoSelectList(),
+                    "Value", "Text", Model),
+                    new { tabindex = "21", @class = "workerEditor", id = idPrefix + "homeless" })
+                @Html.ValidationMessageFor(model => model.homeless)
+            </div>
         </div>
-        <div class "tb-row">
+        <div class="tb-row">
             <h4>Background</h4>
         </div>
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.recentarrival)
-            @Html.mUIDropDownYesNoFor(model => model.recentarrival, Model.def.yesnoSelectList(), new { tabindex = "30", @class = "workerEditor", id = idPrefix + "recentarrival" })
-            @Html.mUITableLabelFor(model => model.dateinUSA)
-            @Html.mUITableDateTextBoxFor(m => m.dateinUSA, new { @class = "ui-datepicker workerEditor", tabindex = "33", id = idPrefix + "dateinUSA" })
+            <div class="tb-label">
+                @Html.LabelFor(model => model.recentarrival)
+            </div>
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.recentarrival, new SelectList(Model.def.yesnoSelectList(),
+                    "Value", "Text", Model),
+                    new { tabindex = "30", @class = "workerEditor", id = idPrefix + "recentarrival" })
+                @Html.ValidationMessageFor(model => model.recentarrival)
+            </div>
+            <div class="tb-label">
+                @Html.LabelFor(model => model.dateinUSA)
+            </div>
+            <div class="tb-field">
+                @Html.TextBox("dateinUSA", Model.dateinUSA.ToShortTextBoxDateString(), new { @class = "ui-datepicker workerEditor", tabindex = "33", id = idPrefix + "dateinUSA" })
+                @Html.ValidationMessageFor(model => model.dateinUSA)
+            </div>
         </div>
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.countryoforiginID)
-            @Html.mUIDropDownListFor(model => model.countryoforiginID, Model.def.getSelectList(Machete.Domain.LCategory.countryoforigin),
-                        new { tabindex = "31", @class = "workerEditor", id = idPrefix + "countryoforiginID" })
-            @Html.mUITableLabelFor(model => model.dateinseattle)
-            @Html.mUITableDateTextBoxFor(m => m.dateinseattle, new { @class = "ui-datepicker workerEditor", tabindex = "34", id = idPrefix + "dateinseattle" })
+            <div class="tb-label">
+                @Html.LabelFor(model => model.countryoforiginID)
+            </div>
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.countryoforiginID, new SelectList(Model.def.getSelectList(LCategory.countryoforigin), "Value", "Text", Model), Shared.choose, new { tabindex = "31", @class = "workerEditor", id = idPrefix + "countryoforiginID" })
+                @Html.ValidationMessageFor(model => model.countryoforiginID)
+            </div>
+            <div class="tb-label">
+                @Html.LabelFor(model => model.dateinseattle)
+            </div>
+            <div class="tb-field">
+                @Html.TextBox("dateinseattle", Model.dateinseattle.ToShortTextBoxDateString(), new { @class = "ui-datepicker workerEditor", tabindex = "34", id = idPrefix + "dateinseattle" })
+                @Html.ValidationMessageFor(model => model.dateinseattle)
+            </div>
         </div>
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.immigrantrefugee)
-            @Html.mUIDropDownYesNoFor(model => model.immigrantrefugee, Model.def.yesnoSelectList(), new { tabindex = "32", @class = "workerEditor", id = idPrefix + "immigrantrefugee" })
+            <div class="tb-label">
+                @Html.LabelFor(model => model.immigrantrefugee)
+            </div>
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.immigrantrefugee, new SelectList(Model.def.yesnoSelectList(),
+                    "Value", "Text", Model),
+                    new { tabindex = "32", @class = "workerEditor", id = idPrefix + "immigrantrefugee" })
+                @Html.ValidationMessageFor(model => model.immigrantrefugee)
+            </div>
         </div>
-        <div class "tb-row">
+        <div class="tb-row">
             <h4>Skill Background</h4>
         </div>
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.educationLevel)
-            @Html.mUIDropDownListFor(model => model.educationLevel, Model.def.getSelectList(Machete.Domain.LCategory.educationLevel),
-                        new { tabindex = "40", @class = "workerEditor", id = idPrefix + "educationLevel" })
-            @Html.mUITableLabelFor(model => model.farmLaborCharacteristics)
-            @Html.mUIDropDownListFor(model => model.farmLaborCharacteristics, Model.def.getSelectList(Machete.Domain.LCategory.farmLabor),
-                        new { tabindex = "41", @class = "workerEditor", id = idPrefix + "farmLaborCharacteristics" })
+            <div class="tb-label">
+                @Html.LabelFor(model => model.educationLevel)
+            </div>
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.educationLevel,
+                    new SelectList(Model.def.getSelectList(LCategory.educationLevel),
+                        "Value", "Text", Model), Shared.choose,
+                    new { tabindex = "40", @class = "workerEditor", id = idPrefix + "educationLevel" })
+                @Html.ValidationMessageFor(model => model.educationLevel)
+            </div>
+            <div class="tb-label">
+                @Html.LabelFor(model => model.farmLaborCharacteristics)
+            </div>
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.farmLaborCharacteristics,
+                    new SelectList(Model.def.getSelectList(LCategory.farmLabor),
+                        "Value", "Text", Model), Shared.choose,
+                    new { tabindex = "41", @class = "workerEditor", id = idPrefix + "farmLaborCharacteristics" })
+                @Html.ValidationMessageFor(model => model.farmLaborCharacteristics)
+            </div>
         </div>
-        <div class "tb-row">
+        <div class="tb-row">
             <h4>Household</h4>
         </div>
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.maritalstatus)
-            @Html.mUIDropDownListFor(model => model.maritalstatus, Model.def.getSelectList(Machete.Domain.LCategory.maritalstatus),
-                                        new { tabindex = "50", @class = "workerEditor", id = idPrefix + "maritalstatus" })
-            @Html.mUITableLabelFor(model => model.americanBornChildren)
-            @Html.mUIDropDownListFor(model => model.americanBornChildren, Model.def.getSelectList(Machete.Domain.LCategory.usBornChildren),
-                                        new { tabindex = "55", @class = "workerEditor", id = idPrefix + "maritalstatus" })
+            <div class="tb-label">
+                @Html.LabelFor(model => model.maritalstatus)
+            </div>
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.maritalstatus,
+                    new SelectList(Model.def.getSelectList(LCategory.maritalstatus),
+                        "Value", "Text", Model), Shared.choose,
+                    new { tabindex = "50", @class = "workerEditor", id = idPrefix + "maritalstatus" })
+                @Html.ValidationMessageFor(model => model.maritalstatus)
+            </div>
+            <div class="tb-label">
+                @Html.LabelFor(model => model.americanBornChildren)
+            </div>
+
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.americanBornChildren,
+                    new SelectList(Model.def.getSelectList(LCategory.usBornChildren),
+                        "Value", "Text", Model), Shared.choose,
+                    new { tabindex = "55", @class = "workerEditor", id = idPrefix + "maritalstatus" })
+                @Html.ValidationMessageFor(model => model.americanBornChildren)
+            </div>
         </div>
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.liveWithSpouse)
-            @Html.mUIDropDownYesNoFor(model => model.liveWithSpouse, Model.def.yesnoSelectList(), new { tabindex = "51", @class = "workerEditor", id = idPrefix + "liveWithSpouse" })
-            @Html.mUITableLabelFor(model => model.numofchildren)
-            @Html.mUITableTextBoxFor(m => m.numofchildren, new { tabindex = "56", @class = "workerEditor", id = idPrefix + "numofchildren" })
+            <div class="tb-label">
+                @Html.LabelFor(model => model.liveWithSpouse)
+            </div>
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.liveWithSpouse, new SelectList(Model.def.yesnoSelectList(),
+                    "Value", "Text", Model),
+                    new { tabindex = "51", @class = "workerEditor", id = idPrefix + "liveWithSpouse" })
+                @Html.ValidationMessageFor(model => model.liveWithSpouse)
+            </div>
+            <div class="tb-label">
+                @Html.LabelFor(model => model.numofchildren)
+            </div>
+            <div class="tb-field">
+                @Html.TextBoxFor(model => model.numofchildren, new { tabindex = "56", @class = "workerEditor", id = idPrefix + "numofchildren" })
+                @Html.ValidationMessageFor(model => model.numofchildren)
+            </div>
         </div>
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.livewithchildren)
-            @Html.mUIDropDownYesNoFor(model => model.livewithchildren, Model.def.yesnoSelectList(), new { tabindex = "52", @class = "workerEditor", id = idPrefix + "livewithchildren" })
-            @Html.mUITableLabelFor(model => model.numChildrenUnder18)
-            @Html.mUITableTextBoxFor(m => m.numChildrenUnder18, new { tabindex = "57", @class = "workerEditor", id = idPrefix + "numChildrenUnder18" })
+            <div class="tb-label">
+                @Html.LabelFor(model => model.livewithchildren)
+            </div>
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.livewithchildren, new SelectList(Model.def.yesnoSelectList(),
+                    "Value", "Text", Model),
+                    new { tabindex = "52", @class = "workerEditor", id = idPrefix + "livewithchildren" })
+                @Html.ValidationMessageFor(model => model.livewithchildren)
+            </div>
+            <div class="tb-label">
+                @Html.LabelFor(model => model.numChildrenUnder18)
+            </div>
+            <div class="tb-field">
+                @Html.TextBoxFor(model => model.numChildrenUnder18,
+                    new { tabindex = "57", @class = "workerEditor", id = idPrefix + "numChildrenUnder18" })
+                @Html.ValidationMessageFor(model => model.numChildrenUnder18)
+            </div>
         </div>
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.livealone)
-            @Html.mUIDropDownYesNoFor(model => model.livealone, Model.def.yesnoSelectList(), new { @tabindex = "53", @class = "workerEditor", @id = idPrefix + "livealone" })
-            @Html.mUITableLabelFor(model => model.incomeID)
-            @Html.mUIDropDownListFor(model => model.incomeID, Model.def.getSelectList(Machete.Domain.LCategory.income),
-                                        new { tabindex = "58", @class = "workerEditor", id = idPrefix + "incomeID" })
+            <div class="tb-label">
+                @Html.LabelFor(model => model.livealone)
+            </div>
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.livealone, new SelectList(Model.def.yesnoSelectList(),
+                    "Value", "Text", Model),
+                    new { tabindex = "53", @class = "workerEditor", id = idPrefix + "livealone" })
+                @Html.ValidationMessageFor(model => model.livealone)
+            </div>
+            <div class="tb-label">
+                @Html.LabelFor(model => model.incomeID)
+            </div>
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.incomeID,
+                    new SelectList(Model.def.getSelectList(LCategory.income),
+                        "Value", "Text", Model), Shared.choose,
+                    new { tabindex = "58", @class = "workerEditor", id = idPrefix + "incomeID" })
+                @Html.ValidationMessageFor(model => model.incomeID)
+            </div>
         </div>
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.liveWithDescription)
-            @Html.mUITableTextBoxFor(m => m.liveWithDescription, 
-                new { tabindex = "54",@class = "workerEditor", id = idPrefix + "liveWithDescription" })
-            @Html.mUITableLabelFor(model => model.incomeSourceID)
-            @Html.mUIDropDownListFor(model => model.incomeSourceID, Model.def.getSelectList(Machete.Domain.LCategory.incomeSourceID),
-                                        new { tabindex = "59", @class = "workerEditor", id = idPrefix + "incomeSourceID" })
+            <div class="tb-label">
+                @Html.LabelFor(model => model.liveWithDescription)
+            </div>
+            <div class="tb-field">
+                @Html.TextBoxFor(model => model.liveWithDescription, new { tabindex = "54",@class = "workerEditor", id = idPrefix + "liveWithDescription" })
+                @Html.ValidationMessageFor(model => model.liveWithDescription)
+            </div>
+            <div class="tb-label">
+                @Html.LabelFor(model => model.incomeSourceID)
+            </div>
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.incomeSourceID,
+                    new SelectList(Model.def.getSelectList(LCategory.incomeSourceID),
+                        "Value", "Text", Model), Shared.choose, 
+                    new { tabindex = "59", @class = "workerEditor", id = idPrefix + "incomeSourceID" })
+                @Html.ValidationMessageFor(model => model.incomeSourceID)
+            </div>
         </div>
-        <div class "tb-row">
+        <div class="tb-row">
             <h4>Vehicle</h4>
         </div>
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.driverslicense)
-            @Html.mUIDropDownYesNoFor(model => model.driverslicense, Model.def.yesnoSelectList(), new { tabindex = "60", @class = "workerEditor", id = idPrefix + "driverslicense" })
-            @Html.mUITableLabelFor(model => model.licenseexpirationdate)
-            @Html.mUITableDateTextBoxFor(m => m.licenseexpirationdate, new { @class = "ui-datepicker workerEditor", tabindex = "63", id = idPrefix + "licenseexpirationdate" })
+            <div class="tb-label">
+                @Html.LabelFor(model => model.driverslicense)
+            </div>
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.driverslicense, new SelectList(Model.def.yesnoSelectList(),
+                    "Value", "Text", Model),
+                    new { tabindex = "60", @class = "workerEditor", id = idPrefix + "driverslicense" })
+                @Html.ValidationMessageFor(model => model.driverslicense)
+            </div>
+            <div class="tb-label">
+                @Html.LabelFor(model => model.licenseexpirationdate)
+            </div>
+            <div class="tb-field">
+                @Html.TextBox("licenseexpirationdate", Model.licenseexpirationdate.ToShortTextBoxDateString(),
+                    new { @class = "ui-datepicker workerEditor", tabindex = "63", id = idPrefix + "licenseexpirationdate" })
+                @Html.ValidationMessageFor(model => model.licenseexpirationdate)
+            </div>
         </div>
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.carinsurance)
-            @Html.mUIDropDownYesNoFor(model => model.carinsurance, Model.def.yesnoSelectList(), new { tabindex = "61", @class = "workerEditor", id = idPrefix + "carinsurance" })
-            @Html.mUITableLabelFor(model => model.insuranceexpiration)
-            @Html.mUITableDateTextBoxFor(m => m.insuranceexpiration, new { @class = "ui-datepicker workerEditor", tabindex = "64", id = idPrefix + "insuranceexpiration" })
+            <div class="tb-label">
+                @Html.LabelFor(model => model.carinsurance)
+            </div>
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.carinsurance, new SelectList(Model.def.yesnoSelectList(),
+                    "Value", "Text", Model),
+                    new { tabindex = "61", @class = "workerEditor", id = idPrefix + "carinsurance" })
+                @Html.ValidationMessageFor(model => model.carinsurance)
+            </div>
+            <div class="tb-label">
+                @Html.LabelFor(model => model.insuranceexpiration)
+            </div>
+            <div class="tb-field">
+                @Html.TextBox("insuranceexpiration", Model.insuranceexpiration.ToShortTextBoxDateString(), new { @class = "ui-datepicker workerEditor", tabindex = "64", id = idPrefix + "insuranceexpiration" })
+                @Html.ValidationMessageFor(model => model.insuranceexpiration)
+            </div>
         </div>
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.vehicleTypeID)
-            @Html.mUIDropDownListFor(model => model.vehicleTypeID, Model.def.getSelectList(Machete.Domain.LCategory.vehicleTypeID),
-                                        new { tabindex = "62", @class = "workerEditor", id = idPrefix + "vehicleTypeID" })
+            <div class="tb-label">
+                @Html.LabelFor(model => model.vehicleTypeID)
+            </div>
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.vehicleTypeID,
+                    new SelectList(Model.def.getSelectList(LCategory.vehicleTypeID),
+                        "Value", "Text", Model), Shared.choose,
+                    new { tabindex = "62", @class = "workerEditor", id = idPrefix + "vehicleTypeID" })
+                @Html.ValidationMessageFor(model => model.vehicleTypeID)
+            </div>
         </div>
-        <div class "tb-row">
+        <div class="tb-row">
             <h4>Wage Theft</h4>
         </div>
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.wageTheftVictim)
-            @Html.mUIDropDownYesNoFor(model => model.wageTheftVictim, Model.def.yesnoSelectList(), new { tabindex = "70", @class = "workerEditor", id = idPrefix + "wageTheftVictim" })
-            @Html.mUITableLabelFor(model => model.wageTheftRecoveryAmount)
-            @Html.mUITableTextBoxFor(m => m.wageTheftRecoveryAmount, 
-                new { tabindex = "73",@class = "workerEditor", id = idPrefix + "wageTheftRecoveryAmount" })
+            <div class="tb-label">
+                @Html.LabelFor(model => model.wageTheftVictim)
+            </div>
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.wageTheftVictim, new SelectList(Model.def.yesnoSelectList(),
+                    "Value", "Text", Model),
+                    new { tabindex = "70", @class = "workerEditor", id = idPrefix + "wageTheftVictim" })
+                @Html.ValidationMessageFor(model => model.wageTheftVictim)
+            </div>
+            <div class="tb-label">
+                @Html.LabelFor(model => model.wageTheftRecoveryAmount)
+            </div>
+            <div class="tb-field">
+                @Html.TextBoxFor(model => model.wageTheftRecoveryAmount, new { tabindex = "73",@class = "workerEditor", id = idPrefix + "wageTheftRecoveryAmount" })
+                @Html.ValidationMessageFor(model => model.wageTheftRecoveryAmount)
+            </div>
         </div>
-        <div class "tb-row">
+        <div class="tb-row">
             <h4>Identity</h4>
         </div>
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.disabled)
-            @Html.mUIDropDownYesNoFor(model => model.disabled, Model.def.yesnoSelectList(), new { @tabindex = "71", @class = "workerEditor", @id = idPrefix + "disabled" })
-            @Html.mUITableLabelFor(model => model.disabilitydesc)
-            @Html.mUITableTextBoxFor(m => m.disabilitydesc, 
-                new { tabindex = "74",@class = "workerEditor", id = idPrefix + "disabilitydesc" })
+            <div class="tb-label">
+                @Html.LabelFor(model => model.disabled)
+            </div>
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.disabled, new SelectList(Model.def.yesnoSelectList(),
+                    "Value", "Text", Model),
+                    new { tabindex = "71", @class = "workerEditor", id = idPrefix + "disabled" })
+                @Html.ValidationMessageFor(model => model.disabled)
+            </div>
+            <div class="tb-label">
+                @Html.LabelFor(model => model.disabilitydesc)
+            </div>
+            <div class="tb-field">
+                @Html.TextBoxFor(model => model.disabilitydesc, new { tabindex = "74",@class = "workerEditor", id = idPrefix + "disabilitydesc" })
+                @Html.ValidationMessageFor(model => model.disabilitydesc)
+            </div>
         </div>
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.usVeteran)
-            @Html.mUIDropDownYesNoFor(model => model.usVeteran, Model.def.yesnoSelectList(), new { tabindex = "72", @class = "workerEditor", id = idPrefix + "usVeteran" })
-            @Html.mUITableLabelFor(model => model.lgbtq)
-            @Html.mUIDropDownYesNoFor(model => model.lgbtq, Model.def.yesnoSelectList(), new { tabindex = "75", @class = "workerEditor", id = idPrefix + "lgbtq" })
+            <div class="tb-label">
+                @Html.LabelFor(model => model.usVeteran)
+            </div>
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.usVeteran, new SelectList(Model.def.yesnoSelectList(), "Value", "Text", Model), new { tabindex = "72", @class = "workerEditor", id = idPrefix + "usVeteran" })
+                @Html.ValidationMessageFor(model => model.usVeteran)
+            </div>
+            <div class="tb-label">
+                @Html.LabelFor(model => model.lgbtq)
+            </div>
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.lgbtq, new SelectList(Model.def.yesnoSelectList(), "Value", "Text", Model), new { tabindex = "75", @class = "workerEditor", id = idPrefix + "lgbtq" })
+                @Html.ValidationMessageFor(model => model.lgbtq)
+            </div>
         </div>
-        <div class "tb-row">
+        <div class="tb-row">
             <h4>Health Insurance</h4>
         </div>
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.healthInsurance)
-            @Html.mUIDropDownYesNoFor(model => model.healthInsurance, Model.def.yesnoSelectList(), new { tabindex = "80", @class = "workerEditor", id = idPrefix + "healthInsurance" })
-            @Html.mUITableLabelFor(model => model.healthInsuranceDate)
-            @Html.mUITableDateTextBoxFor(m => m.healthInsuranceDate, new { @class = "ui-datepicker workerEditor", tabindex = "81", id = idPrefix + "healthInsuranceDate" })
+            <div class="tb-label">
+                @Html.LabelFor(model => model.healthInsurance)
+            </div>
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.healthInsurance, new SelectList(Model.def.yesnoSelectList(), "Value", "Text", Model), new { tabindex = "80", @class = "workerEditor", id = idPrefix + "healthInsurance" })
+                @Html.ValidationMessageFor(model => model.healthInsurance)
+            </div>
+            <div class="tb-label">
+                @Html.LabelFor(model => model.healthInsuranceDate)
+            </div>
+            <div class="tb-field">
+                @Html.TextBox("healthInsuranceDate", Model.healthInsuranceDate.ToShortTextBoxDateString(), new { @class = "ui-datepicker workerEditor", tabindex = "81", id = idPrefix + "healthInsuranceDate" })
+                @Html.ValidationMessageFor(model => model.healthInsuranceDate)
+            </div>
         </div>
     </div>
 </div>
@@ -243,7 +539,7 @@
 </div>
 <!--Image-->
 <div class="tb-table mui-edit-worker-footer">
-    <div class "tb-row">
+    <div class="tb-row">
         <h4>Skills</h4>
     </div>
     <div class="tb-row">
@@ -260,31 +556,31 @@
     <div class="tb-row">
         <div class="tb-field tri-col">
             @Html.DropDownListFor(model => model.skill1,
-            new SelectList(Model.def.getSkill(true),
-                "Value",
-                "Text",
-                Model.skill1),
-                         @Machete.Web.Resources.Shared.choose, new { tabindex = "90" })
+                new SelectList(Model.def.getSkill(true),
+                    "Value",
+                    "Text",
+                    Model.skill1),
+                Shared.choose, new { tabindex = "90" })
             @Html.ValidationMessageFor(model => model.skill1)
         </div>
         <div class="tb-field tri-col">
             @Html.DropDownListFor(model => model.skill2,
-            new SelectList(Model.def.getSkill(true),
-                "Value",
-                "Text", Model.skill2),
-                         @Machete.Web.Resources.Shared.choose, new { tabindex = "91" })
+                new SelectList(Model.def.getSkill(true),
+                    "Value",
+                    "Text", Model.skill2),
+                Shared.choose, new { tabindex = "91" })
             @Html.ValidationMessageFor(model => model.skill2)
         </div>
         <div class="tb-field tri-col">
             @Html.DropDownListFor(model => model.skill3,
-            new SelectList(Model.def.getSkill(true),
-                "Value",
-                "Text", Model.skill3),
-                         @Machete.Web.Resources.Shared.choose, new { tabindex = "92" })
+                new SelectList(Model.def.getSkill(true),
+                    "Value",
+                    "Text", Model.skill3),
+                Shared.choose, new { tabindex = "92" })
             @Html.ValidationMessageFor(model => model.skill3)
         </div>
     </div>
-    <div class "tb-row">
+    <div class="tb-row">
         <h4>Emergency Contacts</h4>
     </div>
     <div class="tb-row">
@@ -339,7 +635,7 @@
     </div>
 </div>
 <!--contacts-->
-@Html.Partial("ManagerInfo")
+@await Html.PartialAsync("ManagerInfo")
 
 <script type="text/javascript">
     $(document).ready(function () {

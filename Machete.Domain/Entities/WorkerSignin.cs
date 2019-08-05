@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     WorkerSignin.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -22,6 +22,7 @@
 // 
 #endregion
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -29,12 +30,16 @@ namespace Machete.Domain
 {
     public class WorkerSignin : Signin 
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public new int ID { get; set; }
         public int? WorkAssignmentID { get; set; }
         public DateTime? lottery_timestamp { get; set; }
         public int? lottery_sequence { get; set; }
         public virtual Worker worker { get; set; }
         public int? WorkerID { get; set; }
-
+        
+        public virtual ICollection<WorkAssignment> workAssignments { get; set; }
     }
     public abstract class Signin : Record
     {

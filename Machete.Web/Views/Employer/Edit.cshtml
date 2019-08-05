@@ -1,16 +1,24 @@
-﻿@model Machete.Web.ViewModel.Employer
 @using Machete.Web.Helpers
-@using Machete.Web.Resources
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.Localization
+@model Machete.Web.ViewModel.Employer
+
+@using Machete.Web.Resources;
+
 @{
-    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    var httpContext = ViewContext.HttpContext;
+    var currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
+    var currentUrl = UriHelper.BuildRelative(httpContext.Request.PathBase, httpContext.Request.Path, httpContext.Request.QueryString);
+
     string recType = "employer";
 }
+
 @using (Html.BeginForm("Edit", "Employer", FormMethod.Post, 
-                        new { @class = "edittab-form EditPost", @id="EmployerTab-" + Model.ID }))
+                        new { @class = "edittab-form EditPost", id="EmployerTab-" + Model.ID }))
 {
     @*<input type="button" value="@Employers.viewlink" class="formButton" id="viewEmployer-@Model.ID" />*@
     <input type="button" onclick="FindEmployerDuplicate()" value="@Employers.editsubmit" class="formButton saveBtn"/>
-    if (Html.IsInRole(Html.Role_AM()))
+    if (Html.IsInRole("Administrator", "Manager"))
     {
         <input id="deleteEmployerButton-@Model.ID" type="button" value="@Employers.deletesubmit" 
                 class="formButton deleteButton" />
@@ -20,21 +28,21 @@
     @Html.EditorForModel()
 
 }
-@if (Html.IsInRole(Html.Role_AM()))
+@if (Html.IsInRole("Administrator", "Manager"))
 {
     //
     // Only Managers can delete employer records
     // The phonedesk can edit and save
     //
     using (Html.BeginForm("Delete", "Employer", FormMethod.Post, 
-                            new { @class = "edittab-form DeletePost", @id = "DeleteEmployer-" + Model.ID }))
+                            new { @class = "edittab-form DeletePost", id = "DeleteEmployer-" + Model.ID }))
     {
         @Html.HiddenFor(model => model.ID);
     }
 }
-@Html.Partial("WorkOrderIndex", Model)
+@await Html.PartialAsync("WorkOrderIndex", Model)
 
-<div id="duplicatesDialog" title="@(Machete.Web.Resources.Shared.DuplicatePersonsTitle)">
+<div id="duplicatesDialog" title="@Shared.DuplicatePersonsTitle">
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -46,8 +54,8 @@
         $("#EmployerTab-@(Model.ID)").mUI('formDetectChanges', {
             recType: "@(recType)",
             formLevel: 1,
-            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
-            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+            changeConfirm: "@Shared.changeConfirm",
+            changeTitle: "@Shared.changeTitle"
             });
         //
         // validation for elements added after page load
@@ -79,7 +87,7 @@
         buttons: {
             "Cancel": function () { $(this).dialog("close"); },
             "Save": {
-                text: "@(Machete.Web.Resources.Employers.editsubmit)",
+                text: "@Employers.editsubmit",
                 id: 'duplicateSaveBtn',
                 click: function () {
                     $(this).dialog("close");
@@ -113,14 +121,14 @@
 
 
     function CreateHtmlText(duplicates) {
-        var dialogHtmlText = '<p>@(Machete.Web.Resources.Shared.DuplicateEmployerMessage)</p>'
+        var dialogHtmlText = '<p>@Shared.DuplicateEmployerMessage</p>'
             + '<table class="duplicateEmployers" style="width:100%" border="1" cellpadding="2">'
             + '<tr>'
-            + '<th>@(Machete.Web.Resources.Employer.name)</th>'
-            + '<th>@(Machete.Web.Resources.Employer.address1)</th>'
-            + '<th>@(Machete.Web.Resources.Employer.phone)</th>'
-            + '<th>@(Machete.Web.Resources.Employer.city)</th>'
-            + '<th>@(Machete.Web.Resources.Employer.zipcode)</th>'
+            + '<th>@Employer.name</th>'
+            + '<th>@Employer.address1</th>'
+            + '<th>@Employer.phone</th>'
+            + '<th>@Employer.city</th>'
+            + '<th>@Employer.zipcode</th>'
             + '</tr>';
         for (var i = 0; i < duplicates.length; i++) {
             if (duplicates[i].ID == '@Model.ID') { continue; }
@@ -133,7 +141,7 @@
                 + '</tr>';
         }
 
-        dialogHtmlText += '</table> <p></p> <p></p>@(Machete.Web.Resources.Shared.SaveMessageDuplicatePersons)</p>';
+        dialogHtmlText += '</table> <p></p> <p></p>@Shared.SaveMessageDuplicatePersons</p>';
 
         return dialogHtmlText;
     }

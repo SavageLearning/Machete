@@ -3,7 +3,7 @@
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
 // License:  GPL v3
-// Project:  Machete.Test
+// Project:  Machete.Test.Old
 // Contact:  savagelearning
 // 
 // Copyright 2011 Savage Learning, LLC., all rights reserved.
@@ -21,20 +21,20 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Machete.Data;
-using Moq;
-using Machete.Data.Infrastructure;
-using Machete.Service;
-using Machete.Domain;
-using Machete.Test;
-using AutoMapper;
 
-namespace Machete.Test.Unit.Service
+using System;
+using System.Collections.Generic;
+using AutoMapper;
+using Machete.Data;
+using Machete.Data.Infrastructure;
+using Machete.Data.Tenancy;
+using Machete.Domain;
+using Machete.Service;
+using Machete.Test.UnitTests.Controllers.Helpers;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+
+namespace Machete.Test.UnitTests.Services
 {
     /// <summary>
     /// Summary description for WorkAssignmentServiceUnitTests
@@ -42,58 +42,22 @@ namespace Machete.Test.Unit.Service
     [TestClass]
     public class WorkAssignmentTests
     {
-        Mock<IWorkAssignmentRepository> waRepo;
-        Mock<IUnitOfWork> uow;
-        Mock<ILookupRepository> lRepo;
-        Mock<IWorkerRepository> wRepo;
-        Mock<IWorkerSigninRepository> wsiRepo;
-        WorkAssignmentService waServ;
-        Mock<IWorkerRequestRepository> wrRepo;
-        Mock<IMapper> _map;
+        private Mock<IWorkAssignmentRepository> waRepo;
+        private Mock<IUnitOfWork> uow;
+        private Mock<ILookupRepository> lRepo;
+        private Mock<IWorkerRepository> wRepo;
+        private Mock<IWorkerSigninRepository> wsiRepo;
+        private WorkAssignmentService waServ;
+        private Mock<IMapper> _map;
+        private Mock<IWorkOrderRepository> woRepo;
+        private TestContext testContextInstance;
+        private Mock<ITenantService> _tenantService;
 
         public WorkAssignmentTests()
         {
         }
 
-        private TestContext testContextInstance;
 
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
-
-        #region Additional test attributes
-        //
-        // You can use the following additional attributes as you write your tests:
-        //
-        // Use ClassInitialize to run code before running the first test in the class
-        // [ClassInitialize()]
-        // public static void MyClassInitialize(TestContext testContext) { }
-        //
-        // Use ClassCleanup to run code after all tests in a class have run
-        // [ClassCleanup()]
-        // public static void MyClassCleanup() { }
-        //
-        // Use TestInitialize to run code before running each test 
-        // [TestInitialize()]
-        // public void MyTestInitialize() { }
-        //
-        // Use TestCleanup to run code after each test has run
-        // [TestCleanup()]
-        // public void MyTestCleanup() { }
-        //
-        #endregion
         [TestInitialize]
         public void TestInitialize()
         {
@@ -102,9 +66,12 @@ namespace Machete.Test.Unit.Service
             wRepo = new Mock<IWorkerRepository>();
             lRepo = new Mock<ILookupRepository>();
             wsiRepo = new Mock<IWorkerSigninRepository>();
-            wrRepo = new Mock<IWorkerRequestRepository>();
             _map = new Mock<IMapper>();
-            waServ = new WorkAssignmentService(waRepo.Object, wRepo.Object, lRepo.Object, wsiRepo.Object, uow.Object, _map.Object);
+            woRepo = new Mock<IWorkOrderRepository>();
+            _tenantService = new Mock<ITenantService>();
+            _tenantService.Setup(service => service.GetCurrentTenant()).Returns(UnitTestExtensions.TestingTenant);            
+            
+            waServ = new WorkAssignmentService(waRepo.Object, wRepo.Object, woRepo.Object, lRepo.Object, wsiRepo.Object, uow.Object, _map.Object, _tenantService.Object);
             
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WAs)]
@@ -145,6 +112,9 @@ namespace Machete.Test.Unit.Service
             _wa.datecreated = DateTime.MinValue;
             _wa.dateupdated = DateTime.MinValue;
             _wa.workOrder = (WorkOrder)Records.order.Clone();
+
+            woRepo.Setup(x => x.GetById(It.IsAny<int>())).Returns(_wa.workOrder);
+            
             _wa.workOrder.paperOrderNum = _wa.workOrder.ID;
             waRepo.Setup(r => r.Add(_wa)).Returns(_wa);
             lRepo.Setup(r => r.GetById(It.IsAny<int>())).Returns(_l);
@@ -191,6 +161,9 @@ namespace Machete.Test.Unit.Service
             _wa.datecreated = DateTime.MinValue;
             _wa.dateupdated = DateTime.MinValue;
             _wa.workOrder = (WorkOrder)Records.order.Clone();
+
+            woRepo.Setup(x => x.GetById(It.IsAny<int>())).Returns(_wa.workOrder);
+            
             _wa.workOrder.paperOrderNum = _wa.workOrder.ID;
             _wa.pseudoID = 1;
             //

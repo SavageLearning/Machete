@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     MacheteLookups.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -21,16 +21,19 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using Machete.Domain;
+
 using System;
 using System.Collections.Generic;
+using Machete.Domain;
+using Microsoft.EntityFrameworkCore;
 
-namespace Machete.Data
+namespace Machete.Data.Initialize
 {
     // static -- [ class-modifier ]
     //              cannot be instantiated, cannot be used as a type, can only contain
     //              static members
-    public static class MacheteLookup    {
+    public static class MacheteLookups
+    {
         /// <summary>
         /// There have been multiple renditions of the Lookups table and a form of cache, as I learned
         /// C#, .Net, and MVC. This list of objects is used to seed the database and to provide 
@@ -190,17 +193,24 @@ namespace Machete.Data
                 new Lookup { ID=286,category = LCategory.farmLabor, text_EN="Seasonal Farm Worker", text_ES="Seasonal Farm Worker", selected=false },
                 new Lookup { ID=287,category = LCategory.training, text_EN="OSHA", text_ES="OSHA", selected=true },
             };
-        //
-        //
+
+        /// <summary>
+        /// Initialize the Machete Lookups (configuration values); this should only be called by MacheteConfiguration.
+        /// This represents an example of how to execute plain text SQL commands directly against the injected context.
+        /// </summary>
+        /// <param name="context">MacheteContext is injected, therefore disposal is handled by the container.</param>
         public static void Initialize(MacheteContext context) {
             _cache.ForEach(u => {
                 u.datecreated = DateTime.Now;
                 u.dateupdated = DateTime.Now;
                 u.createdby = "Init T. Script";
                 u.updatedby = "Init T. Script";
-                context.Lookups.Add(u); 
+                context.Lookups.Add(u);
             });
+            context.Database.OpenConnection();
+            context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT dbo.Lookups ON");
             context.SaveChanges();
+            context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT dbo.Lookups OFF");
         }
     }    
 }

@@ -1,68 +1,198 @@
-﻿@model Machete.Web.ViewModel.Employer
-@using Machete.Web.ViewModel
-@using Machete.Web.Helpers
+@model Machete.Web.ViewModel.Employer
+
+@using Machete.Domain
+@using Machete.Web.Resources
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.Localization
 
 @{
-    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
-    string recType = "employer";
-    string idPrefix = recType + Model.ID + "-";
+    var httpContext = ViewContext.HttpContext;
+    var currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
+    var currentUrl = UriHelper.BuildRelative(httpContext.Request.PathBase, httpContext.Request.Path, httpContext.Request.QueryString);
+
+    var recType = "employer";
+    var idPrefix = recType + Model.ID + "-";
 }
+
 @Html.HiddenFor(model => model.ID, new { @class="hiddenRecID", id=idPrefix + "ID"})
 <div class="tb-table" style="float: left; clear: left;">
     <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.name, new { tabindex = "1", id = idPrefix + "name" })
-        @Html.mUITableLabelFor(model => model.business)
-        @Html.mUIDropDownYesNoFor(model => model.business, Model.def.yesnoSelectList(), new { tabindex = "2", id = idPrefix + "business" })
-</div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.name)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.name, new {tabindex = "1", id = idPrefix + "name"})
+            @Html.ValidationMessageFor(model => model.name)
+        </div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.business)
+        </div>
+        @* @Html.mUIDropDownYesNoFor(model => model.business, Model.def.yesnoSelectList(), new { tabindex = "2", id = idPrefix + "business" }) *@
+        <div class="tb-field">
+            @Html.DropDownListFor(model => model.business, new SelectList(Model.def.yesnoSelectList(), "Value", "Text", Model), Shared.choose, new { tabindex = "2", id = idPrefix + "business" })
+            @Html.ValidationMessageFor(model => model.business)
+        </div>
+    </div>
     <div class="tb-row" id="hidebusinessname">
-        @Html.mUITableLabelAndTextBoxFor(model => model.businessname, new { tabindex = "3", id = idPrefix + "businessname" })
-    </div><!--why are these all mixed up? todo: fix groupings-->
+        <div class="tb-label">
+            @Html.LabelFor(model => model.businessname)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.businessname, new { tabindex = "3", id = idPrefix + "businessname" })
+            @Html.ValidationMessageFor(model => model.businessname)
+        </div>
+    </div>
     <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.phone, new { tabindex = "4", id = idPrefix + "phone" })
-        @Html.mUITableLabelAndTextBoxFor(model => model.address1, new { tabindex = "5", id = idPrefix + "address1" })
+        <div class="tb-label">
+            @Html.LabelFor(model => model.phone)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.phone, new { tabindex = "4", id = idPrefix + "phone" })
+            @Html.ValidationMessageFor(model => model.phone)
+        </div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.address1)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.address1, new { tabindex = "5", id = idPrefix + "address1" })
+            @Html.ValidationMessageFor(model => model.address1)
+        </div>
     </div><!--tb-row-->
     <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.cellphone, new { tabindex = "6", id = idPrefix + "cellphone" })
-        @Html.mUITableLabelAndTextBoxFor(model => model.address2, new { tabindex = "7", id = idPrefix + "address2" })
+        <div class="tb-label">
+            @Html.LabelFor(model => model.cellphone)
+        </div>        <div class="tb-field">
+            @Html.TextBoxFor(model => model.cellphone, new { tabindex = "6", id = idPrefix + "cellphone" })
+            @Html.ValidationMessageFor(model => model.cellphone)
+        </div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.address2)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.address2, new { tabindex = "7", id = idPrefix + "address2" })
+            @Html.ValidationMessageFor(model => model.address2)
+        </div>
     </div><!--tb-row-->
     <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.email, new { tabindex = "8", id = idPrefix + "email" })
-        @Html.mUITableLabelAndTextBoxFor(model => model.city, new { tabindex = "9", id = idPrefix + "city" })
+        <div class="tb-label">
+            @Html.LabelFor(model => model.email)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.email, new { tabindex = "8", id = idPrefix + "email" })
+            @Html.ValidationMessageFor(model => model.email)
+        </div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.city)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.city, new { tabindex = "9", id = idPrefix + "city" })
+            @Html.ValidationMessageFor(model => model.city)
+        </div>
     </div>
     <!--tb-row-->
     <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.referredby)
-        @Html.mUIDropDownListFor(model => model.referredby, Model.def.getSelectList(Machete.Domain.LCategory.emplrreference), new { tabindex = "10", id = idPrefix + "referredby" })
-        @Html.mUITableLabelAndTextBoxFor(model => model.state, new { tabindex = "11", id = idPrefix + "state" })
+        <div class="tb-label">
+            @Html.LabelFor(model => model.referredby)
+        </div>
+        @* @Html.mUIDropDownListFor(model => model.referredby, Model.def.getSelectList(LCategory.emplrreference), new { tabindex = "10", id = idPrefix + "referredby" }) *@
+        <div class="tb-field">
+            @Html.DropDownListFor(model => model.referredby, new SelectList(Model.def.getSelectList(LCategory.emplrreference), "Value", "Text", Model), Shared.choose, new { tabindex = "10", id = idPrefix + "referredby" })
+            @Html.ValidationMessageFor(model => model.referredby)
+        </div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.state)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.state, new { tabindex = "11", id = idPrefix + "state" })
+            @Html.ValidationMessageFor(model => model.state)
+        </div>
     </div>
     <!--tb-row-->
     <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.referredbyOther, new { tabindex = "12", id = idPrefix + "referredbyOther" })
-        @Html.mUITableLabelAndTextBoxFor(model => model.zipcode, new { tabindex = "13", id = idPrefix + "zipcode" })
+        <div class="tb-label">
+            @Html.LabelFor(model => model.referredbyOther)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.referredbyOther, new { tabindex = "12", id = idPrefix + "referredbyOther" })
+            @Html.ValidationMessageFor(model => model.referredbyOther)
+        </div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.zipcode)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.zipcode, new { tabindex = "13", id = idPrefix + "zipcode" })
+            @Html.ValidationMessageFor(model => model.zipcode)
+        </div>
     </div>
-    <!--  -->
+    
     <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.licenseplate, new { tabindex = "14", id = idPrefix + "licenseplate" })
-        @Html.mUITableLabelAndTextBoxFor(model => model.driverslicense, new { tabindex = "15", id = idPrefix + "driverslicense" })
-    </div>
-
-
-    <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.active)
-        @Html.mUIDropDownYesNoFor(model => model.active, Model.def.yesnoSelectList(), new { tabindex = "16", id = idPrefix + "active" })
-        @Html.mUITableLabelFor(model => model.blogparticipate)
-        @Html.mUIDropDownYesNoFor(model => model.blogparticipate, Model.def.yesnoSelectList(), new { tabindex = "17", id = idPrefix + "blogparticipate" })
-    </div>
-    <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.returnCustomer)
-        @Html.mUIDropDownYesNoFor(model => model.returnCustomer, Model.def.yesnoSelectList(), new { tabindex = "18", id = idPrefix + "returnCustomer" })
-        @Html.mUITableLabelFor(model => model.receiveUpdates)
-        @Html.mUIDropDownYesNoFor(model => model.receiveUpdates, Model.def.yesnoSelectList(), new { tabindex = "19", id = idPrefix + "blogparticipate" })
+        <div class="tb-label">
+            @Html.LabelFor(model => model.licenseplate)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.licenseplate, new { tabindex = "14", id = idPrefix + "licenseplate" })
+            @Html.ValidationMessageFor(model => model.licenseplate)
+        </div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.driverslicense)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.driverslicense, new { tabindex = "15", id = idPrefix + "driverslicense" })
+            @Html.ValidationMessageFor(model => model.driverslicense)
+        </div>
     </div>
     <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.onlineSource)
-        @Html.mUIDropDownYesNoFor(model => model.onlineSource, Model.def.yesnoSelectList(), new { tabindex = "20", id = idPrefix + "onlineSource" })
-        @Html.mUITableLabelAndTextBoxFor(model => model.fax, new { tabindex = "21", id = idPrefix + "fax" })
+        <div class="tb-label">
+            @Html.LabelFor(model => model.active)
+        </div>
+        @* @Html.mUIDropDownYesNoFor(model => model.active, Model.def.yesnoSelectList(), new { tabindex = "16", id = idPrefix + "active" }) *@
+        <div class="tb-field">
+            @Html.DropDownListFor(model => model.active, new SelectList(Model.def.yesnoSelectList(), "Value", "Text", Model), Shared.choose, new { tabindex = "16", id = idPrefix + "active" })
+            @Html.ValidationMessageFor(model => model.active)
+        </div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.blogparticipate)
+        </div>
+        @* @Html.mUIDropDownYesNoFor(model => model.blogparticipate, Model.def.yesnoSelectList(), new { tabindex = "17", id = idPrefix + "blogparticipate" }) *@
+        <div class="tb-field">
+            @Html.DropDownListFor(model => model.blogparticipate, new SelectList(Model.def.yesnoSelectList(), "Value", "Text", Model), Shared.choose, new { tabindex = "17", id = idPrefix + "blogparticipate" })
+            @Html.ValidationMessageFor(model => model.blogparticipate)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label">
+            @Html.LabelFor(model => model.returnCustomer)
+        </div>
+        @* @Html.mUIDropDownYesNoFor(model => model.returnCustomer, Model.def.yesnoSelectList(), new { tabindex = "18", id = idPrefix + "returnCustomer" }) *@
+        <div class="tb-field">
+            @Html.DropDownListFor(model => model.returnCustomer, new SelectList(Model.def.yesnoSelectList(), "Value", "Text", Model), Shared.choose, new { tabindex = "18", id = idPrefix + "returnCustomer" })
+            @Html.ValidationMessageFor(model => model.returnCustomer)
+        </div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.receiveUpdates)
+        </div>
+        @* @Html.mUIDropDownYesNoFor(model => model.receiveUpdates, Model.def.yesnoSelectList(), new { tabindex = "19", id = idPrefix + "blogparticipate" }) *@
+        <div class="tb-field">
+            @Html.DropDownListFor(model => model.receiveUpdates, new SelectList(Model.def.yesnoSelectList(), "Value", "Text", Model), Shared.choose, new { tabindex = "19", id = idPrefix + "business" })
+            @Html.ValidationMessageFor(model => model.receiveUpdates)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label">
+            @Html.LabelFor(model => model.onlineSource)
+        </div>
+        @* @Html.mUIDropDownYesNoFor(model => model.onlineSource, Model.def.yesnoSelectList(), new { tabindex = "20", id = idPrefix + "onlineSource" }) *@
+        <div class="tb-field">
+            @Html.DropDownListFor(model => model.onlineSource, new SelectList(Model.def.yesnoSelectList(), "Value", "Text", Model), Shared.choose, new { tabindex = "20", id = idPrefix + "onlineSource" })
+            @Html.ValidationMessageFor(model => model.onlineSource)
+        </div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.fax)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.fax, new { tabindex = "21", id = idPrefix + "fax" })
+            @Html.ValidationMessageFor(model => model.fax)
+        </div>
     </div>
 </div>
 <div class="tb-table" style="float: left;">
@@ -76,27 +206,26 @@
         </div>
     </div>
 </div>
+<div style="clear: left;">
+    
+</div>
 
-
-<div style="clear: left;"></div>
-@Html.Partial("ManagerInfo", Model)
-
-
+@await Html.PartialAsync("ManagerInfo", Model)
 
 <script type="text/javascript">
     $(document).ready(function () {
-       //$("#phone").mask("999-999-9999", { placeholder: "" });
+        //$("#phone").mask("999-999-9999", { placeholder: "" });
         //$("#cellphone").mask("999-999-9999", { placeholder: "" });
-        var bizname = $('#hidebusinessname');
-        bizname.hide();
+        var businessName = $('#hidebusinessname');
+        businessName.hide();
         $('#@(idPrefix)business').change(function () {
-            if (!bizname.is(":visible"))
+            if (!businessName.is(":visible"))
             {
-                bizname.show();
+                businessName.show();
             }
             else
             {
-                bizname.hide();
+                businessName.hide();
             }
         });
     });

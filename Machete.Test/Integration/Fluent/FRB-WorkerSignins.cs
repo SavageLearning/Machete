@@ -1,37 +1,29 @@
-﻿using Machete.Data;
+﻿using System;
 using Machete.Domain;
 using Machete.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Practices.Unity;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Machete.Test.Integration
+namespace Machete.Test.Integration.Fluent
 {
-    public partial class FluentRecordBase : IDisposable
+    public partial class FluentRecordBase
     {
         private IWorkerSigninService _servWSI;
         private WorkerSignin _wsi;
 
-        public FluentRecordBase AddWorkerSignin(
-            Worker worker = null
-        //DateTime? datecreated = null,
-        //DateTime? dateupdated = null
-        )
+        public FluentRecordBase AddWorkerSignin(Worker worker = null)
         {
-            //
-            // DEPENDENCIES
-            _servWSI = container.Resolve<IWorkerSigninService>();
-            if (worker != null) _w = worker;
-            if (_w == null) AddWorker();
-            //
             // ARRANGE
+            _servWSI = container.GetRequiredService<IWorkerSigninService>();
+            var _w = worker ?? AddWorker();
 
             //
-            // ACT
-            _wsi = _servWSI.CreateSignin(_w.dwccardnum, DateTime.Now, _user);
+            // ACT (convert to UTC, as the client would)
+            _wsi = _servWSI.CreateSignin(
+                _w.dwccardnum,
+                TimeZoneInfo
+                    .ConvertTimeToUtc(DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified), ClientTimeZoneInfo),
+                _user
+            );
             return this;
         }
 
@@ -40,7 +32,5 @@ namespace Machete.Test.Integration
             if (_wsi == null) AddWorkerSignin();
             return _wsi;
         }
-
-
     }
 }

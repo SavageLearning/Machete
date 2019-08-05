@@ -3,7 +3,7 @@
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
 // License:  GPL v3
-// Project:  Machete.Test
+// Project:  Machete.Test.Old
 // Contact:  savagelearning
 // 
 // Copyright 2011 Savage Learning, LLC., all rights reserved.
@@ -21,23 +21,25 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using Machete.Domain;
-using Machete.Service;
-using DTO = Machete.Service.DTO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Machete.Test.Integration;
+using Machete.Domain;
+using Machete.Service;
+using Machete.Test.Integration.Fluent;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using DTO = Machete.Service.DTO;
 
-namespace Machete.Test.Integration.Service
+namespace Machete.Test.Integration.Services
 {
     [TestClass]
     public class WorkOrderTests
     {
         viewOptions dOptions;
         FluentRecordBase frb;
+        
         [ClassInitialize]
         public static void ClassInitialize(TestContext c)
         {
@@ -47,7 +49,7 @@ namespace Machete.Test.Integration.Service
         [TestInitialize]
         public void TestInitialize()
         {
-            frb = new FluentRecordBase();
+            frb = FluentRecordBaseFactory.Get();
             dOptions = new viewOptions
             {
                 CI = new CultureInfo("en-US", false),
@@ -67,7 +69,7 @@ namespace Machete.Test.Integration.Service
         {
             //
             //Arrange
-            var Date = frb.ToServ<IWorkOrderService>().GetSummary().OrderByDescending(o => o.date).First().date.Value.AddDays(1);
+            var Date = frb.ToServ<IWorkOrderService>().GetSummary(null).OrderByDescending(o => o.date).First().date.Value.AddDays(1);
             frb.AddWorkOrder(status: WorkOrder.iCancelled, dateTimeOfWork: Date).AddWorkAssignment()
                .AddWorkOrder(status: WorkOrder.iPending, dateTimeOfWork: Date).AddWorkAssignment()
                .AddWorkOrder(status: WorkOrder.iCompleted, dateTimeOfWork: Date).AddWorkAssignment()
@@ -94,7 +96,7 @@ namespace Machete.Test.Integration.Service
             bool orderdescending = true;
             int displayStart = 0;
             int displayLength = 50;
-            var Date = frb.ToServ<IWorkOrderService>().GetSummary().OrderByDescending(o => o.date).First().date.Value.AddDays(1);
+            var Date = frb.ToServ<IWorkOrderService>().GetSummary(null).OrderByDescending(o => o.date).First().date.Value.AddDays(1);
             frb.AddWorkOrder(status: WorkOrder.iCancelled, dateTimeOfWork: Date).AddWorkAssignment()
                .AddWorkOrder(status: WorkOrder.iPending, dateTimeOfWork: Date).AddWorkAssignment().AddWorkAssignment()
                .AddWorkOrder(status: WorkOrder.iCompleted, dateTimeOfWork: Date).AddWorkAssignment().AddWorkAssignment()
@@ -137,7 +139,7 @@ namespace Machete.Test.Integration.Service
             //
             //Arrange
             // get find latest workorder, get date from it, and add a day (make sure we're only records for this test)
-            var Date = frb.ToServ<IWorkOrderService>().GetSummary().OrderByDescending(a => a.date).First().date.Value.AddDays(1);
+            var Date = frb.ToServ<IWorkOrderService>().GetSummary(null).OrderByDescending(a => a.date).First().date.Value.AddDays(1);
 
             frb.AddWorkOrder(dateTimeOfWork: Date).AddWorkOrder(dateTimeOfWork: Date).AddWorkOrder(dateTimeOfWork: Date);
             frb.AddWorkOrder(dateTimeOfWork: Date).AddWorkOrder(dateTimeOfWork: Date).AddWorkOrder(dateTimeOfWork: Date);

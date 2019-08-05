@@ -1,9 +1,7 @@
-﻿using Machete.Web.Helpers;
+using Machete.Web.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace Machete.Web.ViewModel
 {
@@ -34,7 +32,7 @@ namespace Machete.Web.ViewModel
         public virtual ICollection<WorkAssignment> workAssignments { get; set; }
 
         [LocalizedDisplayName("workerRequests", NameResourceType = typeof(Resources.WorkOrder))]
-        public virtual ICollection<WorkerRequest> workerRequests { get; set; }
+        public virtual ICollection<WorkerRequest> workerRequestsAAA { get; set; }
         public virtual ICollection<Email> Emails { get; set; }
 
         // Constructor
@@ -243,7 +241,7 @@ namespace Machete.Web.ViewModel
     //                    {
     //                        WID = w.workerAssigned != null ? (int?)w.workerAssigned.dwccardnum : null,
     //                        name = w.workerAssigned != null ? w.workerAssigned.Person.fullName() : null,
-    //                        skill = lcache.textByID(w.skillID, CI.TwoLetterISOLanguageName),
+    //                        skill = lcache.textByID(w.skillID, currentCulture.TwoLetterISOLanguageName),
     //                        hours = w.hours,
     //                        wage = w.hourlyWage
     //} : null

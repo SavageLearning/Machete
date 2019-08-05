@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     WorkOrder.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -41,14 +41,21 @@ namespace Machete.Domain
         public virtual Employer Employer { get; set; }
 
         public virtual ICollection<WorkAssignment> workAssignments { get; set; }
-        public virtual ICollection<WorkerRequest> workerRequests { get; set; }
-        public virtual ICollection<Email> Emails { get; set; }
+        public virtual ICollection<WorkerRequest> workerRequestsDDD { get; set; }
 
-        // Constructor
+        private ICollection<EmailWorkOrder> WorkOrderEmails { get; } = new List<EmailWorkOrder>();
+        [NotMapped] public ICollection<Email> Emails;
+
         public WorkOrder()
         {
-            this.waPseudoIDCounter = 0;
+            waPseudoIDCounter = 0;
+            Emails = new JoinCollectionFacade<Email,EmailWorkOrder>(
+                WorkOrderEmails,
+                woe => woe.Email,
+                e => new EmailWorkOrder { WorkOrder = this, Email = e }
+            );
         }
+        
         public Double timeZoneOffset { get; set; }
         // Flag identifying if source of work order was online web form
         public bool onlineSource { get; set; }
@@ -82,9 +89,8 @@ namespace Machete.Domain
         [StringLength(12)]
         [Required, RegularExpression(@"^$|^[\d]{3,3}-[\d]{3,3}-[\d]{4,4}$")]
         public string phone { get; set; }
+
         // Work program (e.g. HHH, DWC, etc)
-        // TODO: investigate deleting this - it doesn't appear in the WO interface
-        //[Required]
         public int typeOfWorkID { get; set; }
         // Flag indicating if english is required for at least one worker
         public bool englishRequired { get; set; }
@@ -140,6 +146,8 @@ namespace Machete.Domain
         public string ppPayerID { get; set; }
         [StringLength(20)]
         public string ppState { get; set; }
+
+        public virtual ICollection<EmailWorkOrder> EmailWorkOrders { get; set; }
     }
 
     public class WorkOrderSummary

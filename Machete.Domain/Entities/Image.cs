@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     Image.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/10/27 
@@ -21,6 +21,8 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Machete.Domain
@@ -39,5 +41,7 @@ namespace Machete.Domain
         public string parenttable { get; set; }
         [StringLength(20)]
         public string recordkey { get; set; }
+        
+        public virtual ICollection<JoinEventImage> JoinEventImages { get; set; }
     }
 }

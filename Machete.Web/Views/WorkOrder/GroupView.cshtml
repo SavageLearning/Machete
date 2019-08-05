@@ -1,10 +1,6 @@
-﻿@model Machete.Web.ViewModel.WorkOrderGroupPrintView
-@using Machete.Web.ViewModel           
-@using Machete.Web.Resources
-@using Machete.Web.Helpers
-@using System.Globalization
-           
-@if (Model.orders.Count() == 0)
+@model Machete.Web.ViewModel.WorkOrderGroupPrintView
+
+@if (!Model.orders.Any())
 {
     <h3> @Html.Encode(Machete.Web.Resources.WorkOrders.groupviewerror) </h3>
 }
@@ -12,7 +8,7 @@ else
 {
 foreach (Machete.Web.ViewModel.WorkOrder order in Model.orders)
 {
-    @Html.Partial("View", order);
+    @await Html.PartialAsync("View", order);
     <div style="page-break-before: always;">
     </div>
 }

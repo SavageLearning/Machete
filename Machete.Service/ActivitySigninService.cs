@@ -29,6 +29,7 @@ using Machete.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Machete.Data.Tenancy;
 
 namespace Machete.Service
 {
@@ -47,7 +48,7 @@ namespace Machete.Service
     {
 
         private readonly IPersonService pServ;
-        private readonly IActivitySigninRepository asiRepo;
+
         public ActivitySigninService(
             IActivitySigninRepository asiRepo,
             IWorkerService wServ,
@@ -56,13 +57,17 @@ namespace Machete.Service
             IWorkerRequestService wrServ,
             IUnitOfWork uow,
             IMapper map, 
-            IConfigService cfg)
-            : base(asiRepo, wServ, iServ, wrServ, uow, map, cfg)
+            IConfigService cfg,
+            ITenantService tenantService
+        ) : base(asiRepo, wServ, iServ, wrServ, uow, map, cfg)
         {
             this.logPrefix = "ActivitySignin";
             this.pServ = pServ;
-            this.asiRepo = asiRepo;
+            ClientTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(tenantService.GetCurrentTenant().Timezone);
         }
+
+        private TimeZoneInfo ClientTimeZoneInfo { get; }
+
         /// <summary>
         /// 
         /// </summary>
@@ -73,7 +78,14 @@ namespace Machete.Service
             var result = new dataTableResult<DTO.ActivitySigninList>();
             IQueryable<ActivitySignin> q = repo.GetAllQ();
             //
-            if (o.date != null) IndexViewBase.diffDays(o, ref q);
+            if (o.date != null)
+            {
+                // good intentions marinated in panic
+                q = q.Where(p =>
+                    p.dateforsignin.DateBasedOn(ClientTimeZoneInfo) == o.date.Value.DateBasedOn(ClientTimeZoneInfo)
+                );    
+            }
+
             if (o.personID > 0) IndexViewBase.GetAssociated(o.personID, ref q);
             if (o.activityID != null) q = q.Where(p => p.activityID == o.activityID);
             //            

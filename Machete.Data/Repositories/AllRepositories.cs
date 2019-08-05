@@ -21,10 +21,13 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+
+using System;
+using System.Collections;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
 using System.Collections.Generic;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text;
 
@@ -54,9 +57,13 @@ namespace Machete.Data
     {
         IEnumerable<Email> GetEmailsToSend();
     }
-    public interface IWorkOrderRepository : IRepository<WorkOrder> { }
+
+    public interface IWorkOrderRepository : IRepository<WorkOrder>
+    {
+        IEnumerable<WorkOrder> GetActiveOrders(DateTime date);
+    }
     public interface IWorkerRequestRepository : IRepository<WorkerRequest> {
-        WorkerRequest GetByWorkerID(int woid, int workerID);
+        WorkerRequest GetByID(int woid, int workerID);
     }
     public interface IWorkerRepository : IRepository<Worker>
     {
@@ -73,10 +80,15 @@ namespace Machete.Data
     {
         void clearSelected(string category);
         Lookup GetByKey(string category, string key);
-        IEnumerable<string> GetTeachers();
     }
+    
     public interface IActivityRepository : IRepository<Activity> { }
-    public interface IActivitySigninRepository : IRepository<ActivitySignin> {}
+    
+    public interface IActivitySigninRepository : IRepository<ActivitySignin>
+    {
+        ActivitySignin GetByPersonID(int actID, int personID);
+    }
+    
     public class WorkerSigninRepository : RepositoryBase<WorkerSignin>, IWorkerSigninRepository
     {
         public WorkerSigninRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
@@ -85,6 +97,7 @@ namespace Machete.Data
             return dbset.Include(a => a.worker).AsNoTracking().AsQueryable();
         }
     }
+    
     public class ActivitySigninRepository : RepositoryBase<ActivitySignin>, IActivitySigninRepository
     {
         public ActivitySigninRepository(IDatabaseFactory databaseFactory)
@@ -94,18 +107,25 @@ namespace Machete.Data
             //return dbset.Include(a => a.worker).AsQueryable();
             return dbset.Include(a => a.Activity).AsNoTracking().AsQueryable();
         }
-
+        public ActivitySignin GetByPersonID(int actID, int personID)
+        {
+            var q = from o in dbset.AsQueryable()
+                    where (o.activityID.Equals(actID) && o.personID.Equals(personID))
+                    select o;
+            return q.FirstOrDefault();
+        }
     }
-    /// <summary>
-    /// 
-    /// </summary>
+    
     public class ActivityRepository : RepositoryBase<Activity>, IActivityRepository
     {
         public ActivityRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
+
+        override public IQueryable<Activity> GetAllQ()
+        {
+            return dbset.AsNoTracking().AsQueryable();
+        }
     }
-    /// <summary>
-    /// 
-    /// </summary>
+    
     public class EmployerRepository : RepositoryBase<Employer>, IEmployerRepository
     {
         public EmployerRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
@@ -133,7 +153,7 @@ namespace Machete.Data
             sb.AppendFormat("select * from Emails e  with (UPDLOCK) where e.statusID = {0} or ", Email.iReadyToSend);
             sb.AppendFormat("(e.statusID = {0} and e.transmitAttempts < {1})", Email.iTransmitError, Email.iTransmitAttempts);
             var set = (DbSet<Email>)dbset;
-            return set.SqlQuery(sb.ToString()).AsEnumerable();
+            return set.FromSql(sb.ToString()).AsEnumerable();
         }
     }
     /// <summary>
@@ -142,9 +162,19 @@ namespace Machete.Data
     public class WorkOrderRepository : RepositoryBase<WorkOrder>, IWorkOrderRepository
     {
         public WorkOrderRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
-        override public IQueryable<WorkOrder> GetAllQ()
+        
+        public IEnumerable<WorkOrder> GetActiveOrders(DateTime date)
         {
-            return dbset.Include(a => a.workAssignments).Include(a => a.workerRequests).AsNoTracking().AsQueryable();
+            return dbset.Where(wo => wo.statusID == WorkOrder.iActive
+                                           && wo.dateTimeofWork.Date == date.Date)
+                .Include(a => a.Employer)
+                .Include(a => a.workerRequestsDDD)
+                .ThenInclude(a => a.workerRequested)
+                .ThenInclude(a=>a.Person)
+                .Include(a => a.workAssignments)
+                .ThenInclude(a => a.workerAssignedDDD)
+                        .ThenInclude(a => a.Person)
+                .ToList();
         }
     }
     /// <summary>
@@ -159,7 +189,7 @@ namespace Machete.Data
             return dbset.Include(a => a.workerRequested).AsNoTracking().AsQueryable();
         }
 
-        public WorkerRequest GetByWorkerID(int woid, int workerID)
+        public WorkerRequest GetByID(int woid, int workerID)
         {
             var q = from o in dbset.AsQueryable()
                     where (o.WorkOrderID.Equals(woid) && o.WorkerID.Equals(workerID))
@@ -196,7 +226,14 @@ namespace Machete.Data
 
         override public IQueryable<WorkAssignment> GetAllQ()
         {
-            return dbset.Include(a => a.workOrder).Include(b => b.workOrder.Employer).Include(b => b.workerAssigned).AsNoTracking().AsQueryable();
+            return dbset.Include(a => a.workOrder)
+                .ThenInclude(a => a.workerRequestsDDD)
+                    .ThenInclude(a=>a.workerRequested)
+                .Include(b => b.workOrder)
+                    .ThenInclude(a => a.Employer)
+                .Include(b => b.workerAssignedDDD)
+                .AsNoTracking()
+                .AsQueryable();
         }
     }
     /// <summary>
@@ -246,14 +283,6 @@ namespace Machete.Data
                     where (o.category.Equals(category) && o.key.Equals(key))
                     select o;
             return q.FirstOrDefault();
-        }
-
-        public IEnumerable<string> GetTeachers()
-        {
-            // TODO will break if Identity roles go away
-            var teacherID = dbFactory.Get().Roles.First(r => r.Name == "Teacher").Id;
-            return dbFactory.Get().Users.Where(u => u.Roles.Any(r => r.RoleId == teacherID))
-              .Select(x => x.UserName).Distinct().ToList();
         }
     }
 

@@ -3,7 +3,7 @@
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
 // License:  GPL v3
-// Project:  Machete.Test
+// Project:  Machete.Test.Old
 // Contact:  savagelearning
 // 
 // Copyright 2011 Savage Learning, LLC., all rights reserved.
@@ -21,14 +21,14 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+
+using System.Linq;
 using Machete.Domain;
 using Machete.Service;
+using Machete.Test.Integration.Fluent;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Data.Entity.Validation;
-using System.Linq;
 
-namespace Machete.Test.Integration.Service
+namespace Machete.Test.Integration.Services
 {
     [TestClass]
     public class PersonTests
@@ -38,7 +38,7 @@ namespace Machete.Test.Integration.Service
         [TestInitialize]
         public void TestInitialize()
         {
-            frb = new FluentRecordBase();
+            frb = FluentRecordBaseFactory.Get();
         }
 
         [TestCleanup]
@@ -54,47 +54,39 @@ namespace Machete.Test.Integration.Service
         {
             //Arrange
             //Act
-            var result = frb.ToPerson();
+            var result = frb.AddPerson();
             //Assert
             Assert.IsNotNull(result.ID, "Person.ID is Null");
         }
+
         /// <summary>
         /// CreatePerson calls DbSet.Add() and  Context.SaveChanges() This leads to duplication
         /// </summary>
-        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Persons)]
+        /// IGNORED because this is entirely contradictory to the way SaveChanges is setup;
+        /// you can't expect to save a person, get back an ID, and then save the same person
+        /// with an explicit ID and have the framework create an entirely new record with a
+        /// new ID. It errors out as it should. If we rewrite this test, it should expect error:
+        ///
+        /// Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while updating the entries. See the inner exception for details. ---> System.Data.SqlClient.SqlException: Cannot insert explicit value for identity column in table 'Persons' when IDENTITY_INSERT is set to OFF.
+        [Ignore, TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Persons)]
         public void CreatePersons_TestDuplicateBehavior()
         {
             int reccount = 0;
             //
             //Arrange
-            Person _p = frb.ClonePerson();
+            Person person = frb.ClonePerson();
             //
             //Act
-            try
-            {
-                // Using Service Create to test behavior when same object is created
-                // 3 times. Expecting 3 different records. 
-                frb.ToServ<IPersonService>().Create(_p, "UnitTest");
-                frb.ToServ<IPersonService>().Create(_p, "UnitTest");
-                frb.ToServ<IPersonService>().Create(_p, "UnitTest");
-                reccount = frb.ToServ<IPersonService>().GetAll().Count(n => n.firstname1 == _p.firstname1);
-           } 
-            catch (DbEntityValidationException ex)
-            {
-                Assert.Fail(string.Format("Validation exception for field {0} caught: {1}",
-                    ex.EntityValidationErrors.First().ValidationErrors.First().PropertyName,
-                    ex.EntityValidationErrors.First().ValidationErrors.First().ErrorMessage));
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(string.Format("Unexpected exception of type {0} caught: {1}",
-                ex.GetType(), ex.Message));
-            }
-            //
-            //Assert
-            Assert.IsNotNull(_p.ID);
-            Assert.IsTrue(reccount == 3, "Expected record count of 3, received {0}", reccount);
+            // Using Service Create to test behavior when same object is created
+            // 3 times. Expecting 3 different records. 
+            frb.ToServ<IPersonService>().Create(person, "UnitTest");
+            frb.ToServ<IPersonService>().Create(person, "UnitTest");
+            frb.ToServ<IPersonService>().Create(person, "UnitTest");
+            reccount = frb.ToServ<IPersonService>().GetAll().Count(n => n.firstname1 == person.firstname1);
 
+            //Assert
+            Assert.IsNotNull(person.ID);
+            Assert.IsTrue(reccount == 3, "Expected record count of 3, received {0}", reccount);
         }
     }
 }

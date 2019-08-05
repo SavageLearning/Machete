@@ -1,12 +1,12 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DTO = Machete.Service.DTO;
-using Machete.Service.DTO.Reports;
 using System.Collections.Generic;
 using System.Linq;
 using Machete.Service;
+using Machete.Test.Integration.Fluent;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using DTO = Machete.Service.DTO;
 
-namespace Machete.Test.Integration.Service
+namespace Machete.Test.Integration.Services
 {
     [TestClass]
     public class ReportsV2ServiceTests
@@ -23,7 +23,7 @@ namespace Machete.Test.Integration.Service
         [TestInitialize]
         public void TestInitialize()
         {
-            frb = new FluentRecordBase();
+            frb = FluentRecordBaseFactory.Get();
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]

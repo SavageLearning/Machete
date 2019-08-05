@@ -4,10 +4,8 @@ using Machete.Domain;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Machete.Service
 {
@@ -51,7 +49,7 @@ namespace Machete.Service
         public virtual T Create(T record, string user)
         {
             record.createdByUser(user);
-            T created = dbset.Add(record);
+            T created = dbset.Add(record).Entity;
             log(record.ID, user, logPrefix + " created");
             return created;
         }
@@ -74,6 +72,7 @@ namespace Machete.Service
         public virtual void Save(T record, string user)
         {
             record.updatedByUser(user);
+            dbset.Update(record);
             log(record.ID, user, logPrefix + " edited");
         }
         /// <summary>
@@ -107,7 +106,8 @@ namespace Machete.Service
             {
                 return record.text_ES;
             }
-            return record.text_EN; ;  //defaults to English
+            //defaults to English
+            return record.text_EN;
         }
     }
 }

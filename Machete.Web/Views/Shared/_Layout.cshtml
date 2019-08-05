@@ -1,16 +1,19 @@
-﻿@using Machete.Web.Helpers
+@using Machete.Web.Helpers
+@using Microsoft.AspNetCore.Routing
+@using Machete.Web.Resources
+
 <!DOCTYPE html>
 <html>
-@Scripts.Render("~/bundles/jquery")
+<script src="~/Content/jquery.js"></script>
 
 @{
-    string controllerName = Request.RequestContext.RouteData.Values["controller"].ToString();
+    var controllerName = Context.Request.HttpContext.GetRouteData().Values["controller"].ToString();
 }
 <head>
     <link href="@Url.Content("~/Content/jquery.lightbox-0.5.css")" rel="stylesheet" type="text/css" />
-    @Styles.Render("~/Content/css")
-    @Styles.Render("~/Content/reportcss")
-    <title>@Machete.Web.Resources.Shared.title@ViewBag.title</title>
+    <link rel="stylesheet" href="~/Content/Machete.css" />
+    <link rel="stylesheet" href="~/Content/reportcss.css" />
+    <title>@Shared.title@ViewBag.title</title>
     <link rel="shortcut icon" href="/Content/favicon.ico" type="image/png"/>
     <link rel="icon" href="/Content/favicon.ico" type="image/png"/> 
 </head>
@@ -22,43 +25,44 @@
         </div>
         <div id="header">
             <div id="title" class="print-off">
-                @*<img alt="@Machete.Web.Resources.Shared.title" src="/Content/casa_logo.png" title="CasaLogo" class="casaLogo"/>*@
-                @*<img class="print_off" alt="@Machete.Web.Resources.Shared.title" src="/Content/machete_1_close_crop.png" title="Click to hide"/>*@
-                @Html.ActionLink(@Machete.Web.Resources.Shared.hometab, "Index", "Home", null, new { id = "menulinkhome" })
+                @Html.ActionLink(Shared.hometab, "Index", "Home", null, new { id = "menulinkhome" })
             </div>
             <div id="logindisplay" class="print-off">
-                @Html.Partial("_LogOnPartial")
-                @Html.Partial("_CultureChooser")
+                <div style="display: inline-block; padding-right: 3em">
+                    @await Html.PartialAsync("_CultureChooser")
+                </div>
+                <div style="display: inline-block">
+                    @await Html.PartialAsync("_LogOnPartial")
+                </div>
             </div>
             <div id="menucontainer" class="print-off">
                 <ul id="menu">
                     <li></li>
-                    @if (Html.IsInRole(Html.Role_AM()))
+                    @if (Html.IsInRole("Administrator", "Manager"))
                     {
-                        <li>@Html.ActionLink("V2", "Index", "V2", null, new { id = "menulinkV2" })</li>
-                        <li>@Html.ActionLink(@Machete.Web.Resources.Shared.reportstab, "Index", "Reports", null, new { id = "menulinkreports" })</li>
-                        <li>@Html.ActionLink(@Machete.Web.Resources.Shared.emailstab, "Index", "Email", null, new { id = "menulinkemails" })</li>
-                    }
-                    @if (Html.IsInRole(Html.Role_AMP()))
-                    {
-                        <li>@Html.ActionLink(@Machete.Web.Resources.Shared.employerstab, "Index", "Employer", null, new { id = "menulinkemployer" })</li>
-                        <li>@Html.ActionLink(@Machete.Web.Resources.Shared.workorderstab, "Index", "WorkOrder", null, new { id = "menulinkworkorder" })</li>
-                    }
-                    @if (Html.IsInRole(Html.Role_AMPCU()))
-                    {
-                        <li>@Html.ActionLink(@Machete.Web.Resources.Shared.workassignmentstab, "Index", "WorkAssignment")</li>
-                    }
-                    @if (Html.IsInRole(Html.Role_AMP()) || Html.IsInRole(Html.Role_T()))
-                    { 
-                        <li>@Html.ActionLink(@Machete.Web.Resources.Shared.persontab, "Index", "Person", null, new { id = "menulinkperson" })</li>
-                    }
-                    @if (Html.IsInRole(Html.Role_AM()) || Html.IsInRole(Html.Role_T()))
-                    { 
-                    <li>@Html.ActionLink(@Machete.Web.Resources.Shared.activitytab, "Index", "Activity", null, new { id = "menulinkactivity" })</li>
-                    }
-                    @if (Html.IsInRole(Html.Role_AMPCU()))
-                    { 
-                    <li>@Html.ActionLink(@Machete.Web.Resources.Shared.workersignintab, "Index", "WorkerSignin", null, new { id = "menulinkworkersignin" })</li>
+                        <li><a id="menulinkV2" href="/V2">V2</a></li>
+                        <li>@Html.ActionLink(Shared.emailstab, "Index", "Email", null, new { id = "menulinkemails" })</li>
+                     }
+                     @if (Html.IsInRole("Administrator", "Manager", "PhoneDesk"))
+                     {
+                        <li>@Html.ActionLink(Shared.employerstab, "Index", "Employer", null, new { id = "menulinkemployer" })</li>
+                        <li>@Html.ActionLink(Shared.workorderstab, "Index", "WorkOrder", null, new { id = "menulinkworkorder" })</li>
+                     }
+                     @if (Html.IsInRole("Administrator", "Manager", "PhoneDesk", "Check-in", "User"))
+                     {
+                        <li>@Html.ActionLink(Shared.workassignmentstab, "Index", "WorkAssignment")</li>
+                     }
+                     @if (Html.IsInRole("Administrator", "Manager", "PhoneDesk") || Html.IsInRole(new[] { "Teacher" }))
+                     {
+                        <li>@Html.ActionLink(Shared.persontab, "Index", "Person", null, new { id = "menulinkperson" })</li>
+                     }
+                     @if (Html.IsInRole("Administrator", "Manager") || Html.IsInRole(new[] { "Teacher" }))
+                     {
+                        <li>@Html.ActionLink(Shared.activitytab, "Index", "Activity", null, new { id = "menulinkactivity" })</li>
+                     }
+                     @if (Html.IsInRole("Administrator", "Manager", "PhoneDesk", "Check-in", "User"))
+                     {
+                        <li>@Html.ActionLink(Shared.workersignintab, "Index", "WorkerSignin", null, new { id = "menulinkworkersignin" })</li>
                     }
                 </ul>
             </div>

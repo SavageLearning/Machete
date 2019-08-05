@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     IndexViewBase.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/25 
@@ -26,11 +26,9 @@ using Machete.Data.Infrastructure;
 using Machete.Domain;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.SqlServer;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text.RegularExpressions;
-
 
 namespace Machete.Service
 {
@@ -42,30 +40,26 @@ namespace Machete.Service
         private static Regex isTimeSpecific = new Regex(@"^\s*\d{1,2}[\/-_]\d{1,2}[\/-_]\d{2,4}\s+\d{1,2}:\d{1,2}");
         private static Regex isDaySpecific = new Regex(@"^\s*\d{1,2}\/\d{1,2}\/\d{2,4}");
         private static Regex isMonthSpecific = new Regex(@"^\s*\d{1,2}\/\d{4,4}");
+        
+        
+        
+        public static DateTime DateBasedOn(this DateTime date, TimeZoneInfo clientTimeZoneInfo) =>
+            TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(date, DateTimeKind.Unspecified), clientTimeZoneInfo).Date;
+
+        public static DateTime DateTimeFrom(this DateTime date, TimeZoneInfo clientTimeZoneInfo) =>
+            TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(date, DateTimeKind.Unspecified), clientTimeZoneInfo);
+        
         #region SIGNINS
-        public static void diffDays<T>(viewOptions o, ref IQueryable<T> q) where T : Signin
-        {
-            q = q.Where(p => DbFunctions.DiffDays(p.dateforsignin, o.date) == 0 ? true : false);
-        }
         public static void search(viewOptions o, ref IQueryable<WorkerSignin> q)
         {
-            q = q.Where(wsi => SqlFunctions.StringConvert((decimal)wsi.dwccardnum).Contains(o.sSearch) ||
-                            wsi.worker.Person.firstname1.Contains(o.sSearch) ||
-                            wsi.worker.Person.firstname2.Contains(o.sSearch) ||
-                            wsi.worker.Person.lastname1.Contains(o.sSearch) ||
-                            wsi.worker.Person.lastname2.Contains(o.sSearch) //||
+            q = q.Where(wsi => wsi.dwccardnum.ToString().Contains(o.sSearch) ||
+                            wsi.worker.Person.firstname1.ToUpper().Contains(o.sSearch.ToUpper()) ||
+                            wsi.worker.Person.firstname2.ToUpper().Contains(o.sSearch.ToUpper()) ||
+                            wsi.worker.Person.lastname1.ToUpper().Contains(o.sSearch.ToUpper()) ||
+                            wsi.worker.Person.lastname2.ToUpper().Contains(o.sSearch.ToUpper())
                             );
         }
-        public static void search<T>(viewOptions o, ref IEnumerable<T> e, IEnumerable<Worker> wcache) where T : Signin
-        {
-            e = e.Join(wcache, s => s.dwccardnum, w => w.dwccardnum, (s, w) => new { s, w })
-                .Where(p => p.w.dwccardnum.ToString().ContainsOIC(o.sSearch) ||
-                            p.w.Person.firstname1.ContainsOIC(o.sSearch) ||
-                            p.w.Person.firstname2.ContainsOIC(o.sSearch) ||
-                            p.w.Person.lastname1.ContainsOIC(o.sSearch) ||
-                            p.w.Person.lastname2.ContainsOIC(o.sSearch))
-                .Select(a => a.s);
-        }
+
         public static void dwccardnum<T>(viewOptions o, ref IQueryable<T> q) where T : Signin
         {
             q = q.Where(wsi => wsi.dwccardnum == o.dwccardnum)
@@ -97,12 +91,12 @@ namespace Machete.Service
                                 wsi => new
                                 {
                                     K1 = (int)wsi.WorkerID,
-                                    K2 = (DateTime)DbFunctions.TruncateTime(wsi.dateforsignin)
+                                    K2 = wsi.dateforsignin.Date
                                 },
                                 wr => new
                                 {
                                     K1 = wr.WorkerID,
-                                    K2 = (DateTime)DbFunctions.TruncateTime(wr.workOrder.dateTimeofWork)
+                                    K2 = wr.workOrder.dateTimeofWork.Date
                                 },
                                 (wsi, wr) => wsi);
                     break;
@@ -139,19 +133,20 @@ namespace Machete.Service
                     .Where(jj => jj.sk.typeOfWorkID == o.typeofwork_grouping)
                     .Select(jj => jj.wa);
         }
-        public static void diffDays(viewOptions o, ref IQueryable<WorkAssignment> q)
+        public static void diffDays(DateTime date, ref IQueryable<WorkAssignment> q)
         {
             DateTime sunday;
-            if (o.date.Value.DayOfWeek == DayOfWeek.Saturday)
+            if (date.DayOfWeek == DayOfWeek.Saturday)
             {
-                sunday = o.date.Value.AddDays(1);
-                q = q.Where(p => DbFunctions.DiffDays(p.workOrder.dateTimeofWork, o.date) == 0 ? true : false ||
-                    DbFunctions.DiffDays(p.workOrder.dateTimeofWork, sunday) == 0 ? true : false
-                    );
+                sunday = date.AddDays(1);
+                q = q.Where(p => 
+                    p.workOrder.dateTimeofWork.Date >= date.Date
+                 && p.workOrder.dateTimeofWork.Date <= sunday.Date
+                );
             }
             else
             {
-                q = q.Where(p => DbFunctions.DiffDays(p.workOrder.dateTimeofWork, o.date) == 0 ? true : false);
+                q = q.Where(p => p.workOrder.dateTimeofWork.Date == date.Date);
             }
         }
         public static void WOID(viewOptions o, ref IQueryable<WorkAssignment> q)
@@ -172,7 +167,6 @@ namespace Machete.Service
         }
         public static void waGrouping(viewOptions o, ref IQueryable<WorkAssignment> q, ILookupRepository lRepo)
         {
-            //var completedID = LookupCache.getByKeys(LCategory.orderstatus, LOrderStatus.Completed);
             switch (o.wa_grouping)
             {
                 case "open": q = q.Where(p => p.workerAssignedID == null 
@@ -182,7 +176,7 @@ namespace Machete.Service
                                                && p.workOrder.statusID == WorkOrder.iActive); break;
                 case "requested":
                     q = q.Where(p => p.workerAssignedID == null 
-                                  && p.workOrder.workerRequests.Any() == true 
+                                  && p.workOrder.workerRequestsDDD.Any() == true 
                                   && p.workOrder.statusID == WorkOrder.iActive);
 
                     break;
@@ -191,7 +185,7 @@ namespace Machete.Service
                                     sk => sk.ID,
                                     (wa, sk) => new { wa, sk })
                              .Where(jj => jj.sk.speciality == true 
-                                       && jj.wa.workerAssigned == null 
+                                       && jj.wa.workerAssignedDDD == null 
                                        && jj.wa.workOrder.statusID == WorkOrder.iActive)
                              .Select(jj => jj.wa);
                     break;
@@ -209,11 +203,14 @@ namespace Machete.Service
         public static void filterOnDatePart(string search, DateTime parsedTime, ref IQueryable<WorkAssignment> query)
         {
             if (isMonthSpecific.IsMatch(search))  //Regex for month/year
-                query = query.Where(p => DbFunctions.DiffMonths(p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
+                query = query.Where(p => SqlServerDbFunctionsExtensions
+                                             .DateDiffMonth(null, p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
             if (isDaySpecific.IsMatch(search))  //Regex for day/month/year
-                query = query.Where(p => DbFunctions.DiffDays(p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
+                query = query.Where(p => SqlServerDbFunctionsExtensions
+                                             .DateDiffDay(null, p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
             if (isTimeSpecific.IsMatch(search)) //Regex for day/month/year time
-                query = query.Where(p => DbFunctions.DiffHours(p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
+                query = query.Where(p => SqlServerDbFunctionsExtensions
+                                             .DateDiffHour(null, p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
             //throw new ArgumentException("Date string not valid for Month,Day, or Hour pattern");
 
         }
@@ -238,7 +235,7 @@ namespace Machete.Service
             {
                 q = q
                     .Join(lRepo.GetAllQ(), wa => wa.skillID, sk => sk.ID, (wa, sk) => new { wa, sk })
-                    .Where(p => SqlFunctions.StringConvert((decimal)p.wa.workOrder.paperOrderNum).Contains(o.sSearch) ||
+                    .Where(p => p.wa.workOrder.paperOrderNum.ToString().Contains(o.sSearch) ||
                         p.wa.description.Contains(o.sSearch) ||
                         p.sk.text_EN.Contains(o.sSearch) ||
                         p.sk.text_ES.Contains(o.sSearch) ||
@@ -329,7 +326,7 @@ namespace Machete.Service
                 case "description": q = descending ? q.OrderByDescending(p => p.description) : q.OrderBy(p => p.description); break;
                 case "updatedby": q = descending ? q.OrderByDescending(p => p.updatedby) : q.OrderBy(p => p.updatedby); break;
                 case "dateupdated": q = descending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated); break;
-                case "assignedWorker": q = descending ? q.OrderByDescending(p => p.workerAssigned == null ? 0 : p.workerAssigned.dwccardnum) : q.OrderBy(p => p.workerAssigned == null ? 0 : p.workerAssigned.dwccardnum); break;
+                case "assignedWorker": q = descending ? q.OrderByDescending(p => p.workerAssignedDDD == null ? 0 : p.workerAssignedDDD.dwccardnum) : q.OrderBy(p => p.workerAssignedDDD == null ? 0 : p.workerAssignedDDD.dwccardnum); break;
                 default: q = descending ? q.OrderByDescending(p => p.workOrder.dateTimeofWork) : q.OrderBy(p => p.workOrder.dateTimeofWork); break;
             }
         }
@@ -342,17 +339,20 @@ namespace Machete.Service
             if (isDateTime = DateTime.TryParse(o.sSearch, out parsedTime))
             {
                 if (isMonthSpecific.IsMatch(o.sSearch))  //Regex for month/year
-                    q = q.Where(p => DbFunctions.DiffMonths(p.dateTimeofWork, parsedTime) == 0 ? true : false);
+                    q = q.Where(p => SqlServerDbFunctionsExtensions
+                                         .DateDiffMonth(null, p.dateTimeofWork, parsedTime) == 0 ? true : false);
                 if (isDaySpecific.IsMatch(o.sSearch))  //Regex for day/month/year
-                    q = q.Where(p => DbFunctions.DiffDays(p.dateTimeofWork, parsedTime) == 0 ? true : false);
+                    q = q.Where(p => SqlServerDbFunctionsExtensions
+                                         .DateDiffDay(null, p.dateTimeofWork, parsedTime) == 0 ? true : false);
                 if (isTimeSpecific.IsMatch(o.sSearch)) //Regex for day/month/year time
-                    q = q.Where(p => DbFunctions.DiffHours(p.dateTimeofWork, parsedTime) == 0 ? true : false);
+                    q = q.Where(p => SqlServerDbFunctionsExtensions
+                                         .DateDiffHour(null, p.dateTimeofWork, parsedTime) == 0 ? true : false);
             }
             else
             {
                 q = q
-                    .Where(p => SqlFunctions.StringConvert((decimal)p.ID).Contains(o.sSearch) ||
-                                SqlFunctions.StringConvert((decimal)p.paperOrderNum).Contains(o.sSearch) ||
+                    .Where(p => p.ID.ToString().Contains(o.sSearch) ||
+                                p.paperOrderNum.ToString().Contains(o.sSearch) ||
                                 p.contactName.Contains(o.sSearch) ||
                                 p.workSiteAddress1.Contains(o.sSearch) ||
                                 p.updatedby.Contains(o.sSearch));
@@ -389,11 +389,14 @@ namespace Machete.Service
             if (DateTime.TryParse(search, out parsedTime))
             {
                 if (isMonthSpecific.IsMatch(search))  //Regex for month/year
-                    return query.Where(p => DbFunctions.DiffMonths(p.dateTimeofWork, parsedTime) == 0 ? true : false);
+                    return query.Where(p => SqlServerDbFunctionsExtensions
+                                                .DateDiffMonth(null, p.dateTimeofWork, parsedTime) == 0 ? true : false);
                 if (isDaySpecific.IsMatch(search))  //Regex for day/month/year
-                    return query.Where(p => DbFunctions.DiffDays(p.dateTimeofWork, parsedTime) == 0 ? true : false);
+                    return query.Where(p => SqlServerDbFunctionsExtensions
+                                                .DateDiffDay(null, p.dateTimeofWork, parsedTime) == 0 ? true : false);
                 if (isTimeSpecific.IsMatch(search)) //Regex for day/month/year time
-                    return query.Where(p => DbFunctions.DiffHours(p.dateTimeofWork, parsedTime) == 0 ? true : false);
+                    return query.Where(p => SqlServerDbFunctionsExtensions
+                                                .DateDiffHour(null, p.dateTimeofWork, parsedTime) == 0 ? true : false);
             }
             return query;
         }
@@ -464,7 +467,7 @@ namespace Machete.Service
         public static void search(viewOptions o, ref IQueryable<Person> q)
         {
             q = q
-                .Where(p => SqlFunctions.StringConvert((decimal)p.Worker.dwccardnum).Contains(o.sSearch) ||
+                .Where(p => p.Worker.dwccardnum.ToString().Contains(o.sSearch) ||
                             p.firstname1.Contains(o.sSearch) ||
                             p.firstname2.Contains(o.sSearch) ||
                             p.lastname1.Contains(o.sSearch) ||
@@ -507,7 +510,7 @@ namespace Machete.Service
         /// Returns a list of sanctioned or expelled workers.
         /// </summary>
         /// <param name="o"></param>
-        /// <param name="q"></param>
+        /// <param name="q"></param> // TODO chaim1221 grow up
         public static void getSExWorkers(viewOptions o, int s, int Ex, ref IQueryable<Person> q)
         {
             q = q.Where(x => x.Worker.memberStatusID == s || x.Worker.memberStatusID == Ex);
@@ -515,12 +518,11 @@ namespace Machete.Service
 
         public static void search(viewOptions o, ref IQueryable<Worker> q)
         {
-            q = q.Where(p => SqlFunctions.StringConvert((decimal)p.dwccardnum).Contains(o.sSearch) ||
+            q = q.Where(p => p.dwccardnum.ToString().Contains(o.sSearch) ||
                             p.Person.firstname1.Contains(o.sSearch) ||
                             p.Person.firstname2.Contains(o.sSearch) ||
                             p.Person.lastname1.Contains(o.sSearch) ||
-                            p.Person.lastname2.Contains(o.sSearch) //||
-                //DbFunctions.p.memberexpirationdate.ToString().Contains(o.sSearch)
+                            p.Person.lastname2.Contains(o.sSearch)
                             );
         }
         public static void sortOnColName(string name, bool descending, ref IQueryable<Worker> q)
@@ -539,45 +541,25 @@ namespace Machete.Service
         }
         #endregion
         #region ACTIVITIES
-        public static void unauthenticatedView(DateTime date, ref IQueryable<Activity> q)
-        {
-            // Shows classes within 30min of start and up to 30min after end
-            q = q.Where(p => DbFunctions.DiffMinutes(date, p.dateStart) <= 30 &&
-             DbFunctions.DiffMinutes(date, p.dateEnd) >= -30 ? true : false);
-        }
         /// <summary>
-        /// 
+        /// Search text and date fields of an activity for a query. 
         /// </summary>
         /// <param name="o"></param>
         /// <param name="q"></param>
         /// <param name="lRepo"></param>
         public static void search(viewOptions o, ref IQueryable<Activity> q)
         {
-            switch(o.CI.TwoLetterISOLanguageName.ToUpperInvariant())
-            {
-                case "ES":
-                    q = q.Where(p => p.notes.Contains(o.sSearch) ||
-                        p.teacher.Contains(o.sSearch) ||
-                        p.dateStart.ToString().Contains(o.sSearch) ||
-                        p.nameES.ToString().Contains(o.sSearch) ||
-                        p.typeES.ToString().Contains(o.sSearch) ||
-                        p.dateEnd.ToString().Contains(o.sSearch));
-                    break;
-                case "EN":
-                default:
-                    q = q.Where(p => p.notes.Contains(o.sSearch) ||
-                        p.teacher.Contains(o.sSearch) ||
-                        p.dateStart.ToString().Contains(o.sSearch) ||
-                        p.nameEN.ToString().Contains(o.sSearch) ||
-                        p.typeEN.ToString().Contains(o.sSearch) ||
-                        p.dateEnd.ToString().Contains(o.sSearch));
-                        break;
-            }
-
+            q = q.Where(p => p.notes.Contains(o.sSearch) ||
+                             p.teacher.Contains(o.sSearch) ||
+                             p.nameES.Contains(o.sSearch) ||
+                             p.typeES.Contains(o.sSearch) ||
+                             p.nameEN.Contains(o.sSearch) ||
+                             p.typeEN.Contains(o.sSearch));
         }
+
         public static void search(viewOptions o, ref IQueryable<ActivitySignin> q)
         {
-            q = q.Where(asi => SqlFunctions.StringConvert((decimal)asi.dwccardnum).Contains(o.sSearch) ||
+            q = q.Where(asi => asi.dwccardnum.ToString().Contains(o.sSearch) ||
                             asi.person.firstname1.Contains(o.sSearch) ||
                             asi.person.firstname2.Contains(o.sSearch) ||
                             asi.person.lastname1.Contains(o.sSearch) ||
@@ -649,8 +631,8 @@ namespace Machete.Service
         /// <param name="asRepo"></param>
         public static void getUnassociated(int personID, ref IQueryable<Activity> q, MacheteContext db)
         {
-            var aRepo = db.Set<Activity>().AsNoTracking().AsQueryable();
-            var asRepo = db.Set<ActivitySignin>().AsNoTracking().AsQueryable();
+            var aRepo = db.Activities.AsNoTracking().AsQueryable();
+            var asRepo = db.ActivitySignins.AsNoTracking().AsQueryable();
             //
             //SELECT extent1.* FROM  [dbo].[Activities] AS [Extent1]
             //LEFT OUTER JOIN [dbo].[ActivitySignins] AS [Extent2] ON 
@@ -679,7 +661,7 @@ namespace Machete.Service
         /// <param name="asRepo"></param>
         public static void getAssociated(int personID, ref IQueryable<Activity> q, MacheteContext db)
         {
-            var asRepo = db.Set<ActivitySignin>().AsNoTracking().AsQueryable();
+            var asRepo = db.ActivitySignins.AsNoTracking().AsQueryable();
             q = from a in q
                 join az in asRepo on a.ID equals az.activityID into g
                 from f in g.DefaultIfEmpty()

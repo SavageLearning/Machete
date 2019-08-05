@@ -1,16 +1,13 @@
-﻿using Machete.Data;
+﻿using System;
+using System.Collections.Generic;
 using Machete.Domain;
 using Machete.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Practices.Unity;
+using Microsoft.Extensions.DependencyInjection;
+using ViewModel = Machete.Web.ViewModel;
 
-namespace Machete.Test.Integration
+namespace Machete.Test.Integration.Fluent
 {
-    public partial class FluentRecordBase : IDisposable
+    public partial class FluentRecordBase
     {
         private IWorkOrderService _servWO;
         private WorkOrder _wo;
@@ -26,7 +23,7 @@ namespace Machete.Test.Integration
             //
             // DEPENDENCIES
             if (_emp == null) AddEmployer();
-            _servWO = container.Resolve<IWorkOrderService>();
+            _servWO = container.GetRequiredService<IWorkOrderService>();
 
             //
             // ARRANGE
@@ -35,7 +32,7 @@ namespace Machete.Test.Integration
             _wo.workAssignments = new List<WorkAssignment>();
             if (datecreated != null) _wo.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _wo.dateupdated = (DateTime)dateupdated;
-            if (paperordernum != null) _wo.paperOrderNum = paperordernum;
+            if (paperordernum == null) _wo.paperOrderNum = new Random().Next(10000, 99999);
             if (dateTimeOfWork != null) _wo.dateTimeofWork = (DateTime)dateTimeOfWork;
             if (status != null) _wo.statusID = (int)status;
             //
@@ -52,15 +49,15 @@ namespace Machete.Test.Integration
 
         public Web.ViewModel.WorkOrder CloneWorkOrder()
         {
-            AddMapper();
-            var wo = _webMap.Map<Machete.Domain.WorkOrder, Web.ViewModel.WorkOrder>((WorkOrder)Records.order.Clone());
+            ToWebMapper();
+            var wo = _webMap.Map<WorkOrder, ViewModel.WorkOrder>((WorkOrder)Records.order.Clone());
             wo.contactName = RandomString(10);
             return wo;
         }
 
-        public Machete.Domain.WorkOrder CloneDomainWorkOrder()
+        public WorkOrder CloneDomainWorkOrder()
         {
-            var wo = (Machete.Domain.WorkOrder)Records.order.Clone();
+            var wo = (WorkOrder)Records.order.Clone();
             wo.contactName = RandomString(10);
             return wo;
         }

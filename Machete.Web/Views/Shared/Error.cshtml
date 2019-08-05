@@ -1,21 +1,24 @@
-﻿@model System.Web.Mvc.HandleErrorInfo
+@* @model System.Web.Mvc.HandleErrorInfo *@
+@* TODO find what ^ is doing and replace *@
+
+@using Machete.Web.Resources
 
 @{
-    ViewBag.Title = @Machete.Web.Resources.Shared.Error;
+    ViewBag.Title = Shared.Error;
     
 }
 
 <h2>
-    @Machete.Web.Resources.Shared.ErrorPgApology
+    @Shared.ErrorPgApology
 </h2>
 <div>
 <p>
-@Machete.Web.Resources.Shared.ErrorPgExplanation
+    @Shared.ErrorPgExplanation
 </p>
-<p><b>@Machete.Web.Resources.Shared.ErrorPgControllerLabel</b>
+<p><b>@Shared.ErrorPgControllerLabel</b>
 @Model.ControllerName
 </p>
-<p><b>@Machete.Web.Resources.Shared.ErrorPgActionLabel</b>
+<p><b>@Shared.ErrorPgActionLabel</b>
 @Model.ActionName
 </p>
 

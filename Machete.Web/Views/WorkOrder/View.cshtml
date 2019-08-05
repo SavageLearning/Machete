@@ -1,19 +1,25 @@
-﻿@model Machete.Web.ViewModel.WorkOrder
+﻿@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.Localization
+@model Machete.Web.ViewModel.WorkOrder
 
 @using Machete.Web.Resources
-@using Machete.Web.Helpers
-@using System.Globalization
+
+@{
+    ViewBag.Title = WorkOrders.viewtitle;
+
+    var httpContext = ViewContext.HttpContext;
+    var currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
+    var currentUrl = UriHelper.BuildRelative(httpContext.Request.PathBase, httpContext.Request.Path, httpContext.Request.QueryString);
+}
+
 <div class="print-on print-text">
     @*<link href="@Url.Content("~/Content/print.css")" rel="stylesheet" type="text/css" media="print" />*@
-    @{
-        ViewBag.Title = WorkOrders.viewtitle;
-        CultureInfo CI = (CultureInfo)Session["Culture"];
-    }
+
     <div class="dateNeeded">
         <div class="neededText">@WorkOrders.dateneeded</div>
-        <div class="neededText">@System.String.Format("{0:dddd}", Model.dateTimeofWork), @System.String.Format("{0:d}", Model.dateTimeofWork)</div>
-        <div class="neededText">@System.String.Format("{0:t}", Model.dateTimeofWork)</div>
-        @if (Model.timeFlexible == true)
+        <div class="neededText">@string.Format("{0:dddd}", Model.dateTimeofWork), @string.Format("{0:d}", Model.dateTimeofWork)</div>
+        <div class="neededText">@string.Format("{0:t}", Model.dateTimeofWork)</div>
+        @if (Model.timeFlexible)
         {
             <div class="neededText">@WorkOrders.flexible</div>
         }
@@ -36,12 +42,13 @@
     </div>
     @Html.DisplayForModel()
     <div class="tb-label">
-        @Html.LabelFor(model => model.workerRequests)
+        @Html.LabelFor(model => model.workerRequestsAAA)
     </div>
     <div class="tb-field">
-        @foreach (var req in Model.workerRequests)
+        @foreach (var req in Model.workerRequestsAAA)
         {
-            @System.String.Format(req.workerRequested.dwccardnum + "--" + req.workerRequested.fullName) <br />
+            @String.Format(req.workerRequested.dwccardnum + "--" + req.workerRequested.fullName) // TODO verify
+            <br />
         }
     </div>
     <h4>@WorkOrders.listOfPositions</h4>
@@ -65,7 +72,7 @@
             <tr>
                 <td class="tb-field-fixed">@item.pseudoID</td>
                 <td class="tb-field-fixed">@Model.def.byID(item.skillID)</td>
-                <td class="tb-field-fixed">@System.String.Format("{0:C}", item.hourlyWage)</td>
+                <td class="tb-field-fixed">@String.Format("{0:C}", item.hourlyWage)</td>
                 <td class="tb-field-fixed">@Html.DisplayFor(modelItem => item.hours)</td>
                 @if (item.hourRange > 0)
                 {
@@ -76,11 +83,11 @@
                     <td></td>
                 }
                 <td class="tb-field-fixed">@Html.DisplayFor(modelItem => item.days)</td>
-                <td class="tb-field-fixed">@System.String.Format("{0:C}", item.surcharge)</td>
-                <td class="tb-field-fixed">@System.String.Format("{0:C}", item.minEarnings)</td>
+                <td class="tb-field-fixed">@String.Format("{0:C}", item.surcharge)</td>
+                <td class="tb-field-fixed">@String.Format("{0:C}", item.minEarnings)</td>
                 @if (item.hourRange > 0)
                 {
-                    <td class="tb-field-fixed">@System.String.Format("{0:C}", item.maxEarnings)</td>
+                    <td class="tb-field-fixed">@String.Format("{0:C}", item.maxEarnings)</td>
                 }
                 else
                 {
@@ -93,10 +100,10 @@
                     <div class="tb-table">
                         <div class="tb-row">
                             <div class="tb-label">
-                                <p>@Machete.Web.Resources.WorkOrders.workername</p>
+                                <p>@WorkOrders.workername</p>
                             </div>
                             <div class="tb-field">
-                                @if (item.isWorkerAssigned == true)
+                                @if (item.isWorkerAssigned)
                                 {
                                     <p>@Html.Encode(item.assignedWorkerFullname)</p>
                                 }

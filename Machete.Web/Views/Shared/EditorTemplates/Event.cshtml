@@ -1,39 +1,52 @@
-﻿@model Machete.Web.ViewModel.Event
+@using Machete.Domain
 @using Machete.Web.Helpers
-@using Machete.Web.Resources
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.Localization
+@using JoinEventImage = Machete.Web.ViewModel.JoinEventImage
 
-@using Machete.Web.ViewModel
+@using Machete.Web.Resources;
+
+@model Machete.Web.ViewModel.Event
+
 @{
-    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    var httpContext = ViewContext.HttpContext;
+    var currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
+    var currentUrl = UriHelper.BuildRelative(httpContext.Request.PathBase, httpContext.Request.Path, httpContext.Request.QueryString);
+
     string recType = "event";
     string idPrefix = recType + Model.ID + "-";
     string jeviPrefix = "";
     string parentPrefix = "person" + Model.PersonID + "-";
 }
+
 @Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID" })
-@Html.HiddenFor(model => model.PersonID, new { @id = idPrefix + "PersonID" })
+@Html.HiddenFor(model => model.PersonID, new { id = idPrefix + "PersonID" })
 <div class="tb-table">
     <div class="tb-row">
         <div class="mui-event-edit-label tb-label">
             @Html.LabelFor(model => model.eventTypeID)
         </div>
         <div class="mui-event-edit-field tb-field">
-            @Html.mUIDropDownListFor(model => model.eventTypeID, Model.def.getSelectList(Machete.Domain.LCategory.eventtype),
-                                  new { tabindex = "2", id = idPrefix + "eventType" })
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.eventTypeID,
+                    new SelectList(Model.def.getSelectList(LCategory.eventtype), "Value", "Text", Model),
+                    Shared.choose, new { tabindex = "2", id = idPrefix + "eventType" })
+                @Html.ValidationMessageFor(model => model.eventTypeID)
+            </div>
             @Html.ValidationMessageFor(model => model.eventTypeID)
         </div>
         <div class="mui-event-edit-label tb-label">
             @Html.LabelFor(model => model.dateFrom)
         </div>
         <div class="tb-field">
-            @Html.TextBox("dateFrom", Html.Encode(System.String.Format("{0:d}", Model.dateFrom)), new { @id = idPrefix + "dateFrom", @class="ui-datepicker" })
+            @Html.TextBox("dateFrom", Html.Encode(Model.dateFrom.ToShortTextBoxDateString()), new { id = idPrefix + "dateFrom", @class="ui-datepicker" })
             @Html.ValidationMessageFor(model => model.dateFrom)
         </div>
         <div class="mui-event-edit-label tb-label">
             @Html.LabelFor(model => model.dateTo)
         </div>
         <div class="tb-field">
-            @Html.TextBox("dateTo", Html.Encode(System.String.Format("{0:d}", Model.dateTo)), new { @id = idPrefix + "dateTo", @class = "ui-datepicker" })
+            @Html.TextBox("dateTo", Html.Encode(Model.dateTo.ToShortTextBoxDateString()), new { id = idPrefix + "dateTo", @class = "ui-datepicker" })
             @Html.ValidationMessageFor(model => model.dateTo)
         </div>
     </div>
@@ -110,7 +123,7 @@
 </div>
 }
 <div style="clear: left;">
-@Html.Partial("ManagerInfo")
+@await Html.PartialAsync("ManagerInfo")
 
 </div>    
 <script type="text/javascript">

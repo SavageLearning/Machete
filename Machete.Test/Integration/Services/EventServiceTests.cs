@@ -1,9 +1,10 @@
-﻿using Machete.Service;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Globalization;
+using Machete.Service;
+using Machete.Test.Integration.Fluent;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Machete.Test.Integration.Service
+namespace Machete.Test.Integration.Services
 {
     [TestClass]
     public class EventTests
@@ -14,7 +15,7 @@ namespace Machete.Test.Integration.Service
         [TestInitialize]
         public void TestInitialize()
         {
-            frb = new FluentRecordBase();
+            frb = FluentRecordBaseFactory.Get();
             dOptions = new viewOptions
             {
                 CI = new CultureInfo("en-US", false),

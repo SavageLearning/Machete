@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     WorkAssignmentService.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -27,9 +27,8 @@ using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
 using System;
-using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
+using Machete.Data.Tenancy;
 
 namespace Machete.Service
 {
@@ -48,28 +47,33 @@ namespace Machete.Service
     {
         private readonly IWorkAssignmentRepository waRepo;
         private readonly IWorkerRepository wRepo;
+        private readonly IWorkOrderRepository _woRepo;
         private readonly IWorkerSigninRepository wsiRepo;
         private readonly IUnitOfWork unitOfWork;
         private readonly ILookupRepository lRepo;
         private readonly IMapper map;
-        //
-        //
+        private readonly TimeZoneInfo _clientTimeZoneInfo;
+
         public WorkAssignmentService(
             IWorkAssignmentRepository waRepo, 
-            IWorkerRepository wRepo, 
+            IWorkerRepository wRepo,
+            IWorkOrderRepository woRepo,
             ILookupRepository lRepo, 
             IWorkerSigninRepository wsiRepo,
             IUnitOfWork unitOfWork,
-            IMapper map
-            ) : base(waRepo, unitOfWork)
+            IMapper map,
+            ITenantService tenantService
+        ) : base(waRepo, unitOfWork)
         {
             this.waRepo = waRepo;
             this.unitOfWork = unitOfWork;
             this.wRepo = wRepo;
+            _woRepo = woRepo;
             this.lRepo = lRepo;
             this.wsiRepo = wsiRepo;
             this.map = map;
             this.logPrefix = "WorkAssignment";
+            _clientTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(tenantService.GetCurrentTenant().Timezone);
         }
         /// <summary>
         ///
@@ -80,7 +84,7 @@ namespace Machete.Service
             var wa = waRepo.GetById(id);
             if (wa.workerAssignedID != null)
             {
-                wa.workerAssigned = wRepo.GetById((int)wa.workerAssignedID);
+                wa.workerAssignedDDD = wRepo.GetById((int)wa.workerAssignedID);
             }         
             return wa;
         }
@@ -90,7 +94,7 @@ namespace Machete.Service
             IQueryable<WorkAssignment> q = waRepo.GetAllQ();
             //
             // 
-            if (o.date != null) IndexViewBase.diffDays(o, ref q);
+            if (o.date != null) IndexViewBase.diffDays((DateTime) o.date, ref q);
             if (o.typeofwork_grouping > 0) IndexViewBase.typeOfWork(o, ref q, lRepo);
             if (o.woid > 0) IndexViewBase.WOID(o, ref q);
             if (o.personID > 0) IndexViewBase.WID(o, ref q);
@@ -133,14 +137,14 @@ namespace Machete.Service
             if (!string.IsNullOrEmpty(search))
                 IndexViewBase.filterOnDatePart(search, ref query);
 
-            var sum_query = from wa in query //LINQ
+            var sum_query = from wa in query
                             group wa by new
                             {
-                                dateSoW = DbFunctions
-                                .TruncateTime(wa.workOrder.dateTimeofWork),                               
+                                dateSoW = TimeZoneInfo
+                                    .ConvertTimeFromUtc(wa.workOrder.dateTimeofWork, _clientTimeZoneInfo).Date,                               
                                 wa.workOrder.statusID
                             } into dayGroup
-                            select new WorkAssignmentSummary()
+                            select new WorkAssignmentSummary
                             {
                                 date = dayGroup.Key.dateSoW,
                                 status = dayGroup.Key.statusID,
@@ -392,17 +396,22 @@ namespace Machete.Service
         }
         public override WorkAssignment Create(WorkAssignment record, string user)
         {
+            // no can lazy load virtual property in EF Core in this manner.
+            //if (record.workOrder == null) throw new ArgumentNullException("workOrder object is null");
 
-            if (record.workOrder == null) throw new ArgumentNullException("workOrder object is null");
-            record.workOrder.waPseudoIDCounter++;
-            record.pseudoID = record.workOrder.waPseudoIDCounter;
-            updateComputedValues(ref record);
+            var wo = _woRepo.GetById(record.workOrderID);
+            
+            wo.waPseudoIDCounter++;
+            record.pseudoID = wo.waPseudoIDCounter;
+            updateComputedValues(ref record, wo.paperOrderNum);
             return base.Create(record, user);
         }
 
         public void Save(WorkAssignment wa, int? workerAssignedID, string user)
         {
             //check if workerAssigned changed; if so, Unassign
+            var wo = _woRepo.GetById(wa.workOrderID);
+            
             int? origWorker = wa.workerAssignedID;
             if (workerAssignedID != origWorker)
                 Unassign(wa.ID, wa.workerSigninID, user);
@@ -410,10 +419,10 @@ namespace Machete.Service
             // if changed from orphan assignment
             if (workerAssignedID != null)
             {
-                wa.workerAssigned = wRepo.GetById((int)wa.workerAssignedID);
+                wa.workerAssignedDDD = wRepo.GetById((int)wa.workerAssignedID);
             }
             wa.updatedByUser(user);
-            updateComputedValues(ref wa);
+            updateComputedValues(ref wa, wo.paperOrderNum);
             log(wa.ID, user, "WorkAssignment edited");
             unitOfWork.SaveChanges();
         }
@@ -423,15 +432,14 @@ namespace Machete.Service
             Save(asmt, null, user);
         }
 
-        private void updateComputedValues(ref WorkAssignment record)
+        private void updateComputedValues(ref WorkAssignment record, int? paperOrderNum)
         {
             record.skillEN = lRepo.GetById(record.skillID).text_EN;
             record.skillES = lRepo.GetById(record.skillID).text_ES;
             record.minEarnings = (record.days * record.surcharge) + (record.hourlyWage * record.hours * record.days);
             record.maxEarnings = record.hourRange == null ? 0 : (record.days * record.surcharge) + (record.hourlyWage * (int)record.hourRange * record.days);
-            record.fullWAID = System.String.Format("{0,5:D5}-{1,2:D2}",
-                                                    (int)(record.workOrder.paperOrderNum ?? 0),
-                                                    (int)record.pseudoID);
+            var recordPseudoID = record.pseudoID ?? 0;
+            record.fullWAID = string.Format("{0,5:D5}-{1,2:D2}", paperOrderNum, recordPseudoID);
         }
     }
 }

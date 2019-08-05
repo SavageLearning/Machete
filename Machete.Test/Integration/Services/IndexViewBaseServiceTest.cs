@@ -3,7 +3,7 @@
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/25 
 // License:  GPL v3
-// Project:  Machete.Test
+// Project:  Machete.Test.Old
 // Contact:  savagelearning
 // 
 // Copyright 2011 Savage Learning, LLC., all rights reserved.
@@ -21,12 +21,14 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+
+using System.Linq;
 using Machete.Domain;
 using Machete.Service;
+using Machete.Test.Integration.Fluent;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
 
-namespace Machete.Test.Integration.Service
+namespace Machete.Test.Integration.Services
 {
     [TestClass]
     public class IvbFluentRecordBase
@@ -35,51 +37,30 @@ namespace Machete.Test.Integration.Service
         [TestInitialize]
         public void TestInitialize()
         {
-            frb = new FluentRecordBase();
+            frb = FluentRecordBaseFactory.Get();
         }
-
-        [TestCleanup]
-        public void TestCleanup()
-        {
-            frb = null;
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        //[TestMethod]
-        //public void Integration_WA_Service_GetIndexView_check_search_description()
-        //{
-        //    //
-        //    //Act
-        //    dOptions.search = "foostring1";
-        //    dOptions.woid = 1;
-        //    dOptions.orderDescending = true;
-        //    var result = _waServ.GetIndexView(dOptions);
-        //    //
-        //    //Assert
-        //    var tolist = result.query.ToList();
-        //    Assert.IsNotNull(tolist, "return value is null");
-        //    Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
-        //    Assert.AreEqual("foostring1", tolist[0].description);
-        //    Assert.AreEqual(1, result.filteredCount);
-        //    Assert.AreEqual(10, result.totalCount);
-        //}
 
         [TestMethod, TestCategory(TC.Fluent)]
         public void activity_getUnassociated()
         {
             //Arrange
-            var worker = frb.ToWorker();
+            var worker = frb.AddWorker();
             frb.AddActivity().AddActivity();
-            frb.AddActivitySignin(worker: worker);
+            frb.AddActivitySignin(worker);
 
-            IQueryable<Activity> q = frb.ToFactory().Get().Activities;
+            IQueryable<Activity> q = frb.ToFactory().Activities;
             var count = q.Count();
             //Act
-            IndexViewBase.getUnassociated(worker.ID, ref q, frb.ToFactory().Get());
+            IndexViewBase.getUnassociated(worker.ID, ref q, frb.ToFactory());
             //Assert
             var result = q.ToList();
-            Assert.AreEqual(count - 1, result.Count());
+            Assert.AreEqual(count - 1, result.Count);
         }
+        
+//        [TestCleanup]
+//        public void TestCleanup()
+//        {
+//            frb = null;
+//        }
     }
 }

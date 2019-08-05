@@ -1,4 +1,4 @@
-﻿@model Machete.Web.ViewModel.Employer
+@model Machete.Web.ViewModel.Employer
 
 @using Machete.Web.Resources
 
@@ -8,7 +8,7 @@
 }
 
 @using (Html.BeginForm("Create", "Employer", FormMethod.Post, 
-                        new { @id = "employerCreateForm" }))
+                        new { id = "employerCreateForm" }))
 {
     <div style="float: left;">
         <input type="button" onclick="FindEmployerDuplicate()" id="@(idPrefix)SaveBtn" class="formButton saveBtn" 
@@ -16,11 +16,11 @@
         <input type="button" onclick="setFormData(true)" id="@(idPrefix)ClearBtn" class="formButton saveBtn"
                value="@Employers.createclear" tabindex="9" />
     </div>
-    @Html.ValidationSummary(true)
-    @Html.EditorForModel()
+     @Html.ValidationSummary(true)
+     @Html.EditorForModel()
 }
 
-<div id="duplicatesDialog" title="@(Machete.Web.Resources.Shared.DuplicateEmployerTitle)">
+<div id="duplicatesDialog" title="@Shared.DuplicateEmployerTitle">
 </div>
 
 <script type="text/javascript">
@@ -44,21 +44,26 @@
         employerCreateForm.mUI('formDetectChanges', {
             recType: "@(recType)",
             formLevel: 1,
-            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
-            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+            changeConfirm: "@Shared.changeConfirm",
+            changeTitle: "@Shared.changeTitle"
         });
     });
 
     function getClearValue(fieldName) {
-        if (fieldName == "business" || fieldName == "returnCustomer"
-                        || fieldName == "onlineSource" || fieldName == "blogparticipate"
-                        || fieldName == "receiveUpdates") {
+        switch (fieldName) {
+        case 'business':
+        case 'returnCustomer':
+        case 'onlineSource':
+        case 'blogparticipate':
+        case 'receiveUpdates':
             return "false";
-        }
-        if (fieldName == "active") {
+        //break;
+        case 'active':
             return "true";
+        //break;
+        default:
+            return "";
         }
-        return "";
     }
 
 
@@ -67,7 +72,7 @@
 
         var form = $('#employerCreateForm');
         var fieldChanged = false;
-        var employerFormContent = JSON.parse(localStorage.getItem("employerCreateForm"));
+        var employerFormContent = JSON.parse(localStorage.getItem('employerCreateForm'));
 
         $.each(employerFormContent, function (i, field) {
             if (field.name == "ID") {
@@ -99,11 +104,11 @@
         modal: true,
         closeOnEscape: false,
         buttons: {
-            "Cancel": function () { $(this).dialog("close"); },
+            "Cancel": function () { $(this).dialog('close'); },
             "Save": {
-                text: "@(Machete.Web.Resources.Employers.createsubmit)",
+                text: '@Employers.createsubmit',
                 id: 'duplicateSaveBtn',
-                click: function () {
+                click: function() {
                     $(this).dialog("close");
                     saveEmployer();
                 }
@@ -113,9 +118,15 @@
     });
 
     function FindEmployerDuplicate() {
-
         var form = $('#employerCreateForm');
         if (form.valid()) {
+            
+            /* * * FOR DEBUGGING * * */
+//            alert($('#employer0-name')[0].value);
+//            alert($('#employer0-address1')[0].value);
+//            alert($('#employer0-phone')[0].value);
+//            alert($('#employer0-city')[0].value);
+//            alert($('#employer0-zipcode')[0].value);
             $.ajax({
                 url: "/Employer/GetDuplicates",
                 data: {
@@ -125,52 +136,57 @@
                     city: $('#employer0-city')[0].value,
                     zipcode: $('#employer0-zipcode')[0].value
                 },
-                success: onSuccessFindEmployerDuplicate,
+                success: (result) => {
+                    if (result.duplicates.length > 0) {
+                        duplicatesDialog.dialog("open");
+                        duplicatesDialog.html(CreateHtmlText(result.duplicates));
+                    } else {
+                        saveEmployer();
+                    }
+                },
+                error: (req, status, error) => {
+                    alert("Error: " + status + " " + error);
+                },
                 dataType: "json"
             });
-        }
-        else {
+        } else {
             saveEmployer();
-          //  form.submit();
         }
     }
-   
 
     function CreateHtmlText(duplicates) {
-        var dialogHtmlText = '<p>@(Machete.Web.Resources.Shared.DuplicateEmployerMessage)</p>'
-            + '<table class="duplicateEmployers" style="width:100%" border="1" cellpadding="2">'
-            + '<tr>'
-            + '<th>@(Machete.Web.Resources.Employer.name)</th>'
-            + '<th>@(Machete.Web.Resources.Employer.address1)</th>'
-            + '<th>@(Machete.Web.Resources.Employer.phone)</th>'
-            + '<th>@(Machete.Web.Resources.Employer.city)</th>'
-            + '<th>@(Machete.Web.Resources.Employer.zipcode)</th>'
-            + '</tr>';
+        var dialogHtmlText = '<p>@Shared.DuplicateEmployerMessage</p>' +
+            '<table class="duplicateEmployers" style="width:100%" border="1" cellpadding="2">' +
+            '<tr>' +
+            '<th>@Employer.name</th>' +
+            '<th>@Employer.address1</th>' +
+            '<th>@Employer.phone</th>' +
+            '<th>@Employer.city</th>' +
+            '<th>@Employer.zipcode</th>' +
+            '</tr>';
         for (var i = 0; i < duplicates.length; i++) {
-                dialogHtmlText += '<tr>'
-                    + '<td>' + duplicates[i]["Name"] + '</td>'
-                    + '<td>' + duplicates[i]["Address"] + '</td>'
-                    + '<td>' + duplicates[i]["Phone"] + '</td>'
-                    + '<td>' + duplicates[i]["City"] + '</td>'
-                    + '<td>' + duplicates[i]["ZipCode"] + '</td>'
-                    + '</tr>';
+            dialogHtmlText += '<tr>' +
+                '<td>' +
+                duplicates[i]["Name"] +
+                '</td>' +
+                '<td>' +
+                duplicates[i]["Address"] +
+                '</td>' +
+                '<td>' +
+                duplicates[i]["Phone"] +
+                '</td>' +
+                '<td>' +
+                duplicates[i]["City"] +
+                '</td>' +
+                '<td>' +
+                duplicates[i]["ZipCode"] +
+                '</td>' +
+                '</tr>';
         }
 
-        dialogHtmlText += '</table> <p></p> <p></p>@(Machete.Web.Resources.Shared.SaveMessageDuplicatePersons)</p>';
+        dialogHtmlText += '</table> <p></p> <p></p>@Shared.SaveMessageDuplicatePersons</p>';
 
         return dialogHtmlText;
-    }
-
-    function onSuccessFindEmployerDuplicate(result) {
-        if (result.duplicates.length > 0) {
-
-            duplicatesDialog.dialog("open");
-            duplicatesDialog.html(CreateHtmlText(result.duplicates));
-        }
-        else {
-            saveEmployer();
-
-        }
     }
 
     function saveEmployer() {
@@ -181,5 +197,4 @@
             setFormData(true);
         }
     }
-
 </script>

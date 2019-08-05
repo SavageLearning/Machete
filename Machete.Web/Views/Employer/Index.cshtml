@@ -1,15 +1,22 @@
-﻿@using Machete.Web.Helpers
-@using Machete.Web.Resources
+@using Machete.Web.Helpers
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.Localization
+
+@using Machete.Web.Resources;
 
 @{
-    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    var httpContext = ViewContext.HttpContext;
+    var currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
+    var currentUrl = UriHelper.BuildRelative(httpContext.Request.PathBase, httpContext.Request.Path, httpContext.Request.QueryString);
+
     string recType = "employer";
 }
+
 <div id="employerTabs" class="ExclusiveTab">
     <ul>
         <li><a href="#employerList" id="employerListTab" class="ListTab">@Employers.listlink</a> </li>
 
-        @if (Html.IsRoleAllowed("Employer.CreateNew.ShowTab"))
+        @if (Html.IsInRole("Administrator", "Manager", "PhoneDesk"))
         {
             <li><a href="/Employer/Create" id="employerCreateTab" class="CreateTab">@Employers.createlink</a></li>
         }
@@ -57,7 +64,7 @@
         </thead>
     </table>
 </div>
-@Html.Partial("WorkerIndex")
+@await Html.PartialAsync("WorkerIndex")
 <script type="text/javascript">
     $(document).ready(function () {
         $('.formButton').button();
@@ -73,7 +80,7 @@
                 //"iDisplaylength": 15,
                 "bPaginate": true,
                 "bLengthChange": true,
-                "aaSorting": [[9, 'desc']],
+                "aaSorting": [[ 9, 'desc' ]],
                 "bFilter": true,
                 "bSort": true,
                 "bInfo": true,
@@ -81,18 +88,18 @@
                 "bServerSide": true,
                 "sAjaxSource": "/Employer/AjaxHandler",
                 "bProcessing": true,
-                "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
-                "aoColumns": [                           //dataTable column definition
-                                {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
-                                {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
-                                {"mDataProp": "active" },
-                                {"mDataProp": "name" },
-                                {"mDataProp": "address1" },
+                "oLanguage": datatable_lang_@(currentCulture.TwoLetterISOLanguageName),
+                "aoColumns": [
+                                { "mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                                { "mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                                { "mDataProp": "active" },
+                                { "mDataProp": "name" },
+                                { "mDataProp": "address1" },
                                 { "mDataProp": "city" },
                                 { "mDataProp": "zipcode" },
                                 { "mDataProp": "phone" },
                                 { "mDataProp": "cellphone" },
-                                {"mDataProp": "dateupdated" },
+                                { "mDataProp": "dateupdated" },
                                 { "mDataProp": "updatedby", "bSortable": false },
                                 { "mDataProp": "onlineSource", "bSearchable": false, "bSortable": true, "bVisible": true }
                             ]
@@ -140,20 +147,20 @@
             "bAutoWidth": false,
             "bServerSide": true,
             "sAjaxSource": "/Employer/AjaxHandler",
-            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "oLanguage": datatable_lang_@(currentCulture.TwoLetterISOLanguageName),
             "bProcessing": true,
             "aoColumns": [
-                            {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
-                            {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
-                            {"mDataProp": "active" },
-                            {"mDataProp": "name" },
-                            {"mDataProp": "address1" },
+                            { "mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                            { "mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                            { "mDataProp": "active" },
+                            { "mDataProp": "name" },
+                            { "mDataProp": "address1" },
                             { "mDataProp": "city" },
                             { "mDataProp": "zipcode" },
                             { "mDataProp": "phone" },
                             { "mDataProp": "cellphone" },
-                            {"mDataProp": "dateupdated" },
-                            {"mDataProp": "updatedby", "bSortable": false }
+                            { "mDataProp": "dateupdated" },
+                            { "mDataProp": "updatedby", "bSortable": false }
             ],
             // callback populates html attr with row data from JSON
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
@@ -173,7 +180,7 @@
             title: '@WorkOrders.empChgConfirmSubmit'
         });
         $('#employerSelectDialog').hide();
-        $('#employerSelectTable').hide()
+        $('#employerSelectTable').hide();
         return true;
     });
 </script>

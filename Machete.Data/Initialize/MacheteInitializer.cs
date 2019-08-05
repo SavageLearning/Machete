@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     MacheteInitializer.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -21,35 +21,40 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System.Data.Entity;
-using System.Data.Entity.Migrations;
+
 using System.Linq;
-namespace Machete.Data
+using System.Threading.Tasks;
+using Machete.Data.Identity;
+using Machete.Data.Infrastructure;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Machete.Data.Initialize
 {
-    public class MacheteInitializer : MigrateDatabaseToLatestVersion<MacheteContext, MacheteConfiguration> {}
-    public class TestInitializer : MigrateDatabaseToLatestVersion<MacheteContext, MacheteConfiguration> {}
-    public class MacheteConfiguration : DbMigrationsConfiguration<MacheteContext>
+    /// <summary>
+    /// <para>Machete.Data.Initialize.MacheteConfiguration class.</para>
+    /// <para>This class is responsible for ensuring the presence of the Seed data needed to run the application.</para>
+    /// </summary>
+    public static class MacheteConfiguration
     {
-        public MacheteConfiguration() : base()
+        public static void Seed(MacheteContext db)
         {
-            AutomaticMigrationsEnabled = true;
-            AutomaticMigrationDataLossAllowed = false;
+            if (!db.Lookups.Any())
+                MacheteLookups.Initialize(db);
+            if (!db.TransportProviders.Any() || !db.TransportProviderAvailabilities.Any())
+                MacheteTransports.Initialize(db);
+            if (!db.Configs.Any())
+                MacheteConfigs.Initialize(db);
+            if (!db.TransportRules.Any())
+                MacheteRules.Initialize(db);
+            if (db.ReportDefinitions.Count() != MacheteReportDefinitions._cache.Count)
+                MacheteReportDefinitions.Initialize(db);
         }
-        protected override void Seed(MacheteContext DB)
+
+        public static async Task SeedAsync(MacheteContext db)
         {
-            if (DB.Lookups.Count() == 0)
-            {
-                MacheteLookup.Initialize(DB);
-            }
-            if (DB.TransportProviders.Count() == 0 || DB.TransportProvidersAvailability.Count() == 0)
-            {
-                MacheteTransports.Initialize(DB);
-            }
-            if (DB.Users.Count() == 0)   MacheteUsers.Initialize(DB);
-            // MacheteCOnfigs.Initialize assumes Configs table has been populated by script
-            if (DB.Configs.Count() == 0) MacheteConfigs.Initialize(DB);
-            if (DB.TransportRules.Count() == 0) MacheteRules.Initialize(DB);
-            if (DB.ReportDefinitions.Count() != MacheteReportDefinitions.cache.Count()) MacheteReportDefinitions.Initialize(DB);
+            if (!db.Users.Any())
+                await MacheteSeedUsers.Initialize(db);
         }
-    }   
+    }
 }

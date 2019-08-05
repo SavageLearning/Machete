@@ -1,101 +1,71 @@
-#OS junk files
-[Tt]humbs.db
-*.DS_Store
-*.cache
-Machete.suo
-Machete.Api/
-*.Web.Publish.xml
-*/Properties/PublishProfiles/*.user
-# Build results
-[Dd]ebug/
-[Rr]elease/
-[Pp]ackages/
-obj/*
-build/
-node_modules/
+# Autosave files
+*~
 
-log.txt*
-#Visual Studio files
-*.[Oo]bj
+# SQLite
+*.db
+
+# build
+[Oo]bj/
+[Bb]in/
+packages/
+TestResults/
+
+# globs
+Makefile.in
+*.DS_Store
+*.sln.cache
+*.suo
+*.cache
+*.pidb
+*.userprefs
+*.usertasks
+config.log
+config.make
+config.status
+aclocal.m4
+install-sh
+autom4te.cache/
 *.user
-*.aps
-*.pch
-*.vspscc
-*.vssscc
+*.tar.gz
+tarballs/
+test-results/
+Thumbs.db
 .vs/
 
-*_i.c
-*_p.c
-*.ncb
-*.suo
-*.tlb
-*.tlh
-*.bak
-*.[Cc]ache
-*.ilk
-*.log
-*.lib
-*.sbr
-*.sdf
-*.opensdf
-*.unsuccessfulbuild
-ipch/
-obj/
-[Bb]in
-[Dd]ebug*/
-[Rr]elease*/
-Ankh.NoLoad
+# Mac/bundle stuff
+*.dmg
+*.app
+Machete.Web/Content/css.css
 
-#Tooling
-_ReSharper*/
-*.resharper
-[Tt]est[Rr]esult*
+# resharper
+*_Resharper.*
+*.Resharper
 
-#Project files
-[Bb]uild/
+# dotCover
+*.dotCover
 
-#Subversion files
-.svn
+# idea
+.idea/
 
-# Office Temp Files
-~$*
+Machete\.Web/Content/reports\.min\.js
 
-#NuGet
-packages/
-/Machete.Web/log.txt
-/Machete.Web/log.txt
-/Machete.suo
+Machete\.Web/Content/reports\.js
 
-/Machete1.vsmdi
-/Machete.WebOld
+Machete\.Web/Content/reportcss\.min\.css
 
-#sensitive secure data
-*/connections.config
+Machete\.Web/Content/reportcss\.css
 
-#annoying binary files somehow still being created
-*/ASPNETDB.MDF
-*/aspnetdb_log.ldf
+Machete\.Web/Content/jquery\.min\.js
 
-MWS.Service_1_TemporaryKey.pfx
-*.MDF
-*.ldf
+Machete\.Web/Content/jquery\.js
 
+Machete\.Web/Content/Machete\.css
+Machete\.Web/Content/Machete\.min\.css
 
-Machete.Test/randomized.csv
-Machete.Test/powershell_stderr.txt
-Machete.Test/powershell_stdout.txt
-Machete.Test/randomized_dates.csv
-Machete.Test/randomized_names.csv
-Machete.Test/randomized_nums.csv
-Machete.Test/BeanShell Sampler.jmx
-.vscode/
-*/node_modules/*
+Machete\.Web/Published
 
+machete1env.list
 
-Identity/appsettings\.config
+node_modules/
 
-Api/Properties/PublishProfiles/*-api.pubxml
-Identity/Properties/PublishProfiles/*-identity.pubxml
-Machete.Web/Properties/PublishProfiles/*.pubxml
-
-Machete.Web/Content/bundles/*
+Machete\.Web/appsettings\.json

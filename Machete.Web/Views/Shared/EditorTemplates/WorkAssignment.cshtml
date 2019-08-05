@@ -1,88 +1,129 @@
 ﻿@model Machete.Web.ViewModel.WorkAssignment
+
 @using Machete.Web.Helpers
-@using Machete.Web.Resources
+@using Machete.Web.Resources;
+
 @Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID" })
 @Html.HiddenFor(model => model.workOrderID)
 @{
-    string myStr = "";
-    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
-    string idPrefix = "WA" + Model.ID + "-";
+    var myStr = "";
+    var idPrefix = "WA" + Model.ID + "-";
 }
 
+<!--suppress ALL -->
 <div class="tb-table">
-
     <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.englishLevelID)
-        @Html.mUIDropDownListFor(model => model.englishLevelID, Model.def.skillLevels(), new {tabindex = "23", @id = idPrefix + "englishLevelID"})
-        @Html.mUITableLabelFor(model => model.skillID)
+        <div class="tb-label">
+            @Html.LabelFor(model => model.englishLevelID)
+        </div>
         <div class="tb-field">
-            <select name="skillID" id=@(idPrefix + "skillID") 
-                    data-val-required="A skill is required (use general labor if none was specified)" 
-                    data-val-number="The field Skill must be a number." 
-                    data-val="true"
-                    tabindex="1"
-                    class="valid"><option value="">@Shared.choose</option>
-                @foreach (SelectListItemEx item in Model.def.getSkill(specializedOnly: false))
+            @Html.DropDownListFor(model => model.englishLevelID,
+                new SelectList(Model.def.skillLevels(), "Value", "Text", Model),
+                Shared.choose, new {tabindex = "23", id = idPrefix + "englishLevelID"})
+            @Html.ValidationMessageFor(model => model.englishLevelID);
+        </div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.skillID)
+        </div>
+        <div class="tb-field">
+            <select class="valid" data-val="true" data-val-number="The field Skill must be a number." data-val-required="A skill is required (use general labor if none was specified)" id=@(idPrefix + "skillID") name="skillID" tabindex="1">
+                <option value="">@Shared.choose</option>
+                @foreach (var item in Model.def.getSkill(specializedOnly: false))
                 {
                     @*kludgy way to print selected or not. couldn't get other syntax to work*@
                     if (Model.skillID == Convert.ToInt16(item.Value))
                     {
-                        <option value="@(item.Value)" 
-                                wage="@(item.wage)" 
-                                minHour="@(item.minHour)" 
-                                fixedJob="@(item.fixedJob)" 
+                        <option value="@(item.Value)"
+                                wage="@(item.wage)"
+                                minHour="@(item.minHour)"
+                                fixedJob="@(item.fixedJob)"
                                 selected="selected">@item.Text</option>
                     }
                     else
-                    {                                                
-                        <option value="@(item.Value)" 
-                                wage="@(item.wage)" 
-                                minHour="@(item.minHour)" 
+                    {
+                        <option value="@(item.Value)"
+                                wage="@(item.wage)"
+                                minHour="@(item.minHour)"
                                 fixedJob="@(item.fixedJob)">@item.Text</option>
                     }
-                } 
+                }
             </select>
             @Html.ValidationMessageFor(model => model.skillID)
         </div>
-        @Html.mUITableLabelAndTextBoxFor(model => model.pseudoID, new { tabindex = "31", style = "width: 2em", @readonly = "readonly", @id = idPrefix + "pseudoID" })
-        @Html.mUITableLabelFor(model => model.weightLifted)
-        @Html.mUIDropDownYesNoFor(model => model.weightLifted, Model.def.yesnoSelectList(), new { tabindex = "35", id = idPrefix + "weightLifted" })
+        <div class="tb-label">
+            @Html.LabelFor(model => model.pseudoID)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.pseudoID,
+                new { tabindex = "31", style = "width: 2em", @readonly = "readonly", id = idPrefix + "pseudoID" })
+            @Html.ValidationMessageFor(model => model.pseudoID)
+        </div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.weightLifted)
+        </div>
+        <div class="tb-field">
+            @Html.DropDownListFor(model => model.weightLifted,
+                new SelectList(Model.def.yesnoSelectList(), "Value", "Text", Model), Shared.choose,
+                new { tabindex = "35", id = idPrefix + "weightLifted" })
+            @Html.ValidationMessageFor(model => model.weightLifted)
+        </div>
     </div>
 </div>
 <div class="tb-table">
     <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.hourlyWage)
+        <div class="tb-label">
+            @Html.LabelFor(model => model.hourlyWage)
+        </div>
         <div class="tb-field">
-            @Html.TextBox("hourlyWage", Html.Encode(System.String.Format("{0:f2}", Model.hourlyWage)), new { tabindex = "25", @class = "money-field earnings-part", min="1", @id = idPrefix + "hourlyWage" })
+            @Html.TextBox("hourlyWage", Html.Encode($"{Model.hourlyWage:f2}"),
+                new { tabindex = "25", @class = "money-field earnings-part", min="1", id = idPrefix + "hourlyWage" })
             @Html.ValidationMessageFor(model => model.hourlyWage)
         </div>
-        @Html.mUITableLabelFor(model => model.hours)
+        <div class="tb-label">
+            @Html.LabelFor(model => model.hours)
+        </div>
         <div class="tb-field">
-            @Html.TextBox("hours", Html.Encode(System.String.Format("{0:f2}", Model.hours)), new { tabindex = "26", @id = idPrefix + "hours", @class = "earnings-part", min="1", style = "width: 6em;" })
+            @Html.TextBox("hours", Html.Encode($"{Model.hours:f2}"),
+                new { tabindex = "26", id = idPrefix + "hours", @class = "earnings-part", min="1", style = "width: 6em;" })
             @Html.ValidationMessageFor(model => model.hours)
         </div>
-
-        @Html.mUITableLabelFor(model => model.hourRange)
-        @Html.mUIDropDownListFor(model => model.hourRange, new SelectList(Model.def.hours(), "Value", "Text", Model.hourRange), new { tabindex = "27", @id = idPrefix + "hourRange", @class = "earnings-part" })
+        <div class="tb-label">
+            @Html.LabelFor(model => model.hourRange)
+        </div>
+        <div class="tb-field">
+            @Html.DropDownListFor(model => model.hourRange,
+                new SelectList(Model.def.hours(), "Value", "Text", Model),
+                Shared.choose, new { tabindex = "27", id = idPrefix + "hourRange", @class = "earnings-part" })
+            @Html.ValidationMessageFor(model => model.hourRange)
+        </div>
     </div>
     <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.days)
-        @Html.mUIDropDownListFor(model => model.days, new SelectList(Model.def.days(), "Value", "Text", Model.days), new { tabindex = "28", @id = idPrefix + "days", @class = "earnings-part" })
         <div class="tb-label">
-            @Html.Label("total", @Machete.Web.Resources.WorkAssignments.total)
+            @Html.LabelFor(model => model.days)
+        </div>
+        <div class="tb-field">
+            @Html.DropDownListFor(model => model.days,
+                new SelectList(Model.def.days(), "Value", "Text", Model),
+                Shared.choose, new { tabindex = "28", id = idPrefix + "days", @class = "earnings-part" })
+            @Html.ValidationMessageFor(model => model.days)
+        </div>
+        <div class="tb-label">
+            @Html.Label("total", WorkAssignments.total)
         </div>
         <div class="tb-field">
             @Html.TextBox( idPrefix + "total", null, new { tabindex = "32", style = "width: 6em;"})
         </div>
         <div class="tb-label">
-            @Html.Label("totalRange", @Machete.Web.Resources.WorkAssignments.totalRange)
+            @Html.Label("totalRange", WorkAssignments.totalRange)
         </div>
         <div class="tb-field">
             @Html.TextBox(idPrefix + "totalRange", null, new { tabindex = "33", style = "width: 6em;"})
         </div>
-        @Html.mUITableLabelFor(model => model.surcharge)
+        <div class="tb-label">
+            @Html.LabelFor(model => model.surcharge)
+        </div>
         <div class="tb-field">
-            @Html.TextBox("surcharge", Html.Encode(System.String.Format("{0:f2}", Model.surcharge)), new { tabindex = "29", @class = "money-field earnings-part", @id = idPrefix + "surcharge" })
+            @Html.TextBox("surcharge", Html.Encode(String.Format("{0:f2}", Model.surcharge)), new { tabindex = "29", @class = "money-field earnings-part", id = idPrefix + "surcharge" })
             @Html.ValidationMessageFor(model => model.surcharge)
         </div>
     </div>
@@ -94,27 +135,29 @@
         </div>
         <div class="tb-field desc-field">
             @*@Html.TextAreaFor("description", Model.description, new { style = "width: 40em; height: 4em;" })*@
-            @Html.TextAreaFor(model => model.description, new { tabindex = "30", @class = "desc-field", @id = idPrefix + "description" })
+            @Html.TextAreaFor(model => model.description, new { tabindex = "30", @class = "desc-field", id = idPrefix + "description" })
             @Html.ValidationMessageFor(model => model.description)
         </div>
     </div>
 </div>
-@if (Html.IsInRole(Html.Role_AM()))
+@if (Html.IsInRole("Administrator", "Manager"))
 {
 <div class="Accordion" id="dispatchAccordion">
-    <h3><a href="#">@Machete.Web.Resources.WorkAssignment.dispatchinfo</a></h3>
+    <h3><a href="#">@WorkAssignment.dispatchinfo</a></h3>
     <div class="tb-table">
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.workerAssignedID)
+            <div class="tb-label">
+                @Html.LabelFor(model => model.workerAssignedID)
+            </div>
             <div class="tb-display">
                 @Html.HiddenFor(model => model.workerAssignedID,
                     new { 
-                       @id="workerAssigned-" + Model.ID
+                       id="workerAssigned-" + Model.ID
                     })           
                 @{                    
                     if (Model.isWorkerAssigned)
                     {
-                        myStr = Model.assignedWorkerDwccardnum.ToString() + " " +
+                        myStr = Model.assignedWorkerDwccardnum + " " +
                                         Model.assignedWorkerFullname;
                     }
                 }
@@ -122,15 +165,15 @@
                     myStr, 
                     new { 
                         style = "width: 20em",
-                        @disabled = "disabled",
-                        @id = "workerAssignedDisplay-" + Model.ID
+                        disabled = "disabled",
+                        id = "workerAssignedDisplay-" + Model.ID
                     })
              </div>
              <div class="tb-label">
-                    <input type="button" value="@Machete.Web.Resources.WorkAssignment.change" 
+                    <input type="button" value="@WorkAssignment.change" 
                             class="formButton" 
                             id="changeAssigned-@(Model.ID)"/>
-                    <input type="button" value="@Machete.Web.Resources.WorkAssignment.delete" 
+                    <input type="button" value="@WorkAssignment.delete" 
                             class="formButton" 
                             id="deleteAssigned-@(Model.ID)"/>
              </div>
@@ -139,7 +182,7 @@
 </div>
 }
 
-@Html.Partial("ManagerInfo")
+@await Html.PartialAsync("ManagerInfo")
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -166,8 +209,8 @@
         //
         // Delete confirmation 
         $('#deleteAssigned-@(Model.ID)').click(function () {
-            jConfirm('@Machete.Web.Resources.WorkAssignment.deleteassignedconfirm',
-                     '@Machete.Web.Resources.WorkAssignment.deleteassignedtitle',
+            jConfirm('@WorkAssignment.deleteassignedconfirm',
+                     '@WorkAssignment.deleteassignedtitle',
                      function (r) {
                          if (r == true) {
                             $('#workerAssigned-@(Model.ID)').val(null);
