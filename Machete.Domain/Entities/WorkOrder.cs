@@ -53,7 +53,7 @@ namespace Machete.Domain
         // Flag identifying if source of work order was online web form
         public bool onlineSource { get; set; }
         // Reference to historical paper record order number
-        [RegularExpression(@"^$|^[\d]{1,6}$")]
+        [RegularExpression(@"^$|^[\d]{1,5}$")]
         public int? paperOrderNum { get; set; }
         // Counter to track next work assignment number associated with this work order
         public int waPseudoIDCounter { get; set; }

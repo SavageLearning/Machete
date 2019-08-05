@@ -50,7 +50,7 @@ namespace Machete.Web.ViewModel
 
         // Reference to historical paper record order number
         [LocalizedDisplayName("paperOrderNum", NameResourceType = typeof(Resources.WorkOrder))]
-        [RegularExpression(@"^$|^[\d]{1,6}$", ErrorMessageResourceName = "paperOrderNumFormat", ErrorMessageResourceType = typeof(Resources.WorkOrder))]
+        [RegularExpression(@"^$|^[\d]{1,5}$", ErrorMessageResourceName = "paperOrderNumFormat", ErrorMessageResourceType = typeof(Resources.WorkOrder))]
         public int? paperOrderNum { get; set; }
 
         // Counter to track next work assignment number associated with this work order
