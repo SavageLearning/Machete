@@ -65,7 +65,8 @@ configuration:
   - Release
 
 # MSBuild settings; NOT a build step
-#build: 
+build: 
+  project: Machete.sln
 # dotnet build includes restore
 before_build:
   - sh: node --version
