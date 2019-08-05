@@ -5,7 +5,7 @@ const github = new Octokit();
 const operation = process.argv[2];
 const appveyorBuildNumber = process.env.APPVEYOR_BUILD_VERSION;
 // TODO process.env.MACHETE_REPO_OWNER etc.
-const owner = 'chaim1221';
+const owner = 'SavageLearning';
 const commitish = 'master'; // default
 
 // GITHUB
