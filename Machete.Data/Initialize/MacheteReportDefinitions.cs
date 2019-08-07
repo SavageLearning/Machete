@@ -1741,6 +1741,25 @@ a.name
 , a.[referredbyOther]
 
 order by format(max(b.dateTimeofWork), 'd')"
+			},
+
+			new ReportDefinition {
+				name = "SkillAndWages",
+				commonName = "Skill and Wages Report",
+				description ="A list of all skills and their hourly wages",
+				category = "Skills",
+				sqlquery = @"select 
+text_EN as [Name],
+text_ES as [Nombre],
+ISNULL(subcategory, '') as [Subcategory],
+FORMAT(wage, 'C', 'en-us') as [Wage],
+concat(ltrCode, convert(varchar,level)) as [code],
+CASE WHEN active = 1 THEN 'true' ELSE 'false' END as [Active],
+CASE WHEN speciality = 1 THEN 'true' ELSE 'false' END as [Special Skill],
+ISNULL(minhour, '') as [Min. Hours]
+
+from dbo.Lookups where category = 'skill'
+order by text_EN asc"
 			}
 
 			#endregion
