@@ -1322,7 +1322,7 @@ order by total desc"
 				name = "WorkerDetailsEvents",
 				commonName = "Worker Details, events (rap sheet)",
 				description =
-					"A list of events, which are complaints, recommendatiosn, sanctions, etc. for a given worker",
+					"A list of events, which are complaints, recommendations, sanctions, etc. for a given worker",
 				category = "WorkerDetail",
 				sqlquery =
 					@"SELECT     
@@ -1741,6 +1741,52 @@ a.name
 , a.[referredbyOther]
 
 order by format(max(b.dateTimeofWork), 'd')"
+			},
+
+			new ReportDefinition {
+				name = "SkillAndWages",
+				commonName = "Skill and Wages Report",
+				description ="A list of all skills and their hourly wages",
+				category = "Skills",
+				sqlquery = @"select 
+text_EN as [Name],
+text_ES as [Nombre],
+ISNULL(subcategory, '') as [Subcategory],
+FORMAT(wage, 'C', 'en-us') as [Wage],
+concat(ltrCode, convert(varchar,level)) as [code],
+CASE WHEN active = 1 THEN 'true' ELSE 'false' END as [Active],
+CASE WHEN speciality = 1 THEN 'true' ELSE 'false' END as [Special Skill],
+ISNULL(minhour, '') as [Min. Hours]
+
+from dbo.Lookups where category = 'skill'
+order by text_EN asc"
+			},
+
+			new ReportDefinition {
+				name = "ActiveMembersWithNoSignins",
+				commonName = "Active Members With No Signins",
+				description = "A list of members who did not sign in the selected time range",
+				category = "Dispatches",
+				sqlquery = @"select 
+distinct w.[dwccardnum] as [Member Number]
+, p.fullname as [Member Name]
+, convert(varchar, w.[memberexpirationdate], 1) as [Expiration]
+, w.[memberStatusEN] as [Member Status]
+, lu.text_EN as [Program]
+
+from workers ​w
+join persons p 
+on w.id = p.id
+join [dbo].[Lookups] lu 
+on lu.id = w.typeOfWorkID
+
+where w.[memberexpirationdate] >= @enddate​
+and w.[dwccardnum] Not in 
+(select dwccardnum 
+from WorkerSignins
+​
+Where dateforsignin >= @begindate 
+and dateforsignin <= @enddate)"
 			}
 
 			#endregion
