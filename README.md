@@ -44,7 +44,7 @@ filesystem access. You probably won't need to worry about this unless you become
 
 Finally, you will need the [`dotnet` CLI](https://dotnet.microsoft.com/download).
 
-Great, now you should be good to go!
+Great, now you should be good to go to the next step!
 
 `☕️ 💻 🐈`
 
@@ -83,6 +83,13 @@ Test Connection + Select Schemas from the middle tab
 
 Select two databases using *`⌘`* to select multiple, then *`⌘-D`* will schema compare.
 
+The only other option is to make an SSH tunnel and expose the database to your local network, then use SSMS or SSDT to connect.
+Be careful with this option; it should not be used on public networks.
+
+## Running Tests
+Download ChromeDriver matching your version of Chrome from [here](http://chromedriver.storage.googleapis.com/index.html).
+Integration tests will run with `dotnet test` from the root directory of the repo.
+Selenium tests currently require Rider. If you have a way around this let us know in Slack or on GitHub. Thank you!
 
 ## People who use this free software include:
 <hr>
