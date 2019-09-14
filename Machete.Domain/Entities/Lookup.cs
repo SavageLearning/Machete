@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     Lookup.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/26 
@@ -53,8 +53,8 @@ namespace Machete.Domain
         public bool speciality { get; set; }
         [StringLength(3)]
         public string ltrCode { get; set; }
-        [StringLength(8000)]
-        [Column(TypeName = "nvarchar(MAX)")]
+        [StringLength(4000)]
+        [Column(TypeName = "nvarchar(4000)")]
         public string emailTemplate { get; set; }
         [StringLength(300)]
         public string skillDescriptionEn { get; set; }

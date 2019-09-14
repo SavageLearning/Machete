@@ -1,4 +1,4 @@
-﻿Confessions from the original author, jciispam@gmail.com: 6/3/2013
+Confessions from the original author, jciispam@gmail.com: 6/3/2013
 
 When building out Machete, I copies some examples that had Data Annotations for presentation (DisplayName, 
 string internationalization (i18n), error messages) at the Domain layer. It also had domain/data Annotations (required,

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Machete.Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Machete.Domain;
-using Machete.Test.Integration;
 
-namespace Machete.Test
+namespace Machete.Test.Integration.Fluent
 {
     [TestClass]
     public class FluentRecordTests
@@ -16,7 +11,7 @@ namespace Machete.Test
         [TestInitialize]
         public void TestInitialize()
         {
-            frb = new FluentRecordBase();
+            frb = FluentRecordBaseFactory.Get();
         }
 
         [TestMethod, TestCategory(TC.Fluent), TestCategory(TC.IT), TestCategory(TC.Employers)]
@@ -44,22 +39,22 @@ namespace Machete.Test
             var result = frb.ToWorkerSignin();
             Assert.IsInstanceOfType(result, typeof(WorkerSignin));
         }
-        [Ignore, TestMethod, TestCategory(TC.Fluent), TestCategory(TC.IT), TestCategory(TC.WorkOrders)]
+        [TestMethod, TestCategory(TC.Fluent), TestCategory(TC.IT), TestCategory(TC.WorkOrders)]
         public void FluentRecordBase_AddRepoWorkerRequest()
         {
             var result = frb.ToWorkerRequest();
             Assert.IsInstanceOfType(result, typeof(WorkerRequest));
         }
-        [Ignore, TestMethod, TestCategory(TC.Fluent), TestCategory(TC.IT), TestCategory(TC.Persons)]
+        [TestMethod, TestCategory(TC.Fluent), TestCategory(TC.IT), TestCategory(TC.Persons)]
         public void FluentRecordBase_AddRepoPerson()
         {
-            var result = frb.AddPerson(testID: "FluentRecordBase_AddRepoPerson").ToPerson();
+            var result = frb.AddPerson(testID: "FluentRecordBase_AddRepoPerson");
             Assert.IsInstanceOfType(result, typeof(Person));
         }
         [TestMethod, TestCategory(TC.Fluent), TestCategory(TC.IT), TestCategory(TC.Workers)]
         public void FluentRecordBase_AddRepoWorker()
         {
-            var result = frb.AddWorker(testID: "FluentRecordBase_AddRepoWorker").ToWorker();
+            var result = frb.AddWorker(testID: "FluentRecordBase_AddRepoWorker");
             Assert.IsInstanceOfType(result, typeof(Worker));
         }
         [TestMethod, TestCategory(TC.Fluent), TestCategory(TC.IT), TestCategory(TC.Activities)]

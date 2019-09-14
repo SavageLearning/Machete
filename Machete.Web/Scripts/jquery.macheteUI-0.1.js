@@ -127,11 +127,11 @@
             $(myTable).find('tbody').click(clickEvent);
             ////////////////////////////////////////////////////////////////
             //
-            // table doubleclick event 
+            // table doubleclick event (duplicate)
             //
             if (!dblclickevent) {
                 dblclickevent = function (event) {
-                    console.log("default dblclick event");
+                    console.log("default dblclick event: jquery.macheteUI");
                     var exclusiveTab = $(event.target).closest('.ui-tabs').hasClass('ExclusiveTab');
                     var myTr = $(event.target).closest('tr');
                     //

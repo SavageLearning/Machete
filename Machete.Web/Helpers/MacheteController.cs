@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     MacheteController.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -21,40 +21,39 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using NLog;
+
 using System;
 using System.Linq;
 using System.Text;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using NLog;
 
+// ReSharper disable once CheckNamespace
 namespace Machete.Web.Controllers
 {
     public class MacheteController : Controller
     {
-        private Logger log = LogManager.GetCurrentClassLogger();
-        private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "Controller", "");
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
+        private readonly LogEventInfo _levent = new LogEventInfo(LogLevel.Debug, "Controller", "");
+        
         /// <summary>
         /// Unified exception handling for controllers. NLog and json response.
         /// </summary>
         /// <param name="filterContext"></param>
-        protected override void OnException(ExceptionContext filterContext)
+        protected void OnException(ExceptionContext filterContext)
         {
-            string exceptionMsg = "";
-            string modelerrors = null;
-            if (filterContext.ExceptionHandled)
-            {
-                return;
-            }
+            if (filterContext.ExceptionHandled) return;
 
-            exceptionMsg = RootException.Get(filterContext.Exception, this.ToString());
-            modelerrors = string.Join("; ", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage));
-            levent.Level = LogLevel.Error;
+            var exceptionMsg = Helpers.GetRootException(filterContext.Exception, ToString());
+            var modelerrors = string.Join("; ", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage));
+            _levent.Level = LogLevel.Error;
 
             //
             // Build errorMessage string with detail call-stacks
             //
 
-            StringBuilder errorMessage = new StringBuilder(this.ToString());
+            StringBuilder errorMessage = new StringBuilder(ToString());
 
             errorMessage.Append(string.Format(", EXCEPTIONS: {0}", exceptionMsg));
             errorMessage.Append(string.Format(", MODELERR: {0}", modelerrors));
@@ -64,39 +63,44 @@ namespace Machete.Web.Controllers
                 errorMessage.Append(string.Format(", INNER_EXCEPTION_STACKTRACE: {0}", filterContext.Exception.InnerException.StackTrace));
             }
             
-            levent.Message = errorMessage.ToString();
+            _levent.Message = errorMessage.ToString();
 
 
-            ModelState modelStateIdData = ModelState["ID"];
+            var modelStateIdData = ModelState["ID"];
             if (modelStateIdData != null) {
-                levent.Properties["RecordID"] = modelStateIdData.Value.ConvertTo(typeof(int));
+                _levent.Properties["RecordID"] = modelStateIdData.GetHashCode();//.Value.ConvertTo(typeof(int));
             }
             
-            log.Log(levent);
+            _log.Log(_levent);
             filterContext.Result = Json(new
             {
                 status = exceptionMsg,
                 rtnMessage = exceptionMsg,
                 modelErrors = modelerrors,
                 jobSuccess = false
-            }, JsonRequestBehavior.AllowGet);
+            });
             filterContext.ExceptionHandled = true;
         }
-    }
-    public static class RootException
-    {
-        ////
-        //// GET: /GetRootException/
-        public static string Get(Exception e, string prefix)
+
+        protected virtual void Initialize(ActionContext requestContext)
         {
-            Exception ee = e;
-            string messages = prefix + " Exception: \"" + e.Message + "\"";
-            while (ee.InnerException != null)
+            throw new NotImplementedException();
+        }
+    }
+
+    public static class Helpers
+    {
+        //// GET: /GetRootException/
+        public static string GetRootException(Exception ex, string prefix)
+        {
+            var exception = ex;
+            var messages = prefix + " Exception: \"" + ex.Message + "\"";
+            while (exception.InnerException != null)
             {
-                messages = messages + "\r\nInner exception: \"" + ee.Message + "\"";
-                ee = ee.InnerException;
+                messages = messages + "\r\nInner exception: \"" + exception.Message + "\"";
+                exception = exception.InnerException;
             }
-            messages = messages + "\r\nInnermost exception: \"" + ee.Message + "\"";
+            messages = messages + "\r\nInnermost exception: \"" + exception.Message + "\"";
             return messages;
         }
     }

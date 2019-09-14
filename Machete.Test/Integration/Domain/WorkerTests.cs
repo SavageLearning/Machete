@@ -3,7 +3,7 @@
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
 // License:  GPL v3
-// Project:  Machete.Test
+// Project:  Machete.Test.Old
 // Contact:  savagelearning
 // 
 // Copyright 2011 Savage Learning, LLC., all rights reserved.
@@ -26,6 +26,7 @@ using Machete.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Globalization;
+using Machete.Test.Integration.Fluent;
 
 namespace Machete.Test.Integration.Domain
 {
@@ -39,7 +40,7 @@ namespace Machete.Test.Integration.Domain
         [TestInitialize]
         public void Initialize()
         {
-            frb = new FluentRecordBase();
+            frb = FluentRecordBaseFactory.Get();
             dOptions = new viewOptions
             {
                 CI = new CultureInfo("en-US", false),
@@ -57,17 +58,16 @@ namespace Machete.Test.Integration.Domain
         /// Inspecting how/when EntityFramework makes the link between parent/child records
         /// </summary>
         /// 
-        [Ignore]
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Workers), TestCategory(TC.Fluent)]
         public void Integration_Worker_add_worker_check_person_link() 
         {
             //Arrange
-            frb.AddWorker();
-            Person _p = frb.ToPerson();
-            Worker _w = frb.ToWorker();
+            var worker = frb.AddWorker();
+            var person = worker.Person;
+            
             //Assert
-            Assert.IsNotNull(_p.Worker);
-            Assert.IsNotNull(_w.Person);
+            Assert.IsNotNull(person.Worker);
+            Assert.IsNotNull(worker.Person);
         }
     }
 }

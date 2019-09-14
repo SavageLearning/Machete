@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     ActivityService.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/12/29 
@@ -23,18 +23,20 @@
 #endregion
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using Machete.Service.DTO;
+using Microsoft.EntityFrameworkCore;
 
 namespace Machete.Service
 {
     public interface IActivityService : IService<Activity>
     {
-        dataTableResult<DTO.ActivityList> GetIndexView(viewOptions o);
+        dataTableResult<ActivityList> GetIndexView(viewOptions o);
         void AssignList(int personID, List<int> actList, string user);
         void UnassignList(int personID, List<int> actList, string user);
     }
@@ -78,21 +80,15 @@ namespace Machete.Service
             record.typeES = lookupTextByID(record.typeID, "ES");
         }
 
-        public dataTableResult<DTO.ActivityList> GetIndexView(viewOptions o)
+        public dataTableResult<ActivityList> GetIndexView(viewOptions o)
         {
             var result = new dataTableResult<DTO.ActivityList>();
             IQueryable<Activity> q = dbset.AsNoTracking();
             
-
             if (o.personID > 0 && o.attendedActivities == false)
                 IndexViewBase.getUnassociated(o.personID, ref q, db);
             if (o.personID > 0 && o.attendedActivities == true)
                 IndexViewBase.getAssociated(o.personID, ref q, db);
-            if (!o.authenticated)
-            {
-                if (o.date == null) o.date = DateTime.Now;
-                IndexViewBase.unauthenticatedView((DateTime)o.date, ref q);
-            }
 
             if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
 
@@ -108,18 +104,18 @@ namespace Machete.Service
 
         public void AssignList(int personID, List<int> actList, string user)
         {
-            foreach (int aID in actList)
+            foreach (int activityID in actList)
             {
-                Activity act = dbset.Find(aID);
+                Activity act = dbset.Find(activityID);
                 if (act == null) throw new Exception("Activity from list is null");
-                int matches = db.Set<ActivitySignin>()
-                    .Where(az => az.activityID == aID && az.personID == personID).Count();
+                int matches = db
+                    .Set<ActivitySignin>().Count(az => az.activityID == activityID && az.personID == personID);
 
                 if (matches == 0)
                 {
                     asServ.CreateSignin(new ActivitySignin
                     {
-                        activityID = aID,
+                        activityID = activityID,
                         personID = personID,
                         dateforsignin = act.dateStart
                     }, user);
@@ -129,13 +125,13 @@ namespace Machete.Service
 
         public void UnassignList(int personID, List<int> actList, string user)
         {
-            foreach (int aID in actList)
+            foreach (int activityID in actList)
             {
-                Activity act = dbset.Find(aID);
+                Activity act = dbset.Find(activityID);
                 if (act == null) throw new Exception("Activity from list is null");
 
-                ActivitySignin asi = db.Set<ActivitySignin>()
-                    .Where(az => az.activityID.Equals(aID) && az.personID.Equals(personID)).FirstOrDefault();
+                ActivitySignin asi = db
+                    .Set<ActivitySignin>().FirstOrDefault(az => az.activityID.Equals(activityID) && az.personID.Equals(personID));
 
 
                 if (asi == null) throw new NullReferenceException("ActivitySignin.GetByPersonID returned null");
@@ -143,5 +139,5 @@ namespace Machete.Service
             }
         }
     }
-   
+
 }

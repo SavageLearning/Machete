@@ -30,8 +30,9 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data.Entity;
 using System.Linq;
+using Machete.Data.Tenancy;
+using Microsoft.EntityFrameworkCore;
 
 namespace Machete.Service
 {
@@ -39,7 +40,6 @@ namespace Machete.Service
     {
         IEnumerable<WorkOrder> GetActiveOrders(DateTime date, bool assignedOnly);
         IQueryable<WorkOrderSummary> GetSummary(string search);
-        IQueryable<WorkOrderSummary> GetSummary();
         int CompleteActiveOrders(DateTime date, string user);
         dataTableResult<WOWASummary> CombinedSummary(string search,
             bool orderDescending,
@@ -51,8 +51,6 @@ namespace Machete.Service
         WorkOrder Create(WorkOrder wo, string userName, ICollection<WorkAssignment> was = null);
     }
 
-    // Business logic for WorkOrder record management
-    // Ïf I made a non-web app, would I still need the code? If yes, put in here.
     public class WorkOrderService : ServiceBase<WorkOrder>, IWorkOrderService
     {
         private readonly IWorkAssignmentService waServ;
@@ -62,12 +60,23 @@ namespace Machete.Service
         private readonly ILookupRepository lRepo;
         private readonly IConfigService cfg;
         private readonly ITransportProvidersService tpServ;
+        private readonly TimeZoneInfo _clientTimeZoneInfo;
+        private new readonly IWorkOrderRepository repo;
+
         /// <summary>
-        /// Constructor
+        /// Business logic object for WorkOrder record management. Contains logic specific
+        /// to processing work orders, and not necessarily related to a web application.
         /// </summary>
         /// <param name="repo"></param>
         /// <param name="waServ">Work Assignment service</param>
+        /// <param name="tpServ"></param>
+        /// <param name="wrServ"></param>
+        /// <param name="wServ"></param>
+        /// <param name="lRepo"></param>
         /// <param name="uow">Unit of Work</param>
+        /// <param name="map"></param>
+        /// <param name="cfg"></param>
+        /// <param name="tenantService"></param>
         public WorkOrderService(IWorkOrderRepository repo, 
                                 IWorkAssignmentService waServ,
                                 ITransportProvidersService tpServ,
@@ -76,8 +85,11 @@ namespace Machete.Service
                                 ILookupRepository lRepo,
                                 IUnitOfWork uow,
                                 IMapper map,
-                                IConfigService cfg) : base(repo, uow)
+                                IConfigService cfg,
+                                ITenantService tenantService
+        ) : base(repo, uow)
         {
+            this.repo = repo;
             this.waServ = waServ;
             this.wrServ = wrServ;
             this.wServ = wServ;
@@ -86,6 +98,7 @@ namespace Machete.Service
             this.cfg = cfg;
             this.tpServ = tpServ;
             this.logPrefix = "WorkOrder";
+            _clientTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(tenantService.GetCurrentTenant().Timezone);
         }
 
         /// <summary>
@@ -96,32 +109,32 @@ namespace Machete.Service
         /// <returns>WorkOrders associated with a given date that are active</returns>
         public IEnumerable<WorkOrder> GetActiveOrders(DateTime date, bool assignedOnly)
         {
-            IQueryable<WorkOrder> query = repo.GetAllQ();
-                            query = query.Where(wo => wo.statusID == WorkOrder.iActive && 
-                                           DbFunctions.DiffDays(wo.dateTimeofWork, date) == 0 ? true : false)
-                                    .AsQueryable();
-            List<WorkOrder> list = query.ToList();
-            List<WorkOrder> final = list.ToList();
-            if (!assignedOnly) return final;
-            int waCounter = 0;
-            foreach (WorkOrder wo in list)
+            var matching = repo.GetActiveOrders(date);
+//                .Where(wo => wo.statusID == WorkOrder.iActive
+//                          && wo.dateTimeofWork.Date == date.Date).ToList();
+
+            if (!assignedOnly) return matching;
+            
+            var result = new List<WorkOrder>();
+
+            foreach (WorkOrder wo in matching)
             {
-                waCounter = 0;
-                foreach (WorkAssignment wa in wo.workAssignments)
+                // WO must have at least one WA to be marked active
+                if (wo.workAssignments.Count == 0) continue;
+
+                var nullAssignments = 0;
+
+                foreach (var wa in wo.workAssignments)
                 {
-                    waCounter++;
-                    if (wa.workerAssignedID == null)
-                    {
-                        final.Remove(wo);
-                        break;
-                    }
+                    if (wa.workerAssignedID == null) nullAssignments++;
                 }
-                if (waCounter == 0) // WO must have at least one WA to be completed
-                {
-                    final.Remove(wo);
-                }
+
+                if (nullAssignments > 0) continue;
+                
+                result.Add(wo);
             }
-            return final;
+
+            return result;
         }
         /// <summary>
         /// Complete active orders - change all WO status for a given date to complete
@@ -158,8 +171,8 @@ namespace Machete.Service
             if (o.status != null) IndexViewBase.filterStatus(o, ref q);
             if (o.onlineSource == true) IndexViewBase.filterOnlineSource(o, ref q);
             if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
-            //
-            IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, o.CI.TwoLetterISOLanguageName, ref q);
+            // TODO restore CultureInfo
+            IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, /*o.CI.TwoLetterISOLanguageName*/"en", ref q);
             //
             result.filteredCount = q.Count();
             result.query = q.ProjectTo<DTO.WorkOrdersList>(map.ConfigurationProvider)
@@ -174,28 +187,22 @@ namespace Machete.Service
         /// <summary>
         /// Retrieve WO summary results - count of work orders with each status type for each date
         /// </summary>
-        /// <returns>Work Order summary results</returns>
-        public IQueryable<WorkOrderSummary> GetSummary()
-        {
-            return GetSummary(null);
-        }
-        /// <summary>
-        /// Retrieve WO summary results - count of work orders with each status type for each date
-        /// </summary>
         /// <param name="search">Search string criteria</param>
         /// <returns>Work Order summary results</returns>
         public IQueryable<WorkOrderSummary> GetSummary(string search)
         {
+            var workOrders = repo.GetAllQ();
+            
             IQueryable<WorkOrder> query;
-            if (!string.IsNullOrEmpty(search)) 
-                query = IndexViewBase.filterDateTimeOfWork(repo.GetAllQ(), search);            
-            else query = repo.GetAllQ();
+            if (string.IsNullOrEmpty(search)) query = workOrders;
+            else query = IndexViewBase.filterDateTimeOfWork(workOrders, search);
+            
             var group_query = from wo in query
                             group wo by new { 
-                                dateSoW = DbFunctions.TruncateTime(wo.dateTimeofWork),                                              
+                                dateSoW = TimeZoneInfo.ConvertTimeFromUtc(wo.dateTimeofWork, _clientTimeZoneInfo).Date,                                              
                                 wo.statusID
                             } into dayGroup
-                            select new WorkOrderSummary()
+                            select new WorkOrderSummary
                             {
                                 date = dayGroup.Key.dateSoW,
                                 status = dayGroup.Key.statusID,
@@ -204,51 +211,54 @@ namespace Machete.Service
 
             return group_query;
         }
+
         /// <summary>
-        /// Create Work Order
+        /// A method to create a WorkOrder, along with associated WorkAssignments and WorkerRequests, in the database. 
         /// </summary>
-        /// <param name="workOrder">Work order to create</param>
-        /// <param name="user">User performing action</param>
-        /// <returns>Work Order object</returns>
-        public WorkOrder Create(WorkOrder workOrder, List<WorkerRequest> wrList,  string user, ICollection<WorkAssignment> was = null)
+        /// <param name="workOrder">The work order to be created.</param>
+        /// <param name="workerRequestList">A list of worker requests made by the employer.</param>
+        /// <param name="username">User performing action</param>
+        /// <param name="workAssignments">A collection representing the worker assignments for the work order.</param>
+        /// <returns>The created WorkOrder.</returns>
+        public WorkOrder Create(WorkOrder workOrder, List<WorkerRequest> workerRequestList, string username, ICollection<WorkAssignment> workAssignments = null)
         {
-            WorkOrder wo;
             workOrder.timeZoneOffset = Convert.ToDouble(cfg.getConfig(Cfg.TimeZoneDifferenceFromPacific));
             updateComputedValues(ref workOrder);
-            workOrder.createdByUser(user);
-            wo = repo.Add(workOrder);
-            wo.workerRequests = new Collection<WorkerRequest>();
-            if (wrList != null)
+            workOrder.createdByUser(username);
+            var createdWorkOrder = repo.Add(workOrder);
+            createdWorkOrder.workerRequestsDDD = new Collection<WorkerRequest>();
+            if (workerRequestList != null)
             {
-                // New Worker Requests to add
-                foreach (var workerRequest in wrList)
+                foreach (var workerRequest in workerRequestList)
                 {
-                    workerRequest.workOrder = wo;
+                    workerRequest.workOrder = createdWorkOrder;
                     workerRequest.workerRequested = wServ.Get(workerRequest.WorkerID);
-                    workerRequest.updatedByUser(user);
-                    workerRequest.createdByUser(user);
-                    wo.workerRequests.Add(workerRequest);
+                    workerRequest.updatedByUser(username);
+                    workerRequest.createdByUser(username);
+                    createdWorkOrder.workerRequestsDDD.Add(workerRequest);
                 }
             }
-            uow.SaveChanges(); 
-            if (wo.paperOrderNum == null || wo.paperOrderNum == 0)
+            uow.SaveChanges();
+            
+            if (createdWorkOrder.paperOrderNum == null || createdWorkOrder.paperOrderNum == 0)
             {
-                wo.paperOrderNum = wo.ID;
+                createdWorkOrder.paperOrderNum = createdWorkOrder.ID;
             }
-            if (was != null)
+            if (workAssignments != null)
             {
-                foreach (var a in was)
+                foreach (var workAssignment in workAssignments)
                 {
-                    a.workOrderID = wo.ID;
-                    a.workOrder = wo;
-                    waServ.Create(a, user);
+                    workAssignment.ID = default(int); //so EF Core will save the record; otherwise IDENTITY_INSERT fails
+                    workAssignment.workOrderID = createdWorkOrder.ID;
+                    workAssignment.workOrder = createdWorkOrder;
+                    waServ.Create(workAssignment, username);
                 }
             }
 
             uow.SaveChanges();
 
-            _log(workOrder.ID, user, "WorkOrder created");
-            return wo;
+            _log(workOrder.ID, username, "WorkOrder created");
+            return createdWorkOrder;
         }
 
         public WorkOrder Create(WorkOrder wo, string user, ICollection<WorkAssignment> was = null)
@@ -258,30 +268,33 @@ namespace Machete.Service
 
         private void updateComputedValues(ref WorkOrder record)
         {
-            record.statusES = lRepo.GetById(record.statusID).text_ES;
-            record.statusEN = lRepo.GetById(record.statusID).text_EN;
-            record.transportMethodEN = tpServ.Get(record.transportProviderID).text_EN;
-            record.transportMethodES = tpServ.Get(record.transportProviderID).text_ES;
+            var lookup = lRepo.GetById(record.statusID);
+            var transportProvider = tpServ.Get(record.transportProviderID);
+
+            record.statusES = lookup.text_ES;
+            record.statusEN = lookup.text_EN;
+            record.transportMethodEN = transportProvider.text_EN;
+            record.transportMethodES = transportProvider.text_ES;
         }
 
         public void Save(WorkOrder workOrder, List<WorkerRequest> wrList, string user)
         {
             // Stale requests to remove
-            foreach (var rem in workOrder.workerRequests.Except<WorkerRequest>(wrList, new WorkerRequestComparer()).ToArray())
+            foreach (var rem in workOrder.workerRequestsDDD.Except(wrList, new WorkerRequestComparer()).ToArray())
             {
-                var request = wrServ.GetByWorkerID(workOrder.ID, rem.WorkerID);
+                var request = wrServ.GetByID(workOrder.ID, rem.WorkerID);
                 wrServ.Delete(request.ID, user);
-                workOrder.workerRequests.Remove(rem);
+                workOrder.workerRequestsDDD.Remove(rem);
             }
 
             // New requests to add
-            foreach (var add in wrList.Except<WorkerRequest>(workOrder.workerRequests, new WorkerRequestComparer()))
+            foreach (var add in wrList.Except(workOrder.workerRequestsDDD, new WorkerRequestComparer()))
             {
                 add.workOrder = workOrder;
                 add.workerRequested = wServ.Get(add.WorkerID);
                 add.updatedByUser(user);
                 add.createdByUser(user);
-                workOrder.workerRequests.Add(add);
+                workOrder.workerRequestsDDD.Add(add);
             }
 
             Save(workOrder, user);
@@ -309,41 +322,38 @@ namespace Machete.Service
             int displayStart,
             int displayLength)
         {
-
-            IEnumerable<WorkOrderSummary> woResult;
-            IEnumerable<WorkAssignmentSummary> waResult;
-            IEnumerable<WOWASummary> q;
             var result = new dataTableResult<WOWASummary>();
             //pulling from DB here because the joins grind it to a halt
             // TODO: investigate how to do a left join - results only appear when there are WA assigned to WO
-            woResult = GetSummary(search).AsEnumerable();
-            waResult = waServ.GetSummary(search).AsEnumerable();
-                q = woResult.Join(waResult,
-                            wo => new { wo.date, wo.status },
-                            wa => new { wa.date, wa.status },
-                            (wo, wa) => new
-                            {
-                                wo.date,
-                                wo.status,
-                                wo_count = wo.count,
-                                wa_count = wa.count
-                            })
-            .GroupBy(gb => gb.date)
-            .Select(g => new WOWASummary
-            {
-                date = g.Key,
-                weekday = Convert.ToDateTime(g.Key).ToString("dddd"),
-                pending_wo = g.Where(c => c.status == WorkOrder.iPending).Sum(d => d.wo_count),
-                pending_wa = g.Where(c => c.status == WorkOrder.iPending).Sum(d => d.wa_count),
-                active_wo = g.Where(c => c.status == WorkOrder.iActive).Sum(d => d.wo_count),
-                active_wa = g.Where(c => c.status == WorkOrder.iActive).Sum(d => d.wa_count),
-                completed_wo = g.Where(c => c.status == WorkOrder.iCompleted).Sum(d => d.wo_count),
-                completed_wa = g.Where(c => c.status == WorkOrder.iCompleted).Sum(d => d.wa_count),
-                cancelled_wo = g.Where(c => c.status == WorkOrder.iCancelled).Sum(d => d.wo_count),
-                cancelled_wa = g.Where(c => c.status == WorkOrder.iCancelled).Sum(d => d.wa_count),
-                expired_wo = g.Where(c => c.status == WorkOrder.iExpired).Sum(d => d.wo_count),
-                expired_wa = g.Where(c => c.status == WorkOrder.iExpired).Sum(d => d.wa_count)
-            });
+            var woResult = GetSummary(search).AsEnumerable();
+            var waResult = waServ.GetSummary(search).AsEnumerable();
+            
+            var q = woResult.Join(waResult,
+                    wo => new { wo.date, wo.status },
+                    wa => new { wa.date, wa.status },
+                    (wo, wa) => new
+                    {
+                        wo.date,
+                        wo.status,
+                        wo_count = wo.count,
+                        wa_count = wa.count
+                    })
+                .GroupBy(gb => gb.date)
+                .Select(g => new WOWASummary
+                {
+                    date = g.Key,
+                    weekday = Convert.ToDateTime(g.Key).ToString("dddd"),
+                    pending_wo = g.Where(c => c.status == WorkOrder.iPending).Sum(d => d.wo_count),
+                    pending_wa = g.Where(c => c.status == WorkOrder.iPending).Sum(d => d.wa_count),
+                    active_wo = g.Where(c => c.status == WorkOrder.iActive).Sum(d => d.wo_count),
+                    active_wa = g.Where(c => c.status == WorkOrder.iActive).Sum(d => d.wa_count),
+                    completed_wo = g.Where(c => c.status == WorkOrder.iCompleted).Sum(d => d.wo_count),
+                    completed_wa = g.Where(c => c.status == WorkOrder.iCompleted).Sum(d => d.wa_count),
+                    cancelled_wo = g.Where(c => c.status == WorkOrder.iCancelled).Sum(d => d.wo_count),
+                    cancelled_wa = g.Where(c => c.status == WorkOrder.iCancelled).Sum(d => d.wa_count),
+                    expired_wo = g.Where(c => c.status == WorkOrder.iExpired).Sum(d => d.wo_count),
+                    expired_wa = g.Where(c => c.status == WorkOrder.iExpired).Sum(d => d.wa_count)
+                });
 
             // Sort results on date (depending on orderDescending input parameter)
                 if (orderDescending)

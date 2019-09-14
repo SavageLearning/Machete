@@ -3,7 +3,7 @@
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
 // License:  GPL v3
-// Project:  Machete.Test
+// Project:  Machete.Test.Old
 // Contact:  savagelearning
 // 
 // Copyright 2011 Savage Learning, LLC., all rights reserved.
@@ -21,26 +21,27 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+
 using System;
-using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Machete.Data;
-using Moq;
-using Machete.Data.Infrastructure;
-using Machete.Service;
-using Machete.Domain;
-using Machete.Test;
 using AutoMapper;
+using Machete.Data;
+using Machete.Data.Infrastructure;
+using Machete.Data.Tenancy;
+using Machete.Domain;
+using Machete.Service;
+using Machete.Test.UnitTests.Controllers.Helpers;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
-namespace Machete.Test.Unit.Service
+namespace Machete.Test.UnitTests.Services
 {
     /// <summary>
     /// Summary description for WorkOrderServiceUnitTests
     /// </summary>
     [TestClass]
-    public class WorkOrderTests
+    public class WorkOrderServiceTests
     {
         Mock<IWorkOrderRepository> _repo;
         Mock<IWorkAssignmentService> _waServ;
@@ -53,27 +54,10 @@ namespace Machete.Test.Unit.Service
         Mock<ITransportProvidersService> _tpServ;
         WorkOrderService _serv;
         string user;
+        Mock<ITenantService> _tenantService;
 
-        public WorkOrderTests()
+        public WorkOrderServiceTests()
         {
-        }
-
-        private TestContext testContextInstance;
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
         }
 
         #region Additional test attributes
@@ -109,7 +93,11 @@ namespace Machete.Test.Unit.Service
             _lRepo = new Mock<ILookupRepository>();
             _cfg = new Mock<IConfigService>();
             _tpServ = new Mock<ITransportProvidersService>();
-            _serv = new WorkOrderService(_repo.Object, _waServ.Object, _tpServ.Object, _wrServ.Object, _wServ.Object, _lRepo.Object, _uow.Object, _map.Object, _cfg.Object );
+            _tenantService = new Mock<ITenantService>();
+            
+            _tenantService.Setup(service => service.GetCurrentTenant()).Returns(UnitTestExtensions.TestingTenant);
+            
+            _serv = new WorkOrderService(_repo.Object, _waServ.Object, _tpServ.Object, _wrServ.Object, _wServ.Object, _lRepo.Object, _uow.Object, _map.Object, _cfg.Object, _tenantService.Object);
             user = "UnitTest";
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
@@ -158,7 +146,18 @@ namespace Machete.Test.Unit.Service
             _lRepo.Setup(r => r.GetById(It.IsAny<int>())).Returns(_l);
             _tpServ.Setup(r => r.Get(It.IsAny<int>())).Returns(_tp);
 
-            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _tpServ.Object, _wrServ.Object, _wServ.Object, _lRepo.Object, _uow.Object, _map.Object, _cfg.Object);
+            var _serv = new WorkOrderService(
+                _repo.Object, 
+                _waServ.Object, 
+                _tpServ.Object, 
+                _wrServ.Object, 
+                _wServ.Object, 
+                _lRepo.Object, 
+                _uow.Object, 
+                _map.Object, 
+                _cfg.Object, 
+                _tenantService.Object
+            );
             //
             //Act
             var result = _serv.Create(_wo, user);
@@ -186,7 +185,7 @@ namespace Machete.Test.Unit.Service
             _repo.Setup(r => r.Delete(It.IsAny<WorkOrder>())).Callback((WorkOrder p) => { dp = p; });
             _repo.Setup(r => r.GetById(id)).Returns(_wo);
             _waServ = new Mock<IWorkAssignmentService>();
-            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _tpServ.Object, _wrServ.Object, _wServ.Object, _lRepo.Object, _uow.Object, _map.Object, _cfg.Object);
+            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _tpServ.Object, _wrServ.Object, _wServ.Object, _lRepo.Object, _uow.Object, _map.Object, _cfg.Object, _tenantService.Object);
             //
             //Act
             _serv.Delete(id, user);
@@ -214,7 +213,7 @@ namespace Machete.Test.Unit.Service
             _tpServ = new Mock<ITransportProvidersService>();
             var _tp = (TransportProvider)Records.transportProvider.Clone();
             _tpServ.Setup(r => r.Get(It.IsAny<int>())).Returns(_tp);
-            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _tpServ.Object, _wrServ.Object, _wServ.Object, _lRepo.Object, _uow.Object, _map.Object, _cfg.Object);
+            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _tpServ.Object, _wrServ.Object, _wServ.Object, _lRepo.Object, _uow.Object, _map.Object, _cfg.Object, _tenantService.Object);
             //
             //Act
             _serv.Save(_wo, user);
@@ -227,7 +226,6 @@ namespace Machete.Test.Unit.Service
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
         public void SaveWorkOrder_finds_duplicate_workrequests()
         {
-            //
             //Arrange
 
             // Lookups are called for updateComputedValues
@@ -236,8 +234,8 @@ namespace Machete.Test.Unit.Service
             _lRepo.Setup(r => r.GetById(It.IsAny<int>())).Returns(_l);
             int testid = 4242;
             WorkOrder fakeworkOrder = new WorkOrder();
-            var workerRequest = new List<WorkerRequest> { };
-            fakeworkOrder.workerRequests = workerRequest;
+            var workerRequest = new List<WorkerRequest>();
+            fakeworkOrder.workerRequestsDDD = workerRequest;
             fakeworkOrder.ID = testid;
             WorkerRequest wr1 = new WorkerRequest
             {
@@ -259,8 +257,7 @@ namespace Machete.Test.Unit.Service
             workerRequest.Add(wr2);
 
             // receives WO passed to repository
-            WorkOrder savedworkOrder = new WorkOrder();
-
+            
             List<WorkerRequest> list = new List<WorkerRequest>();
             list.Add(new WorkerRequest { WorkerID = 12345 });
             list.Add(new WorkerRequest { WorkerID = 30002 });
@@ -271,25 +268,24 @@ namespace Machete.Test.Unit.Service
             string user = "";
             _repo.Setup(r => r.GetById(testid)).Returns(fakeworkOrder);
 
-            _wrServ.Setup(x => x.GetByWorkerID(testid, 1)).Returns(wr1);
-            _wrServ.Setup(x => x.GetByWorkerID(testid, 2)).Returns(wr2);
+            _wrServ.Setup(x => x.GetByID(testid, 1)).Returns(wr1);
+            _wrServ.Setup(x => x.GetByID(testid, 2)).Returns(wr2);
             _wrServ.Setup(x => x.Delete(It.IsAny<int>(), It.IsAny<string>()));
             _tpServ.Setup(x => x.Get(It.IsAny<int>())).Returns(_tp);
             _tpServ.Setup(x => x.Get(It.IsAny<int>())).Returns(_tp);
-            //
+            
             //Act
             _serv.Save(fakeworkOrder, list, user);
-            //
+            
             //Assert
             //Assert.AreEqual(fakeworkOrder, savedworkOrder);
-
-            Assert.AreEqual(fakeworkOrder.workerRequests.Count(), 5);
-            Assert.AreEqual(fakeworkOrder.workerRequests.Count(a => a.WorkerID == 12345), 1);
-            Assert.AreEqual(fakeworkOrder.workerRequests.Count(a => a.WorkerID == 30002), 1);
-            Assert.AreEqual(fakeworkOrder.workerRequests.Count(a => a.WorkerID == 30311), 1);
-            Assert.AreEqual(fakeworkOrder.workerRequests.Count(a => a.WorkerID == 30420), 1);
-            Assert.AreEqual(fakeworkOrder.workerRequests.Count(a => a.WorkerID == 30421), 1);
-            Assert.AreEqual(fakeworkOrder.workerRequests.Count(a => a.WorkerID == 12346), 0);
+            Assert.AreEqual(fakeworkOrder.workerRequestsDDD.Count(), 5);
+            Assert.AreEqual(fakeworkOrder.workerRequestsDDD.Count(a => a.WorkerID == 12345), 1);
+            Assert.AreEqual(fakeworkOrder.workerRequestsDDD.Count(a => a.WorkerID == 30002), 1);
+            Assert.AreEqual(fakeworkOrder.workerRequestsDDD.Count(a => a.WorkerID == 30311), 1);
+            Assert.AreEqual(fakeworkOrder.workerRequestsDDD.Count(a => a.WorkerID == 30420), 1);
+            Assert.AreEqual(fakeworkOrder.workerRequestsDDD.Count(a => a.WorkerID == 30421), 1);
+            Assert.AreEqual(fakeworkOrder.workerRequestsDDD.Count(a => a.WorkerID == 12346), 0);
         }
 
     }

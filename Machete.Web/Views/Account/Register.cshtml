@@ -1,11 +1,13 @@
-﻿@model Machete.Web.ViewModel.RegisterViewModel
+@using Machete.Web.Resources
+
+@model Machete.Web.ViewModel.RegisterViewModel
 @{
-    ViewBag.Title = @Machete.Web.Resources.ValidationStrings.RegisterTitle;
+    ViewBag.Title = ValidationStrings.RegisterTitle;
 }
 <div class="account-background">
-    <h2>@Machete.Web.Resources.ValidationStrings.RegisterSubTitle</h2>
+    <h2>@ValidationStrings.RegisterSubTitle</h2>
     <p>
-        @Machete.Web.Resources.ValidationStrings.RegisterInstructions
+        @ValidationStrings.RegisterInstructions
     </p>
 
     @using (Html.BeginForm())
@@ -59,7 +61,7 @@
                     </div>
                 </div>
                 <p>
-                    <input type="submit" value="@Machete.Web.Resources.ValidationStrings.Register" />
+                    <input type="submit" value="@ValidationStrings.Register" />
                 </p>
             </fieldset>
         </div>

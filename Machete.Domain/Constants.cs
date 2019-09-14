@@ -1,4 +1,4 @@
-﻿//
+//
 // The constants here are strings that are used both in the database and the application
 // as identifiers of system crtical values. These structs encapsulate key strings that machete
 // depends on for proper functionality.
@@ -93,18 +93,6 @@ namespace Machete.Domain
     {
         public const string Assembly = "Assembly";
         public const string OrgMtg = "Organizing Meeting";
-    }
-
-    public struct CV
-    {
-        public const string Any = "Any";
-        public const string Admin = "Administrator";
-        public const string Employer = "Hirer";
-        public const string User = "User";
-        public const string Phonedesk = "Phonedesk";
-        public const string Manager = "Manager";
-        public const string Checkin = "Check-in";
-        public const string Teacher = "Teacher";
     }
 
     public struct Cfg

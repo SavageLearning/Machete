@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     Email.cs
 // Author:   Savage Learning, LLC.
 // Created:  2013/05/02
@@ -22,10 +22,12 @@
 // 
 #endregion
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Machete.Domain
 {
@@ -55,13 +57,23 @@ namespace Machete.Domain
         /// Limit on the number of attempts to send emails. Read from Config file.
         /// </summary>
         public static int iTransmitAttempts { get; set; }
+        
         public Email()
         {
             statusID = Email.iPending;
         }
 
-        public virtual ICollection<WorkOrder> WorkOrders { get; set; }
-
+        public virtual ICollection<EmailWorkOrder> EmailWorkOrders { get; } = new List<EmailWorkOrder>();
+        [NotMapped] public ICollection<WorkOrder> WorkOrders {
+            get
+            {
+                return new JoinCollectionFacade<WorkOrder, EmailWorkOrder>(
+                    EmailWorkOrders,
+                    woe => woe.WorkOrder,
+                    wo => new EmailWorkOrder { Email = this, WorkOrder = wo }
+                );
+            }
+        }
 
         [StringLength(50)]
         public string emailFrom { get; set; }
@@ -72,8 +84,8 @@ namespace Machete.Domain
         [StringLength(100),Required()]
         public string subject { get; set; }
         //
-        [StringLength(8000),Required()]
-        [Column(TypeName = "nvarchar(MAX)")]
+        [StringLength(4000),Required()]
+        [Column(TypeName = "nvarchar(4000)")]
         public string body { get; set; }
         public int transmitAttempts { get; set; }
         public int  statusID { get; set; }
@@ -87,8 +99,7 @@ namespace Machete.Domain
         {
             get
             {
-                if (this.WorkOrders.Count() > 0) return true;
-                return false;
+                return this.WorkOrders.Count() > 0;
             }
         }
         [NotMapped]
@@ -96,9 +107,10 @@ namespace Machete.Domain
         {
             get
             {
-                return this.WorkOrders.AsQueryable();
+                return WorkOrders.AsQueryable();
             }
         }
+
         [NotMapped]
         public WorkOrder currentAssociatedWorkorder
         {
@@ -107,16 +119,5 @@ namespace Machete.Domain
                 return this.AssociatedWorkOrders.OrderByDescending(wo => wo.paperOrderNum).FirstOrDefault();
             }
         }
-    }
-
-
-    public class JoinWorkorderEmail : Record
-    {
-        public int WorkOrderID { get; set; }
-        public virtual WorkOrder WorkOrder { get; set; }
-
-        public int EmailID { get; set; }
-        public virtual Email Email { get; set; }
-
     }
 }

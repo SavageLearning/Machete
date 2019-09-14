@@ -3,7 +3,7 @@
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
 // License:  GPL v3
-// Project:  Machete.Test
+// Project:  Machete.Test.Old
 // Contact:  savagelearning
 // 
 // Copyright 2011 Savage Learning, LLC., all rights reserved.
@@ -21,13 +21,15 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using Machete.Domain;
-using Machete.Service;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using System;
 using System.Globalization;
+using Machete.Domain;
+using Machete.Service;
+using Machete.Test.Integration.Fluent;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Machete.Test.Integration.Service
+namespace Machete.Test.Integration.Services
 {
     [TestClass]
     public class WorkerTests
@@ -38,7 +40,7 @@ namespace Machete.Test.Integration.Service
         [TestInitialize]
         public void TestInitialize()
         {
-            frb = new FluentRecordBase();
+            frb = FluentRecordBaseFactory.Get();
             dOptions = new viewOptions
             {
                 CI = new CultureInfo("en-US", false),
@@ -62,10 +64,10 @@ namespace Machete.Test.Integration.Service
             //Arrange
             //
             //Act
-            var _w = frb.ToWorker();
+            var worker = frb.AddWorker();
             //Assert
-            Assert.IsNotNull(_w.ID, "Worker.ID is Null");
-            Assert.IsTrue(_w.ID == _w.Person.ID, "Worker.ID doesn't match Person.ID");
+            Assert.IsNotNull(worker.ID, "Worker.ID is Null");
+            Assert.IsTrue(worker.ID == worker.Person.ID, "Worker.ID doesn't match Person.ID");
         }
         /// <summary>
         /// Create, Edit, and Save a worker record from the Worker Service
@@ -75,21 +77,21 @@ namespace Machete.Test.Integration.Service
         {
             //
             //Arrange
-            Person _p = frb.ToPerson();
-            Worker _w = frb.ToWorker(); ;
-            _p.firstname2 = "WorkerService_Intergation_CreateWorker";
-            _w.height = "tall";
+            var worker = frb.AddWorker();
+            var person = worker.Person;
+            person.firstname2 = "WorkerService_Integration_CreateWorker";
+            worker.height = "tall";
             //_w.Person = _p;
-            _w.dwccardnum = frb.GetNextMemberID();
-            _w.height = "short"; //EF should keep _w and result the same
+            worker.dwccardnum = frb.GetNextMemberID();
+            worker.height = "short"; //EF should keep _w and result the same
             //
             //Act
-            frb.ToServ<IWorkerService>().Save(_w, "UnitTest");
+            frb.ToServ<IWorkerService>().Save(worker, "UnitTest");
             //
             //Assert
-            Assert.IsNotNull(_w.ID, "Worker.ID is Null");
-            Assert.IsTrue(_w.ID == _p.ID, "Worker.ID doesn't match Person.ID");
-            Assert.IsTrue(_w.height == "short", "SaveWorker failed to save property change");
+            Assert.IsNotNull(worker.ID, "Worker.ID is Null");
+            Assert.IsTrue(worker.ID == person.ID, "Worker.ID doesn't match Person.ID");
+            Assert.IsTrue(worker.height == "short", "SaveWorker failed to save property change");
         }
     }
 }

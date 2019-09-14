@@ -1,4 +1,4 @@
-﻿using Machete.Web.Helpers;
+using Machete.Web.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -66,6 +66,8 @@ namespace Machete.Web.ViewModel
         [LocalizedDisplayName("notes", NameResourceType = typeof(Resources.Activity))]
         [StringLength(4000, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Activity))]
         public string notes { get; set; }
+        
+        public IList<string> teachers { get; set; }
     }
 
     public class ActivityList

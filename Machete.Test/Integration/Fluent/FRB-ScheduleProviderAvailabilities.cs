@@ -1,30 +1,24 @@
-﻿using Machete.Data;
-using Machete.Domain;
+﻿using Machete.Domain;
 using Machete.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Practices.Unity;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Machete.Test.Integration
+namespace Machete.Test.Integration.Fluent
 {
-    public partial class FluentRecordBase : IDisposable
+    public partial class FluentRecordBase
     {
         private ITransportProvidersAvailabilityService _servTPA;
-        private TransportProviderAvailability _tpa;
+        private TransportProviderAvailabilities _tpa;
 
         public FluentRecordBase AddTransportProviderAvailability(
     )
         {
             //
             // DEPENDENCIES
-            _servTPA = container.Resolve<ITransportProvidersAvailabilityService>();
+            _servTPA = container.GetRequiredService<ITransportProvidersAvailabilityService>();
 
             //
             // ARRANGE
-            _tpa = (TransportProviderAvailability)Records.transportProviderAvailability.Clone();
+            _tpa = (TransportProviderAvailabilities)Records.transportProviderAvailabilities.Clone();
 
             //
             // ACT
@@ -32,7 +26,7 @@ namespace Machete.Test.Integration
             return this;
         }
 
-        public TransportProviderAvailability ToTransportProviderAvailability()
+        public TransportProviderAvailabilities ToTransportProviderAvailability()
         {
             if (_tpa == null) AddTransportProviderAvailability();
             return _tpa;

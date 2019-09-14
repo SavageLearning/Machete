@@ -1,4 +1,4 @@
-﻿using Machete.Web.Helpers;
+using Machete.Web.Helpers;
 
 namespace Machete.Web.ViewModel
 {
@@ -50,7 +50,7 @@ namespace Machete.Web.ViewModel
     //                 lastname2 = p.lastname2,
     //                 dateforsignin = p.dateforsignin,
     //                 dateforsigninstring = p.dateforsignin.ToShortDateString(),
-    //                 memberStatus = lcache.textByID(p.memberStatus, CI.TwoLetterISOLanguageName),
+    //                 memberStatus = lcache.textByID(p.memberStatus, currentCulture.TwoLetterISOLanguageName),
     //                 memberInactive = p.w.isInactive,
     //                 memberSanctioned = p.w.isSanctioned,
     //                 memberExpired = p.w.isExpired,

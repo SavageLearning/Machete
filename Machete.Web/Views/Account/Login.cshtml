@@ -1,24 +1,25 @@
-﻿@model Machete.Web.ViewModel.LoginViewModel
+@using Machete.Web.Resources;
 
+@model Machete.Web.ViewModel.LoginViewModel
 @{
-    ViewBag.Title = @Machete.Web.Resources.ValidationStrings.LogOnTitle;
+    ViewBag.Title = ValidationStrings.LogOnTitle;
 }
 <div class="account-background">
-    <h2>@Machete.Web.Resources.ValidationStrings.LogOnTitle</h2>
+    <h2>@ValidationStrings.LogOnTitle</h2>
     <p>
-        @Machete.Web.Resources.ValidationStrings.LogOnRegisterString1 @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.Register, "Register") @Machete.Web.Resources.ValidationStrings.LogOnRegisterString2
+        @ValidationStrings.LogOnRegisterString1 @Html.ActionLink(ValidationStrings.Register, "Register") @ValidationStrings.LogOnRegisterString2
     </p>
 
-    @Html.ValidationSummary(true, @Machete.Web.Resources.ValidationStrings.LogOnUnsuccessful)
+    @Html.ValidationSummary(true, ValidationStrings.LogOnUnsuccessful)
 
     <div class="row">
         <div class="col-md-8">
             <section id="loginForm">
-                @using (Html.BeginForm())
+                @using (Html.BeginForm("Login", "Account", FormMethod.Post))
                 {
                     @Html.AntiForgeryToken()
                     <fieldset>
-                        <legend>@Machete.Web.Resources.ValidationStrings.AccountInfoLegend</legend>
+                        <legend>@ValidationStrings.AccountInfoLegend</legend>
                         <div class="tb-table">
                             <div class="tb-row">
                                 <div class="tb-label">
@@ -44,7 +45,7 @@
                                 </div>
                                 <div class="tb-field">
                                     @Html.CheckBoxFor(m => m.RememberMe)
-                                    <input name="logonB" type="button" onclick="getIsPasswordExpired()" value="@Machete.Web.Resources.ValidationStrings.LogOn" />
+                                    <input name="logonB" type="submit" value="@ValidationStrings.LogOn" />
                                 </div>
                             </div>
                         </div>
@@ -52,21 +53,16 @@
                 }
             </section>
         </div>
-        @*<div class="col-md-4">
-            <section id="socialLoginForm">
-                @Html.Partial("_ExternalLoginsListPartial")
-            </section>
-        </div>*@
     </div>
 </div>
 
-<div id="passwordChange" title="@Machete.Web.Resources.ValidationStrings.ChangeTitle">
+<div id="passwordChange" title="@ValidationStrings.ChangeTitle">
     <p><h5><small>Password has expired. Please provide new password.</small></h5></p>
     <form>
-        <label for="newpassword">@Machete.Web.Resources.ValidationStrings.PasswordNew</label><br>
+        <label for="newpassword">@ValidationStrings.PasswordNew</label><br>
         <input type="password" name="newpassword" id="newpassword" value="" class="text ui-widget-content ui-corner-all"><br>
         <br>
-        <label for="confirmnewpassword">@Machete.Web.Resources.ValidationStrings.PasswordConfirm</label><br>
+        <label for="confirmnewpassword">@ValidationStrings.PasswordConfirm</label><br>
         <input type="password" name="confirmnewpasswordd" id="confirmnewpassword" value="" class="text ui-widget-content ui-corner-all">
     </form>
 </div>
@@ -85,7 +81,7 @@
         resizable: false,
         closeOnEscape: false,
         buttons: {
-            "@Machete.Web.Resources.ValidationStrings.Change": changePassword
+            "@ValidationStrings.Change": changePassword
         }
     });
 
@@ -136,7 +132,7 @@
             confirmnewpassword = $("#confirmnewpassword")[0].value; 
         if (newpassword != confirmnewpassword) // verifying that new password and confirmed passwords are the same
         {
-            showMessage("@Machete.Web.Resources.ValidationStrings.PasswordCompare");
+            showMessage("@ValidationStrings.PasswordCompare");
             return;
         }
         if (newpassword === $('#Password')[0].value) { //#Password found using inspect element on Log on Machete window Checking that new password is not same as current password

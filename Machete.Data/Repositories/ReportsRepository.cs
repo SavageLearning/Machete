@@ -1,110 +1,74 @@
-﻿using Machete.Data.Helpers;
-using Machete.Data.Infrastructure;
-using Machete.Domain;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using Castle.Core.Internal;
+using Machete.Data.DTO;
+using Machete.Data.Dynamic;
+using Machete.Data.Infrastructure;
+using Machete.Data.Tenancy;
+using Machete.Domain;
 
-namespace Machete.Data
-{
+namespace Machete.Data.Repositories
+{   
     public interface IReportsRepository : IRepository<ReportDefinition>
     {
-        List<SimpleDataRow> getSimpleAggregate(int id, DateTime beginDate, DateTime endDate);
-        List<dynamic> getDynamicQuery(int id, DTO.SearchOptions o);
+        List<dynamic> getDynamicQuery(int id, SearchOptions o);
         List<ReportDefinition> getList();
         List<QueryMetadata> getColumns(string tableName);
-        DataTable getDataTable(string query, DTO.SearchOptions o);
+        DataTable getDataTable(string query);
         List<string> validate(string query);
     }
+
     public class ReportsRepository : RepositoryBase<ReportDefinition>, IReportsRepository
     {
-        private IReadOnlyContext readOnlyContext;
+        private readonly string _readonlyConnectionString;
 
-        // leaving for now for testing purposes...
-        public ReportsRepository(IDatabaseFactory dbFactory) : base(dbFactory) { }
-
-        public ReportsRepository(IDatabaseFactory dbFactory, IReadOnlyContext readOnlyContext) : base(dbFactory) {
-            // there's no reason to put this in the base; this class needs a read-only context to perform server-side validation.
-            this.readOnlyContext = readOnlyContext;
+        /// <summary>
+        /// A repository wrapping DbSet{ReportDefinition} and providing for direct queries against the database using
+        /// the MacheteAdoContext with a readonly connection string. Secure code reviews required for any changes to
+        /// this class.
+        /// </summary>
+        /// <param name="factory"></param>
+        /// <param name="tenantService"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public ReportsRepository(IDatabaseFactory factory, ITenantService tenantService) : base(factory)
+        {
+            var currentTenant = tenantService.GetCurrentTenant();
+            _readonlyConnectionString = currentTenant.ReadOnlyConnectionString;
+            
+            if (_readonlyConnectionString.IsNullOrEmpty()) throw new ArgumentNullException(
+                $"ReportsRepository requires valid currentTenant.ReadOnlyConnectionString; was: {currentTenant.ReadOnlyConnectionString ?? "null"}"
+            );
         }
 
-        public List<SimpleDataRow> getSimpleAggregate(int id, DateTime beginDate, DateTime endDate)
+        public List<dynamic> getDynamicQuery(int id, SearchOptions o)
         {
-            var rdef = dbset.Single(a => a.ID == id);
-            return dbFactory.Get().Database.SqlQuery<SimpleDataRow>(rdef.sqlquery,
-                new SqlParameter { ParameterName = "beginDate", Value = beginDate },
-                new SqlParameter { ParameterName = "endDate", Value = endDate })
-                .ToList();
-        }
+            ReportDefinition report = dbset.Single(a => a.ID == id);
+            List<QueryMetadata> meta = MacheteAdoContext.getMetadata(report.sqlquery, _readonlyConnectionString);
+            Type queryType = ILVoodoo.buildQueryType(meta);
+            MethodInfo method = Type.GetType("Machete.Data.MacheteAdoContext")
+                .GetMethod("SqlQuery", new[] { typeof(string), typeof(string), typeof(SqlParameter[]) });
+            MethodInfo man = method.MakeGenericMethod(queryType);
 
-        public List<dynamic> getDynamicQuery(int id, DTO.SearchOptions o)
-        {
-            var rdef = dbset.Single(a => a.ID == id);
-            var meta = SqlServerUtils.getMetadata(DataContext, rdef.sqlquery);
-            var queryType = buildQueryType(meta);
-            Task<List<object>> raw = dbFactory.Get().Database.SqlQuery(
-                queryType, 
-                rdef.sqlquery,
-                new SqlParameter { ParameterName = "beginDate", Value = o.beginDate },
-                new SqlParameter { ParameterName = "endDate", Value = o.endDate },
-                new SqlParameter { ParameterName = "dwccardnum", Value = o.dwccardnum }).ToListAsync();
+            dynamic dynamicQuery = man.Invoke(null, new object[] {
+                    report.sqlquery,
+                    _readonlyConnectionString,
+                    new[] {
+                        new SqlParameter { ParameterName = "beginDate", Value = o.beginDate },
+                        new SqlParameter { ParameterName = "endDate", Value = o.endDate },
+                        new SqlParameter { ParameterName = "dwccardnum", Value = o.dwccardnum }
+                    }
+                });
 
-            // TODO catch exception and handle here
-            raw.Wait();
-            var results = raw.Result;
-            return results;
-
-        }
-
-        public DataTable getDataTable(string query, DTO.SearchOptions o)
-        {
-            // https://stackoverflow.com/documentation/epplus/8223/filling-the-document-with-data
-            DataTable dt = new DataTable();
-            var cnxn = DataContext.Database.Connection.ConnectionString;
-            using (SqlDataAdapter adapter = new SqlDataAdapter(query, cnxn))
-            {
-                adapter.Fill(dt);
+            var dynamicList = new List<dynamic>();
+            foreach (var row in dynamicQuery) {
+                dynamicList.Add(row);
             }
-            return dt;
-        }
 
-        public Type buildQueryType(List<QueryMetadata> columns)
-        {
-            TypeBuilder builder = CreateTypeBuilder(
-                "MyDynamicAssembly", "MyModule", "dynamicQueryType");
-            foreach (var c in columns)
-            {
-                if (c.system_type_name == null) throw new ArgumentNullException("getQueryTyped received null for column name");
-                var ttype = getTypeof(c.system_type_name);
-                CreateAutoImplementedProperty(builder, c.name, ttype);
-            }
-            return builder.CreateType();
-        }
-
-        public Type getTypeof(string sqlType)
-        {
-            if (sqlType.ToUpper().Substring(0, 3) == "BIT") return typeof(bool);
-            if (sqlType.ToUpper().Substring(0, 3) == "DAT") return typeof(DateTime);
-            if (sqlType.ToUpper().Substring(0, 3) == "FLO") return typeof(double);
-            if (sqlType.ToUpper().Substring(0, 3) == "INT") return typeof(int);
-            if (sqlType.ToUpper().Substring(0, 3) == "NVA") return typeof(string);
-            if (sqlType.ToUpper().Substring(0, 3) == "REA") return typeof(Single);
-            if (sqlType.ToUpper().Substring(0, 4) == "VARC") return typeof(string);
-            if (sqlType.ToUpper().Substring(0, 3) == "MON") return typeof(decimal);
-            if (sqlType.ToUpper().Substring(0, 4) == "NULL") return null;
-
-            if (sqlType.ToUpper().Substring(0, 4) == "VARB") return null; // not implementing varbinary
-
-            return null;
+            return dynamicList;
         }
 
         public List<ReportDefinition> getList()
@@ -114,94 +78,18 @@ namespace Machete.Data
 
         public List<QueryMetadata> getColumns(string tableName)
         {
-            if (tableName == null) throw new ArgumentNullException("tableName can't be null");
-            return SqlServerUtils.getMetadata(DataContext, "select top 0 * from " + tableName);
+            return MacheteAdoContext.getMetadata($"select top 0 * from {tableName}", _readonlyConnectionString);
         }
 
-        #region IL voodoo
-
-        //
-        // https://www.codeproject.com/Articles/206416/Use-dynamic-type-in-Entity-Framework-SqlQuery
-        public static TypeBuilder CreateTypeBuilder(
-                        string assemblyName, string moduleName, string typeName)
+        public DataTable getDataTable(string query)
         {
-            TypeBuilder typeBuilder = AppDomain
-                .CurrentDomain
-                .DefineDynamicAssembly(new AssemblyName(assemblyName),
-                                       AssemblyBuilderAccess.Run)
-                .DefineDynamicModule(moduleName)
-                .DefineType(typeName, TypeAttributes.Public);
-            typeBuilder.DefineDefaultConstructor(MethodAttributes.Public);
-            return typeBuilder;
+            // https://stackoverflow.com/documentation/epplus/8223/filling-the-document-with-data
+            return MacheteAdoContext.Fill(query, _readonlyConnectionString);
         }
-        public static void CreateAutoImplementedProperty(
-            TypeBuilder builder, string propertyName, Type propertyType)
-        {
-            const string PrivateFieldPrefix = "m_";
-            const string GetterPrefix = "get_";
-            const string SetterPrefix = "set_";
-
-            // Generate the field.
-            FieldBuilder fieldBuilder = builder.DefineField(
-                string.Concat(PrivateFieldPrefix, propertyName),
-                              propertyType, FieldAttributes.Private);
-
-            // Generate the property
-            PropertyBuilder propertyBuilder = builder.DefineProperty(
-                propertyName, System.Reflection.PropertyAttributes.HasDefault, propertyType, null);
-
-            // Property getter and setter attributes.
-            MethodAttributes propertyMethodAttributes =
-                MethodAttributes.Public | MethodAttributes.SpecialName |
-                MethodAttributes.HideBySig;
-
-            // Define the getter method.
-            MethodBuilder getterMethod = builder.DefineMethod(
-                string.Concat(GetterPrefix, propertyName),
-                propertyMethodAttributes, propertyType, Type.EmptyTypes);
-
-            // Emit the IL code.
-            // ldarg.0
-            // ldfld,_field
-            // ret
-            ILGenerator getterILCode = getterMethod.GetILGenerator();
-            getterILCode.Emit(OpCodes.Ldarg_0);
-            getterILCode.Emit(OpCodes.Ldfld, fieldBuilder);
-            getterILCode.Emit(OpCodes.Ret);
-
-            // Define the setter method.
-            MethodBuilder setterMethod = builder.DefineMethod(
-                string.Concat(SetterPrefix, propertyName),
-                propertyMethodAttributes, null, new Type[] { propertyType });
-
-            // Emit the IL code.
-            // ldarg.0
-            // ldarg.1
-            // stfld,_field
-            // ret
-            ILGenerator setterILCode = setterMethod.GetILGenerator();
-            setterILCode.Emit(OpCodes.Ldarg_0);
-            setterILCode.Emit(OpCodes.Ldarg_1);
-            setterILCode.Emit(OpCodes.Stfld, fieldBuilder);
-            setterILCode.Emit(OpCodes.Ret);
-
-            propertyBuilder.SetGetMethod(getterMethod);
-            propertyBuilder.SetSetMethod(setterMethod);
-        }
-        #endregion
 
         public List<string> validate(string query)
         {
-            var context = readOnlyContext.Get();
-            return readOnlyContext.ExecuteSql(context, query).ToList();
+            return MacheteAdoContext.ValidateQuery(query, _readonlyConnectionString).ToList();
         }
-    }
-
-    public class QueryMetadata
-    {
-        public string name { get; set; }
-        public bool? is_nullable { get; set; }
-        public string system_type_name { get; set; }
-        public bool include { get; set; } /// default value for the UI
     }
 }

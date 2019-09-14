@@ -1,0 +1,8 @@
+{
+  "name": "gitgetter",
+  "version": "0.2.1",
+  "main": "github.js",
+  "dependencies": {
+    "@octokit/rest": "^15.8.1"
+  }
+}

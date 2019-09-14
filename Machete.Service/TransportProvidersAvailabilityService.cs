@@ -1,15 +1,15 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
 
 namespace Machete.Service
 {
-    public interface ITransportProvidersAvailabilityService : IService<TransportProviderAvailability>
+    public interface ITransportProvidersAvailabilityService : IService<TransportProviderAvailabilities>
     {
 
     }
-    public class TransportProvidersAvailabilityService : ServiceBase<TransportProviderAvailability>, ITransportProvidersAvailabilityService
+    public class TransportProvidersAvailabilityService : ServiceBase<TransportProviderAvailabilities>, ITransportProvidersAvailabilityService
     {
         private readonly IMapper map;
 

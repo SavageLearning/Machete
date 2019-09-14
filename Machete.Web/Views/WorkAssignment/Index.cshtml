@@ -1,10 +1,14 @@
-﻿@model Machete.Web.ViewModel.WorkAssignmentIndex
+@model Machete.Web.ViewModel.WorkAssignmentIndex
+
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.Localization
 
-@using Machete.Service
 @{
-    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    var httpContext = ViewContext.HttpContext;
+    var currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
+    var currentUrl = UriHelper.BuildRelative(httpContext.Request.PathBase, httpContext.Request.Path, httpContext.Request.QueryString);
 }
 <div class="wa-content">
     @using (Html.BeginForm())
@@ -38,7 +42,7 @@
 
     }
     <div id="buttonDivider">
-        @if (Html.IsInRole(Html.Role_AM()))
+        @if (Html.IsInRole(new[] { "Administrator", "Manager" }))
         {
             <div class="radio">
                 <input type="button" id="bOpenLottery" class="formButton dispatchButton" value="@(WorkAssignments.lottery)" />
@@ -79,7 +83,7 @@
                             </tr>
                         </thead>
                     </table>
-                </div>
+                </div> 
             </div>
 
             <div id="assignmentTab" class="tb-cell">
@@ -124,7 +128,7 @@
             </thead>
         </table>
     </div>
-    @Html.Partial("WorkerIndex")
+    @await Html.PartialAsync("WorkerIndex")
 </div>
 <script type="text/javascript">
     //@@ sourceURL=WorkAssignment_inline.js
@@ -164,7 +168,7 @@ $(document).ready(function () {
         "bServerSide": true,
         "aaSorting": [[0, 'asc']],
         "sAjaxSource": "/WorkerSignin/AjaxHandler",
-        "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+        "oLanguage": datatable_lang_@(currentCulture.TwoLetterISOLanguageName),
         "bProcessing": true,
         "aoColumns": [
             { "mDataProp": "lotterySequence"},
@@ -251,7 +255,7 @@ $(document).ready(function () {
             "bAutoWidth": false,
             "bServerSide": true,
             "sAjaxSource": "/WorkerSignin/AjaxHandler",
-            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "oLanguage": datatable_lang_@(currentCulture.TwoLetterISOLanguageName),
             "bProcessing": true,
             "aoColumns": [
                 {"mDataProp": "dwccardnum"},
@@ -294,7 +298,7 @@ $(document).ready(function () {
             "bInfo": true,
             "bServerSide": true,
             "sAjaxSource": "/WorkAssignment/AjaxHandler",
-            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "oLanguage": datatable_lang_@(currentCulture.TwoLetterISOLanguageName),
             "bProcessing": true,
             "aoColumns": [
                             { "mDataProp": "assignedWorker", "bVisible": false, "bSortable": true},

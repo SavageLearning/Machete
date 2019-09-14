@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     LookupService.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/25 
@@ -37,7 +37,6 @@ namespace Machete.Service
         IEnumerable<DTO.LookupList> GetIndexView(viewOptions o);
         Lookup GetByKey(string category, string key);
         string textByID(int ID, string locale);
-        IEnumerable<string> GetTeachers();
         void populateStaticIds();
     }
 
@@ -150,12 +149,8 @@ namespace Machete.Service
             {
                 return record.text_ES;
             }
-            return record.text_EN; ;  //defaults to English
-        }
-
-        public IEnumerable<string> GetTeachers()
-        {
-            return lrepo.GetTeachers();
+            //defaults to English
+            return record.text_EN;
         }
     }
 }

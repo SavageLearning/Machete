@@ -1,33 +1,41 @@
-﻿@model Machete.Web.ViewModel.Lookup
-@using Machete.Web.Resources
 @using Machete.Web.Helpers
-@using Machete.Web.ViewModel
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.Localization
+
+@model Machete.Web.ViewModel.Lookup
+
+@using Machete.Web.Resources;
+
+
 @{
-    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    var httpContext = ViewContext.HttpContext;
+    var currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
+    var currentUrl = UriHelper.BuildRelative(httpContext.Request.PathBase, httpContext.Request.Path, httpContext.Request.QueryString);
+
     string recType = "config";
     string idPrefix = recType + Model.ID + "-";
 }
 
 @using (Html.BeginForm("Edit", "Lookup", FormMethod.Post,
                     new { @class = "edittab-form EditPost", 
-                          @id = "configEditForm-" + Model.ID, 
+                          id = "configEditForm-" + Model.ID, 
                           enctype = "multipart/form-data" }))
 {
     <input type="submit" value="@Configs.editsubmit" class="formButton saveBtn"/>
-    if (Html.IsInRole(Html.Role_A()))
+    if (Html.IsInRole(new[]{"Administrator"}))
     {
         <input id="deleteConfigBtn-@(Model.ID)" type="button" value="@Configs.deletesubmit" 
                 class="formButton deleteButton" />
     }
     <br />  
     @Html.ValidationSummary(true)
-    @Html.EditorForModel("Lookup")
+    @Html.EditorForModel("Config")
 }
 
-@if (Html.IsInRole(Html.Role_A()))
+@if (Html.IsInRole(new[]{"Administrator"}))
 {
     using (Html.BeginForm("Delete", "Lookup", FormMethod.Post,
-                            new { @class = "edittab-form DeletePost", @id = "deleteConfigForm-" + Model.ID }))
+                            new { @class = "edittab-form DeletePost", id = "deleteConfigForm-" + Model.ID }))
     {
         @Html.HiddenFor(model => model.ID);
     }
@@ -63,8 +71,8 @@
         configForm.mUI('formDetectChanges', {
             recType: "@(recType)",
             formLevel: 1,
-            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
-            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+            changeConfirm: "@Shared.changeConfirm",
+            changeTitle: "@Shared.changeTitle"
         });
     });
 </script>

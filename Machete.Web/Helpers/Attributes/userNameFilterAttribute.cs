@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     userNameFilterAttribute.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/25 
@@ -21,27 +21,28 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using System.Linq;
 
 namespace Machete.Web.Helpers
 {
-    /// <summary>
-    /// Controller decorator to handle UserName
-    /// </summary>
+	/// <summary>
+	/// Controller decorator to handle UserName
+	/// </summary>
 	public class UserNameFilter : ActionFilterAttribute
 	{
-	    public override void OnActionExecuting(ActionExecutingContext filterContext)
-	    {
-	        const string Key = "userName";
-	 
-	        if (filterContext.ActionParameters.ContainsKey(Key))
-	        {
-	            if (filterContext.HttpContext.User.Identity.IsAuthenticated)
-	            {
-	                filterContext.ActionParameters[Key] = filterContext.HttpContext.User.Identity.Name;
-	            }
-	        }	 
-	        base.OnActionExecuting(filterContext);
-	    }
+		public override void OnActionExecuting(ActionExecutingContext filterContext)
+		{
+			const string key = "userName";
+			
+			if (filterContext.ActionDescriptor.Parameters.Any(parameter => parameter.Name.Equals(key)))
+			{
+				if (filterContext.HttpContext.User.Identity.IsAuthenticated)
+				{
+					filterContext.ActionArguments[key] = filterContext.HttpContext.User.Identity.Name;
+				}
+			}	 
+			base.OnActionExecuting(filterContext);
+		}
 	}
 }

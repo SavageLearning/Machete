@@ -3,7 +3,7 @@
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
 // License:  GPL v3
-// Project:  Machete.Test
+// Project:  Machete.Test.Old
 // Contact:  savagelearning
 // 
 // Copyright 2011 Savage Learning, LLC., all rights reserved.
@@ -21,16 +21,20 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using Machete.Domain;
-using Machete.Service;
-using DTO = Machete.Service.DTO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using FluentAssertions.Extensions;
+using Machete.Data;
+using Machete.Domain;
+using Machete.Service;
+using Machete.Test.Integration.Fluent;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using DTO = Machete.Service.DTO;
 
-namespace Machete.Test.Integration.Service
+namespace Machete.Test.Integration.Services
 {
     [TestClass]
     public class WorkerSigninTests
@@ -41,12 +45,16 @@ namespace Machete.Test.Integration.Service
         [TestInitialize]
         public void TestInitialize()
         {
-            frb = new FluentRecordBase();
+            frb = FluentRecordBaseFactory.Get();
             _dOptions = new viewOptions
             {
                 CI = new CultureInfo("en-US", false),
                 sSearch = "",
-                date = DateTime.Today,
+                date = TimeZoneInfo
+                    .ConvertTimeToUtc(
+                        DateTime.SpecifyKind(DateTime.Today, DateTimeKind.Unspecified),
+                        frb.ClientTimeZoneInfo
+                    ),
                 dwccardnum = null,
                 woid = null,
                 orderDescending = true,
@@ -59,14 +67,19 @@ namespace Machete.Test.Integration.Service
         public void LotterySignin()
         {
             // Arrange
-            frb.AddWorker().AddWorkerSignin();
-            var w = frb.ToWorker();
+            var w = frb.AddWorker();
+            frb.AddWorkerSignin(w);
+            
             var wsi = frb.ToWorkerSignin();
             // Act
-            var result = frb.ToServ<IWorkerSigninService>().GetSignin(w.dwccardnum, wsi.dateforsignin);
+            var result = frb.ToServ<IWorkerSigninRepository>().GetAllQ()
+                .FirstOrDefault(r => r.dwccardnum == w.dwccardnum && r.dateforsignin.Date == wsi.dateforsignin.Date);
+            var wsiDate = new DateTime(wsi.dateforsignin.Year, wsi.dateforsignin.Month, wsi.dateforsignin.Day, wsi.dateforsignin.Hour, wsi.dateforsignin.Minute, wsi.dateforsignin.Second);
+            var resultDate = new DateTime(result.dateforsignin.Year, result.dateforsignin.Month, result.dateforsignin.Day, result.dateforsignin.Hour, result.dateforsignin.Minute, result.dateforsignin.Second);
+            
             // Assert
             Assert.AreEqual(w.dwccardnum, result.dwccardnum);
-            Assert.AreEqual(wsi.dateforsignin, result.dateforsignin);
+            Assert.AreEqual(wsiDate, resultDate);
         }
         /// <summary>
         /// Filters WSI IndexView based on dwccardnum option. should return all records.
@@ -74,10 +87,9 @@ namespace Machete.Test.Integration.Service
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
         public void GetIndexView_check_search_dwccardnum()
         {
-            //
             // Arrange
-            frb.AddWorker(skill1:63).AddWorkerSignin();
-            var w = frb.ToWorker();
+            var w = frb.AddWorker(skill1:63);
+            frb.AddWorkerSignin(w);
             var wsi = frb.ToWorkerSignin();
             //
             //Act
@@ -92,19 +104,17 @@ namespace Machete.Test.Integration.Service
         /// <summary>
         /// Filter on requested grouping
         /// </summary>
-        [Ignore] // TODO: Fix this after dotnet core
+        [Ignore]
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
         public void GetIndexView_workerRequested()
         {
-            //
             // Arrange
-            frb.AddWorker(skill1: 63);
-            frb.AddWorkerSignin();
-            frb.AddWorkerRequest();
-            var w = frb.ToWorker();
+            var worker = frb.AddWorker(skill1: 63);
+            frb.AddWorkerSignin(worker);
+            frb.AddWorkerRequest(worker);
             //
             //Act
-            _dOptions.dwccardnum = w.dwccardnum;
+            _dOptions.dwccardnum = worker.dwccardnum;
             _dOptions.wa_grouping = "requested";
             var wsi = frb.ToServ<IWorkerSigninService>();
             dataTableResult<DTO.WorkerSigninList> result = wsi.GetIndexView(_dOptions);

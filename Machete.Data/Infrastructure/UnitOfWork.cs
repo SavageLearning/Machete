@@ -23,7 +23,6 @@
 #endregion
 
 using System;
-using System.Data.Entity.Validation;
 using System.Linq;
 using System.Text;
 
@@ -33,7 +32,6 @@ namespace Machete.Data.Infrastructure
     //
     public interface IUnitOfWork
     {
-        void Commit();
         void SaveChanges();
     }
     //
@@ -58,12 +56,5 @@ namespace Machete.Data.Infrastructure
         {
             DataContext.SaveChanges();
         }
-
-        public void Commit()
-        {
-            DataContext.SaveChanges();
-            databaseFactory.Dispose();
-            dataContext = null;
-        } 
     }
 }

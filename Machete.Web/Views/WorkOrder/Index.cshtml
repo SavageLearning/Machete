@@ -1,48 +1,55 @@
-﻿@using Machete.Web.Helpers
+@using Machete.Domain
+@using Machete.Web.Helpers
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.Localization
+@using WorkOrder = Machete.Web.Resources.WorkOrder
+@using Record = Machete.Web.Resources.Record
 
 @using Machete.Web.Resources
-@using Machete.Service
+
 @{
-    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    var httpContext = ViewContext.HttpContext;
+    var currentCulture = httpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
+    var currentUrl = UriHelper.BuildRelative(httpContext.Request.PathBase, httpContext.Request.Path, httpContext.Request.QueryString);
 }
 <div id="woDispatchTabs" >
     <ul>
-        <li><a href="#orderList" id="pendingOrderListTab" class="ListTab">@Machete.Web.Resources.WorkOrders.details</a> </li>
-        <li><a href="#summaryList" id="summaryOrderListTab" class="ListTab">@Machete.Web.Resources.WorkOrders.summary</a> </li>
+        <li><a href="#orderList" id="pendingOrderListTab" class="ListTab">@WorkOrders.details</a> </li>
+        <li><a href="#summaryList" id="summaryOrderListTab" class="ListTab">@WorkOrders.summary</a> </li>
         
     </ul>
     <div id="summaryList">
-        <input type="button" id="printActiveBtn" class="formButton" value="@Machete.Web.Resources.WorkOrders.printactive"/>
-        <input type="button" id="printActiveAssignedBtn" class="formButton" value="@Machete.Web.Resources.WorkOrders.printactiveassigned"/>
-        @Html.TextBox("activeDate", @DateTime.Today.ToShortDateString(), new { @style = "width: 6em;", @class = "ui-datepicker" })
-        <input type="button" id="completeActiveBtn" class="formButton" value="@Machete.Web.Resources.WorkOrders.completeactiveassigned"/>
+        <input type="button" id="printActiveBtn" class="formButton" value="@WorkOrders.printactive"/>
+        <input type="button" id="printActiveAssignedBtn" class="formButton" value="@WorkOrders.printactiveassigned"/>
+        @Html.TextBox("activeDate", DateTime.Today.ToShortTextBoxDateString(), new { style = "width: 6em;", @class = "ui-datepicker" })
+        <input type="button" id="completeActiveBtn" class="formButton" value="@WorkOrders.completeactiveassigned"/>
         <table id="orderSummaryTable" class="display">
             <thead>
                 <tr>
-                    <th>@Machete.Web.Resources.WorkOrders.date</th>
-                    <th>@Machete.Web.Resources.WorkOrders.weekday</th>
-                    <th>@Machete.Web.Resources.WorkOrders.pendingorder</th>
-                    <th>@Machete.Web.Resources.WorkOrders.pendingassignment</th>
-                    <th>@Machete.Web.Resources.WorkOrders.activeorder</th>
-                    <th>@Machete.Web.Resources.WorkOrders.activeassignment</th>
-                    <th>@Machete.Web.Resources.WorkOrders.completedorder</th>
-                    <th>@Machete.Web.Resources.WorkOrders.completedassignment</th>
-                    <th>@Machete.Web.Resources.WorkOrders.cancelledorder</th>
-                    <th>@Machete.Web.Resources.WorkOrders.cancelledassignment</th>
-                    <th>@Machete.Web.Resources.WorkOrders.expiredorder</th>
-                    <th>@Machete.Web.Resources.WorkOrders.expiredassignment</th>
+                    <th>@WorkOrders.date</th>
+                    <th>@WorkOrders.weekday</th>
+                    <th>@WorkOrders.pendingorder</th>
+                    <th>@WorkOrders.pendingassignment</th>
+                    <th>@WorkOrders.activeorder</th>
+                    <th>@WorkOrders.activeassignment</th>
+                    <th>@WorkOrders.completedorder</th>
+                    <th>@WorkOrders.completedassignment</th>
+                    <th>@WorkOrders.cancelledorder</th>
+                    <th>@WorkOrders.cancelledassignment</th>
+                    <th>@WorkOrders.expiredorder</th>
+                    <th>@WorkOrders.expiredassignment</th>
                 </tr>
             </thead>
         </table>
     </div>
     <div id="orderList">
-        <input type="button" value="@Machete.Web.Resources.WorkOrders.btnPending" class="formButton" id="pendingOrdersBtn"/>
-        <input type="button" value="@Machete.Web.Resources.WorkOrders.btnActive" class="formButton" id="activeOrdersBtn"/>
-        <input type="button" value="@Machete.Web.Resources.WorkOrders.btnCompleted" class="formButton" id="completedOrdersBtn"/>
-        <input type="button" value="@Machete.Web.Resources.WorkOrders.btnCancelled" class="formButton" id="cancelledOrdersBtn"/>
-        <input type="button" value="@Machete.Web.Resources.WorkOrders.btnExpired" class="formButton" id="expiredOrdersBtn"/>
-        <input type="button" value="@Machete.Web.Resources.WorkOrders.btnAll" class="formButton" id="allOrdersBtn"/>
-        <input type="button" value="@Machete.Web.Resources.WorkOrders.btnOnline" class="formButton" id="onlineOrdersBtn"/>
+        <input type="button" value="@WorkOrders.btnPending" class="formButton" id="pendingOrdersBtn"/>
+        <input type="button" value="@WorkOrders.btnActive" class="formButton" id="activeOrdersBtn"/>
+        <input type="button" value="@WorkOrders.btnCompleted" class="formButton" id="completedOrdersBtn"/>
+        <input type="button" value="@WorkOrders.btnCancelled" class="formButton" id="cancelledOrdersBtn"/>
+        <input type="button" value="@WorkOrders.btnExpired" class="formButton" id="expiredOrdersBtn"/>
+        <input type="button" value="@WorkOrders.btnAll" class="formButton" id="allOrdersBtn"/>
+        <input type="button" value="@WorkOrders.btnOnline" class="formButton" id="onlineOrdersBtn"/>
         <table id="orderTable" class="display">
             <thead>
                 <tr>
@@ -66,7 +73,7 @@
         </table>        
     </div>
 </div>
-@Html.Partial("WorkerIndex")
+@await Html.PartialAsync("WorkerIndex")
 <script type="text/javascript">
     var oTableDefaults = {
             "bPaginate": true,
@@ -80,7 +87,7 @@
             "bServerSide": true,
             "sAjaxSource": "/WorkOrder/AjaxHandler",
             "bProcessing": true,
-            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "oLanguage": datatable_lang_@(currentCulture.TwoLetterISOLanguageName),
             "aoColumns": [
                             { "mDataProp": "tabref", "bSearchable": false, "bSortable": false, "bVisible": false },
                             { "mDataProp": "tablabel", "bSearchable": false, "bSortable": false, "bVisible": false },
@@ -100,16 +107,17 @@
                         ],
             "aoSearchCols" :  [null, null, null, null, null, null, null, null, null, null, null, null],
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                console.log(aData);
                         $(nRow).attr("edittabref", aData["tabref"]);
                         $(nRow).attr("edittablabel", aData["tablabel"]);
                         switch (aData['displayState']) {
-                            case "@(Machete.Domain.LOrderStatus.Pending)": $(nRow).addClass('statusGrey'); break;
-                            case "@(Machete.Domain.LOrderStatus.Active)": $(nRow).addClass('statusBlue'); break;
-                            case "@(Machete.Domain.LOrderStatus.Completed)": $(nRow).addClass('statusGreen'); break;
-                            case "@(Machete.Domain.LOrderStatus.Cancelled)": $(nRow).addClass('statusRed'); break;
-                            case "@(Machete.Domain.LOrderStatus.Expired)": $(nRow).addClass('statusRed'); break;
-                            case "@(Machete.Domain.LOrderStatus.Orphaned)": $(nRow).addClass('statusYellow'); break;
-                            case "@(Machete.Domain.LOrderStatus.Unassigned)": $(nRow).addClass('statusOrange'); break;
+                            case "@(LOrderStatus.Pending)": $(nRow).addClass('statusGrey'); break;
+                            case "@(LOrderStatus.Active)": $(nRow).addClass('statusBlue'); break;
+                            case "@(LOrderStatus.Completed)": $(nRow).addClass('statusGreen'); break;
+                            case "@(LOrderStatus.Cancelled)": $(nRow).addClass('statusRed'); break;
+                            case "@(LOrderStatus.Expired)": $(nRow).addClass('statusRed'); break;
+                            case "@(LOrderStatus.Orphaned)": $(nRow).addClass('statusYellow'); break;
+                            case "@(LOrderStatus.Unassigned)": $(nRow).addClass('statusOrange'); break;
                             default: break;
                         }
                         return nRow;
@@ -139,8 +147,8 @@
         $('#woDispatchTabs').mUI('createTabs', {
             prefix: "ui-tabs-dispatch-",
             formLevel: 1,
-            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
-            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)",
+            changeConfirm: "@Shared.changeConfirm",
+            changeTitle: "@Shared.changeTitle",
             updateDatatable: true
             });
         ////////////////////////////////////////////////////////////////
@@ -217,7 +225,8 @@
         $('#completeActiveBtn').click(function() {
             $.post("/WorkOrder/CompleteOrders",
                 {
-                    date: $('#activeDate').val()
+                    // Make sure that C# recognizes this as a DateTime value; i.e., return as Date().toJSON();
+                    date: (function () { var val = $('#activeDate').val().split('/'); return new Date(parseInt(val[2], 10), parseInt(val[0], 10) - 1, parseInt(val[1], 10)).toJSON(); })()
                 },
                 function (data) {
                         alert("Number of orders completed: "+data.completedCount);
