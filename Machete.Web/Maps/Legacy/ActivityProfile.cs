@@ -16,7 +16,7 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.tablabel, opt => opt.MapFrom(d =>
                     d.recurring ? "Recurring Event with " + d.teacher : d.nameEN + " with " + d.teacher))
                 .ForMember(v => v.def, opt => opt.MapFrom(unused => MapperHelpers.Defaults))
-                .ForMember(v => v.dateStart, opt => opt.MapFrom(d => d.dateEnd.UtcToClient()))
+                .ForMember(v => v.dateStart, opt => opt.MapFrom(d => d.dateStart.UtcToClient()))
                 .ForMember(v => v.dateEnd, opt => opt.MapFrom(d => d.dateEnd.UtcToClient()))
                 .ForMember(v => v.teachers, opt => opt.MapFrom(unused => MapperHelpers.UserNames))
                 .ForMember(v => v.idString, opt => opt.Ignore())
