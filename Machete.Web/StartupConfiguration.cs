@@ -367,7 +367,8 @@ EXEC sp_addrolemember 'db_datareader', 'readonlyuser';
                 .AddModelMetadataDetailsProviderFor(typeof(WorkerSignin)) // Worker::WorkerSignin
                 .AddModelMetadataDetailsProviderFor(typeof(Event)) // Worker::Event
                 .AddModelMetadataDetailsProviderFor(typeof(Image)) // Event::Image
-                .AddModelMetadataDetailsProviderFor(typeof(ActivitySignin)); // Activity::ActivitySignin (also, Worker)
+                .AddModelMetadataDetailsProviderFor(typeof(ActivitySignin)) // Activity::ActivitySignin (also, Worker)
+                .AddModelMetadataDetailsProviderFor(typeof(Person)); // Person::Worker
             return options;
         }
 
