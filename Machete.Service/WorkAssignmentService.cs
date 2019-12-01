@@ -94,7 +94,29 @@ namespace Machete.Service
             IQueryable<WorkAssignment> q = waRepo.GetAllQ();
             //
             // 
-            if (o.date != null) IndexViewBase.diffDays((DateTime) o.date, ref q);
+            if (o.date != null)
+            {
+                var requestedDate = o.date.Value.DateBasedOn(_clientTimeZoneInfo);
+                var endOfDay = requestedDate.AddDays(1).AddMilliseconds(-1);
+
+                DateTime sunday;
+                if (requestedDate.DayOfWeek == DayOfWeek.Saturday)
+                {
+                    sunday = requestedDate.AddDays(1);
+                    q = q.Where(p => 
+                        p.workOrder.dateTimeofWork.DateTimeFrom(_clientTimeZoneInfo).Date >= requestedDate.Date
+                    && p.workOrder.dateTimeofWork.DateTimeFrom(_clientTimeZoneInfo).Date <= sunday.Date
+                    );
+                }
+                else
+                {
+                    q = q.Where(p => p.workOrder.dateTimeofWork.DateTimeFrom(_clientTimeZoneInfo).Date == requestedDate.Date);
+                }
+
+                // IndexViewBase.diffDays((DateTime) o.date, ref q);
+            } 
+                
+
             if (o.typeofwork_grouping > 0) IndexViewBase.typeOfWork(o, ref q, lRepo);
             if (o.woid > 0) IndexViewBase.WOID(o, ref q);
             if (o.personID > 0) IndexViewBase.WID(o, ref q);
