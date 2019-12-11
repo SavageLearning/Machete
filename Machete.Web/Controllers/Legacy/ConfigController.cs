@@ -61,7 +61,7 @@ namespace Machete.Web.Controllers
         public ActionResult Index()
         {
             ViewBag.configCategories = def.configCategories();
-            return View("~/Views/Config/Index.cshtml");
+            return View("~/Views/Lookup/Index.cshtml");
         }
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
@@ -90,7 +90,7 @@ namespace Machete.Web.Controllers
         {
             var m = map.Map<Lookup, ViewModel.Lookup>(new Lookup());
             m.def = def;
-            return PartialView("~/Views/Config/Create.cshtml", m);
+            return PartialView("~/Views/Lookup/Create.cshtml", m);
         }
         /// <summary>
         /// 
@@ -127,7 +127,7 @@ namespace Machete.Web.Controllers
         {
             var m = map.Map<Lookup, ViewModel.Lookup>(serv.Get(id));
             m.def = def;
-            return PartialView("~/Views/Config/Edit.cshtml", m);
+            return PartialView("~/Views/Lookup/Edit.cshtml", m);
         }
         /// <summary>
         /// 
@@ -160,7 +160,7 @@ namespace Machete.Web.Controllers
         {
             var m = map.Map<Lookup, ViewModel.Lookup>(serv.Get(id));
             m.def = def;
-            return PartialView("~/Views/Config/Edit.cshtml", m);
+            return PartialView("~/Views/Lookup/Edit.cshtml", m);
         }
         /// <summary>
         /// 
