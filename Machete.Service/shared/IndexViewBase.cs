@@ -133,20 +133,20 @@ namespace Machete.Service
                     .Where(jj => jj.sk.typeOfWorkID == o.typeofwork_grouping)
                     .Select(jj => jj.wa);
         }
-        public static void diffDays(DateTime date, ref IQueryable<WorkAssignment> q)
+        public static void diffDays(DateTime date, TimeZoneInfo clientTimeZoneInfo, ref IQueryable<WorkAssignment> q)
         {
             DateTime sunday;
             if (date.DayOfWeek == DayOfWeek.Saturday)
             {
                 sunday = date.AddDays(1);
                 q = q.Where(p => 
-                    p.workOrder.dateTimeofWork.Date >= date.Date
-                 && p.workOrder.dateTimeofWork.Date <= sunday.Date
+                    p.workOrder.dateTimeofWork.DateBasedOn(clientTimeZoneInfo) >= date.Date
+                 && p.workOrder.dateTimeofWork.DateBasedOn(clientTimeZoneInfo) <= sunday.Date
                 );
             }
             else
             {
-                q = q.Where(p => p.workOrder.dateTimeofWork.Date == date.Date);
+                q = q.Where(p => p.workOrder.dateTimeofWork.DateBasedOn( clientTimeZoneInfo) == date.Date);
             }
         }
         public static void WOID(viewOptions o, ref IQueryable<WorkAssignment> q)
