@@ -233,16 +233,22 @@ namespace Machete.Service
                 filterOnDatePart(o.sSearch, parsedTime, ref q);
             else
             {
-                q = q
+                o.sSearch = o.sSearch.ToLower();
+                //Commenting the p.wa.description search for now, EF LINQ errors out
+                  q = q
                     .Join(lRepo.GetAllQ(), wa => wa.skillID, sk => sk.ID, (wa, sk) => new { wa, sk })
-                    .Where(p => p.wa.workOrder.paperOrderNum.ToString().Contains(o.sSearch) ||
-                        p.wa.description.Contains(o.sSearch) ||
-                        p.sk.text_EN.Contains(o.sSearch) ||
-                        p.sk.text_ES.Contains(o.sSearch) ||
-                        p.wa.workOrder.contactName.Contains(o.sSearch) ||
-                        p.wa.workOrder.Employer.name.Contains(o.sSearch) ||
+                    .Where(p => 
+                        p.wa.workOrder.paperOrderNum.ToString().Contains(o.sSearch) ||
+                        // p.wa.description.ToLower().Contains(o.sSearch) ||
+                        p.sk.text_EN.ToLower().Contains(o.sSearch) ||
+                        p.sk.text_ES.ToLower().Contains(o.sSearch) ||
+                        p.wa.workOrder.contactName.ToLower().Contains(o.sSearch) ||
+                        p.wa.workOrder.zipcode.ToString().Contains(o.sSearch) ||
+                        p.wa.workOrder.Employer.name.ToLower().Contains(o.sSearch) ||
                         //p.dateupdated.ToString().ContainsOIC(param.sSearch) ||
-                        p.wa.updatedby.Contains(o.sSearch)).Select(p => p.wa);
+                        p.wa.updatedby.ToLower().Contains(o.sSearch)
+                        )
+                        .Select(p => p.wa);
             }
         }
         public static IEnumerable<WorkAssignment> filterOnSkill(
