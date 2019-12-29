@@ -170,7 +170,7 @@ namespace Machete.Service
             if (o.employerGuid != null) IndexViewBase.filterEmployerByGuid(o, ref q);
             if (o.status != null) IndexViewBase.filterStatus(o, ref q);
             if (o.onlineSource == true) IndexViewBase.filterOnlineSource(o, ref q);
-            if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
+            if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, _clientTimeZoneInfo, ref q);
             // TODO restore CultureInfo
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, /*o.CI.TwoLetterISOLanguageName*/"en", ref q);
             //

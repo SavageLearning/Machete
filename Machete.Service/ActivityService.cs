@@ -31,6 +31,7 @@ using System.Globalization;
 using System.Linq;
 using Machete.Service.DTO;
 using Microsoft.EntityFrameworkCore;
+using Machete.Data.Tenancy;
 
 namespace Machete.Service
 {
@@ -46,15 +47,18 @@ namespace Machete.Service
     public class ActivityService : ServiceBase2<Activity>, IActivityService
     {
         private IActivitySigninService asServ;
+        private TimeZoneInfo _clientTimeZoneInfo;
         private readonly IMapper map;
         public ActivityService(IDatabaseFactory db,
             IActivitySigninService asServ,
-            IMapper map) : base(db)
+            IMapper map,
+            ITenantService tenantService
+        ) : base(db)
         {
             this.logPrefix = "Activity";
             this.map = map;
             this.asServ = asServ;
-   
+            _clientTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(tenantService.GetCurrentTenant().Timezone);
         }
 
         public override Activity Create(Activity record, string user)
@@ -90,7 +94,7 @@ namespace Machete.Service
             if (o.personID > 0 && o.attendedActivities == true)
                 IndexViewBase.getAssociated(o.personID, ref q, db);
 
-            if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
+            if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, _clientTimeZoneInfo ,ref q);
 
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
             result.filteredCount = q.Count();

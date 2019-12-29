@@ -133,20 +133,20 @@ namespace Machete.Service
                     .Where(jj => jj.sk.typeOfWorkID == o.typeofwork_grouping)
                     .Select(jj => jj.wa);
         }
-        public static void diffDays(DateTime date, ref IQueryable<WorkAssignment> q)
+        public static void diffDays(DateTime date, TimeZoneInfo clientTimeZoneInfo, ref IQueryable<WorkAssignment> q)
         {
             DateTime sunday;
             if (date.DayOfWeek == DayOfWeek.Saturday)
             {
                 sunday = date.AddDays(1);
                 q = q.Where(p => 
-                    p.workOrder.dateTimeofWork.Date >= date.Date
-                 && p.workOrder.dateTimeofWork.Date <= sunday.Date
+                    p.workOrder.dateTimeofWork.DateBasedOn(clientTimeZoneInfo) >= date.Date
+                 && p.workOrder.dateTimeofWork.DateBasedOn(clientTimeZoneInfo) <= sunday.Date
                 );
             }
             else
             {
-                q = q.Where(p => p.workOrder.dateTimeofWork.Date == date.Date);
+                q = q.Where(p => p.workOrder.dateTimeofWork.DateBasedOn( clientTimeZoneInfo) == date.Date);
             }
         }
         public static void WOID(viewOptions o, ref IQueryable<WorkAssignment> q)
@@ -225,6 +225,7 @@ namespace Machete.Service
             if (DateTime.TryParse(search, out parsedTime))
                 filterOnDatePart(search, parsedTime, ref query);
         }
+        
         public static void search(viewOptions o, ref IQueryable<WorkAssignment> q, ILookupRepository lRepo)
         {
             bool isDateTime = false;
@@ -233,16 +234,19 @@ namespace Machete.Service
                 filterOnDatePart(o.sSearch, parsedTime, ref q);
             else
             {
-                q = q
+                o.sSearch = o.sSearch.ToLower();
+                  q = q
                     .Join(lRepo.GetAllQ(), wa => wa.skillID, sk => sk.ID, (wa, sk) => new { wa, sk })
-                    .Where(p => p.wa.workOrder.paperOrderNum.ToString().Contains(o.sSearch) ||
-                        p.wa.description.Contains(o.sSearch) ||
-                        p.sk.text_EN.Contains(o.sSearch) ||
-                        p.sk.text_ES.Contains(o.sSearch) ||
-                        p.wa.workOrder.contactName.Contains(o.sSearch) ||
-                        p.wa.workOrder.Employer.name.Contains(o.sSearch) ||
-                        //p.dateupdated.ToString().ContainsOIC(param.sSearch) ||
-                        p.wa.updatedby.Contains(o.sSearch)).Select(p => p.wa);
+                    .Where(p => 
+                            p.wa.workOrder.paperOrderNum.ToString().Contains(o.sSearch) ||
+                            (p.wa.description != null && p.wa.description.ToLower().Contains(o.sSearch)) ||
+                            p.sk.text_EN.ToLower().Contains(o.sSearch) ||
+                            p.sk.text_ES.ToLower().Contains(o.sSearch) ||
+                            p.wa.workOrder.contactName.ToLower().Contains(o.sSearch) ||
+                            p.wa.workOrder.zipcode.ToString().Contains(o.sSearch) ||
+                            p.wa.workOrder.Employer.name.ToLower().Contains(o.sSearch) ||
+                            //p.dateupdated.ToString().ContainsOIC(param.sSearch) ||
+                            p.wa.updatedby.ToLower().Contains(o.sSearch)).Select(p => p.wa);
             }
         }
         public static IEnumerable<WorkAssignment> filterOnSkill(
@@ -332,7 +336,7 @@ namespace Machete.Service
         }
         #endregion
         #region WORKORDERS
-        public static void search(viewOptions o, ref IQueryable<WorkOrder> q)
+        public static void search(viewOptions o, TimeZoneInfo clientTimeZoneInfo,ref IQueryable<WorkOrder> q)
         {
             bool isDateTime = false;
             DateTime parsedTime;
@@ -340,13 +344,13 @@ namespace Machete.Service
             {
                 if (isMonthSpecific.IsMatch(o.sSearch))  //Regex for month/year
                     q = q.Where(p => SqlServerDbFunctionsExtensions
-                                         .DateDiffMonth(null, p.dateTimeofWork, parsedTime) == 0 ? true : false);
+                                         .DateDiffMonth(null, p.dateTimeofWork.DateBasedOn(clientTimeZoneInfo), parsedTime) == 0 ? true : false);
                 if (isDaySpecific.IsMatch(o.sSearch))  //Regex for day/month/year
                     q = q.Where(p => SqlServerDbFunctionsExtensions
-                                         .DateDiffDay(null, p.dateTimeofWork, parsedTime) == 0 ? true : false);
+                                         .DateDiffDay(null, p.dateTimeofWork.DateBasedOn(clientTimeZoneInfo), parsedTime) == 0 ? true : false);
                 if (isTimeSpecific.IsMatch(o.sSearch)) //Regex for day/month/year time
                     q = q.Where(p => SqlServerDbFunctionsExtensions
-                                         .DateDiffHour(null, p.dateTimeofWork, parsedTime) == 0 ? true : false);
+                                         .DateDiffHour(null, p.dateTimeofWork.DateBasedOn(clientTimeZoneInfo), parsedTime) == 0 ? true : false);
             }
             else
             {
@@ -547,14 +551,23 @@ namespace Machete.Service
         /// <param name="o"></param>
         /// <param name="q"></param>
         /// <param name="lRepo"></param>
-        public static void search(viewOptions o, ref IQueryable<Activity> q)
+        public static void search(viewOptions o, TimeZoneInfo clientTimeZoneInfo, ref IQueryable<Activity> q)
         {
-            q = q.Where(p => p.notes.Contains(o.sSearch) ||
-                             p.teacher.Contains(o.sSearch) ||
-                             p.nameES.Contains(o.sSearch) ||
-                             p.typeES.Contains(o.sSearch) ||
-                             p.nameEN.Contains(o.sSearch) ||
-                             p.typeEN.Contains(o.sSearch));
+            bool isDateTime = false;
+            DateTime parsedTime;
+            if (isDateTime = DateTime.TryParse(o.sSearch, out parsedTime))
+            {
+                q = q.Where(p => p.dateStart.DateBasedOn(clientTimeZoneInfo) == parsedTime.Date);
+            }
+            else
+            {
+                q = q.Where(p => p.notes.Contains(o.sSearch) ||
+                                p.teacher.Contains(o.sSearch) ||
+                                p.nameES.Contains(o.sSearch) ||
+                                p.typeES.Contains(o.sSearch) ||
+                                p.nameEN.Contains(o.sSearch) ||
+                                p.typeEN.Contains(o.sSearch));
+            }
         }
 
         public static void search(viewOptions o, ref IQueryable<ActivitySignin> q)
