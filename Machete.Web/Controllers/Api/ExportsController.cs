@@ -119,19 +119,5 @@ namespace Machete.Web.Controllers.Api
 //            response.StatusCode = HttpStatusCode.OK;            
             return new FileContentResult(bytes, new MediaTypeHeaderValue("application/ms-excel"));
         }
-
-        // PUT api/values/5
-        [Authorize(Roles = "Administrator")]
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [Authorize(Roles = "Administrator")]
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }

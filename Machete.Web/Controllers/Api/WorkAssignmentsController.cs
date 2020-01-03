@@ -1,67 +1,40 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
+using Machete.Domain;
 using Machete.Service;
 using Machete.Service.DTO;
+using Machete.Web.ViewModel.Api;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Web.Controllers.Api
 {
-    [Route("api/workassignments")]
+    [Route("api/[controller]")]
     [ApiController]
-        [Authorize]
-    public class WorkAssignmentsController : ControllerBase
+    public class WorkAssignmentsController 
+        : MacheteApi2Controller<WorkAssignment,WorkAssignmentVM> 
     {
-        private readonly IWorkAssignmentService serv;
-        private readonly IMapper map;
+        public WorkAssignmentsController(IWorkAssignmentService serv, IMapper map) : base(serv, map) {}
 
-        public WorkAssignmentsController(IWorkAssignmentService employerService, IMapper map)
-        {
-            this.serv = employerService;
-            this.map = map;
-        }
-        
-        // GET api/values
-        [HttpGet]
-        [Route("")]
-        public ActionResult Get()
-        {
-            var vo = new viewOptions();
-            vo.displayLength = 10;
-            vo.displayStart = 0;
-            dataTableResult<WorkAssignmentsList> list = serv.GetIndexView(vo);
-            var result = list.query
-                .Select(
-                    e => map.Map<WorkAssignmentsList, Machete.Web.ViewModel.Api.WorkAssignment>(e)
-                ).AsEnumerable();
-            return new JsonResult(new { data =  result });
+        [HttpGet, Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
+        public new ActionResult<IEnumerable<WorkAssignmentVM>> Get(
+            [FromQuery]int displayLength = 10,
+            [FromQuery]int displayStart = 0) 
+        { 
+            return base.Get(displayLength, displayStart); 
         }
 
-        // GET api/values/5
-        [HttpGet]
-        [Route("{id}")]
-        public ActionResult Get(int id)
-        {
-            var result = map.Map<Domain.WorkAssignment, Machete.Web.ViewModel.Api.WorkAssignment>(serv.Get(id));
-            return new JsonResult(new { data = result });
-        }
+        [HttpGet("{id}"), Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
+        public new ActionResult<WorkAssignmentVM> Get(int id) { return base.Get(id); }
 
-        // POST api/values
-        [HttpPost("")]
-        public void Post([FromBody]string value)
-        {
-        }
+        [HttpPost, Authorize(Roles = "Administrator")]
+        public new ActionResult<WorkAssignmentVM> Post([FromBody]WorkAssignmentVM value) { return base.Post(value); }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
+        [HttpPut("{id}"), Authorize(Roles = "Administrator")]
+        public new ActionResult<WorkAssignmentVM> Put(int id, [FromBody]WorkAssignmentVM value) { return base.Put(id, value); }
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        [HttpDelete("{id}"), Authorize(Roles = "Administrator")]
+        public new ActionResult<WorkAssignmentVM> Delete(int id) { return base.Delete(id); }
     }
 }

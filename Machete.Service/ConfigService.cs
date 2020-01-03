@@ -15,38 +15,11 @@ namespace Machete.Service
         string getConfig(string key);
     }
 
-    public class ConfigService : ServiceBase<Config>, IConfigService
+    public class ConfigService : ServiceBase2<Config>, IConfigService
     {
-        private readonly IMapper map;
         private List<Config> config { get; set; }
 
-        public ConfigService(IConfigRepository repo,
-                               IUnitOfWork unitOfWork,
-                               IMapper map)
-                : base(repo, unitOfWork)
-        {
-            this.map = map;
-            this.logPrefix = "Config";
-        }
-
-        public override Config Create(Config record, string user)
-        {
-            var result = base.Create(record, user);
-            uow.SaveChanges();
-            return result;
-        }
-
-        public override void Save(Config record, string user)
-        {
-            base.Save(record, user);
-            uow.SaveChanges();
-        }
-
-        public override void Delete(int id, string user)
-        {
-            base.Delete(id, user);
-            uow.SaveChanges();
-        }
+        public ConfigService(IDatabaseFactory db, IMapper map) : base(db, map) {}
 
         public string getConfig(string key)
         {

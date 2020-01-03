@@ -37,7 +37,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WorkerRequest = Machete.Domain.WorkerRequest;
-using WorkOrder = Machete.Domain.WorkOrder;
 using WorkOrdersList = Machete.Service.DTO.WorkOrdersList;
 
 namespace Machete.Web.Controllers
@@ -203,7 +202,7 @@ namespace Machete.Web.Controllers
 
             MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
             MapperHelpers.Defaults = _defaults;
-            var wo = _map.Map<WorkOrder, ViewModel.WorkOrder>(workOrder);
+            var wo = _map.Map<WorkOrder, ViewModel.WorkOrderMVC>(workOrder);
 
             return PartialView("Create", wo);
         }
@@ -237,7 +236,7 @@ namespace Machete.Web.Controllers
             var workOrder = _woServ.Create(wo, wRequests, userName);
 
             MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
-            var result = _map.Map<WorkOrder, ViewModel.WorkOrder>(workOrder);
+            var result = _map.Map<WorkOrder, ViewModel.WorkOrderMVC>(workOrder);
             return Json(new {
                 sNewRef = result.tabref,
                 sNewLabel = result.tablabel,
@@ -269,7 +268,7 @@ namespace Machete.Web.Controllers
             
             MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
             MapperHelpers.Defaults = _defaults;
-            var m = _map.Map<WorkOrder, ViewModel.WorkOrder>(workOrder);
+            var m = _map.Map<WorkOrder, ViewModel.WorkOrderMVC>(workOrder);
 
             return PartialView("Edit", m);
         }
@@ -323,7 +322,7 @@ namespace Machete.Web.Controllers
             
             MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
             MapperHelpers.Defaults = _defaults;
-            var m = _map.Map<WorkOrder, ViewModel.WorkOrder>(workOrder);
+            var m = _map.Map<WorkOrder, ViewModel.WorkOrderMVC>(workOrder);
 
             return View(m);
         }
@@ -339,7 +338,7 @@ namespace Machete.Web.Controllers
             
             MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
             MapperHelpers.Defaults = _defaults;
-            var m = _map.Map<WorkOrder, ViewModel.WorkOrder>(workOrder);
+            var m = _map.Map<WorkOrder, ViewModel.WorkOrderMVC>(workOrder);
 
             ViewBag.OrganizationName = _defaults.getConfig("OrganizationName");
             return PartialView(m);
@@ -347,22 +346,22 @@ namespace Machete.Web.Controllers
         /// <summary>
         /// Creates the view to print all orders for a given day
         /// </summary>
-        /// <param name="date">Date to perform action</param>
+        /// <param name="targetDate">Date to perform action</param>
         /// <param name="assignedOnly">Optional flag: if True, only shows orders that are fully assigned</param>
         /// <returns>MVC Action Result</returns>
         [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult GroupView(DateTime date, bool? assignedOnly)
+        public ActionResult GroupView(DateTime targetDate, bool? assignedOnly)
         {
-            var utcDate = TimeZoneInfo.ConvertTimeToUtc(date, _clientTimeZoneInfo);
+            var utcDate = TimeZoneInfo.ConvertTimeToUtc(targetDate, _clientTimeZoneInfo);
 
             var v = _woServ.GetActiveOrders(utcDate, assignedOnly ?? false).ToList();
             
             MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
             MapperHelpers.Defaults = _defaults;
-            List<ViewModel.WorkOrder> foo = new List<ViewModel.WorkOrder>();
+            List<ViewModel.WorkOrderMVC> foo = new List<ViewModel.WorkOrderMVC>();
             foreach (var item in v)
             {
-                foo.Add(_map.Map<Domain.WorkOrder, ViewModel.WorkOrder>(item));
+                foo.Add(_map.Map<Domain.WorkOrder, ViewModel.WorkOrderMVC>(item));
             }
             //var erders = v.Select(e => _map.Map<WorkOrder, ViewModel.WorkOrder>(e)).ToList();
             var view = new WorkOrderGroupPrintView
@@ -375,14 +374,14 @@ namespace Machete.Web.Controllers
         /// <summary>
         /// Completes all orders for a given day
         /// </summary>
-        /// <param name="date">Date to perform action</param>
+        /// <param name="targetDate">Date to perform action</param>
         /// <param name="userName">UserName performing action</param>
         /// <returns>MVC Action Result</returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult CompleteOrders(DateTime date, string userName)
+        public ActionResult CompleteOrders(DateTime targetDate, string userName)
         {
-            int count = _woServ.CompleteActiveOrders(date, userName);
+            int count = _woServ.CompleteActiveOrders(targetDate, userName);
             return Json(new
             {
                 completedCount = count
