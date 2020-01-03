@@ -1,72 +1,60 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
-using Machete.Service.DTO;
-using Machete.Web.Controllers.Api.Abstracts;
-using Machete.Web.Helpers.Api;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using DTO = Machete.Service.DTO;
-using EmployerViewModel = Machete.Web.ViewModel.Api.Employer;
+using Machete.Web.ViewModel.Api;
 
 namespace Machete.Web.Controllers.Api
 {
-    [Route("api/employer")]
-    [ApiController]
-    public class EmployersController : MacheteApiController
+        [Route("api/[controller]")]
+        [ApiController]
+    public class EmployersController : MacheteApi2Controller<Employer, EmployerVM>
     {
         private readonly IEmployerService serv;
         private readonly IWorkOrderService woServ;
-        private readonly IMapper map;
 
         public EmployersController(
-            IEmployerService employerService, 
+            IEmployerService serv, 
             IWorkOrderService workorderService,
-            IMapper map)
+            IMapper map) : base(serv, map)
         {
-            this.serv = employerService;
+            this.serv = serv;
             this.woServ = workorderService;
-            this.map = map;
         }
 
         // GET api/values
         // TODO Add real permissions
-        [Authorize(Roles = "Administrator, Hirer")]
+        [Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
         [HttpGet]
-        [Route("")]
-        public ActionResult Get()
+        public new ActionResult<IEnumerable<EmployersList>> Get(
+            [FromQuery]int displayLength = 10,
+            [FromQuery]int displayStart = 0
+            )
         {
-            var vo = new viewOptions();
-            vo.displayLength = 10;
-            vo.displayStart = 0;
-            dataTableResult<DTO.EmployersList> list = serv.GetIndexView(vo);
-            var result = list.query
-                .Select(
-                    e => map.Map<DTO.EmployersList, EmployersList>(e)
-                ).AsEnumerable();
-            return new JsonResult(new { data =  result });
+            var list = serv.GetIndexView(new viewOptions {
+                displayLength = displayLength,
+                displayStart = displayStart
+            });
+
+            if (list.query == null) return NotFound();
+            return Ok(list.query);
         }
 
         // GET api/values/5
-        [Authorize(Roles = "Administrator, Manager, Phonedesk")]
-        [HttpGet]
-        [Route("{id}")]
-        public ActionResult Get(int id)
-        {
-            var result = map.Map<Domain.Employer, EmployerViewModel>(serv.Get(id));
-            if (result == null) return NotFound();
+        [HttpGet("{id}"), Authorize(Roles = "Administrator, Manager, Phonedesk")]
+        public new ActionResult<EmployerVM> Get(int id) { return base.Get(id); }
 
-            return new JsonResult(new { data = result });
-        }
 
         [Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
         [HttpGet]
         [Route("profile")]
-        public ActionResult ProfileGet()
+        public ActionResult<EmployerVM> ProfileGet()
         {
-            Domain.Employer e;
+            Employer e;
             try
             {
                 e = findEmployerBySubjectOrEmail();
@@ -86,26 +74,26 @@ namespace Machete.Web.Controllers.Api
                 serv.Save(e, UserEmail);
             }
             if (e.onlineSigninID != UserSubject) return Conflict();
-            var result = map.Map<Domain.Employer, EmployerViewModel>(e);
-            return new JsonResult(new { data = result });
+            var result = map.Map<Employer, EmployerVM>(e);
+            return Ok(result);
         }
 
         [NonAction]
-        public Domain.Employer findEmployerBySubjectOrEmail()
+        public Employer findEmployerBySubjectOrEmail()
         {
-            var e = serv.Get(UserSubject);
-            if (e != null) return e;
+            var currentEmployer = serv.Get(UserSubject);
+            if (currentEmployer != null) return currentEmployer;
             if (UserEmail != null)
             {
                 // If SingleOrDefault, then ~500 users will fail to login.
                 // Need solution to de-duplicating employers before getting
                 // string on emails duplication
-                e = serv.GetMany(em => em.email == UserEmail).OrderByDescending(em => em.dateupdated)
+                currentEmployer = serv.GetMany(em => em.email == UserEmail).OrderByDescending(em => em.dateupdated)
                     .FirstOrDefault();
-                return e;
+                return currentEmployer;
             }
 
-            return e;
+            return currentEmployer;
 
             // legacy accounts wont have an email; comes from a claim
             // if we haven't found by userSubject, and userEmail is null, assume it's a 
@@ -114,89 +102,83 @@ namespace Machete.Web.Controllers.Api
 
         // POST api/values
         // This action method is for ANY employer
-        [Authorize(Roles = "Administrator, Manager, Phonedesk")]
-        [HttpPost("")]
-        public void Post([FromBody]EmployerViewModel employer)
-        {
-            var domain = map.Map<EmployerViewModel, Domain.Employer>(employer);
-            serv.Create(domain, UserEmail);
-        }
+        [HttpPost, Authorize(Roles = "Administrator, Manager, Phonedesk")]
+        public new ActionResult<EmployerVM> Post([FromBody]EmployerVM employer) { return base.Post(employer); }
 
         // For an employer creating his/her own record
         [Authorize(Roles = "Administrator, Hirer")]
         [HttpPost("profile")]
-        public ActionResult ProfilePost([FromBody]EmployerViewModel employer)
+        public ActionResult<EmployerVM> ProfilePost([FromBody]EmployerVM employer)
         {
-            Domain.Employer e = null;
-            e = findEmployerBySubjectOrEmail();
+            Employer existingEmployer = null;
+            EmployerVM newEmployer = null;
+            existingEmployer = findEmployerBySubjectOrEmail();
             // If 
-            if (e != null) return Conflict();
+            if (existingEmployer != null) return Conflict();
 
-            var domain = map.Map<EmployerViewModel, Domain.Employer>(employer);
+            var domain = map.Map<EmployerVM, Employer>(employer);
             domain.onlineSigninID = UserSubject;
             if (UserEmail != null)
                 domain.email = UserEmail;
             try
             {
-                serv.Create(domain, UserEmail);
+                newEmployer = map.Map<Employer, EmployerVM>(serv.Create(domain, UserEmail));
+            }
+            // catch (DbExpception e) {
 
-            }
-            catch
+            // }
+            catch(Exception ex)
             {
-                return StatusCode(500);
+                return StatusCode(500, ex);
             }
-            return Ok();
+            return Ok(newEmployer);
         }
 
         // For editing any employer record
         [Authorize(Roles = "Administrator, Manager, Phonedesk")]
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]EmployerViewModel employer)
-        {
-            var domain = serv.Get(employer.id);
-            map.Map<EmployerViewModel, Domain.Employer>(employer, domain);
-            serv.Save(domain, UserEmail);
-        }
+        public new ActionResult<EmployerVM> Put(int id, [FromBody]EmployerVM employer) { return base.Put(id, employer); }
 
         // for an employer editing his/her own employer record
         [Authorize(Roles = "Administrator, Hirer")]
         [HttpPut("profile")]
-        public ActionResult ProfilePut([FromBody]EmployerViewModel viewmodel)
+        public ActionResult<EmployerVM> ProfilePut([FromBody]EmployerVM viewmodel)
         {
             bool newEmployer = false;
             var employer = findEmployerBySubjectOrEmail();
             if (employer == null)
             {
-                employer = new Domain.Employer();
+                employer = new Employer();
                 newEmployer = true;
             }
             employer.onlineSigninID = UserSubject;
             employer.email = UserEmail;
+            map.Map<EmployerVM, Employer>(viewmodel, employer);
             viewmodel.onlineSource = true;
-            map.Map<EmployerViewModel, Domain.Employer>(viewmodel, employer);
 
-            Domain.Employer result;
-            if (newEmployer)
-            {
-                result = serv.Create(employer, UserEmail);
+            Employer result;
+            try {
+                if (newEmployer)
+                {
+                    result = serv.Create(employer, UserEmail);
+                }
+                else
+                {
+                    serv.Save(employer, UserEmail);
+                    result = serv.Get(employer.ID);
+                }
+            } catch(Exception ex) {
+                return StatusCode(500, ex);
+
             }
-            else
-            {
-                serv.Save(employer, UserEmail);
-                result = serv.Get(employer.ID);
-            }
-            var mapped = map.Map<Domain.Employer, EmployerViewModel>(result);
-            return new JsonResult(new { data = mapped });
+            var mapped = map.Map<Employer, EmployerVM>(result);
+            return Ok(mapped);
 
         }
 
         // DELETE api/values/5
-        [Authorize(Roles = "Administrator")]
-        [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
-        {
-            // TODO: Make a soft delete; never really delete record
-            return StatusCode(501);
-        }
+        [HttpDelete("{id}"), Authorize(Roles = "Administrator")]
+        public new ActionResult Delete(int id) { return base.Delete(id); }
+
     }
 }

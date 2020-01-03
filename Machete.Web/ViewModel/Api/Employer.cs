@@ -2,16 +2,8 @@
 
 namespace Machete.Web.ViewModel.Api
 {
-    public class Employer
+    public class EmployerVM :RecordVM
     {
-        public string createdby { get; set; }
-        public DateTime datecreated { get; set; }
-        public DateTime dateupdated { get; set; }
-        public int id { get; set; }
-        public string idPrefix { get; }
-        public string idString { get; set; }
-        public string updatedby { get; set; }
-
         public bool active { get; set; }
         public string address1 { get; set; }
         public string address2 { get; set; }
@@ -35,13 +27,12 @@ namespace Machete.Web.ViewModel.Api
         public string referredbyOther { get; set; }
         public bool returnCustomer { get; set; }
         public string state { get; set; }
-        // public ICollection<WorkOrder> WorkOrders { get; set; }
         public string zipcode { get; set; }
     }
 
     public class EmployersList
     {
-        public int ID { get; set; }
+        public int id { get; set; }
         public bool active { get; set; }
         public string name { get; set; }
         public string address1 { get; set; }

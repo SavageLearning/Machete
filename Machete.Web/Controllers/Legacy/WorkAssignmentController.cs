@@ -112,7 +112,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Create(int workOrderID, string description)
         {
-            var wa = map.Map<WorkAssignment, ViewModel.WorkAssignment>(new WorkAssignment
+            var wa = map.Map<WorkAssignment, ViewModel.WorkAssignmentMVC>(new WorkAssignment
             {
                 active = true,
                 workOrderID = workOrderID,
@@ -137,7 +137,7 @@ namespace Machete.Web.Controllers
             if (modelIsValid) {
                 assignment.workOrder = woServ.Get(assignment.workOrderID);
                 var newAssignment = waServ.Create(assignment, userName);
-                var result = map.Map<WorkAssignment, ViewModel.WorkAssignment>(newAssignment);
+                var result = map.Map<WorkAssignment, ViewModel.WorkAssignmentMVC>(newAssignment);
                 return Json(new {
                     sNewRef = result.tabref,
                     sNewLabel = result.tablabel,
@@ -161,7 +161,7 @@ namespace Machete.Web.Controllers
             duplicate.workerSiginin = null;
             duplicate.workerSigninID = null;
             var saved = waServ.Create(duplicate, userName);
-            var result = map.Map<WorkAssignment, ViewModel.WorkAssignment>(saved);
+            var result = map.Map<WorkAssignment, ViewModel.WorkAssignmentMVC>(saved);
             return Json(new
             {
                 sNewRef = result.tabref,
@@ -201,7 +201,7 @@ namespace Machete.Web.Controllers
         public ActionResult Edit(int id)
         {
             WorkAssignment wa = waServ.Get(id);
-            var m = map.Map<WorkAssignment, ViewModel.WorkAssignment>(wa);
+            var m = map.Map<WorkAssignment, ViewModel.WorkAssignmentMVC>(wa);
             m.def = _defaults;
             return PartialView("Edit", m);
         }

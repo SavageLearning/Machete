@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using EmployerViewModel = Machete.Web.ViewModel.Api.Employer;
+using Machete.Web.ViewModel.Api;
 
 namespace Machete.Web.Maps.Api
 {
@@ -7,9 +7,9 @@ namespace Machete.Web.Maps.Api
     {
         public EmployersMap()
         {
-            CreateMap<Service.DTO.EmployersList, EmployerViewModel>();
-            CreateMap<Domain.Employer, EmployerViewModel>();
-            CreateMap<EmployerViewModel, Domain.Employer>()
+            CreateMap<Service.DTO.EmployersList, EmployerVM>();
+            CreateMap<Domain.Employer, EmployerVM>();
+            CreateMap<EmployerVM, Domain.Employer>()
                 .ForMember(v => v.datecreated, opt => opt.Ignore())
                 .ForMember(v => v.dateupdated, opt => opt.Ignore())
                 .ForMember(v => v.createdby, opt => opt.Ignore())

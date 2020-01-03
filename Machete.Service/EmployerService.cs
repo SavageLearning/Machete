@@ -26,6 +26,7 @@ using AutoMapper.QueryableExtensions;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
 namespace Machete.Service
@@ -36,45 +37,16 @@ namespace Machete.Service
         Employer Get(string guid);
     }
 
-    public class EmployerService : ServiceBase<Employer>, IEmployerService
+    public class EmployerService : ServiceBase2<Employer>, IEmployerService
     {
-        private readonly IWorkOrderService woServ;
-        private readonly IMapper map;
-        new IEmployerRepository repo;
-        public EmployerService(IEmployerRepository repo, 
-                               IWorkOrderService woServ,
-                               IUnitOfWork unitOfWork,
-                               IMapper map)
-                : base(repo, unitOfWork)
-        {
-            this.woServ = woServ;
-            this.map = map;
-            this.logPrefix = "Employer";
-            this.repo = repo;
-        }
+        public EmployerService(IDatabaseFactory db, IMapper map) : base(db, map) {}
 
         public Employer Get(string guid)
         {
-            return repo.GetBySubject(guid);
-        }
-
-        public override Employer Create(Employer record, string user)
-        {
-            var result = base.Create(record, user);
-            uow.SaveChanges();
-            return result;
-        }
-
-        public override void Save(Employer record, string user)
-        {
-            base.Save(record, user);
-            uow.SaveChanges();
-        }
-
-        public override void Delete(int id, string user)
-        {
-            base.Delete(id, user);
-            uow.SaveChanges();
+            var q = from e in dbset
+                    where e.onlineSigninID.Equals(guid)
+                    select e;
+            return q.SingleOrDefault();
         }
         /// <summary>
         /// 
@@ -85,7 +57,7 @@ namespace Machete.Service
         {
             var result = new dataTableResult<DTO.EmployersList>();
             //Get all the records
-            IQueryable<Employer> q = repo.GetAllQ();
+            IQueryable<Employer> q = dbset.AsNoTracking();
             //Search based on search-bar string 
             if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
 
@@ -94,7 +66,7 @@ namespace Machete.Service
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
             //Limit results to the display length and offset
             result.filteredCount = q.Count();
-            result.totalCount = repo.GetAllQ().Count();
+            result.totalCount = dbset.AsNoTracking().Count();
             result.query = q.ProjectTo<DTO.EmployersList>(map.ConfigurationProvider)
                 .Skip(o.displayStart)
                 .Take(o.displayLength)
