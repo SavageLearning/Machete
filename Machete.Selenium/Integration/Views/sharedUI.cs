@@ -408,7 +408,7 @@ namespace Machete.Test.Selenium.View
         #endregion
 
         #region workorders
-        public bool workOrderCreate(Employer _emp, WorkOrder _wo)
+        public bool workOrderCreate(Employer _emp, WorkOrderMVC _wo)
         {
             string prefix = "WO0-";
             WaitThenClickElement(By.Id("workOrderCreateTab_" + _emp.ID));
@@ -477,7 +477,7 @@ namespace Machete.Test.Selenium.View
             return Convert.ToInt32(tabAnchor.GetAttribute("recordid"));
         }
 
-        public bool workOrderValidate(Web.ViewModel.WorkOrder _wo) 
+        public bool workOrderValidate(Web.ViewModel.WorkOrderMVC _wo) 
         {
             string prefix = "WO" + _wo.ID.ToString() + "-";
             Func<string, string, bool> getAttributeAssertEqual = ((p, q) =>
@@ -532,7 +532,7 @@ namespace Machete.Test.Selenium.View
         /// <param name="wo"></param>
         /// <param name="wa"></param>
         /// <returns></returns>
-        public bool workAssignmentCreate(Employer emp, WorkOrder wo, WorkAssignment wa, FluentRecordBase frb)
+        public bool workAssignmentCreate(Employer emp, WorkOrderMVC wo, WorkAssignmentMVC wa, FluentRecordBase frb)
         {
             // Click on the assignment Create Tab
             WaitThenClickElement(By.Id("wact-" + wo.ID)); //the ID here is the WorkOrder.ID, not the Employer.ID
@@ -562,7 +562,7 @@ namespace Machete.Test.Selenium.View
         /// <param name="_wo"></param>
         /// <param name="_wa"></param>
         /// <returns></returns>
-        public bool workAssignmentActivate(Employer _emp, WorkOrder _wo, WorkAssignment _wa)
+        public bool workAssignmentActivate(Employer _emp, WorkOrderMVC _wo, WorkAssignmentMVC _wa)
         {
             // Verify we're on the WA ListTab we expected
             WaitForElement(By.Id("walt-" + _wo.ID));
@@ -591,7 +591,7 @@ namespace Machete.Test.Selenium.View
 
         }
 
-        public bool workAssignmentValidate(Employer _emp, WorkOrder _wo, WorkAssignment _wa)
+        public bool workAssignmentValidate(Employer _emp, WorkOrderMVC _wo, WorkAssignmentMVC _wa)
         {
             Thread.Sleep(1000);
             WaitThenClickElement(By.Id("WO" + _wo.ID + "-EditTab"));

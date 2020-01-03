@@ -1,71 +1,37 @@
-﻿using System;
-using System.Linq;
+﻿using System.Collections.Generic;
 using AutoMapper;
-using Machete.Domain;
 using Machete.Service;
-using Machete.Web.Controllers.Api.Abstracts;
-using Machete.Web.Helpers.Api;
+using Machete.Web.ViewModel.Api;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Web.Controllers.Api
 {
-    [Route("api/transportprovidersavailability")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class TransportProvidersAvailabilityController : MacheteApiController
+    public class TransportProvidersAvailabilityController 
+        : MacheteApi2Controller<Machete.Domain.TransportProviderAvailability,TransportProviderAvailabilityVM> 
     {
-        private readonly ITransportProvidersAvailabilityService serv;
-        private readonly IMapper map;
+        public TransportProvidersAvailabilityController(ITransportProvidersAvailabilityService serv, IMapper map) : base(serv, map) {}
 
-        public TransportProvidersAvailabilityController(ITransportProvidersAvailabilityService serv, IMapper map)
-        {
-            this.serv = serv;
-            this.map = map;
+        [HttpGet, Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
+        public new ActionResult<IEnumerable<TransportProviderAvailabilityVM>> Get(
+            [FromQuery]int displayLength = 10,
+            [FromQuery]int displayStart = 0) 
+        { 
+            return base.Get(displayLength, displayStart); 
         }
 
-        // GET: api/TransportRule
-        [Authorize(Roles = "Administrator, Hirer")]
-        [HttpGet]
-        [Route("")]
-        public ActionResult Get()
-        {
-            try
-            {
-                var result = serv.GetAll()
-                    .Select(e => map.Map<Domain.TransportProviderAvailabilities, TransportProviderAvailabilities>(e))
-                    .AsEnumerable();
-                return new JsonResult(new { data = result });
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(ex);
-            }
-        }
+        [HttpGet("{id}"), Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
+        public new ActionResult<TransportProviderAvailabilityVM> Get(int id) { return base.Get(id); }
 
-        // GET: api/TransportRule/5
-        [HttpGet]
-        [Route("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+        [HttpPost, Authorize(Roles = "Administrator")]
+        public new ActionResult<TransportProviderAvailabilityVM> Post([FromBody]TransportProviderAvailabilityVM value) { return base.Post(value); }
 
-        // POST: api/TransportRule
-        [HttpPost("")]
-        public void Post([FromBody]string value)
-        {
-        }
+        [HttpPut("{id}"), Authorize(Roles = "Administrator")]
+        public new ActionResult<TransportProviderAvailabilityVM> Put(int id, [FromBody]TransportProviderAvailabilityVM value) { return base.Put(id, value); }
 
-        // PUT: api/TransportRule/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE: api/TransportRule/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        [HttpDelete("{id}"), Authorize(Roles = "Administrator")]
+        public new ActionResult<TransportProviderAvailabilityVM> Delete(int id) { return base.Delete(id); }
     }
 }

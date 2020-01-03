@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
@@ -16,12 +17,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -31,11 +34,13 @@ namespace Machete.Web
 {
     public class Startup
     {
+
         private readonly RsaSecurityKey _signingKey;
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
+            LocalEnv = env;
             
             using (RSA rsa = RSA.Create()) {
                 rsa.KeySize = 4096;                
@@ -44,11 +49,12 @@ namespace Machete.Web
         }
 
         public IConfiguration Configuration { get; }
+        public IHostingEnvironment LocalEnv { get; }
 
-        /// <summary>
-        /// Defines the ASP.NET Core middleware pipeline. This method gets called by the runtime.
-        /// </summary>
-        public void ConfigureServices(IServiceCollection services)
+    /// <summary>
+    /// Defines the ASP.NET Core middleware pipeline. This method gets called by the runtime.
+    /// </summary>
+    public void ConfigureServices(IServiceCollection services)
         {
             var tenants = Configuration.GetSection("Tenants").Get<TenantMapping>();
             var connString = Configuration.GetConnectionString(tenants.Tenants["default"]);
@@ -65,15 +71,7 @@ namespace Machete.Web
             });
 
             services.ConfigureAuthentication(Configuration);
-//            Mapper.Initialize(cfg =>
-//            {
-//                cfg.ConfigureApi();
-//                cfg.ConfigureMvc();
-//                cfg.AddCollectionMappers();
-//                // Configuration code
-//            });
-//
-//            services.AddAutoMapper();
+
             var mapperConfig = new MapperConfiguration(maps =>
             {
                 maps.AllowNullCollections = true;
@@ -84,6 +82,12 @@ namespace Machete.Web
             var mapper = mapperConfig.CreateMapper();
             services.AddSingleton(mapper);
 
+            services.AddSwaggerGen(c =>
+                {
+                    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Machete.Api", Version = "v1" });
+                    c.ResolveConflictingActions(a => a.First()); // necessary for controller action inheritance
+                });
+
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/localization?view=aspnetcore-2.2#configure-localization
             // https://github.com/aspnet/AspNetCore/issues/6332
             // https://stackoverflow.com/questions/34753498/self-referencing-loop-detected-in-asp-net-core
@@ -91,7 +95,7 @@ namespace Machete.Web
             {
                 options.MaxValidationDepth = 4; // if there is a recursive error, don't go crazy
                 options.SuppressChildValidationForOneToManyRelationships();
-                
+                // if (LocalEnv.IsDevelopment()) options.Filters.Add(new AllowAnonymousFilter());
                 // options.Filters.Add(new AuthorizeFilter()); }) // <~ for JWT auth                    
             })
             .AddJsonOptions(options =>
@@ -226,27 +230,49 @@ namespace Machete.Web
             });
 
             app.UseAuthentication();
-
+            app.UseSwagger();
+            app.UseSwaggerUI(c => {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Machete API v1");
+                //c.RoutePrefix = string.Empty;            
+            });
+            
             // https://github.com/aspnet/Mvc/issues/4842
             app.UseMvc(routes => {
                 // keep separate for future api-only port:
                 routes.MapLegacyMvcRoutes();
                 routes.MapApiRoutes();
             });
-            
-            // https://docs.microsoft.com/en-us/aspnet/core/client-side/spa/angular?view=aspnetcore-2.2
-            app.UseSpa(angularApp =>
-            {
-                angularApp.Options.SourcePath = "../UI";
-
-                if (envIsDevelopment) angularApp.UseProxyToSpaDevelopmentServer("http://localhost:4200");
+            // https://stackoverflow.com/questions/48216929/how-to-configure-asp-net-core-server-routing-for-multiple-spas-hosted-with-spase
+            app.Map("/rx", rx => {
+                rx.UseSpa(rxApp => {
+                     rxApp.Options.SourcePath = "../RX";
+                    if (envIsDevelopment) rxApp.UseProxyToSpaDevelopmentServer("http://localhost:3000");
+                });
             });
+            app.Map("/V2", ng => {
+                // https://docs.microsoft.com/en-us/aspnet/core/client-side/spa/angular?view=aspnetcore-2.2
+                app.UseSpa(angularApp =>
+                {
+                    angularApp.Options.SourcePath = "../UI";
+
+                    if (envIsDevelopment) angularApp.UseProxyToSpaDevelopmentServer("http://localhost:4200");
+                });
+            });
+
 
             app.UseDirectoryBrowser(new DirectoryBrowserOptions
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Content")),
                 RequestPath = "/Content"
             });
+
+
+            using (var serviceScope = app.ApplicationServices.CreateScope())
+            {
+                var services = serviceScope.ServiceProvider;
+                var svc = services.GetService<ILookupService>();
+                svc.populateStaticIds();
+            }
         }
     }
 }

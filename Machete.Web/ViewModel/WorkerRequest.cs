@@ -8,7 +8,7 @@ namespace Machete.Web.ViewModel
         }
 
         public int WorkOrderID { get; set; }
-        public virtual WorkOrder workOrder { get; set; }
+        public virtual WorkOrderMVC workOrder { get; set; }
         public int WorkerID { get; set; }
         public virtual Worker workerRequested { get; set; }
     }

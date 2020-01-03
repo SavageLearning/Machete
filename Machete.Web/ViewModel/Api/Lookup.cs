@@ -2,7 +2,7 @@
 
 namespace Machete.Web.ViewModel.Api
 {
-    public class Lookup
+    public class LookupVM
     {
         public string createdby { get; set; }
         public DateTime datecreated { get; set; }

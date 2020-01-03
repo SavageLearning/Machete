@@ -163,7 +163,7 @@ namespace Machete.Test
             updatedby = "TestInitializer"
         };
 
-        public static WorkOrder order = new WorkOrder
+        public static WorkOrderMVC order = new WorkOrderMVC
         {
             contactName = "Oompa Loompa",
             workSiteAddress1 = "2400 Main Ave E",
@@ -221,7 +221,7 @@ namespace Machete.Test
 //           // transportTransactID = "#6169"
 //        };
 
-        public static WorkAssignment assignment = new WorkAssignment
+        public static WorkAssignmentMVC assignment = new WorkAssignmentMVC
         {
             //ID = 1,
             active = true,

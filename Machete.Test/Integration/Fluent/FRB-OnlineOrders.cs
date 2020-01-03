@@ -1,10 +1,12 @@
-﻿namespace Machete.Test.Integration.Fluent
+﻿using Machete.Web.ViewModel.Api;
+
+namespace Machete.Test.Integration.Fluent
 {
     public partial class FluentRecordBase
     {
-        public Machete.Web.ViewModel.Api.WorkOrder CloneOnlineOrder()
+        public WorkOrderVM CloneOnlineOrder()
         {
-            var wo = (Machete.Web.ViewModel.Api.WorkOrder)Records.onlineOrder.Clone();
+            var wo = (WorkOrderVM)Records.onlineOrder.Clone();
             wo.contactName = RandomString(10);
             return wo;
         }

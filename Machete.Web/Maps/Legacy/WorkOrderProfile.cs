@@ -14,7 +14,7 @@ namespace Machete.Web.Maps
     {
         public WorkOrderProfile()
         {
-            CreateMap<WorkOrder, ViewModel.WorkOrder>()
+            CreateMap<WorkOrder, ViewModel.WorkOrderMVC>()
                 .ForMember(v => v.tabref,               opt => opt.MapFrom(d => "/WorkOrder/Edit/" + Convert.ToString(d.ID)))
                 .ForMember(v => v.tablabel,             opt => opt.MapFrom(d =>
                                                             WorkOrders.tabprefix +

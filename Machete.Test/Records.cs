@@ -28,6 +28,7 @@ using System.Linq;
 using Machete.Domain;
 using Microsoft.EntityFrameworkCore;
 using Machete.Data.Initialize;
+using Machete.Web.ViewModel.Api;
 
 namespace Machete.Test 
 {
@@ -202,7 +203,7 @@ namespace Machete.Test
             transportTransactID = "#6169"
         };
 
-        public static Machete.Web.ViewModel.Api.WorkOrder onlineOrder = new Machete.Web.ViewModel.Api.WorkOrder
+        public static WorkOrderVM onlineOrder = new WorkOrderVM
         {
             workSiteAddress1 = "2400 Main Ave E",
             workSiteAddress2 = "Apt 207",
@@ -311,7 +312,7 @@ namespace Machete.Test
             createdby = "TestInitializer",
             updatedby = "TestInitializer"
         };
-        public static TransportProviderAvailabilities transportProviderAvailabilities = new TransportProviderAvailabilities
+        public static TransportProviderAvailability transportProviderAvailabilities = new TransportProviderAvailability
         {
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime
