@@ -42,7 +42,12 @@ You will also need [Docker](https://www.docker.com/get-started). Keep in mind th
 levels of support for the Docker engine. Depending on your platform, Docker may be running inside a VM with very little
 filesystem access. You probably won't need to worry about this unless you become more involved with the project.
 
-Finally, you will need the [`dotnet` CLI](https://dotnet.microsoft.com/download).
+Additionally, you will need the [`dotnet` CLI](https://dotnet.microsoft.com/download).
+
+Finally, you will need `npm` for your distribution. We recommend [downloading and installing NodeJS](https://nodejs.org/en/)
+for your distribution. Once you have `npm` installed you will need to run `npm install -g @angular/cli` in the terminal.
+
+(If you're on Mac, you'll then need to `sudo chown -R $USER: /usr/local/lib/node_modules`, because Mac).
 
 Great, now you should be good to go!
 
@@ -58,8 +63,18 @@ inquiries should be directed to the [email](chaim@ndlon.org) above.
 Aptly named, this file will dispose of whatever database container you have running (as long as you have the environment
 variable for it set, which the script does), and create an entirely new database container.
 
-`./Machete.Util/sh/run-machete1.sh`
-This script runs the Machete.Web.dll binary inside a container behind an NginX proxy, which tests the creation of the container. Not needed for development.
+`./make_env_file.sh`  
+This file will create an environment file that you can source to set certain variables. Only needed for OAuth development.
+
+`./completely-clean-build-and-run.sh`
+This file will:
+1. [Disable msbuild 're-use'](https://github.com/Microsoft/msbuild/issues/3362) in `dotnet`. 
+2. Prompt you to create the environment variables file if it doesn't exist.
+3. Source the environment variables file.
+4. Clean up any existing build(s).
+5. Initialize the submodule, if it isn't initialized.
+6. Start the Angular webpack server as a background process.
+7. Build and run Machete.
 
 `🎺 💃 🇲🇽`
 
