@@ -68,10 +68,9 @@ namespace Machete.Web.Controllers.Api
         // POST: api/TransportRule
         protected virtual  ActionResult<TVM> Post(TVM value)
         {
-            TD domain = map.Map<TVM, TD>(value);
             TVM newValue;
             try {
-                newValue = map.Map<TD, TVM>(service.Create(domain, UserEmail));
+                newValue = Create(value);
             }
             catch (Exception ex) {
                 return StatusCode(500, ex);
@@ -79,21 +78,38 @@ namespace Machete.Web.Controllers.Api
             return Ok(newValue);
         }
 
+        [NonAction]
+        private TVM Create(TVM value) 
+        {
+            TD domain = map.Map<TVM, TD>(value);
+            return map.Map<TD, TVM>(service.Create(domain, UserEmail)); 
+        }
+
+        [NonAction]
+        private TVM Update(int id, TVM value)
+        {
+            TD domain = service.Get(id);
+            TD fromTVM = map.Map<TVM, TD>(value, domain);
+            fromTVM.ID = id;
+            service.Save(fromTVM, UserEmail);
+            return map.Map<TD, TVM>(service.Get(id));
+        }
         // PUT: api/TransportRule/5
         protected virtual  ActionResult<TVM> Put(int id, TVM value)
         {
-            TD domain = service.Get(id);
-            TD fromTVM = map.Map<TVM, TD>(value);
-            fromTVM.ID = id;
-            TVM updated;
+            TVM newValue;
+
             try {
-                    service.Save(fromTVM, UserEmail);
-                    updated = map.Map<TD, TVM>(service.Get(id));
+                if (id == 0) {
+                    newValue = Create(value);
+                } else {
+                    newValue = Update(id, value);
+                }
             } 
             catch(Exception ex) {
                 return StatusCode(500, ex);
             }
-            return Ok(updated);
+            return Ok(newValue);
         }
 
         // DELETE: api/TransportRule/5
