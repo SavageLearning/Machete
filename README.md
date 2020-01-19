@@ -54,15 +54,12 @@ Great, now you should be good to go!
 There are a few setup scripts that can help get you up and running. These scripts are _experimental_ and any problems or
 inquiries should be directed to the [email](chaim@ndlon.org) above.
 
-`./Machete.Util/sh/initial-setup.sh`  
-This will create a Docker network for you, `machete-bridge`, and attempt to create a database using the next script.
-
 `./Machete.Util/sh/new-db-use-with-caution.sh`  
 Aptly named, this file will dispose of whatever database container you have running (as long as you have the environment
 variable for it set, which the script does), and create an entirely new database container.
 
 `./Machete.Util/sh/run-machete1.sh`
-This script runs the Machete.Web.dll binary inside a container behind an NginX proxy. Not really needed for development.
+This script runs the Machete.Web.dll binary inside a container behind an NginX proxy, which tests the creation of the container. Not needed for development.
 
 `🎺 💃 🇲🇽`
 
