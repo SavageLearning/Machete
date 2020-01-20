@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# ./Machete.Util/sh/run-machete1.sh
+# This script runs the Machete.Web.dll binary inside a container behind an NginX proxy, which tests the creation of the container. Not needed for development.
+
+
 # trap "{ rm -f machete1env.list; }" EXIT
 
 docker rm machete1
@@ -27,4 +31,5 @@ dotnet user-secrets list --project=Machete.Web \
   | sed s/Authentication/MACHETE_Authentication/g \
   >> machete1env.list
 
-docker run -it --name machete1 --network machete-bridge -p 443:443 --env-file machete1env.list ndlonmachete/debian:1.14.61
+# TODO get latest tag from GitHub
+docker run -it --name machete1 --network machete-bridge -p 443:443 --env-file machete1env.list ndlonmachete/debian:latest
