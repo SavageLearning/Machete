@@ -213,6 +213,12 @@ namespace Machete.Web.Controllers
         {
             if (!ModelState.IsValid) return View(model);
             var newUserName = model.FirstName.Trim() + "." + model.LastName.Trim();
+            var dupeUser = await _userManager.FindByEmailAsync(model.Email);
+            if (dupeUser != null  && dupeUser.Email == model.Email) 
+            {
+                ModelState.AddModelError("", ValidationStrings.dupeEmail);
+                return View(model);
+            }   
             var user = new MacheteUser { UserName = newUserName, LoweredUserName = newUserName.ToLower(), ApplicationId = GetApplicationId(), Email = model.Email.Trim(), LoweredEmail = model.Email.Trim() };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
@@ -354,8 +360,14 @@ namespace Machete.Web.Controllers
             {
                 var user = _context.Users.First(u => u.Id == model.Id);
                 var macheteUserName = model.FirstName.Trim() + "." + model.LastName.Trim();
+                var dupeUser = await _userManager.FindByEmailAsync(model.Email);
                 user.UserName = macheteUserName;
                 user.LoweredUserName = macheteUserName.ToLower();
+                if (dupeUser != null  && dupeUser.Email == model.Email) 
+                {
+                    ModelState.AddModelError("ErrorMessage", ValidationStrings.dupeEmail);
+                    return View(model);
+                }   
                 user.Email = model.Email.Trim();
                 user.LoweredEmail = model.Email.Trim().ToLower();
                 user.IsApproved = model.IsApproved;
