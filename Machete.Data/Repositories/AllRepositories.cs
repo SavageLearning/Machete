@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text;
+using Machete.Data.Helpers;
 
 namespace Machete.Data
 {
@@ -60,7 +61,7 @@ namespace Machete.Data
 
     public interface IWorkOrderRepository : IRepository<WorkOrder>
     {
-        IEnumerable<WorkOrder> GetActiveOrders(DateTime date);
+        IEnumerable<WorkOrder> GetActiveOrders(DateTime date, TimeZoneInfo clientTimeZoneInfo);
     }
     public interface IWorkerRequestRepository : IRepository<WorkerRequest> {
         WorkerRequest GetByID(int woid, int workerID);
@@ -163,10 +164,10 @@ namespace Machete.Data
     {
         public WorkOrderRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
         
-        public IEnumerable<WorkOrder> GetActiveOrders(DateTime date)
+        public IEnumerable<WorkOrder> GetActiveOrders(DateTime date, TimeZoneInfo clientTimeZoneInfo)
         {
             return dbset.Where(wo => wo.statusID == WorkOrder.iActive
-                                           && wo.dateTimeofWork.Date == date.Date)
+                                           && wo.dateTimeofWork.DateBasedOn(clientTimeZoneInfo) == date.Date)
                 .Include(a => a.Employer)
                 .Include(a => a.workerRequestsDDD)
                 .ThenInclude(a => a.workerRequested)
