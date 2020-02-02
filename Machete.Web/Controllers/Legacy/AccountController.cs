@@ -230,7 +230,9 @@ namespace Machete.Web.Controllers
 
             foreach (var error in result.Errors)
             {
-                ModelState.AddModelError(error.Code, error.Description);
+                ModelState.AddModelError("", error.Description);
+                if (error.Description.Contains("is invalid, can only contain letters or digits") && newUserName.Contains(" "))
+                    ModelState.AddModelError("", ValidationStrings.NameHasSpace);
             }
 
             // If we got this far, something failed, redisplay form

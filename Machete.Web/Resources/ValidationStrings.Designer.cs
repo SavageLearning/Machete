@@ -320,6 +320,15 @@ namespace Machete.Web.Resources {
                 return ResourceManager.GetString("Register", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to NameHasSpace.
+        /// </summary>
+        public static string NameHasSpace {
+            get {
+                return ResourceManager.GetString("NameHasSpace", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to Use the form below to create a new account..

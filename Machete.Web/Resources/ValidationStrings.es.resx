@@ -156,6 +156,9 @@
   <data name="PasswordNew" xml:space="preserve">
     <value>Contraseña nueva</value>
   </data>
+  <data name="NameHasSpace" xml:space="preserve">
+    <value>Nombre y apellido no pueden contener espacios. Por favor, usar un guion " - " para unir dos palabras</value>
+  </data>
   <data name="Register" xml:space="preserve">
     <value>Crear una cuenta</value>
   </data>
