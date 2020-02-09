@@ -165,8 +165,11 @@ namespace Machete.Data
         
         public IEnumerable<WorkOrder> GetActiveOrders(DateTime date, TimeZoneInfo clientTimeZoneInfo)
         {
+            // date parameter comes in as Utc datetime, so convert before comparing
+            DateTime clientDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(date, DateTimeKind.Unspecified), clientTimeZoneInfo); 
+
             return dbset.Where(wo => wo.statusID == WorkOrder.iActive
-                                           && TimeZoneInfo.ConvertTimeFromUtc(wo.dateTimeofWork, clientTimeZoneInfo).Date == TimeZoneInfo.ConvertTimeFromUtc(date, clientTimeZoneInfo).Date)
+                                           && TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(wo.dateTimeofWork, DateTimeKind.Unspecified), clientTimeZoneInfo).Date == clientDate.Date)
                 .Include(a => a.Employer)
                 .Include(a => a.workerRequestsDDD)
                 .ThenInclude(a => a.workerRequested)
