@@ -353,9 +353,9 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult GroupView(DateTime date, bool? assignedOnly)
         {
-            // var utcDate = TimeZoneInfo.ConvertTimeToUtc(date, _clientTimeZoneInfo);
+            var utcDate = TimeZoneInfo.ConvertTimeToUtc(date, _clientTimeZoneInfo);
 
-            var v = _woServ.GetActiveOrders(date, assignedOnly ?? false).ToList();
+            var v = _woServ.GetActiveOrders(utcDate, assignedOnly ?? false).ToList();
             
             MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
             MapperHelpers.Defaults = _defaults;

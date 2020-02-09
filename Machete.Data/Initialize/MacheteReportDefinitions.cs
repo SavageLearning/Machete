@@ -1357,7 +1357,8 @@ CONVERT(varchar, a.dateStart, 22) as [Start Time]
 FROM ActivitySignins asi
 JOIN Activities a
 on asi.ActivityID = a.ID
-WHERE asi.dwccardnum = @dwccardnum",
+WHERE asi.dwccardnum = @dwccardnum
+",
 				inputsJson = "{\"beginDate\":false,\"endDate\":false,\"memberNumber\":true}"
 			},
 			// Worker details -- jobs summary

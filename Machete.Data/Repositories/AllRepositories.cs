@@ -30,7 +30,6 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text;
-using Machete.Data.Helpers;
 
 namespace Machete.Data
 {
@@ -167,7 +166,7 @@ namespace Machete.Data
         public IEnumerable<WorkOrder> GetActiveOrders(DateTime date, TimeZoneInfo clientTimeZoneInfo)
         {
             return dbset.Where(wo => wo.statusID == WorkOrder.iActive
-                                           && wo.dateTimeofWork.DateBasedOn(clientTimeZoneInfo) == date.Date)
+                                           && TimeZoneInfo.ConvertTimeFromUtc(wo.dateTimeofWork, clientTimeZoneInfo).Date == TimeZoneInfo.ConvertTimeFromUtc(date, clientTimeZoneInfo).Date)
                 .Include(a => a.Employer)
                 .Include(a => a.workerRequestsDDD)
                 .ThenInclude(a => a.workerRequested)
