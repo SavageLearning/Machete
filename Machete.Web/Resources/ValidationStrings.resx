@@ -175,7 +175,7 @@
     <value>New Password</value>
   </data>
   <data name="NameHasSpace" xml:space="preserve">
-    <value>Last name and first name must not contain spaces. To enter a name with multiple words, use hyphens " - "</value>
+    <value>Last name and first name must not contain spaces. To enter a name with multiple words, use hyphens "-"</value>
   </data>
   <data name="Register" xml:space="preserve">
     <value>Register</value>
