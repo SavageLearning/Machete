@@ -7,6 +7,7 @@ using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using Machete.Data;
 using Machete.Data.Tenancy;
+using Machete.Service;
 using Machete.Web.Maps;
 using Machete.Web.Maps.Api;
 using Microsoft.AspNetCore.Builder;
@@ -246,6 +247,13 @@ namespace Machete.Web
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Content")),
                 RequestPath = "/Content"
             });
+            // populate static variables
+            using (var serviceScope = app.ApplicationServices.CreateScope())
+            {
+                var services = serviceScope.ServiceProvider;
+                var svc = services.GetService<ILookupService>();
+                svc.populateStaticIds();
+            }
         }
     }
 }
