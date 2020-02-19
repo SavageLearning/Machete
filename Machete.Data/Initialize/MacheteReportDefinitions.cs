@@ -1340,6 +1340,27 @@ join lookups l on (ev.eventType = l.id)
 WHERE     (w.dwccardnum = @dwccardnum)",
 				inputsJson = "{\"beginDate\":false,\"endDate\":false,\"memberNumber\":true}"
 			},
+			// Worker Details -- activities
+			new ReportDefinition
+			{
+				name = "WorkerDetailsActivities",
+				commonName = "Worker Details, Activities attended",
+				description =
+					" A list of activities that a given worker attended",
+				category = "WorkerDetail",
+				sqlquery = 
+					@"SELECT 
+a.nameEN as [Activity Name], 
+a.typeEN as [Activity Type],
+a.teacher as [Teacher],
+CONVERT(varchar, a.dateStart, 22) as [Start Time]
+FROM ActivitySignins asi
+JOIN Activities a
+on asi.ActivityID = a.ID
+WHERE asi.dwccardnum = @dwccardnum
+",
+				inputsJson = "{\"beginDate\":false,\"endDate\":false,\"memberNumber\":true}"
+			},
 			// Worker details -- jobs summary
 			new ReportDefinition
 			{

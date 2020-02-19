@@ -156,6 +156,9 @@
   <data name="PasswordNew" xml:space="preserve">
     <value>Contraseña nueva</value>
   </data>
+  <data name="NameHasSpace" xml:space="preserve">
+    <value>Nombre y apellido no pueden contener espacios. Por favor, usar un guión "-" para unir dos palabras</value>
+  </data>
   <data name="Register" xml:space="preserve">
     <value>Crear una cuenta</value>
   </data>
@@ -218,6 +221,9 @@
   </data>
   <data name="emailValidation" xml:space="preserve">
     <value>The email format is invalid</value>
+  </data>
+  <data name="dupeEmail" xml:space="preserve">
+    <value>Intente denuevo con otro email</value>
   </data>
   <data name="invalidLogin" xml:space="preserve">
     <value>Invalid username or password.</value>

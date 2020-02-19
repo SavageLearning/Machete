@@ -149,6 +149,15 @@ namespace Machete.Web.Resources {
                 return ResourceManager.GetString("emailValidation", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string to duplicate email error on Create.
+        /// </summary>
+        public static string dupeEmail {
+            get {
+                return ResourceManager.GetString("dupeEmail", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to First Name.
@@ -309,6 +318,15 @@ namespace Machete.Web.Resources {
         public static string Register {
             get {
                 return ResourceManager.GetString("Register", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to NameHasSpace.
+        /// </summary>
+        public static string NameHasSpace {
+            get {
+                return ResourceManager.GetString("NameHasSpace", resourceCulture);
             }
         }
         
