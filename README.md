@@ -5,8 +5,6 @@
 [![Join the chat at https://gitter.im/machete-project/Lobby](https://badges.gitter.im/machete-project/Lobby.svg)](https://gitter.im/machete-project/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.en.html)
 
-
-
 Machete is a web application that manages a day labor referral service. Machete tracks work orders for employers looking
 for short term, casual labor. It also provides a means for matching laborers with specific skills to requests made by 
 employers for skilled labor.
@@ -26,6 +24,7 @@ This README is mostly for software developers. If you would like to know more ab
 please contact chaim@ndlon.org.
 
 `☮️ 💟 🍁`
+
 
 ## How to get started
 <hr>
@@ -53,6 +52,7 @@ Great, now you should be good to go!
 
 `☕️ 💻 🐈`
 
+
 ## Setup scripts
 <hr>
 
@@ -63,8 +63,13 @@ inquiries should be directed to the [email](chaim@ndlon.org) above.
 Aptly named, this file will dispose of whatever database container you have running (as long as you have the environment
 variable for it set, which the script does), and create an entirely new database container.
 
-`./make_env_file.sh`  
-This file will create an environment file that you can source to set certain variables. Only needed for OAuth development.
+`./make_env_secrets_file.sh`  
+This file will create an environment file that you can source to set certain variables. Needed for OAuth development. If Machete is run in production 
+mode, this file must be sourced (e.g., inside the container) so that `dotnet` can read the secrets from the environment.
+
+`./make_json_secrets_file.sh`  
+This will take the file produced by the above script and turn it into a JSON file that can be piped to `dotnet user-secrets set --project=Machete.Web`. 
+Eventually we should be doing this for production as well, but the pipeline depends on the `bash` variables.
 
 `./completely-clean-build-and-run.sh`
 This file will:
@@ -74,9 +79,13 @@ This file will:
 4. Clean up any existing build(s).
 5. Initialize the submodule, if it isn't initialized.
 6. Start the Angular webpack server as a background process.
-7. Build and run Machete.
+7. Build and run Machete in production mode.
+
+Clearly, this is not a full development kit. We recommend using JetBrains Rider for debugging .NET applications on *nix. If you need user secrets in
+Rider, you can use the ones that are stored in the `dotnet user-secrets` store, as mentioned above.
 
 `🎺 💃 🇲🇽`
+
 
 ## How to connect to the database
 <hr>

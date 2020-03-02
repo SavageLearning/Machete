@@ -1,7 +1,15 @@
+#!/bin/bash
+
 # https://github.com/Microsoft/msbuild/issues/3362
+
+trap 'kill $(jobs -p)' EXIT
+
+echo "This script runs Machete in production mode, and should not be run simultaneously with a development build."
+sleep 2
+
 export MSBUILDDISABLENODEREUSE=1
 
-if [ ! -f machete1env.list ]; then ./make_env_file.sh ; fi
+if [ ! -f machete1env.json ]; then ./make_env_file.sh ; fi
 
 for var in $(cat machete1env.list); do
   export $var
@@ -17,4 +25,4 @@ npm run start-local-dev &
 cd ..
 
 dotnet build
-dotnet run --project Machete.Web --configuration=Debug
+dotnet run --project Machete.Web --configuration=Release
