@@ -362,12 +362,13 @@ namespace Machete.Web.Controllers
             {
                 var user = _context.Users.First(u => u.Id == model.Id);
                 var macheteUserName = model.FirstName.Trim() + "." + model.LastName.Trim();
-                var dupeUser = await _userManager.FindByEmailAsync(model.Email);
                 user.UserName = macheteUserName;
                 user.LoweredUserName = macheteUserName.ToLower();
-                if (dupeUser != null  && dupeUser.Email == model.Email) 
+                //Check for duplicate emails, if any, show error message
+                var dupeUserCount = _context.Users.Count(u => u.Email == model.Email && u.Id != model.Id);
+                if (dupeUserCount > 0) 
                 {
-                    ModelState.AddModelError("ErrorMessage", ValidationStrings.dupeEmail);
+                    ModelState.AddModelError("", ValidationStrings.dupeEmail);
                     return View(model);
                 }   
                 user.Email = model.Email.Trim();
