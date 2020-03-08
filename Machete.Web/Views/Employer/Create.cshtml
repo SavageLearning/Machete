@@ -130,6 +130,7 @@
             $.ajax({
                 url: "/Employer/GetDuplicates",
                 data: {
+                    email: $('#employer0-email')[0].value,
                     name: $('#employer0-name')[0].value,
                     address: $('#employer0-address1')[0].value,
                     phone: $('#employer0-phone')[0].value,
@@ -161,6 +162,7 @@
             '<th>@Employer.name</th>' +
             '<th>@Employer.address1</th>' +
             '<th>@Employer.phone</th>' +
+            '<th>@Employer.email</th>' +
             '<th>@Employer.city</th>' +
             '<th>@Employer.zipcode</th>' +
             '</tr>';
@@ -174,6 +176,9 @@
                 '</td>' +
                 '<td>' +
                 duplicates[i]["Phone"] +
+                '</td>' +
+                '<td>' +
+                duplicates[i]["Email"] +
                 '</td>' +
                 '<td>' +
                 duplicates[i]["City"] +

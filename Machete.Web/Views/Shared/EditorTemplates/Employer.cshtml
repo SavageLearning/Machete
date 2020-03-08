@@ -183,7 +183,7 @@
         </div>
         @* @Html.mUIDropDownYesNoFor(model => model.onlineSource, Model.def.yesnoSelectList(), new { tabindex = "20", id = idPrefix + "onlineSource" }) *@
         <div class="tb-field">
-            @Html.DropDownListFor(model => model.onlineSource, new SelectList(Model.def.yesnoSelectList(), "Value", "Text", Model), Shared.choose, new { tabindex = "20", id = idPrefix + "onlineSource" })
+            @Html.DropDownListFor(model => model.onlineSource, new SelectList(Model.def.yesnoSelectList(), "Value", "Text", Model), Shared.choose, new { tabindex = "20", id = idPrefix + "onlineSource",  @disabled = "disabled" })
             @Html.ValidationMessageFor(model => model.onlineSource)
         </div>
         <div class="tb-label">

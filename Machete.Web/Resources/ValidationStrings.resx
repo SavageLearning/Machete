@@ -241,7 +241,7 @@
     <value>Invalid username or password.</value>
   </data>
   <data name="passwordLengthMin" xml:space="preserve">
-    <value>The Password must be at least 6 characters long.</value>
+    <value>The Password must be at least 8 characters long.</value>
   </data>
   <data name="stringLengthMax" xml:space="preserve">
     <value>The {0} must be no more than {1} characters.</value>
