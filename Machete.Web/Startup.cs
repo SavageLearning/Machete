@@ -248,12 +248,12 @@ namespace Machete.Web
                 RequestPath = "/Content"
             });
             // populate static variables
-            using (var serviceScope = app.ApplicationServices.CreateScope())
-            {
-                var services = serviceScope.ServiceProvider;
-                var svc = services.GetService<ILookupService>();
-                svc.populateStaticIds();
-            }
+            //using (var serviceScope = app.ApplicationServices.CreateScope())
+            //{
+            //    var services = serviceScope.ServiceProvider;
+            //    var svc = services.GetService<ILookupService>();
+            //    svc.populateStaticIds();
+            //}
         }
     }
 }
