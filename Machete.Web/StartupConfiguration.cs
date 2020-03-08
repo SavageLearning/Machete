@@ -53,6 +53,10 @@ namespace Machete.Web
 
                 foreach (var tenant in tenants)
                 {
+                    // populate static variables
+                    var lookupService = serviceScope.ServiceProvider.GetService<ILookupService>();
+                    lookupService.populateStaticIds();
+
                     var factory = serviceScope.ServiceProvider.GetService<IDatabaseFactory>();
                     var macheteContext = factory.Get(tenant);
                     var readonlyBuilder = new SqlConnectionStringBuilder(tenant.ReadOnlyConnectionString);
