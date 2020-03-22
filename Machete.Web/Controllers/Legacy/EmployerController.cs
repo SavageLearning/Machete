@@ -141,7 +141,6 @@ namespace Machete.Web.Controllers
         {
             var e = _serv.Get(id);
             var m = _map.Map<Employer, ViewModel.Employer>(e);
-            ViewBag.onlineSource = e.onlineSource;
             m.def = _defaults;
             return await Task.Run(() => PartialView("Edit", m));
         }
