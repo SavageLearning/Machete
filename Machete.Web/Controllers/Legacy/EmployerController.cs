@@ -158,7 +158,6 @@ namespace Machete.Web.Controllers
             ModelState.ThrowIfInvalid();
 
             var employer = _serv.Get(id);
-            var employerOriginalEmail = employer.email;
             var modelIsValid = await _adaptor.TryUpdateModelAsync(this, employer);
             if (modelIsValid) {
                 _serv.Save(employer, userName);
