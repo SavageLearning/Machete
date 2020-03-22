@@ -214,9 +214,7 @@ namespace Machete.Web.Controllers
             if (!ModelState.IsValid) return View(model);
             var newUserName = model.FirstName.Trim() + "." + model.LastName.Trim();
             //Check for duplicate emails, if any, show error message
-            var allUsers = await _context.Users.ToListAsync();
-            var dupeUsers = allUsers.Where(u => u.Email == model.Email.Trim());
-            if (dupeUsers.Count() > 0) 
+            if (await _userManager.FindByEmailAsync(model.Email.Trim()) != null)
             {
                 ModelState.AddModelError("", ValidationStrings.dupeEmail);
                 return View(model);
@@ -366,16 +364,13 @@ namespace Machete.Web.Controllers
                 var macheteUserName = model.FirstName.Trim() + "." + model.LastName.Trim();
                 user.UserName = macheteUserName;
                 user.LoweredUserName = macheteUserName.ToLower();
+                user.Email = model.Email.Trim();
                 //Check for duplicate emails, if any, show error message
-                var allUsers = await _context.Users.ToListAsync();
-                var matchedOnEmails = allUsers.Where(u => u.Email == model.Email.Trim());
-                var dupeUsers = matchedOnEmails.Where(u => u.Id != model.Id);
-                if (dupeUsers.Any()) 
+                if (_context.Users.Any(u => u.Email == user.Email && u.Id != user.Id)) 
                 {
                     ModelState.AddModelError("", ValidationStrings.dupeEmail);
                     return View(model);
                 }   
-                user.Email = model.Email.Trim();
                 user.LoweredEmail = model.Email.Trim().ToLower();
                 user.IsApproved = model.IsApproved;
                 user.IsLockedOut = model.IsLockedOut;
@@ -412,11 +407,7 @@ namespace Machete.Web.Controllers
             var remove = await _userManager.RemovePasswordAsync(user);
             if (!remove.Succeeded)
             {
-                errors.Add("Something went wrong with your request. Contact an administrator for assistance."); 
-                foreach (var error in remove.Errors)
-                {
-                    errors.Add(error.Description);
-                }
+                errors.Add("Something went wrong with your request. Contact an administrator for assistance.");
             }
             var result = await _userManager.AddPasswordAsync(user, attemptedValue);
             if (!result.Succeeded)

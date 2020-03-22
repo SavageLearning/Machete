@@ -141,6 +141,7 @@ namespace Machete.Web.Controllers
         {
             var e = _serv.Get(id);
             var m = _map.Map<Employer, ViewModel.Employer>(e);
+            ViewBag.onlineSource = e.onlineSource;
             m.def = _defaults;
             return await Task.Run(() => PartialView("Edit", m));
         }
@@ -161,8 +162,6 @@ namespace Machete.Web.Controllers
             var employerOriginalEmail = employer.email;
             var modelIsValid = await _adaptor.TryUpdateModelAsync(this, employer);
             if (modelIsValid) {
-                //TODO provide feedback: Cannot change email for employers created online
-                if (employer.onlineSource) employer.email = employerOriginalEmail;
                 _serv.Save(employer, userName);
                 return Json(new { jobSuccess = true });
             } else {

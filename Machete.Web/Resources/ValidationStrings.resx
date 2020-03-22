@@ -235,7 +235,7 @@
     <value>The email format is invalid</value>
   </data>
   <data name="dupeEmail" xml:space="preserve">
-    <value>Please try a different email</value>
+    <value>Email address already in use. Please try a different email.</value>
   </data>
   <data name="invalidLogin" xml:space="preserve">
     <value>Invalid username or password.</value>
