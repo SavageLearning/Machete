@@ -158,7 +158,6 @@ namespace Machete.Web.Controllers
             ModelState.ThrowIfInvalid();
 
             var employer = _serv.Get(id);
-
             var modelIsValid = await _adaptor.TryUpdateModelAsync(this, employer);
             if (modelIsValid) {
                 _serv.Save(employer, userName);
@@ -190,8 +189,9 @@ namespace Machete.Web.Controllers
         }
 
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public JsonResult GetDuplicates(string name, string address, string phone, string city, string zipcode)
+        public JsonResult GetDuplicates(string email, string name, string address, string phone, string city, string zipcode)
         {
+            var email1 = email;
             var name1 = name;
             var address1 = address;
             var phone1 = phone;
@@ -201,6 +201,7 @@ namespace Machete.Web.Controllers
             var list = _serv.GetAll();
             var employersFound = new List<Dictionary<string, string>>();
             
+            email1 = string.IsNullOrEmpty(email1) ? "nonMatchingValue" : email1;
             name1 = name1.Replace(" ", "");
             address1 = address1.Replace(" ", "");
             phone1 = string.IsNullOrEmpty(phone1) ? "nonMatchingValue" : phone1;
@@ -209,6 +210,7 @@ namespace Machete.Web.Controllers
 
             foreach (var employer in list)
             {
+                var employerEmail = string.IsNullOrEmpty(employer.email) ? string.Empty : employer.email;
                 var employerName = employer.name.Replace(" ", "");
                 var employerAddress = employer.address1.Replace(" ", "");
                 var employerPhone = string.IsNullOrEmpty(employer.phone) ? string.Empty : employer.phone;
@@ -217,6 +219,7 @@ namespace Machete.Web.Controllers
 
                 //checking if person already exists in database
                 var matchCount = 0;
+                if (employerEmail.Equals(email1, StringComparison.CurrentCultureIgnoreCase)) matchCount++;
                 if (employerName.Equals(name1, StringComparison.CurrentCultureIgnoreCase)) matchCount++;
                 if (employerAddress.Equals(address1, StringComparison.CurrentCultureIgnoreCase)) matchCount++;
                 if (employerPhone.Equals(phone1, StringComparison.CurrentCultureIgnoreCase)) matchCount++;
@@ -224,8 +227,9 @@ namespace Machete.Web.Controllers
                 if (employerCity.Equals(city1, StringComparison.CurrentCultureIgnoreCase)) matchCount++;
 
 
-                if (matchCount < 3) continue;
+                if (matchCount < 2) continue;
                 var employerFound = new Dictionary<string, string> {
+                    {"Email", employer.email},
                     { "Name", employer.name },
                     { "Address", employer.address1 },
                     { "Phone", employer.phone },

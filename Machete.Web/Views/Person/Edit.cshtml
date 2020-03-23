@@ -56,7 +56,7 @@
         }
     </div>
     @await Html.PartialAsync("EventIndex", Model)
-    @if (Html.IsInRole("Teacher") && Model.Worker != null)
+    @if (Html.IsInRole("Teacher", "Administrator", "Manager") && Model.Worker != null)
     {
         @await Html.PartialAsync("ActivityJoinIndex", Model)
     }

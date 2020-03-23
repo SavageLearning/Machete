@@ -78,7 +78,14 @@
             @Html.LabelFor(model => model.email)
         </div>
         <div class="tb-field">
-            @Html.TextBoxFor(model => model.email, new { tabindex = "8", id = idPrefix + "email" })
+            @if (Model.onlineSource == "False")
+            {
+                @Html.TextBoxFor(model => model.email, new { tabindex = "8", id = idPrefix + "email" })
+            }
+            @if (Model.onlineSource == "True")
+            {
+                @Html.TextBoxFor(model => model.email, new { tabindex = "8", id = idPrefix + "email", @disabled = "disabled", @title="This Employer's Email is Managed by Machete Online Hiring Portal"})
+            }
             @Html.ValidationMessageFor(model => model.email)
         </div>
         <div class="tb-label">

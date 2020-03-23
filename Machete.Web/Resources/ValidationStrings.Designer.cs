@@ -295,7 +295,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Password must be at least 6 characters long..
+        ///   Looks up a localized string similar to The Password must be at least 8 characters long..
         /// </summary>
         public static string passwordLengthMin {
             get {
