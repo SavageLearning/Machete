@@ -124,8 +124,8 @@ namespace Machete.Service
 
     public class LookupServiceHelper
     {
-        public static MacheteContext context;
-        public static ILookupRepository lrepo;
+        public MacheteContext context;
+        public ILookupRepository lrepo;
 
         public void populateStaticIds()
         {

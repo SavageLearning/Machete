@@ -227,7 +227,7 @@ namespace Machete.Web.Controllers
                 if (employerCity.Equals(city1, StringComparison.CurrentCultureIgnoreCase)) matchCount++;
 
 
-                if (matchCount < 2) continue;
+                if (matchCount < 3) continue;
                 var employerFound = new Dictionary<string, string> {
                     {"Email", employer.email},
                     { "Name", employer.name },
