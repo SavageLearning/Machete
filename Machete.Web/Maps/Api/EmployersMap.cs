@@ -19,6 +19,8 @@ namespace Machete.Web.Maps.Api
                 .ForMember(v => v.licenseplate, opt => opt.Ignore())
                 .ForMember(v => v.driverslicense, opt => opt.Ignore())
                 .ForMember(v => v.isOnlineProfileComplete, opt => opt.Ignore())
+                .ForMember(v => v.email, opt => opt.Ignore())
+                .ForMember(v => v.onlineSource, opt => opt.MapFrom(d => d.onlineSource))
                 ;
         }
 

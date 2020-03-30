@@ -61,6 +61,11 @@ namespace Machete.Web
                     MacheteConfiguration.Seed(macheteContext);
                     StartupConfiguration.AddDBReadOnlyUser(macheteContext, readonlyBuilder.Password);
                     await MacheteConfiguration.SeedAsync(macheteContext);
+
+                    // populate static variables
+                    var lookupServiceHelper = new LookupServiceHelper();
+                    lookupServiceHelper.setContext(macheteContext);
+                    lookupServiceHelper.populateStaticIds();
                 }
             }
 

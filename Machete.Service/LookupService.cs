@@ -37,7 +37,6 @@ namespace Machete.Service
         IEnumerable<DTO.LookupList> GetIndexView(viewOptions o);
         Lookup GetByKey(string category, string key);
         string textByID(int ID, string locale);
-        void populateStaticIds();
     }
 
     // Business logic for Lookup record management
@@ -46,6 +45,8 @@ namespace Machete.Service
     {
         private readonly ILookupRepository lrepo;
         private readonly IMapper map;
+        private LookupServiceHelper helper;
+
         public LookupService(ILookupRepository lRepo,
                              IMapper map,
                              IUnitOfWork unitOfWork)
@@ -54,7 +55,9 @@ namespace Machete.Service
             this.lrepo = lRepo;
             this.map = map;
             this.logPrefix = "Lookup";
-            populateStaticIds();
+            this.helper = new LookupServiceHelper();
+            helper.setRepo(lRepo);
+            helper.populateStaticIds();
         }
 
         public IEnumerable<DTO.LookupList> GetIndexView(viewOptions o)
@@ -94,6 +97,36 @@ namespace Machete.Service
             base.Save(record, user);
         }
 
+        // copied from lookupcache because lookupcache will eventually die
+        public Lookup GetByKey(string category, string key) =>        
+            helper.GetByKey(category, key);        
+
+        public string textByID(int ID, string locale)
+        {
+            Lookup record;
+            if (ID == 0) return null;
+            try
+            {
+                record = lrepo.GetById(ID);
+            }
+            catch
+            {
+                throw new MacheteIntegrityException("Unable to find Lookup record " + ID);
+            }
+            if (locale == "es" || locale == "ES")
+            {
+                return record.text_ES;
+            }
+            //defaults to English
+            return record.text_EN;
+        }
+    }
+
+    public class LookupServiceHelper
+    {
+        public MacheteContext context;
+        public ILookupRepository lrepo;
+
         public void populateStaticIds()
         {
             #region WORKERS
@@ -120,12 +153,13 @@ namespace Machete.Service
             #endregion
         }
 
-        // copied from lookupcache because lookupcache will eventually die
         public Lookup GetByKey(string category, string key)
         {
             try
             {
-                return lrepo.GetByKey(category, key);
+                var lookup = lrepo?.GetByKey(category, key) ?? context?.Lookups.SingleOrDefault(row => row.category.Equals(category) && row.key.Equals(key));
+                if (lookup == null) throw new Exception("Result was null; please check the database.");
+                return lookup;
             }
             catch(Exception e)
             {
@@ -133,24 +167,14 @@ namespace Machete.Service
             }
         }
 
-        public string textByID(int ID, string locale)
+        public void setRepo(ILookupRepository lRepo)
         {
-            Lookup record;
-            if (ID == 0) return null;
-            try
-            {
-                record = lrepo.GetById(ID);
-            }
-            catch
-            {
-                throw new MacheteIntegrityException("Unable to find Lookup record " + ID);
-            }
-            if (locale == "es" || locale == "ES")
-            {
-                return record.text_ES;
-            }
-            //defaults to English
-            return record.text_EN;
+            lrepo = lRepo;
+        }
+
+        public void setContext(MacheteContext macheteContext)
+        {
+            context = macheteContext;
         }
     }
 }

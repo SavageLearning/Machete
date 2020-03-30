@@ -247,13 +247,6 @@ namespace Machete.Web
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Content")),
                 RequestPath = "/Content"
             });
-            // populate static variables
-            using (var serviceScope = app.ApplicationServices.CreateScope())
-            {
-                var services = serviceScope.ServiceProvider;
-                var svc = services.GetService<ILookupService>();
-                svc.populateStaticIds();
-            }
         }
     }
 }

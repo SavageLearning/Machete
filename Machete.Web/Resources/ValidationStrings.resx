@@ -235,13 +235,13 @@
     <value>The email format is invalid</value>
   </data>
   <data name="dupeEmail" xml:space="preserve">
-    <value>Please try a different email</value>
+    <value>Email address already in use. Please try a different email.</value>
   </data>
   <data name="invalidLogin" xml:space="preserve">
     <value>Invalid username or password.</value>
   </data>
   <data name="passwordLengthMin" xml:space="preserve">
-    <value>The Password must be at least 6 characters long.</value>
+    <value>The Password must be at least 8 characters long.</value>
   </data>
   <data name="stringLengthMax" xml:space="preserve">
     <value>The {0} must be no more than {1} characters.</value>
