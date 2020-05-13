@@ -50,6 +50,7 @@ namespace Machete.Service
         {
             record.createdByUser(user);
             T created = dbset.Add(record).Entity;
+            db.SaveChanges();
             log(record.ID, user, logPrefix + " created");
             return created;
         }
@@ -62,6 +63,7 @@ namespace Machete.Service
         {
             T record = dbset.Find(id);
             dbset.Remove(record);
+            db.SaveChanges();
             log(id, user, logPrefix + " deleted");
         }
         /// <summary>
@@ -73,6 +75,7 @@ namespace Machete.Service
         {
             record.updatedByUser(user);
             dbset.Update(record);
+            db.SaveChanges();
             log(record.ID, user, logPrefix + " edited");
         }
         /// <summary>

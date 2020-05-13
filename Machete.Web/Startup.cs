@@ -7,6 +7,7 @@ using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using Machete.Data;
 using Machete.Data.Tenancy;
+using Machete.Service;
 using Machete.Web.Maps;
 using Machete.Web.Maps.Api;
 using Microsoft.AspNetCore.Builder;

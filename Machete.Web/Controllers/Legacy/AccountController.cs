@@ -224,7 +224,9 @@ namespace Machete.Web.Controllers
 
             foreach (var error in result.Errors)
             {
-                ModelState.AddModelError(error.Code, error.Description);
+                ModelState.AddModelError("", error.Description);
+                if (error.Description.Contains("is invalid, can only contain letters or digits") && newUserName.Contains(" "))
+                    ModelState.AddModelError("", ValidationStrings.NameHasSpace);
             }
 
             // If we got this far, something failed, redisplay form
@@ -357,6 +359,14 @@ namespace Machete.Web.Controllers
                 user.UserName = macheteUserName;
                 user.LoweredUserName = macheteUserName.ToLower();
                 user.Email = model.Email.Trim();
+                //Check for duplicate emails, if any, show error message
+                var users = _context.Users.Select(u => new {u.Id, u.Email}).ToList();
+                var dupeUsers = users.Where(u => u.Email == user.Email);
+                if (dupeUsers.Any(u => u.Id != model.Id))
+                {
+                    ModelState.AddModelError("", ValidationStrings.dupeEmail);
+                    return View(model);
+                }   
                 user.LoweredEmail = model.Email.Trim().ToLower();
                 user.IsApproved = model.IsApproved;
                 user.IsLockedOut = model.IsLockedOut;
@@ -393,10 +403,17 @@ namespace Machete.Web.Controllers
             var remove = await _userManager.RemovePasswordAsync(user);
             if (!remove.Succeeded)
                 errors.Add("Something went wrong with your request. Contact an administrator for assistance.");
-
             var result = await _userManager.AddPasswordAsync(user, attemptedValue);
             if (!result.Succeeded)
+            {
                 errors.Add("Something went wrong with your request. Contact an administrator for assistance.");
+                foreach (var error in result.Errors)
+                {
+                    errors.Add(error.Description);
+                    if (error.Description.Contains("is invalid, can only contain letters or digits") && user.UserName.Contains(" "))
+                        ModelState.AddModelError("", ValidationStrings.NameHasSpace);
+                }
+            }
 
             if (errors.Any()) return errors;
             

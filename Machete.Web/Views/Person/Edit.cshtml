@@ -21,7 +21,7 @@
             <li><a href="#eventList" id="eventListTab" class="ListTab">@Events.eventtab</a> </li>
             <li><a href="/Event/Create?PersonID=@(Model.ID)" id="eventCreateTab" class="CreateTab">@Events.createlink</a></li>
         }
-        @if (Html.IsInRole("Teacher") && Model.Worker != null)
+        @if (Html.IsInRole("Administrator", "Manager", "Teacher") && Model.Worker != null)
         {
             <li><a href="#actJoinList" id="actJoinTab" class="ListTab">@Activities.actJoinTab</a></li>
             <li><a hidden href="/Worker/Edit/@(Model.ID)" id="workerEditTab">@Machete.Web.Resources.Persons.workerinfo</a></li>
@@ -56,7 +56,7 @@
         }
     </div>
     @await Html.PartialAsync("EventIndex", Model)
-    @if (Html.IsInRole("Teacher") && Model.Worker != null)
+    @if (Html.IsInRole("Teacher", "Administrator", "Manager") && Model.Worker != null)
     {
         @await Html.PartialAsync("ActivityJoinIndex", Model)
     }

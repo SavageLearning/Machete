@@ -116,6 +116,30 @@ namespace Machete.Test.Integration.Services
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Activities)]
+        public void DeleteActivity()
+        {
+            IEnumerable<int> classlist = frb.ToFactory().Lookups.Where(l => l.category == "activityName").Select(q => q.ID).ToList();
+            Activity a = new Activity();
+            //random date, within last 30 days
+            Random rand = new Random();
+            DateTime today = DateTime.Now;
+            a.dateStart = today;
+            a.dateEnd = a.dateStart.AddHours(1.5);
+            a.nameID = classlist.ElementAt(rand.Next(classlist.Count()));
+            a.typeID = 101; //type==class
+            a.teacher = "UnitTest script";
+            a.notes = "From Integration_Activity_Service";
+            frb.ToServ<IActivityService>().Create(a, "TestScript");
+            
+            Assert.IsTrue(1 == frb.ToServ<IActivityService>().GetMany(aa => aa.ID == a.ID).Count());
+
+            frb.ToServ<IActivityService>().Delete(a.ID, "TestScript");
+            Assert.IsTrue(0 == frb.ToServ<IActivityService>().GetMany(aa => aa.ID == a.ID).Count());
+
+        }
+
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Activities)]
         public void GetIndexView_authenticated()
         {
             //

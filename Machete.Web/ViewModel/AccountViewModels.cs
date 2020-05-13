@@ -42,7 +42,7 @@ namespace Machete.Web.ViewModel
 
         [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         [StringLength(100, ErrorMessageResourceName = "stringLengthMax", ErrorMessageResourceType = typeof(ValidationStrings))] // 100 char max
-        [RegularExpression(@"^.{6,}$", ErrorMessageResourceName = "passwordLengthMin", ErrorMessageResourceType = typeof(ValidationStrings))] // 6 char min
+        [RegularExpression(@"^.{8,}$", ErrorMessageResourceName = "passwordLengthMin", ErrorMessageResourceType = typeof(ValidationStrings))] // 8 char min
         [DataType(DataType.Password)]
         [LocalizedDisplayName("PasswordNew", NameResourceType = typeof(ValidationStrings))]
         public string NewPassword { get; set; }

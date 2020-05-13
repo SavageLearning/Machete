@@ -91,8 +91,6 @@ namespace Machete.Test.Integration.Fluent
             var serviceScope = webHost.Services.CreateScope();
             
             container = serviceScope.ServiceProvider;
-
-            ToServ<ILookupService>().populateStaticIds();
             
             ClientTimeZoneInfo = TimeZoneInfo
                 .FindSystemTimeZoneById(serviceScope.ServiceProvider.GetRequiredService<ITenantService>().GetCurrentTenant().Timezone);

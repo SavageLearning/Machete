@@ -149,6 +149,15 @@ namespace Machete.Web.Resources {
                 return ResourceManager.GetString("emailValidation", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string to duplicate email error on Create.
+        /// </summary>
+        public static string dupeEmail {
+            get {
+                return ResourceManager.GetString("dupeEmail", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to First Name.
@@ -286,7 +295,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Password must be at least 6 characters long..
+        ///   Looks up a localized string similar to The Password must be at least 8 characters long..
         /// </summary>
         public static string passwordLengthMin {
             get {
@@ -309,6 +318,15 @@ namespace Machete.Web.Resources {
         public static string Register {
             get {
                 return ResourceManager.GetString("Register", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to NameHasSpace.
+        /// </summary>
+        public static string NameHasSpace {
+            get {
+                return ResourceManager.GetString("NameHasSpace", resourceCulture);
             }
         }
         

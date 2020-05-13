@@ -172,6 +172,7 @@ namespace Machete.Web.Controllers.Api
             }
             employer.onlineSigninID = UserSubject;
             employer.email = UserEmail;
+            viewmodel.onlineSource = true;
             map.Map<EmployerViewModel, Domain.Employer>(viewmodel, employer);
 
             Domain.Employer result;

@@ -61,6 +61,11 @@ namespace Machete.Web
                     MacheteConfiguration.Seed(macheteContext);
                     StartupConfiguration.AddDBReadOnlyUser(macheteContext, readonlyBuilder.Password);
                     await MacheteConfiguration.SeedAsync(macheteContext);
+
+                    // populate static variables
+                    var lookupServiceHelper = new LookupServiceHelper();
+                    lookupServiceHelper.setContext(macheteContext);
+                    lookupServiceHelper.populateStaticIds();
                 }
             }
 
@@ -83,12 +88,12 @@ namespace Machete.Web
             services.Configure<IdentityOptions>(options =>
             {
                 // Password settings; we are relying on validation
-                options.Password.RequireDigit = false;
-                options.Password.RequiredLength = 6;
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 8;
                 options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = false;
+                options.Password.RequireUppercase = true;
                 options.Password.RequireLowercase = false;
-                options.Password.RequiredUniqueChars = 0;
+                options.Password.RequiredUniqueChars = 6;
 
                 // Lockout settings
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
