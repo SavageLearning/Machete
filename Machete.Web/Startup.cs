@@ -271,7 +271,7 @@ namespace Machete.Web
             {
                 var services = serviceScope.ServiceProvider;
                 var svc = services.GetService<ILookupService>();
-                svc.populateStaticIds();
+                //svc.populateStaticIds();
             }
         }
     }
