@@ -28,6 +28,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Machete.Data;
 using Machete.Data.Tenancy;
 using Machete.Domain;
 using Machete.Service;
@@ -120,18 +121,18 @@ namespace Machete.Web.Controllers
             //return what's left to datatables
             var result = from p in dtr.query
                          select new[] {
-                             $"{p.date ?? TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _clientTimeZoneInfo):MM/dd/yyyy}",
+                             p.date,
                              p.weekday,
-                             p.pending_wo > 0 ? p.pending_wo.ToString(): null,
-                             p.pending_wa > 0 ? p.pending_wa.ToString(): null,
-                             p.active_wo > 0 ? p.active_wo.ToString(): null,
-                             p.active_wa > 0 ? p.active_wa.ToString(): null,
-                             p.completed_wo > 0 ? p.completed_wo.ToString(): null,
-                             p.completed_wa > 0 ? p.completed_wa.ToString(): null,
-                             p.cancelled_wo > 0 ? p.cancelled_wo.ToString(): null,
-                             p.cancelled_wa > 0 ? p.cancelled_wa.ToString(): null,
-                             p.expired_wo > 0 ? p.expired_wo.ToString(): null,
-                             p.expired_wa > 0 ? p.expired_wa.ToString(): null
+                             p.PendingWO > 0 ? p.PendingWO.ToString(): null,
+                             p.PendingWA > 0 ? p.PendingWA.ToString(): null,
+                             p.ActiveWO > 0 ? p.ActiveWO.ToString(): null,
+                             p.ActiveWA > 0 ? p.ActiveWA.ToString(): null,
+                             p.CompletedWO > 0 ? p.CompletedWO.ToString(): null,
+                             p.CompletedWA > 0 ? p.CompletedWA.ToString(): null,
+                             p.CancelledWO > 0 ? p.CancelledWO.ToString(): null,
+                             p.CancelledWA > 0 ? p.CancelledWA.ToString(): null,
+                             p.ExpiredWO > 0 ? p.ExpiredWO.ToString(): null,
+                             p.ExpiredWA > 0 ? p.ExpiredWA.ToString(): null
                          }.ToList();
 
             return Json(new
