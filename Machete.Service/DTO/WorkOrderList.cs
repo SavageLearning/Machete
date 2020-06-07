@@ -30,8 +30,8 @@ namespace Machete.Service.DTO
         public int WAcount { get; set; }
         public int emailSentCount { get; set; }
         public int emailErrorCount { get; set; }
-        public int WAUnassignedCount { get; set; }
-        public int WAOrphanedCount { get; set; }
+        // public int WAUnassignedCount { get; set; }
+        // public int WAOrphanedCount { get; set; }
         public IEnumerable<WorkerAssignedList> workers { get; set; }
     }
 
