@@ -50,7 +50,7 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.dateupdated, opt => opt.MapFrom(d => d.dateupdated.UtcToClientString()))
                 .ForMember(v => v.status, opt => opt.MapFrom(d => getCI() == "ES" ? d.statusES : d.statusEN))
                 .ForMember(v => v.transportMethod, opt => opt.MapFrom(d => getCI() == "ES" ? d.transportMethodES : d.transportMethodEN))
-                .ForMember(v => v.displayState,      opt => opt.MapFrom(d => MapperHelpers.ComputeOrderStatus(d)))
+                .ForMember(v => v.displayState,      opt => opt.MapFrom(d => d.statusEN))
                 .ForMember(v => v.recordid, opt => opt.MapFrom(d => d.ID.ToString()))
                 ;
             CreateMap<WorkerAssignedList, ViewModel.WorkerAssignedList>()

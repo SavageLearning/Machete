@@ -9,8 +9,8 @@ namespace Machete.Service
         {
             CreateMap<Domain.WorkOrder, Service.DTO.WorkOrdersList>()
                 .ForMember(v => v.WAcount,              opt => opt.MapFrom(d => d.workAssignments.Count()))
-                .ForMember(v => v.WAUnassignedCount,    opt => opt.MapFrom(d => d.workAssignments.Count(wa => wa.workerAssignedID == null)))
-                .ForMember(v => v.WAOrphanedCount,      opt => opt.MapFrom(d => d.workAssignments.Count(wa => wa.workerAssignedID != null && wa.workerSigninID == null)))
+                // .ForMember(v => v.WAUnassignedCount,    opt => opt.MapFrom(d => d.workAssignments.Count(wa => wa.workerAssignedID == null)))
+                // .ForMember(v => v.WAOrphanedCount,      opt => opt.MapFrom(d => d.workAssignments.Count(wa => wa.workerAssignedID != null && wa.workerSigninID == null)))
                 .ForMember(v => v.emailSentCount,       opt => opt.MapFrom(d => d.Emails.Where(e => e.statusID == Domain.Email.iSent || e.statusID == Domain.Email.iReadyToSend).Count()))
                 .ForMember(v => v.emailErrorCount,      opt => opt.MapFrom(d => d.Emails.Where(e => e.statusID == Domain.Email.iTransmitError).Count()))
                 .ForMember(v => v.workers,              opt => opt.MapFrom(d => d.workAssignments.Where(wa => wa.workerAssignedDDD != null )))

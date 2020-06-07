@@ -61,6 +61,10 @@ namespace Machete.Data
     public interface IWorkOrderRepository : IRepository<WorkOrder>
     {
         IEnumerable<WorkOrder> GetActiveOrders(DateTime date, TimeZoneInfo clientTimeZoneInfo);
+        IEnumerable<WOWASummary> GetCombinedSummary(string search, 
+            bool orderDescending,
+            int displayStart,
+            int displayLength);
     }
     public interface IWorkerRequestRepository : IRepository<WorkerRequest> {
         WorkerRequest GetByID(int woid, int workerID);
@@ -166,11 +170,13 @@ namespace Machete.Data
         public IEnumerable<WorkOrder> GetActiveOrders(DateTime date, TimeZoneInfo clientTimeZoneInfo)
         {
             // date parameter comes in as Utc datetime, so convert before comparing
-            DateTime clientDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(date, DateTimeKind.Unspecified), clientTimeZoneInfo); 
-
-            return dbset.Where(wo => wo.statusID == WorkOrder.iActive
-                                           && TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(wo.dateTimeofWork, DateTimeKind.Unspecified), clientTimeZoneInfo).Date == clientDate.Date)
-                .Include(a => a.Employer)
+            var clientDateUTC = TimeZoneInfo.ConvertTimeToUtc(DateTime.SpecifyKind(date, DateTimeKind.Unspecified), clientTimeZoneInfo); 
+            var nextDateUTC = clientDateUTC.AddDays(1);
+            return dbset.Where(wo => 
+                wo.statusID == WorkOrder.iActive &&
+                wo.dateTimeofWork > clientDateUTC &&
+                wo.dateTimeofWork < nextDateUTC
+            ).Include(a => a.Employer)
                 .Include(a => a.workerRequestsDDD)
                 .ThenInclude(a => a.workerRequested)
                 .ThenInclude(a=>a.Person)
@@ -178,6 +184,14 @@ namespace Machete.Data
                 .ThenInclude(a => a.workerAssignedDDD)
                         .ThenInclude(a => a.Person)
                 .ToList();
+        }
+
+        public IEnumerable<WOWASummary> GetCombinedSummary(string search, 
+            bool orderDescending,
+            int displayStart,
+            int displayLength) {
+            return  dataContext.Query<WOWASummary>().ToList();
+
         }
     }
     /// <summary>
@@ -307,6 +321,26 @@ namespace Machete.Data
     {
         public TransportCostRuleRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
 
+    }
+
+        /// <summary>
+    /// Summary object of WO/WA status on a given date
+    /// </summary>
+
+    public class WOWASummary
+    {
+        public string date { get; set; }
+        public string weekday { get; set; }
+        public int? PendingWO { get; set; }
+        public int? PendingWA { get; set; }
+        public int? ActiveWO { get; set; }
+        public int? ActiveWA { get; set; }
+        public int? CompletedWO { get; set; }
+        public int? CompletedWA { get; set; }
+        public int? CancelledWO { get; set; }
+        public int? CancelledWA { get; set; }
+        public int? ExpiredWO { get; set; }
+        public int? ExpiredWA { get; set; }
     }
 }
 
