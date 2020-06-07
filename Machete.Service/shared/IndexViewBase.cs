@@ -342,15 +342,16 @@ namespace Machete.Service
             DateTime parsedTime;
             if (isDateTime = DateTime.TryParse(o.sSearch, out parsedTime))
             {
+                parsedTime = parsedTime.ToUniversalTime();
                 if (isMonthSpecific.IsMatch(o.sSearch))  //Regex for month/year
                     q = q.Where(p => SqlServerDbFunctionsExtensions
-                                         .DateDiffMonth(null, p.dateTimeofWork.DateBasedOn(clientTimeZoneInfo), parsedTime) == 0 ? true : false);
+                                         .DateDiffMonth(null, p.dateTimeofWork, parsedTime) == 0 ? true : false);
                 if (isDaySpecific.IsMatch(o.sSearch))  //Regex for day/month/year
                     q = q.Where(p => SqlServerDbFunctionsExtensions
-                                         .DateDiffDay(null, p.dateTimeofWork.DateBasedOn(clientTimeZoneInfo), parsedTime) == 0 ? true : false);
+                                         .DateDiffDay(null, p.dateTimeofWork, parsedTime) == 0 ? true : false);
                 if (isTimeSpecific.IsMatch(o.sSearch)) //Regex for day/month/year time
                     q = q.Where(p => SqlServerDbFunctionsExtensions
-                                         .DateDiffHour(null, p.dateTimeofWork.DateBasedOn(clientTimeZoneInfo), parsedTime) == 0 ? true : false);
+                                         .DateDiffHour(null, p.dateTimeofWork, parsedTime) == 0 ? true : false);
             }
             else
             {
