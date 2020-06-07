@@ -93,6 +93,7 @@ namespace Machete.Data
         public DbSet<WorkOrder> WorkOrders { get; set; }
         public DbSet<WorkerRequest> WorkerRequests { get; set; }
         public DbSet<WorkerSignin> WorkerSignins { get; set; }
+        //public DbQuery<WOWASummary WOWASummaries { get; set; }
 
         /// <summary>
         /// Writes the changes for all entities modified since the last save. Modifications are automatically detected.
@@ -1078,6 +1079,8 @@ namespace Machete.Data
                     .HasForeignKey(d => d.workerSigninID)
                     .HasConstraintName("FK_dbo.WorkAssignments_dbo.WorkerSignins_workerSigninID");
             });
+
+            modelBuilder.Query<WOWASummary>().ToView("View_WOWASummary");
 
             modelBuilder.Entity<WorkOrder>(entity =>
             {

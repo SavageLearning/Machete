@@ -116,8 +116,8 @@
                             case "@(LOrderStatus.Completed)": $(nRow).addClass('statusGreen'); break;
                             case "@(LOrderStatus.Cancelled)": $(nRow).addClass('statusRed'); break;
                             case "@(LOrderStatus.Expired)": $(nRow).addClass('statusRed'); break;
-                            case "@(LOrderStatus.Orphaned)": $(nRow).addClass('statusYellow'); break;
-                            case "@(LOrderStatus.Unassigned)": $(nRow).addClass('statusOrange'); break;
+                            @* case "@(LOrderStatus.Orphaned)": $(nRow).addClass('statusYellow'); break;
+                            case "@(LOrderStatus.Unassigned)": $(nRow).addClass('statusOrange'); break; *@
                             default: break;
                         }
                         return nRow;
