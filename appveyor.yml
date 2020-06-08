@@ -8,6 +8,7 @@ branches:
 #  only:
   except:
     - master
+    - gh-pages
 # master does not require an additional build, its only purpose is to point to production after a release.
 
 skip_tags: true
