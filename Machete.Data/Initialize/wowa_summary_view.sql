@@ -2,8 +2,8 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-ALTER VIEW [dbo].[View_WOWASummary] AS
-select [date],[weekday], [PendingWO],[PendingWA],[ActiveWO],[ActiveWA],[CompletedWO],[CompletedWA],[CancelledWO],[CancelledWA],[ExpiredWO],[ExpiredWA]
+CREATE OR ALTER VIEW [dbo].[View_WOWASummary] AS
+select [date], cast([date] as date) as sortableDate, [weekday], [PendingWO],[PendingWA],[ActiveWO],[ActiveWA],[CompletedWO],[CompletedWA],[CancelledWO],[CancelledWA],[ExpiredWO],[ExpiredWA]
 from
 (
     select CONVERT(varchar, dateTimeofWork, 101) as [date], DATENAME(dw, dateTimeofWork) as [weekday], CONCAT([statusEN], 'WO') [status], count(*) as [count]

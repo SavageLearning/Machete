@@ -330,6 +330,7 @@ namespace Machete.Data
     public class WOWASummary
     {
         public string date { get; set; }
+        public DateTime sortableDate { get; set;}
         public string weekday { get; set; }
         public int? PendingWO { get; set; }
         public int? PendingWA { get; set; }
