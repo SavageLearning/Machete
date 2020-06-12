@@ -118,9 +118,10 @@ after_build:
 #on_success
 #on_failure
 #on_finish
-notifications:
-  - provider: Slack
-    incoming_webhook: https://hooks.slack.com/services/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
+# notifications:
+#   - provider: Slack
+#     incoming_webhook: https://hooks.slack.com/services/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
+# Slack disabled this webhook the last time I committed it. We need an environment variable.
 
 # ...or using auth token
 # - provider: Slack
