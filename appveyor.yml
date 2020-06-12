@@ -4,11 +4,8 @@
 version: '1.14.{build}'
 
 branches:   
-# # (all by default)
-#  only:
   except:
     - gh-pages
-# master does not require an additional build, its only purpose is to point to production after a release.
 
 skip_tags: true
 #skip_non_tags: false
