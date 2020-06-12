@@ -297,9 +297,9 @@ namespace Machete.Service
 
                 var q = repo.GetCombinedSummary("", true, 0, 1);
                 if (orderDescending)
-                    q = q.OrderByDescending(p => p.date);
+                    q = q.OrderByDescending(p => p.sortableDate);
                 else
-                    q = q.OrderBy(p => p.date);
+                    q = q.OrderBy(p => p.sortableDate);
 
                 result.filteredCount = q.Count();
                 result.query = q.Skip<WOWASummary>((int)displayStart).Take((int)displayLength);
