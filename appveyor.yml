@@ -7,7 +7,6 @@ branches:
 # # (all by default)
 #  only:
   except:
-    - master
     - gh-pages
 # master does not require an additional build, its only purpose is to point to production after a release.
 
@@ -118,11 +117,10 @@ after_build:
 #on_success
 #on_failure
 #on_finish
+# CE: Slack disabled this webhook the last time I committed it. We need an environment variable.
 # notifications:
 #   - provider: Slack
 #     incoming_webhook: https://hooks.slack.com/services/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
-# Slack disabled this webhook the last time I committed it. We need an environment variable.
-
 # ...or using auth token
 # - provider: Slack
 #   auth_token:
