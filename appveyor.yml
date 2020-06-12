@@ -85,13 +85,13 @@ build_script:
 
 after_build:
   - sh: cd Machete.Web && dotnet publish -o published && cd ..
-  - sh: if [ $APPVEYOR_REPO_BRANCH == 'develop' ]; then docker build -t ndlonmachete/debian:$APPVEYOR_BUILD_VERSION .; fi
-  - sh: if [ $APPVEYOR_REPO_BRANCH != 'develop' ]; then docker build -t ndlonmachete/debian:$APPVEYOR_BUILD_VERSION-beta .; fi
+  - sh: if [ $APPVEYOR_REPO_BRANCH == 'master' ]; then docker build -t ndlonmachete/debian:$APPVEYOR_BUILD_VERSION .; fi
+  - sh: if [ $APPVEYOR_REPO_BRANCH != 'master' ]; then docker build -t ndlonmachete/debian:$APPVEYOR_BUILD_VERSION-beta .; fi
   - sh: docker images
   - sh: docker login -u chaim1221 -p "$DOCKER_PASSWORD"
-  - sh: if [ $APPVEYOR_REPO_BRANCH == 'develop' ]; then docker push ndlonmachete/debian:$APPVEYOR_BUILD_VERSION; fi
-  - sh: if [ $APPVEYOR_REPO_BRANCH != 'develop' ]; then docker push ndlonmachete/debian:$APPVEYOR_BUILD_VERSION-beta; fi
-  - sh: if [ $APPVEYOR_REPO_BRANCH == 'develop' ]; then cd github && npm install && node github.js create-machete-release && cd ..; fi
+  - sh: if [ $APPVEYOR_REPO_BRANCH == 'master' ]; then docker push ndlonmachete/debian:$APPVEYOR_BUILD_VERSION; fi
+  - sh: if [ $APPVEYOR_REPO_BRANCH != 'master' ]; then docker push ndlonmachete/debian:$APPVEYOR_BUILD_VERSION-beta; fi
+  - sh: if [ $APPVEYOR_REPO_BRANCH == 'master' ]; then cd github && npm install && node github.js create-machete-release && cd ..; fi
 
 #before_package:
 #test:
