@@ -1,4 +1,4 @@
-﻿#region COPYRIGHT
+#region COPYRIGHT
 // File:     WorkOrderService.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
@@ -39,7 +39,6 @@ namespace Machete.Service
     public interface IWorkOrderService : IService<WorkOrder>
     {
         IEnumerable<WorkOrder> GetActiveOrders(DateTime date, bool assignedOnly);
-        IQueryable<WorkOrderSummary> GetSummary(string search);
         int CompleteActiveOrders(DateTime date, string user);
         dataTableResult<WOWASummary> CombinedSummary(string search,
             bool orderDescending,
@@ -185,34 +184,6 @@ namespace Machete.Service
         }
 
         /// <summary>
-        /// Retrieve WO summary results - count of work orders with each status type for each date
-        /// </summary>
-        /// <param name="search">Search string criteria</param>
-        /// <returns>Work Order summary results</returns>
-        public IQueryable<WorkOrderSummary> GetSummary(string search)
-        {
-            var workOrders = repo.GetAllQ();
-            
-            IQueryable<WorkOrder> query;
-            if (string.IsNullOrEmpty(search)) query = workOrders;
-            else query = IndexViewBase.filterDateTimeOfWork(workOrders, search);
-            
-            var group_query = from wo in query
-                            group wo by new { 
-                                dateSoW = TimeZoneInfo.ConvertTimeFromUtc(wo.dateTimeofWork, _clientTimeZoneInfo).Date,                                              
-                                wo.statusID
-                            } into dayGroup
-                            select new WorkOrderSummary
-                            {
-                                date = dayGroup.Key.dateSoW,
-                                status = dayGroup.Key.statusID,
-                                count = dayGroup.Count()
-                            };
-
-            return group_query;
-        }
-
-        /// <summary>
         /// A method to create a WorkOrder, along with associated WorkAssignments and WorkerRequests, in the database. 
         /// </summary>
         /// <param name="workOrder">The work order to be created.</param>
@@ -323,39 +294,8 @@ namespace Machete.Service
             int displayLength)
         {
             var result = new dataTableResult<WOWASummary>();
-            //pulling from DB here because the joins grind it to a halt
-            // TODO: investigate how to do a left join - results only appear when there are WA assigned to WO
-            var woResult = GetSummary(search).AsEnumerable();
-            var waResult = waServ.GetSummary(search).AsEnumerable();
-            
-            var q = woResult.Join(waResult,
-                    wo => new { wo.date, wo.status },
-                    wa => new { wa.date, wa.status },
-                    (wo, wa) => new
-                    {
-                        wo.date,
-                        wo.status,
-                        wo_count = wo.count,
-                        wa_count = wa.count
-                    })
-                .GroupBy(gb => gb.date)
-                .Select(g => new WOWASummary
-                {
-                    date = g.Key,
-                    weekday = Convert.ToDateTime(g.Key).ToString("dddd"),
-                    pending_wo = g.Where(c => c.status == WorkOrder.iPending).Sum(d => d.wo_count),
-                    pending_wa = g.Where(c => c.status == WorkOrder.iPending).Sum(d => d.wa_count),
-                    active_wo = g.Where(c => c.status == WorkOrder.iActive).Sum(d => d.wo_count),
-                    active_wa = g.Where(c => c.status == WorkOrder.iActive).Sum(d => d.wa_count),
-                    completed_wo = g.Where(c => c.status == WorkOrder.iCompleted).Sum(d => d.wo_count),
-                    completed_wa = g.Where(c => c.status == WorkOrder.iCompleted).Sum(d => d.wa_count),
-                    cancelled_wo = g.Where(c => c.status == WorkOrder.iCancelled).Sum(d => d.wo_count),
-                    cancelled_wa = g.Where(c => c.status == WorkOrder.iCancelled).Sum(d => d.wa_count),
-                    expired_wo = g.Where(c => c.status == WorkOrder.iExpired).Sum(d => d.wo_count),
-                    expired_wa = g.Where(c => c.status == WorkOrder.iExpired).Sum(d => d.wa_count)
-                });
 
-            // Sort results on date (depending on orderDescending input parameter)
+                var q = repo.GetCombinedSummary("", true, 0, 1);
                 if (orderDescending)
                     q = q.OrderByDescending(p => p.date);
                 else
@@ -384,22 +324,5 @@ namespace Machete.Service
         }        
     }
 
-    /// <summary>
-    /// Summary object of WO/WA status on a given date
-    /// </summary>
-    public class WOWASummary
-    {
-        public DateTime? date { get; set; }
-        public string weekday { get; set; }
-        public int? pending_wo { get; set; }
-        public int? pending_wa { get; set; }
-        public int? active_wo { get; set; }
-        public int? active_wa { get; set; }
-        public int? completed_wo { get; set; }
-        public int? completed_wa { get; set; }
-        public int? cancelled_wo { get; set; }
-        public int? cancelled_wa { get; set; }
-        public int? expired_wo { get; set; }
-        public int? expired_wa { get; set; }
-    }
+
 }

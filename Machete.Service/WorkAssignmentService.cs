@@ -34,7 +34,6 @@ namespace Machete.Service
 {
     public interface IWorkAssignmentService :IService<WorkAssignment>
     {        
-        IQueryable<WorkAssignmentSummary> GetSummary(string search);
         bool Assign(WorkAssignment assignment, WorkerSignin signin, string user);
         bool Unassign(int? wsiid, int? waid, string user);
         dataTableResult<DTO.WorkAssignmentsList> GetIndexView(viewOptions o);
@@ -131,34 +130,8 @@ namespace Machete.Service
             }
             result.totalCount = waRepo.GetAllQ().Count();
            return result;
-      }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="search"></param>
-        /// <returns></returns>
-        public IQueryable<WorkAssignmentSummary> GetSummary(string search)
-        {
-            IQueryable<WorkAssignment> query = waRepo.GetAllQ();
-            if (!string.IsNullOrEmpty(search))
-                IndexViewBase.filterOnDatePart(search, ref query);
+       }
 
-            var sum_query = from wa in query
-                            group wa by new
-                            {
-                                dateSoW = TimeZoneInfo
-                                    .ConvertTimeFromUtc(wa.workOrder.dateTimeofWork, _clientTimeZoneInfo).Date,                               
-                                wa.workOrder.statusID
-                            } into dayGroup
-                            select new WorkAssignmentSummary
-                            {
-                                date = dayGroup.Key.dateSoW,
-                                status = dayGroup.Key.statusID,
-                                count = dayGroup.Count()
-                            };
-
-            return sum_query;
-        }
         /// <summary>
         /// 
         /// </summary>

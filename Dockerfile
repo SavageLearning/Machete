@@ -23,5 +23,4 @@ COPY ./UI/ssl /app/certs
 WORKDIR /app/api
 
 # start app
-# CMD ["dotnet", "/app/api/Machete.Web.dll"]
-CMD "/bin/bash"
+CMD "/app/api/machete.sh"
