@@ -13,6 +13,7 @@ using Machete.Data.Repositories;
 using Machete.Data.Tenancy;
 using Machete.Domain;
 using Machete.Service;
+using Machete.Service.BackgroundServices;
 using Machete.Web.Controllers.Api.Abstracts;
 using Machete.Web.Helpers;
 using Machete.Web.Helpers.Api;
@@ -148,6 +149,8 @@ namespace Machete.Web
         /// </summary>
         public static void ConfigureDependencyInjection(this IServiceCollection services)
         {
+            services.AddHostedService<RecurringBackgroundService>();
+            
             services.AddTransient<IUserStore<MacheteUser>, MacheteUserStore>();
             services.AddTransient<IRoleStore<MacheteRole>, MacheteRoleStore>();
             
@@ -200,6 +203,8 @@ namespace Machete.Web
             services.AddScoped<IWorkerSigninService, WorkerSigninService>();
             services.AddScoped<IWorkerService, WorkerService>();
             services.AddScoped<IWorkOrderService, WorkOrderService>();
+
+            services.AddTransient<IWorkerActions, WorkerActions>();
 
             services.AddScoped<IDefaults, Defaults>();
             services.AddScoped<IModelBindingAdaptor, ModelBindingAdaptor>();
