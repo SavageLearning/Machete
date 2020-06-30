@@ -1,5 +1,4 @@
 using Machete.Service.BackgroundServices;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -13,8 +12,8 @@ namespace Machete.Test.UnitTests.Services
     {
         private Mock<ILogger<RecurringBackgroundService>> _logger;
         private Mock<IWorkerActions> _workerActions;
-        private IConfiguration _configuration;
-        RecurringBackgroundService _cronJobHostedService;
+        RecurringBackgroundService _recurringBackgroundService;
+        CancellationTokenSource _cts;
 
         [TestInitialize]
         public void TestInitinialize()
@@ -22,13 +21,18 @@ namespace Machete.Test.UnitTests.Services
             _logger = new Mock<ILogger<RecurringBackgroundService>>();
             _workerActions = new Mock<IWorkerActions>();
 
-            _cronJobHostedService =
+            _recurringBackgroundService =
                 new RecurringBackgroundService(
                     _logger.Object,
                     _workerActions.Object);
 
             _logger
-                .Setup(x => x.BeginScope<RecurringBackgroundService>(_cronJobHostedService));
+                .Setup(x => x.BeginScope<RecurringBackgroundService>(_recurringBackgroundService));
+            
+            _recurringBackgroundService.DelayMinutes = 0;
+            _recurringBackgroundService.RecurringMinutes = 1;
+
+            _cts = new CancellationTokenSource();
         }
 
 
@@ -38,20 +42,35 @@ namespace Machete.Test.UnitTests.Services
             // Arrange
             _workerActions
                 .Setup(x => x.Execute())
-                .Verifiable();
-            _cronJobHostedService.DelayMinutes = 0;
-            _cronJobHostedService.RecurringMinutes = 1;
+                .Returns(true);
 
             // act
-            await _cronJobHostedService.StartAsync(CancellationToken.None);
+            await _recurringBackgroundService.StartAsync(CancellationToken.None);
             await Task
-                .Delay((_cronJobHostedService.DelayMinutes) * 60000);
+                .Delay(10000);
 
             //assert
-            Assert.IsTrue(_cronJobHostedService.Executed);
+            Assert.IsTrue(_recurringBackgroundService.Executed);
 
             // cleanup
-            await _cronJobHostedService.StopAsync(CancellationToken.None);
+            await _recurringBackgroundService.StopAsync(_cts.Token);
+        }
+
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Workers)]
+        public async Task Should_Not_Start()
+        {
+             // Arrange
+            _workerActions
+                .Setup(x => x.Execute())
+                .Returns(true);
+
+            // act
+            await _recurringBackgroundService.StartAsync(_cts.Token);
+            await Task
+                .Delay((_recurringBackgroundService.DelayMinutes) * 60000);
+            
+            //assert
+            Assert.IsFalse(_recurringBackgroundService.Executed);
         }
     }
 }
