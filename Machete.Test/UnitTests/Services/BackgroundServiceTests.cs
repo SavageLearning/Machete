@@ -67,7 +67,7 @@ namespace Machete.Test.UnitTests.Services
             // act
             await _recurringBackgroundService.StartAsync(_cts.Token);
             await Task
-                .Delay((_recurringBackgroundService.DelayMinutes) * 60000);
+                .Delay(((int)_recurringBackgroundService.DelayMinutes) * 60000);
             
             //assert
             Assert.IsFalse(_recurringBackgroundService.Executed);

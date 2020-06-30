@@ -12,11 +12,11 @@ namespace Machete.Service.BackgroundServices
         private IWorkerActions _workerActions;
         private Timer _timer;
 
-        private int _delayMinutes;
-        private int _recurringMinutes;
+        private double _delayMinutes;
+        private double _recurringMinutes;
         private bool _executed;
-        public int DelayMinutes { get => _delayMinutes; set => _delayMinutes = value; }
-        public int RecurringMinutes { get => _recurringMinutes; set => _recurringMinutes = value; }
+        public double DelayMinutes { get => _delayMinutes; set => _delayMinutes = value; }
+        public double RecurringMinutes { get => _recurringMinutes; set => _recurringMinutes = value; }
         public bool Executed { get => _executed; set => _executed = value; }
 
 
@@ -27,8 +27,15 @@ namespace Machete.Service.BackgroundServices
             _logger = logger;
             _workerActions = workerActions;
 
-            _delayMinutes = 0;
-            _recurringMinutes = 1;
+            // When to first run the task
+            //DateTime.Today = midnight 00.00, setting it to 6:00 am UTC (~11pm PST, ~2am NYC)
+            var nextRunTime = DateTime.Today.AddDays(1).AddHours(6);
+            var currTime = DateTime.Now;
+	        var firstInterval = nextRunTime.Subtract(currTime).TotalMinutes;
+
+            _delayMinutes = firstInterval;
+            // recurring daily
+            _recurringMinutes = 24 * 60;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -39,8 +46,8 @@ namespace Machete.Service.BackgroundServices
                 _timer = new Timer(
                     x => _executed = _workerActions.Execute(), // callback
                     null, // object state
-                    TimeSpan.FromMinutes(_delayMinutes), // delayTime
-                    TimeSpan.FromMinutes(_recurringMinutes) // period
+                    TimeSpan.FromMinutes(_delayMinutes), // delayByMinutes
+                    TimeSpan.FromMinutes(_recurringMinutes) // interval
                 );
             }
             catch (Exception ex)
