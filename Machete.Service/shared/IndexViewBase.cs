@@ -336,15 +336,14 @@ namespace Machete.Service
         }
         #endregion
         #region WORKORDERS
-        public static void search(viewOptions o, TimeZoneInfo clientTimeZoneInfo,ref IQueryable<WorkOrder> q)
+        public static void search(viewOptions o,ref IQueryable<WorkOrder> q)
         {
             bool isDateTime = false;
             DateTime parsedTime;
             if (isDateTime = DateTime.TryParse(o.sSearch, out parsedTime))
             {
                 //for day/month/year
-                var searchDateStartUtc = new DateTime(parsedTime.Date.Year, parsedTime.Date.Month, parsedTime.Date.Day)
-                                            .ToUniversalTime(); // a new date with midnight time
+                var searchDateStartUtc = new DateTime(parsedTime.Date.Year, parsedTime.Date.Month, parsedTime.Date.Day).ToUniversalTime(); // a new date with midnight time
                 var searchDateEndUtc = searchDateStartUtc.AddHours(24); // UTC end search dateTime
 
                 parsedTime = parsedTime.ToUniversalTime();
