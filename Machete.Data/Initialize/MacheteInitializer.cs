@@ -37,14 +37,14 @@ namespace Machete.Data.Initialize
     /// </summary>
     public static class MacheteConfiguration
     {
-        public static void Seed(MacheteContext db)
+        public static void Seed(MacheteContext db, string tenantTZ)
         {
             if (!db.Lookups.Any())
                 MacheteLookups.Initialize(db);
             if (!db.TransportProviders.Any() || !db.TransportProviderAvailabilities.Any())
                 MacheteTransports.Initialize(db);
             if (!db.Configs.Any())
-                MacheteConfigs.Initialize(db);
+                MacheteConfigs.Initialize(db, tenantTZ);
             if (!db.TransportRules.Any())
                 MacheteRules.Initialize(db);
             if (db.ReportDefinitions.Count() != MacheteReportDefinitions._cache.Count)

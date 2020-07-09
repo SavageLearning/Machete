@@ -1,4 +1,8 @@
-CREATE   VIEW [dbo].[View_WOWASummary] AS
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE OR ALTER  VIEW [dbo].[View_WOWASummary] AS
 WITH cte_offSet (OFFSET)
 AS (
 	SELECT DATEDIFF(HOUR, GETUTCDATE() AT TIME ZONE(SELECT value FROM dbo.Configs WHERE [key] = 'MicrosoftTimeZoneIndex'), GETUTCDATE()) AS [offset]
@@ -31,3 +35,5 @@ PIVOT
     sum([count])
     for [status] in ([PendingWO],[PendingWA],[ActiveWO],[ActiveWA],[CompletedWO],[CompletedWA],[CancelledWO],[CancelledWA],[ExpiredWO],[ExpiredWA])
 ) as WOWASummary
+
+GO

@@ -27,13 +27,16 @@ namespace Machete.Data
             new Config { key = Cfg.PaypalUrl,                     category = "PayPal", publicConfig = true, value = "url" },
             new Config { key = Cfg.PaypalSecret,                  category = "PayPal", publicConfig = false, value = "secreet"},
             new Config { key = Cfg.PaypalEnvironment,             category = "PayPal", publicConfig = true, value = "sandbox" },
-            new Config { key = Cfg.WorkCenterDescription,         category = "OnlineOrders", publicConfig = true, value = "<p>Casa Latina is nonprofit organization that empowers Latino immigrants through educational and economic opportunities. Our employment program connects immigrants with individuals and businesses looking for temporary labor. Our workers are skilled and dependable. From landscaping to dry walling to catering and housecleaning, if you can dream the project our workers can do it! <a href=\"http://casa-latina.org/get-involved/hire-worker \" target=\"_blank\">Learn more about Casa Latina</a>.</p>"}
+            new Config { key = Cfg.WorkCenterDescription,         category = "OnlineOrders", publicConfig = true, value = "<p>Casa Latina is nonprofit organization that empowers Latino immigrants through educational and economic opportunities. Our employment program connects immigrants with individuals and businesses looking for temporary labor. Our workers are skilled and dependable. From landscaping to dry walling to catering and housecleaning, if you can dream the project our workers can do it! <a href=\"http://casa-latina.org/get-involved/hire-worker \" target=\"_blank\">Learn more about Casa Latina</a>.</p>"},
+            new Config { key = Cfg.MicrosoftTimeZoneIndex,        category = "Tenants", publicConfig = true }
         };
 
-        public static void Initialize(MacheteContext context)
+        public static void Initialize(MacheteContext context, string tenantTZ)
         {
             foreach (var c in list)
             {
+                if (c.key == Cfg.MicrosoftTimeZoneIndex)
+                    c.value = GetWindowsTimeZones(tenantTZ);
                 c.datecreated = DateTime.Now;
                 c.dateupdated = DateTime.Now;
                 c.createdby = "Init T. Script";
@@ -41,6 +44,32 @@ namespace Machete.Data
                 context.Configs.Add((Config) c.Clone());
                 context.SaveChanges();
             }
+        }
+
+        public static string GetWindowsTimeZones(string tenantTZ)
+        {   
+            /* 
+                These timezones are for SQLSERVER to compare against system UTC dates
+                !! This seed is only valid in development environments. Ideally we would check
+                for INA (linux) timezones for Windows TZ equivalent through the Bing api 
+            */
+            string windowsTZ = "";
+            switch (tenantTZ)
+            {
+                case "America/Los_Angeles":
+                    windowsTZ = "Pacific Standard Time";
+                    break;
+                case "America/New_York":
+                    windowsTZ = "US Eastern Standard Time";
+                    break;
+                case "UTC":
+                    windowsTZ = "UTC";
+                    break;                    
+                default: 
+                    windowsTZ = "";
+                    break;
+            }
+            return windowsTZ;
         }
     }
 }

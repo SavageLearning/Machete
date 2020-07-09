@@ -58,7 +58,7 @@ namespace Machete.Web
                     var readonlyBuilder = new SqlConnectionStringBuilder(tenant.ReadOnlyConnectionString);
                     
                     await macheteContext.Database.MigrateAsync();
-                    MacheteConfiguration.Seed(macheteContext);
+                    MacheteConfiguration.Seed(macheteContext, tenant.Timezone);
                     StartupConfiguration.AddDBReadOnlyUser(macheteContext, readonlyBuilder.Password);
                     await MacheteConfiguration.SeedAsync(macheteContext);
 

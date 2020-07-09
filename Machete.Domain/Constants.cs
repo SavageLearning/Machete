@@ -112,5 +112,6 @@ namespace Machete.Domain
         public const string EmailEnableSimple = "true";
         public const string TimeZoneDifferenceFromPacific = "TimeZoneDifferenceFromPacific";
         public const string WorkCenterDescription = "WorkCenterDescription_EN";
+        public const string MicrosoftTimeZoneIndex = "MicrosoftTimeZoneIndex";
     }
 }
