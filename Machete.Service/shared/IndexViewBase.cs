@@ -345,7 +345,6 @@ namespace Machete.Service
             DateTime parsedTime;
             if (isDateTime = DateTime.TryParse(o.sSearch, out parsedTime))
             {
-                //for day/month/year
                 var searchDateStartUtc = parsedTime.ToUtcFrom(clientTimeZoneInfo); // some date at midnight time + {offset} hours
                 var searchDateEndUtc = searchDateStartUtc.AddHours(24); // UTC end search dateTime
 
