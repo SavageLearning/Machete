@@ -1,3 +1,7 @@
+/* 
+    If you are updating this script, also update the template literal sql script deifinition in MacheteSqlViewsDefinitions.cs
+    So that this script is run on every tenant database with other initialization report definitions, seeding, etc.
+*/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON

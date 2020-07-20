@@ -60,7 +60,7 @@ namespace Machete.Data
 
     public interface IWorkOrderRepository : IRepository<WorkOrder>
     {
-        IEnumerable<WorkOrder> GetActiveOrders(DateTime date, TimeZoneInfo clientTimeZoneInfo);
+        IEnumerable<WorkOrder> GetActiveOrders(DateTime date);
         IEnumerable<WOWASummary> GetCombinedSummary(string search, 
             bool orderDescending,
             int displayStart,
@@ -167,7 +167,7 @@ namespace Machete.Data
     {
         public WorkOrderRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
         
-        public IEnumerable<WorkOrder> GetActiveOrders(DateTime date, TimeZoneInfo clientTimeZoneInfo)
+        public IEnumerable<WorkOrder> GetActiveOrders(DateTime date)
         {
            // date parameter comes in as Utc datetime, e.g 6/29/20 + some offset hour
             var dateEndUtc = date.AddHours(24); // UTC end search dateTime

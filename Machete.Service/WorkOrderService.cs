@@ -108,7 +108,7 @@ namespace Machete.Service
         /// <returns>WorkOrders associated with a given date that are active</returns>
         public IEnumerable<WorkOrder> GetActiveOrders(DateTime date, bool assignedOnly)
         {
-            var matching = repo.GetActiveOrders(date, _clientTimeZoneInfo);
+            var matching = repo.GetActiveOrders(date);
 //                .Where(wo => wo.statusID == WorkOrder.iActive
 //                          && wo.dateTimeofWork.Date == date.Date).ToList();
 

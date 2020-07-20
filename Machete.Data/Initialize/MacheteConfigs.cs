@@ -31,12 +31,12 @@ namespace Machete.Data
             new Config { key = Cfg.MicrosoftTimeZoneIndex,        category = "Tenants", publicConfig = true }
         };
 
-        public static void Initialize(MacheteContext context, string tenantTZ)
+        public static void Initialize(MacheteContext context, string tenantTimeZone)
         {
             foreach (var c in list)
             {
                 if (c.key == Cfg.MicrosoftTimeZoneIndex)
-                    c.value = GetWindowsTimeZones(tenantTZ);
+                    c.value = GetWindowsTimeZones(tenantTimeZone);
                 c.datecreated = DateTime.Now;
                 c.dateupdated = DateTime.Now;
                 c.createdby = "Init T. Script";
@@ -46,7 +46,7 @@ namespace Machete.Data
             }
         }
 
-        public static string GetWindowsTimeZones(string tenantTZ)
+        public static string GetWindowsTimeZones(string tenantTimeZone)
         {   
             /* 
                 These timezones are for SQLSERVER to compare against system UTC dates
@@ -54,7 +54,7 @@ namespace Machete.Data
                 for INA (linux) timezones for Windows TZ equivalent through the Bing api 
             */
             string windowsTZ = "";
-            switch (tenantTZ)
+            switch (tenantTimeZone)
             {
                 case "America/Los_Angeles":
                     windowsTZ = "Pacific Standard Time";

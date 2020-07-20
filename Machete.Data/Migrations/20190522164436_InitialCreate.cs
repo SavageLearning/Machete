@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
+using Machete.Data.Initialize;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
@@ -9,11 +11,8 @@ namespace Machete.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            // Create the view with a custome SQL script at file bellow
-            var rootPath = Environment.CurrentDirectory;
-            var sqlScript = File.ReadAllText($"{rootPath}/../Machete.Data/Initialize/wowa_summary_view.sql");
-            migrationBuilder.Sql(sqlScript);
-
+            migrationBuilder.Sql(MacheteSqlViewsDefinitions.WorkOrderWorkAssignmentSummarySqlViewScript);
+            
             migrationBuilder.DropForeignKey(
                 name: "FK_dbo.AspNetUserClaims_dbo.AspNetUsers_User_Id",
                 table: "AspNetUserClaims");
