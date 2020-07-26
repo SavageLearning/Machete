@@ -27,9 +27,12 @@ namespace Machete.Service.BackgroundServices
             _logger = logger;
             _workerActions = workerActions;
 
-            // When to first run the task
-            //DateTime.Today = midnight 00.00, setting it to 6:00 am UTC (~11pm PST, ~2am NYC)
-            var nextRunTime = DateTime.Today.AddHours(6);
+            // When to first run the task setting it to 6:00 am UTC (~11pm PST, ~2am NYC)
+            var nextRunTime = DateTime
+                                .Today
+                                // Today at 00.00 is always x hours ago, so add 1 day to go to the next day at 00:00
+                                .AddHours(24)
+                                .AddHours(6); // Then set it to 6:00 UTC of the next day.
             var currTime = DateTime.Now;
 	        var firstInterval = nextRunTime.Subtract(currTime).TotalMinutes;
 
