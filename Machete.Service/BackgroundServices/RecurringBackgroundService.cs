@@ -29,7 +29,7 @@ namespace Machete.Service.BackgroundServices
 
             // When to first run the task
             //DateTime.Today = midnight 00.00, setting it to 6:00 am UTC (~11pm PST, ~2am NYC)
-            var nextRunTime = DateTime.Today.AddDays(1).AddHours(6);
+            var nextRunTime = DateTime.Today.AddHours(6);
             var currTime = DateTime.Now;
 	        var firstInterval = nextRunTime.Subtract(currTime).TotalMinutes;
 
