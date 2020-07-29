@@ -12,12 +12,9 @@ namespace Machete.Service.BackgroundServices
         private IWorkerActions _workerActions;
         private Timer _timer;
 
-        private double _delayMinutes;
-        private double _recurringMinutes;
-        private bool _executed;
-        public double DelayMinutes { get => _delayMinutes; set => _delayMinutes = value; }
-        public double RecurringMinutes { get => _recurringMinutes; set => _recurringMinutes = value; }
-        public bool Executed { get => _executed; set => _executed = value; }
+        public double DelayMinutes { get; set; }
+        public double RecurringMinutes { get; set; }
+        public bool Executed { get; set; }
 
 
         public RecurringBackgroundService(
@@ -36,21 +33,21 @@ namespace Machete.Service.BackgroundServices
             var currTime = DateTime.Now;
 	        var firstInterval = nextRunTime.Subtract(currTime).TotalMinutes;
 
-            _delayMinutes = firstInterval;
+            DelayMinutes = firstInterval;
             // recurring daily
-            _recurringMinutes = 24 * 60;
+            RecurringMinutes = 24 * 60;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            _executed = false;
+            Executed = false;
             try
             {
                 _timer = new Timer(
-                    x => _executed = _workerActions.Execute(), // callback
+                    x => Executed = _workerActions.Execute(), // callback
                     null, // object state
-                    TimeSpan.FromMinutes(_delayMinutes), // delayByMinutes
-                    TimeSpan.FromMinutes(_recurringMinutes) // interval
+                    TimeSpan.FromMinutes(DelayMinutes), // delayByMinutes
+                    TimeSpan.FromMinutes(RecurringMinutes) // interval
                 );
             }
             catch (Exception ex)
