@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using Machete.Data.Initialize;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
@@ -11,8 +10,6 @@ namespace Machete.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql(MacheteSqlViewsDefinitions.WorkOrderWorkAssignmentSummarySqlViewScript);
-            
             migrationBuilder.DropForeignKey(
                 name: "FK_dbo.AspNetUserClaims_dbo.AspNetUsers_User_Id",
                 table: "AspNetUserClaims");

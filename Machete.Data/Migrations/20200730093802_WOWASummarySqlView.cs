@@ -1,12 +1,14 @@
-using System;
-using System.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
+﻿using Machete.Data.Initialize;
+using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Machete.Data.Initialize
+namespace Machete.Data.Migrations
 {
-    public static class MacheteSqlViewsDefinitions
+    public partial class WOWASummarySqlView : Migration
     {
-        private static string workOrderWorkAssignmentSummarySqlView = $@"SET ANSI_NULLS ON
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.Sql(
+            @"SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
@@ -45,12 +47,12 @@ PIVOT
 ) as WOWASummary
 
 GO
-";
+            ");
+        }
 
-        public static string WorkOrderWorkAssignmentSummarySqlViewScript 
-            { 
-                get => workOrderWorkAssignmentSummarySqlView; 
-            }
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
 
+        }
     }
 }

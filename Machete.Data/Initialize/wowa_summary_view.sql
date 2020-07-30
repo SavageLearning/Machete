@@ -1,5 +1,5 @@
 /* 
-    If you are updating this script, also update the template literal sql script deifinition in MacheteSqlViewsDefinitions.cs
+    If you are updating this script, also update the template literal sql script deifinition in Migrations/20200730093802_WOWASummarySqlView.cs
     So that this script is run on every tenant database with other initialization report definitions, seeding, etc.
 */
 SET ANSI_NULLS ON
