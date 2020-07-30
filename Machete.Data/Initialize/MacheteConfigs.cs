@@ -49,7 +49,6 @@ namespace Machete.Data
 
             if (!context.Configs.Any(configIsMicrosoftTimezone))
             {
-                ;
                 var configEntry = new Config()
                 {
                     key = Cfg.MicrosoftTimeZoneIndex,
