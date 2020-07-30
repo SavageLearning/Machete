@@ -26,6 +26,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Machete.Data.Identity;
 using Machete.Data.Infrastructure;
+using Machete.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -44,7 +45,9 @@ namespace Machete.Data.Initialize
             if (!db.TransportProviders.Any() || !db.TransportProviderAvailabilities.Any())
                 MacheteTransports.Initialize(db);
             if (!db.Configs.Any())
-                MacheteConfigs.Initialize(db, tenantTimeZone);
+                MacheteConfigs.Initialize(db);
+            if (!db.Configs.Any(config => config.key == Cfg.MicrosoftTimeZoneIndex))
+                MacheteConfigs.SetWindowsTimeZones(db, tenantTimeZone);
             if (!db.TransportRules.Any())
                 MacheteRules.Initialize(db);
             if (db.ReportDefinitions.Count() != MacheteReportDefinitions._cache.Count)

@@ -8,7 +8,8 @@ namespace Machete.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.Sql(
-            @"SET ANSI_NULLS ON
+            @"
+SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
@@ -52,7 +53,11 @@ GO
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-
+            migrationBuilder.Sql(
+            @"
+DROP VIEW IF EXISTS [dbo].[View_WOWASummary]
+GO
+            ");
         }
     }
 }
