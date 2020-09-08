@@ -193,7 +193,7 @@ namespace Machete.Service
         /// <returns>The created WorkOrder.</returns>
         public WorkOrder Create(WorkOrder workOrder, List<WorkerRequest> workerRequestList, string username, ICollection<WorkAssignment> workAssignments = null)
         {
-            workOrder.timeZoneOffset = Convert.ToDouble(cfg.getConfig(Cfg.TimeZoneDifferenceFromPacific));
+            // workOrder.timeZoneOffset = Convert.ToDouble(cfg.getConfig(Cfg.TimeZoneDifferenceFromPacific));
             updateComputedValues(ref workOrder);
             workOrder.createdByUser(username);
             var createdWorkOrder = repo.Add(workOrder);

@@ -56,6 +56,8 @@ namespace Machete.Domain
             );
         }
         
+        // !!Deprecated. Timezone evaluation is based on the client Timezone Info instead.
+        // !!See Appsettings.json
         public Double timeZoneOffset { get; set; }
         // Flag identifying if source of work order was online web form
         public bool onlineSource { get; set; }
