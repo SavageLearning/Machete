@@ -30,30 +30,9 @@ please contact chaim@ndlon.org.
 ## How to get started
 <hr>
 
-To get started developing with Machete, you will need a few things. Currently we are pretty much all developing on Mac
-OS X, but as this is a `dotnet core` project, you can pretty much develop on any platform. First, go ahead and make a
-fork of this repo; we only accept internal pull requests from our contributors, but you can submit a request from your
-own fork any time you like and we will review it. You can clone your repo using your own credentials.
-
-We recommend using [Visual Studio Code](https://code.visualstudio.com/download) as your primary editing tool. It is easy
-to learn and to configure, and it plays incredibly well with `dotnet core` and other cross-platform applications.
-
-You will also need [Docker](https://www.docker.com/get-started). Keep in mind that different platforms have different
-levels of support for the Docker engine. Depending on your platform, Docker may be running inside a VM with very little
-filesystem access. You probably won't need to worry about this unless you become more involved with the project.
-
-Additionally, you will need the [`dotnet` CLI](https://dotnet.microsoft.com/download).
-
-Finally, you will need `npm` for your distribution. We recommend [downloading and installing NodeJS](https://nodejs.org/en/)
-for your distribution. Once you have `npm` installed you will need to run `npm install -g @angular/cli` in the terminal.
-
-(If you're on Mac, you'll then need to `sudo chown -R $USER: /usr/local/lib/node_modules`, because Mac).
-
-Great, now you should be good to go!
-
 `☕️ 💻 🐈`
 
-## Setup scripts
+### Setup scripts
 <hr>
 
 There are a few setup scripts that can help get you up and running. These scripts are _experimental_ and any problems or
@@ -78,7 +57,7 @@ This file will:
 
 `🎺 💃 🇲🇽`
 
-## How to connect to the database
+### How to connect to the database
 <hr>
 Download DataGrip. It has a 30 day evaluation period, but is not free software.
 
