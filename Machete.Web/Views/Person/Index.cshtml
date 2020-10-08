@@ -24,6 +24,8 @@
         @Html.TextBoxFor(m => m.showExpiredWorkers)
         @Html.LabelFor(m => m.showSExWorkers)
         @Html.TextBoxFor(m => m.showSExWorkers)
+        @Html.LabelFor(m => m.showActiveWorkers)
+        @Html.TextBoxFor(m => m.showActiveWorkers)
         <input type="button" value="@(WorkAssignments.btnUpdate)" id="updateBtn" class="formButton" />
     </div>
 
@@ -36,6 +38,7 @@
             <input type="button" id="bSortNotWorkers" class="formButton report-button" value="@(Shared.not) @(Shared.workerstab)" />
             <input type="button" id="bSortExpired" class="formButton report-button" value="@(Persons.expired)" />
             <input type="button" id="bSortSEx" class="formButton report-button" value="@(Persons.sancExp)" />
+            <input type="button" id="bSortActive" class="formButton report-button" value="@(Persons.active)" />
             <div id ="personHelp" class="person-help">@(Persons.clicksort)</div>
             <input type="button" id="bHelp" class="formButton report-button" style="float:right;" value="?" />
         </div>
@@ -118,7 +121,8 @@
                         { "name": "showWorkers", "value": $('#showWorkers').val() },
                         { "name": "showNotWorkers", "value": $('#showNotWorkers').val() },
                         { "name": "showExpiredWorkers", "value": $('#showExpiredWorkers').val() },
-                        { "name": "showSExWorkers", "value": $('#showSExWorkers').val() }
+                        { "name": "showSExWorkers", "value": $('#showSExWorkers').val() },
+                        { "name": "showActiveWorkers", "value": $('#showActiveWorkers').val() }
                     ]
                 }
             },
@@ -140,6 +144,7 @@
             $('#showNotWorkers').val(false);
             $('#showExpiredWorkers').val(false);
             $('#showSExWorkers').val(false);
+            $('#showActiveWorkers').val(false);
             $('#updateBtn').click();
         });
         $('#bSortWorkers').click(function (e) {
@@ -148,6 +153,7 @@
             $('#showNotWorkers').val(false);
             $('#showExpiredWorkers').val(false);
             $('#showSExWorkers').val(false);
+            $('#showActiveWorkers').val(false);
             $('#updateBtn').click();
         });
         $('#bSortNotWorkers').click(function (e) {
@@ -156,6 +162,7 @@
             $('#showNotWorkers').val(true);
             $('#showExpiredWorkers').val(false);
             $('#showSExWorkers').val(false);
+            $('#showActiveWorkers').val(false);
             $('#updateBtn').click();
         });
         $('#bSortExpired').click(function (e) {
@@ -164,14 +171,25 @@
             $('#showNotWorkers').val(false);
             $('#showExpiredWorkers').val(true);
             $('#showSExWorkers').val(false);
+            $('#showActiveWorkers').val(false);
             $('#updateBtn').click();
         });
+        $('#bSortActive').click(function (e) {
+            e.preventDefault();
+            $('#showWorkers').val(false);
+            $('#showNotWorkers').val(false);
+            $('#showExpiredWorkers').val(false);
+            $('#showSExWorkers').val(false);
+            $('#showActiveWorkers').val(true);
+            $('#updateBtn').click();
+        });        
         $('#bSortSEx').click(function (e) {
             e.preventDefault();
             $('#showWorkers').val(false);
             $('#showNotWorkers').val(false);
             $('#showExpiredWorkers').val(false);
             $('#showSExWorkers').val(true);
+            $('#showActiveWorkers').val(false);
             $('#updateBtn').click();
         });
         $('#updateBtn').click(function () { $('#personTable').dataTable().fnDraw(); });

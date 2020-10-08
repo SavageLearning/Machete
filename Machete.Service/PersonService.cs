@@ -77,6 +77,10 @@ namespace Machete.Service
                     ref q);
 
             }
+            if (o.showActiveWorkers == true) {
+                IndexViewBase.GetActiveWorkers(lRepo.GetByKey(LCategory.memberstatus, LMemberStatus.Active).ID,
+                    ref q);
+            }
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
 
             result.filteredCount = q.Count();

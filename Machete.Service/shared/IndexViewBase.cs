@@ -521,6 +521,17 @@ namespace Machete.Service
             q = q.Where(x => x.Worker.memberStatusID == s || x.Worker.memberStatusID == Ex);
         }
 
+        /// <summary>
+        /// Returns a list of active workers.
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="activeLookUp"></param>
+        /// <param name="q"></param>
+        public static void GetActiveWorkers(int activeLookUp, ref IQueryable<Person> q)
+        {
+            q = q.Where(person => person.Worker.memberStatusID == activeLookUp);
+        }
+
         public static void search(viewOptions o, ref IQueryable<Worker> q)
         {
             q = q.Where(p => p.dwccardnum.ToString().Contains(o.sSearch) ||

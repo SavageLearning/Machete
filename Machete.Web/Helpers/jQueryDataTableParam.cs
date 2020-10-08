@@ -178,6 +178,7 @@ namespace Machete.Web.Helpers
         // new for "People" tab
         public bool showExpiredWorkers { get; set; }
         public bool showSExWorkers { get; set; }
+        public bool showActiveWorkers { get; set; }
         public bool showNotWorkers { get; set; }
         public bool showWorkers { get; set; }
 

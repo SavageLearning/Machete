@@ -34,6 +34,7 @@ namespace Machete.Web.ViewModel
         public bool showNotWorkers { get; set; }
         public bool showExpiredWorkers { get; set; }
         public bool showSExWorkers { get; set; }
+        public bool showActiveWorkers { get; set; }
     }
 
     /// <summary>

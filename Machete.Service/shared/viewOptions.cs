@@ -56,6 +56,7 @@ namespace Machete.Service
         public bool showSExWorkers;
         public bool showNotWorkers;
         public bool showWorkers;
+        public bool showActiveWorkers { get; set; }
         //public bool showExpelledWorker;
         public bool attendedActivities;
         public int? emailID { get; set; }

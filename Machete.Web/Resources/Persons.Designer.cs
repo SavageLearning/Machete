@@ -284,6 +284,15 @@ namespace Machete.Web.Resources {
                 return ResourceManager.GetString("sancExp", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Active.
+        /// </summary>
+        public static string active {
+            get {
+                return ResourceManager.GetString("active", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to Print.
