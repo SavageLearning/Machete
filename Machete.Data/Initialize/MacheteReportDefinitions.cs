@@ -1808,6 +1808,34 @@ from WorkerSignins
 ​
 Where dateforsignin >= @begindate 
 and dateforsignin <= @enddate)"
+			},
+
+			new ReportDefinition() {
+				name = "DuplicateDWCCardNums",
+				commonName = "Duplicate DWC Card Numbers",
+				description = "A list of members with duplicate card numbers. all-time",
+				category = "Data-Hygiene",
+				sqlquery = @";
+WITH
+    cte_duplicate_dwccardnums ([memberNum], [count])
+    AS
+    (
+        SELECT
+            dwccardnum,
+            COUNT(*) as [count]
+        FROM
+            [dbo].[Workers]
+        GROUP BY
+	dwccardnum
+        HAVING
+	COUNT(*) > 1
+    )
+SELECT
+    w.fullNameAndID
+FROM [dbo].[Workers] w
+WHERE w.dwccardnum in (SELECT memberNum
+from cte_duplicate_dwccardnums)
+ORDER BY w.fullNameAndID"
 			}
 
 			#endregion
