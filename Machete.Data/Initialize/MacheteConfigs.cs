@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Configuration;
 using Machete.Domain;
 using System.Data.SqlClient;
+using TimeZoneConverter;
 
 namespace Machete.Data
 {
@@ -54,7 +55,7 @@ namespace Machete.Data
                     key = Cfg.MicrosoftTimeZoneIndex,
                     category = "Tenants",
                     publicConfig = true,
-                    value = GetWindowsTimeZones(tenantTimeZone),
+                    value = TZConvert.IanaToWindows(tenantTimeZone),
                     datecreated = DateTime.Now,
                     dateupdated = DateTime.Now,
                     createdby = "Init T. Script",
@@ -63,40 +64,6 @@ namespace Machete.Data
                 context.Configs.Add(configEntry);
                 context.SaveChanges();
             }
-        }
-
-        public static string GetWindowsTimeZones(string tenantTimeZone)
-        {   
-            /* 
-                These timezones are for SQLSERVER to compare against system UTC dates
-                for INA (linux) timezones for Windows TZ equivalent through the Bing api 
-            */
-            string windowsTZ = "";
-            switch (tenantTimeZone)
-            {
-                case "America/Los_Angeles":
-                    windowsTZ = "Pacific Standard Time";
-                    break;
-                case "America/New_York":
-                    windowsTZ = "US Eastern Standard Time";
-                    break;
-                case "America/Chicago":
-                    windowsTZ = "Central Standard Time";
-                    break;
-                case "America/Denver":
-                    windowsTZ = "Mountain Standard Time";                    
-                    break;
-                case "America/Phoenix":
-                    windowsTZ = "Mountain Standard Time";                    
-                    break;                           
-                case "UTC":
-                    windowsTZ = "UTC";
-                    break;                    
-                default: 
-                    windowsTZ = "";
-                    break;
-            }
-            return windowsTZ;
         }
     }
 }
