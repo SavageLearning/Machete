@@ -357,7 +357,7 @@ namespace Machete.Service
                                     p.dateTimeofWork < searchDateEndUtc);
                 if (isTimeSpecific.IsMatch(o.sSearch)) //Regex for day/month/year time
                     q = q.Where(p => SqlServerDbFunctionsExtensions
-                                         .DateDiffHour(null, p.dateTimeofWork, searchDateStartUtc) == 0 ? true : false);                                         
+                                         .DateDiffHour(null, p.dateTimeofWork, searchDateStartUtc) == 0 ? true : false);
             }
             else
             {
