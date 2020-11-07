@@ -1815,6 +1815,7 @@ and dateforsignin <= @enddate)"
 				commonName = "Duplicate DWC Card Numbers",
 				description = "A list of members with duplicate card numbers. all-time",
 				category = "Data-Hygiene",
+				inputsJson =  "{\"beginDate\":false,\"endDate\":false,\"memberNumber\":false}",
 				sqlquery = @";
 WITH
     cte_duplicate_dwccardnums ([memberNum], [count])
@@ -1836,6 +1837,97 @@ FROM [dbo].[Workers] w
 WHERE w.dwccardnum in (SELECT memberNum
 from cte_duplicate_dwccardnums)
 ORDER BY w.fullNameAndID"
+			},
+
+			new ReportDefinition() {
+				name = "comprehensiveMemberParticipation",
+				commonName = "Comprehensive member participation metrics.",
+				description = "Counts total participation for each member in each category within time range. ESL is counted when member attends an activity with a name containing -somos- or -english-",
+				category = "Participation",
+				sqlquery = @";with
+    jobs (dwccardnum, Jobcount)
+    as
+    (
+        SELECT dwccardnum, count(*) as [Jobcount]
+        from dbo.WorkAssignments WAs
+            JOIN dbo.WorkOrders WOs ON WAs.workOrderID = WOs.ID
+            JOIN dbo.Workers Ws on WAs.workerAssignedID = Ws.ID
+            join dbo.lookups l on l.id = wos.status
+        WHERE dateTimeofWork >= @begindate
+            and dateTimeofWork < @enddate
+            and l.text_EN = 'Completed'
+        group by dwccardnum
+    ),
+    act (dwccardnum, actcount)
+    as
+    (
+        select dwccardnum, count(*) as [actcount]
+        from activitysignins asi
+        where dateforsignin >= @begindate
+            and dateforsignin < @enddate
+        group by dwccardnum
+    ),
+    esl (dwccardnum, eslcount)
+    as
+    (
+        select asi1.dwccardnum, count(*) as [eslcount]
+        from activitysignins asi1
+            join activities aa on aa.ID = asi1.activityid
+        where aa.nameen in (SELECT DISTINCT(a2.nameEN)
+            FROM Activities a2
+            WHERE a2.nameEN LIKE '%english%'
+                OR a2.nameEN LIKE '%somos%')
+            and asi1.dateforsignin >= @begindate
+            and asi1.dateforsignin < @enddate
+        group by asi1.dwccardnum
+    ),
+
+    signins (dwccardnum, signincount)
+    as
+    (
+        select wsi.dwccardnum, count(*) as [signincount]
+        from WorkerSignins wsi
+
+        Where wsi.dateforsignin >= @begindate
+            and wsi.dateforsignin < @enddate
+        group by wsi.dwccardnum
+    ),
+
+    cardnums (dwccardnum)
+    as
+    (
+        select dwccardnum
+            from jobs
+        union
+            select dwccardnum
+            from act
+        union
+            select dwccardnum
+            from esl
+        union
+            select dwccardnum
+            from signins
+
+    )
+select distinct(cn.dwccardnum) [Member number]
+, p.fullname [Member name]
+, case when w.homeless = 0 then 'no' when w.homeless is null then 'unknown' else 'yes' end as [Homeless]
+, cast(isnull([signincount],0) as int) as [Sign Ins]
+, cast(isnull([jobcount],0) as int) as  [Dispatches]
+, cast(isnull([actcount],0) as int) as [Activities]
+, cast(isnull([eslcount],0) as int) as [ESL]
+
+from cardnums cn
+    join workers w on cn.dwccardnum = w.dwccardnum
+    join persons p on w.id = p.id
+    left join jobs on cn.dwccardnum = jobs.dwccardnum
+    left join act on cn.dwccardnum = act.dwccardnum
+    left join esl on esl.dwccardnum = cn.dwccardnum
+    left join signins on signins.dwccardnum = cn.dwccardnum
+where jobcount is not null
+    or actcount is not null
+    or eslcount is not null
+    or signincount is not null"
 			}
 
 			#endregion
