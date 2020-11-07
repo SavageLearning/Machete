@@ -35,6 +35,7 @@ namespace Machete.Service
     public interface IWorkerService : IService<Worker>
     {
         Worker GetByMemberID(int dwccardnum);
+        bool MemberExists(int dwccardnum);
         int GetNextWorkerNum();
         dataTableResult<DTO.WorkerList> GetIndexView(viewOptions o);
         // IQueryable<Worker> GetPriorEmployees(int employerId);
@@ -71,6 +72,11 @@ namespace Machete.Service
         public Worker GetByMemberID(int dwccardnum)
         {
             return wRepo.GetByMemberID(dwccardnum);
+        }
+
+        public bool MemberExists(int dwccardnum)
+        {
+            return !(wRepo.GetByMemberID(dwccardnum) is null);
         }
 
         public int GetNextWorkerNum()

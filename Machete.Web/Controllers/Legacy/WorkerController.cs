@@ -117,7 +117,13 @@ namespace Machete.Web.Controllers
             ModelState.ThrowIfInvalid();
 
             var modelIsValid = await _adaptor.TryUpdateModelAsync(this, worker);
-            if (modelIsValid) {
+            if (serv.MemberExists(worker.dwccardnum)) {
+                return Json(new {
+                    jobSuccess = false,
+                    rtnMessage = $"Membership # is already taken. The next available number is {serv.GetNextWorkerNum()}"
+                    });
+            }
+            else if (modelIsValid) {
                 if (imagefile != null) await updateImage(worker, imagefile, userName);
                 var newWorker = serv.Create(worker, userName);
                 var result = map.Map<Worker, ViewModel.Worker>(newWorker);
@@ -128,7 +134,7 @@ namespace Machete.Web.Controllers
                     jobSuccess = true
                 });
             } else {
-                return Json(new {jobSuccess = "false"});
+                return Json(new {jobSuccess = false});
             }
         }
 
