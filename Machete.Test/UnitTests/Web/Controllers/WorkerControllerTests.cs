@@ -168,6 +168,35 @@ namespace Machete.Test.UnitTests.Controllers
             //Assert
         }
 
+        [DataTestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Workers)]
+        [DataRow(true)]
+        [DataRow(false)]
+        public async Task create_post_duplicate_card_num_returns_job_success_false(bool memberExists)
+        {
+            //Arrange
+            var w = new Machete.Web.ViewModel.Worker {
+                ID = 12345,
+                dwccardnum = 12345
+            };
+            map.Setup(x => x.Map<Worker, Machete.Web.ViewModel.Worker>(It.IsAny<Worker>()))
+                .Returns(w);
+            var worker = new Worker();
+            var person = new Person();
+            //
+            _wserv.Setup(p => p.Create(worker, "UnitTest")).Returns(worker);
+            _wserv.Setup(p => p.MemberExists(worker.dwccardnum)).Returns(memberExists);
+            _wserv.Setup(p => p.GetNextWorkerNum()).Returns(12346);
+            _pserv.Setup(p => p.Create(person, "UnitTest")).Returns(person);
+
+            //Act
+            var result = await _controller.Create(worker, "UnitTest", null) as JsonResult;
+            
+            if (memberExists)
+                Assert.AreEqual("{ jobSuccess = False, rtnMessage = Membership # is already taken. The next available number is 12346 }", result.Value.ToString());
+            else 
+                Assert.AreEqual("{ sNewRef = , sNewLabel = , iNewID = 12345, jobSuccess = True }", result.Value.ToString());
+        }
+
         //
         //   Testing /Edit functionality
         //

@@ -1832,7 +1832,14 @@ WITH
 	COUNT(*) > 1
     )
 SELECT
-    w.fullNameAndID
+    w.fullNameAndID as [Full name and Id]
+    , w.memberStatusEn as [Member Status]
+    , FORMAT (w.datecreated, 'MM/dd/yyyy') as [Created]
+    , CreatedBy as [By]
+    , FORMAT (w.dateupdated, 'MM/dd/yyyy') as [Updated]
+    , UpdatedBy as [By]
+    , FORMAT (w.dateOfMembership, 'MM/dd/yyyy') as [Membership]
+    , FORMAT (w.memberexpirationdate, 'MM/dd/yyyy') as [Membership Expiration]
 FROM [dbo].[Workers] w
 WHERE w.dwccardnum in (SELECT memberNum
 from cte_duplicate_dwccardnums)
