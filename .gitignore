@@ -69,3 +69,6 @@ machete1env.list
 node_modules/
 
 Machete\.Web/appsettings\.json
+
+# Mono auto generated files
+mono_crash.*
