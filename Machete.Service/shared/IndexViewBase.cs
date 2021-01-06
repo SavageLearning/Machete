@@ -49,6 +49,9 @@ namespace Machete.Service
         public static DateTime DateTimeFrom(this DateTime date, TimeZoneInfo clientTimeZoneInfo) =>
             TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(date, DateTimeKind.Unspecified), clientTimeZoneInfo);
         
+        public static DateTime ToUtcFrom(this DateTime date, TimeZoneInfo clientTimeZoneInfo) =>
+            TimeZoneInfo.ConvertTimeToUtc(DateTime.SpecifyKind(date, DateTimeKind.Unspecified), clientTimeZoneInfo);
+        
         #region SIGNINS
         public static void search(viewOptions o, ref IQueryable<WorkerSignin> q)
         {
@@ -336,22 +339,25 @@ namespace Machete.Service
         }
         #endregion
         #region WORKORDERS
-        public static void search(viewOptions o, TimeZoneInfo clientTimeZoneInfo,ref IQueryable<WorkOrder> q)
+        public static void search(viewOptions o, TimeZoneInfo clientTimeZoneInfo, ref IQueryable<WorkOrder> q)
         {
             bool isDateTime = false;
             DateTime parsedTime;
             if (isDateTime = DateTime.TryParse(o.sSearch, out parsedTime))
             {
-                parsedTime = parsedTime.ToUniversalTime();
+                var searchDateStartUtc = parsedTime.ToUtcFrom(clientTimeZoneInfo); // some date at midnight time + {offset} hours
+                var searchDateEndUtc = searchDateStartUtc.AddHours(24); // UTC end search dateTime
+
                 if (isMonthSpecific.IsMatch(o.sSearch))  //Regex for month/year
                     q = q.Where(p => SqlServerDbFunctionsExtensions
-                                         .DateDiffMonth(null, p.dateTimeofWork, parsedTime) == 0 ? true : false);
+                                         .DateDiffMonth(null, p.dateTimeofWork, searchDateStartUtc) == 0 ? true : false);
                 if (isDaySpecific.IsMatch(o.sSearch))  //Regex for day/month/year
-                    q = q.Where(p => SqlServerDbFunctionsExtensions
-                                         .DateDiffDay(null, p.dateTimeofWork, parsedTime) == 0 ? true : false);
+                    q = q.Where(p => 
+                                    p.dateTimeofWork >= searchDateStartUtc &&
+                                    p.dateTimeofWork < searchDateEndUtc);
                 if (isTimeSpecific.IsMatch(o.sSearch)) //Regex for day/month/year time
                     q = q.Where(p => SqlServerDbFunctionsExtensions
-                                         .DateDiffHour(null, p.dateTimeofWork, parsedTime) == 0 ? true : false);
+                                         .DateDiffHour(null, p.dateTimeofWork, searchDateStartUtc) == 0 ? true : false);
             }
             else
             {

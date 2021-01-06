@@ -108,7 +108,7 @@ namespace Machete.Service
         /// <returns>WorkOrders associated with a given date that are active</returns>
         public IEnumerable<WorkOrder> GetActiveOrders(DateTime date, bool assignedOnly)
         {
-            var matching = repo.GetActiveOrders(date, _clientTimeZoneInfo);
+            var matching = repo.GetActiveOrders(date);
 //                .Where(wo => wo.statusID == WorkOrder.iActive
 //                          && wo.dateTimeofWork.Date == date.Date).ToList();
 
@@ -193,7 +193,7 @@ namespace Machete.Service
         /// <returns>The created WorkOrder.</returns>
         public WorkOrder Create(WorkOrder workOrder, List<WorkerRequest> workerRequestList, string username, ICollection<WorkAssignment> workAssignments = null)
         {
-            workOrder.timeZoneOffset = Convert.ToDouble(cfg.getConfig(Cfg.TimeZoneDifferenceFromPacific));
+            // workOrder.timeZoneOffset = Convert.ToDouble(cfg.getConfig(Cfg.TimeZoneDifferenceFromPacific));
             updateComputedValues(ref workOrder);
             workOrder.createdByUser(username);
             var createdWorkOrder = repo.Add(workOrder);

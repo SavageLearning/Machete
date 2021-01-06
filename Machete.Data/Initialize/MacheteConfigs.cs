@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Configuration;
 using Machete.Domain;
 using System.Data.SqlClient;
+using TimeZoneConverter;
 
 namespace Machete.Data
 {
@@ -39,6 +40,28 @@ namespace Machete.Data
                 c.createdby = "Init T. Script";
                 c.updatedby = "Init T. Script";
                 context.Configs.Add((Config) c.Clone());
+                context.SaveChanges();
+            }
+        }
+
+        public static void SetWindowsTimeZones(MacheteContext context, string tenantTimeZone)
+        {
+            Func<Config, bool> configIsMicrosoftTimezone = config => config.key == Cfg.MicrosoftTimeZoneIndex;
+
+            if (!context.Configs.Any(configIsMicrosoftTimezone))
+            {
+                var configEntry = new Config()
+                {
+                    key = Cfg.MicrosoftTimeZoneIndex,
+                    category = "Tenants",
+                    publicConfig = true,
+                    value = TZConvert.IanaToWindows(tenantTimeZone),
+                    datecreated = DateTime.Now,
+                    dateupdated = DateTime.Now,
+                    createdby = "Init T. Script",
+                    updatedby = "Init T. Script",
+                };
+                context.Configs.Add(configEntry);
                 context.SaveChanges();
             }
         }
