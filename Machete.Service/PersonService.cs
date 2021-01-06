@@ -62,7 +62,7 @@ namespace Machete.Service
             result.totalCount = q.Count();
             //
             //Search based on search-bar string 
-            if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
+            if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o.sSearch, ref q);
             if (o.showWorkers == true) IndexViewBase.getWorkers(o, ref q);
             if (o.showNotWorkers == true) IndexViewBase.getNotWorkers(o, ref q);
             if (o.showExpiredWorkers == true) {

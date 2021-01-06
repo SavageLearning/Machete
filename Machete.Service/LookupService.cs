@@ -26,6 +26,7 @@ using AutoMapper.QueryableExtensions;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
+using Machete.Service.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,7 @@ namespace Machete.Service
     public interface ILookupService : IService<Lookup>
     {
         IEnumerable<DTO.LookupList> GetIndexView(viewOptions o);
+        IEnumerable<SimpleLookupList> GetSkills();
         Lookup GetByKey(string category, string key);
         string textByID(int ID, string locale);
     }
@@ -74,6 +76,14 @@ namespace Machete.Service
                 .Skip(o.displayStart)
                 .Take(o.displayLength)
                 .AsEnumerable();
+        }
+
+        public IEnumerable<SimpleLookupList> GetSkills()
+        {
+            var skills = repo
+                .GetManyQ(l => l.category == LCategory.skill)
+                .ToList();
+            return map.Map<IEnumerable<SimpleLookupList>>(skills);
         }
         public override Lookup Create(Lookup record, string user)
         {

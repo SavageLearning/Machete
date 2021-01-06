@@ -26,9 +26,12 @@ using AutoMapper.QueryableExtensions;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
+using Machete.Service.DTO;
+using Machete.Service.shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Machete.Service
 {
@@ -38,6 +41,7 @@ namespace Machete.Service
         int GetNextWorkerNum();
         dataTableResult<DTO.WorkerList> GetIndexView(viewOptions o);
         // IQueryable<Worker> GetPriorEmployees(int employerId);
+        PagedResults<WorkforceList> GetWorkersInSkill(int id, ApiRequestParams arp);
         bool ExpireMembers();
         bool ReactivateMembers();
     }
@@ -164,6 +168,34 @@ namespace Machete.Service
             return result;
         }
 
+        /// <summary>
+        /// Returns all workers in a skills list
+        /// </summary>
+        /// <param name="skillId"></param>
+        /// <param name="arp"></param>
+        /// <returns>Paged List of Workforce objects</returns>
+        public PagedResults<WorkforceList> GetWorkersInSkill(int skillId, ApiRequestParams arp)
+        {
+            IQueryable<Person> q = pRepo.GetAllQ();
+            IndexViewBase.filterWorkersOnSkill(skillId, ref q);
+
+            if (arp.dwccardnum > 0) IndexViewBase.filterWorkersOnCardNum((int)arp.dwccardnum, ref q);
+            if (!string.IsNullOrEmpty(arp.search)) IndexViewBase.search(arp.search, ref q);
+            IndexViewBase.sortOnColName(arp.sortField, arp.sortDesc, ref q);
+
+            var pagedResults = new PagedResults<WorkforceList>();
+            pagedResults.pageNumber = arp.pageNumber;
+            pagedResults.pageSize = arp.pageSize;
+            pagedResults.recordCount = q.Count();
+            pagedResults.totalPages = pagedResults.recordCount / pagedResults.pageSize;
+            var filteredResult = q.Skip(arp.skip)
+                .Take(arp.pageSize)
+                .ToList();
+            pagedResults.data = map.Map<IEnumerable<WorkforceList>>(filteredResult);
+
+            return pagedResults; 
+        }
+        
         /// <summary>
         /// Expires active workers based on expiration date
         /// </summary>

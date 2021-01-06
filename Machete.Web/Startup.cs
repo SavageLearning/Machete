@@ -222,7 +222,7 @@ namespace Machete.Web
             app.UseSpaStaticFiles();            
             
             app.UseCookiePolicy(new CookiePolicyOptions {
-                MinimumSameSitePolicy = SameSiteMode.None
+                MinimumSameSitePolicy = env.IsDevelopment() ? SameSiteMode.Lax : SameSiteMode.None
             });
 
             app.UseAuthentication();

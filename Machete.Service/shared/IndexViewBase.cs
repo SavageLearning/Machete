@@ -469,16 +469,42 @@ namespace Machete.Service
         }
         #endregion
         #region PERSONS
-        public static void search(viewOptions o, ref IQueryable<Person> q)
+        public static void search(string search, ref IQueryable<Person> q)
         {
-            q = q
-                .Where(p => p.Worker.dwccardnum.ToString().Contains(o.sSearch) ||
-                            p.firstname1.Contains(o.sSearch) ||
-                            p.firstname2.Contains(o.sSearch) ||
-                            p.lastname1.Contains(o.sSearch) ||
-                            p.lastname2.Contains(o.sSearch) ||
-                            p.phone.Contains(o.sSearch));
+            search = search.Trim();
+            string[] words = search.Split(" ");
+            if(words.Length >= 2)
+            {
+                var first = words[0] ?? "";
+                var last = words[1] ?? "";
+                q = q.Where(p => p.Worker.dwccardnum.ToString().Contains(search) ||
+                            (p.firstname1.Contains(first) || p.firstname2.Contains(first)) &&
+                            (p.lastname1.Contains(last) || p.lastname2.Contains(last)) ||
+                            p.phone.Contains(search));
+            }
+            else
+            {
+                q = q.Where(p => p.Worker.dwccardnum.ToString().Contains(search) ||
+                            p.firstname1.Contains(search) ||
+                            p.firstname2.Contains(search) ||
+                            p.lastname1.Contains(search) ||
+                            p.lastname2.Contains(search) ||
+                            p.phone.Contains(search));
+            }
         }
+
+        public static void filterWorkersOnSkill(int skillId, ref IQueryable<Person> q)
+        {
+            q = q.Where(p => p.Worker.skill1 == skillId ||
+                            p.Worker.skill2 == skillId ||
+                            p.Worker.skill3 == skillId);
+        }
+
+        public static void filterWorkersOnCardNum(int dwcNumber, ref IQueryable<Person> q)
+        {
+            q = q.Where(p => p.Worker.dwccardnum == dwcNumber);
+        }
+
         public static void sortOnColName(string name, bool descending, ref IQueryable<Person> q)
         {
             switch (name)
