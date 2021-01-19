@@ -164,13 +164,20 @@ namespace Machete.Web
             }
 
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/localization?view=aspnetcore-2.2 (Ibid.)
+            var esCulture = CultureInfo.CreateSpecificCulture("es-US");
+            var dateformat = new DateTimeFormatInfo
+            { 
+                ShortDatePattern = "MM/dd/yyyy", 
+                LongDatePattern = "MM/dd/yyyy hh:mm:ss tt" 
+            };
+            esCulture.DateTimeFormat = dateformat;
             var supportedCultures = new[]
             {
                 // Ibid. #globalization-and-localization-terms
                 // https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
                 // https://en.wikipedia.org/wiki/ISO_3166-1
                 new CultureInfo("en-US"),
-                new CultureInfo("es-US")
+                esCulture
                 // we use es-US because we are not fully equipped to support international dates.
             };
             app.UseRequestLocalization(new RequestLocalizationOptions
