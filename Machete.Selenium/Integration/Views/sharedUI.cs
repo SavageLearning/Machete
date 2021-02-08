@@ -215,6 +215,8 @@ namespace Machete.Test.Selenium.View
 
         public bool workerDelete(Worker _wkr)
         {
+            WaitThenClickElement((By.Id("personGeneralTab")));
+            WaitThenClickElement((By.Id("workerCreateTab")));
             WaitThenClickElement(By.Id("deleteWorkerButton-" + _wkr.ID.ToString()));
             WaitThenClickElement(By.Id("popup_ok"));
 
@@ -279,9 +281,9 @@ namespace Machete.Test.Selenium.View
             string prefix = "event" + _ev.ID + "-";
             WaitForElement(By.Id(prefix + "eventType"));
             Assert.AreEqual(_ev.eventTypeID.ToString(), GetOptionValue(By.Id(prefix + "eventType")));
-            Assert.AreEqual(_ev.dateFrom.ToShortDateString(), WaitForElement(By.Id(prefix + "dateFrom")).GetAttribute("value"));
+            Assert.AreEqual(_ev.dateFrom.ToString("MM/dd/yyyy"), WaitForElement(By.Id(prefix + "dateFrom")).GetAttribute("value"));
             if (_ev.dateTo != null)
-                Assert.AreEqual(((DateTime)_ev.dateTo).ToShortDateString(), WaitForElement(By.Id(prefix + "dateTo")).GetAttribute("value"));
+                Assert.AreEqual(((DateTime)_ev.dateTo).ToString("MM/dd/yyyy"), WaitForElement(By.Id(prefix + "dateTo")).GetAttribute("value"));
             Assert.AreEqual(_ev.notes, WaitForElement(By.Id(prefix + "notes")).GetAttribute("value"));
             return true;
         }
@@ -629,9 +631,9 @@ namespace Machete.Test.Selenium.View
             string skillIDValue = GetOptionValue(By.Id(prefix + "skillID"));
             Assert.AreEqual(_wa.skillID.ToString(), skillIDValue);
             WaitForElement(By.Id(prefix + "hourlyWage"));
-            Assert.AreEqual(_wa.hourlyWage.ToString("F"), WaitForElement(By.Id(prefix + "hourlyWage")).GetAttribute("value"));
+            Assert.AreEqual(_wa.hourlyWage.ToString("F2"), WaitForElement(By.Id(prefix + "hourlyWage")).GetAttribute("value"));
             WaitForElement(By.Id(prefix + "total"));
-            Assert.AreEqual("$" +(_wa.hourlyWage * _wa.hours * _wa.days).ToString("F"), WaitForElement(By.Id(prefix + "total")).GetAttribute("value"));
+            Assert.AreEqual("$" +(_wa.hourlyWage * _wa.hours * _wa.days).ToString("F2"), WaitForElement(By.Id(prefix + "total")).GetAttribute("value"));
             Assert.AreEqual(_wa.pseudoID.ToString(), WaitForElement(By.Id(prefix + "pseudoID")).GetAttribute("Value"));
 
             // Now change field values and check field relationships
@@ -665,8 +667,8 @@ namespace Machete.Test.Selenium.View
             int hourRange = Convert.ToInt32(GetOptionValue(By.Id(prefix + "hourRange")));
             int daysWork = Convert.ToInt32(GetOptionValue(By.Id(prefix + "days")));
 
-            Assert.AreEqual("$" + (hourlyWage * hoursWork * daysWork).ToString("F"), WaitForElement(By.Id(prefix + "total")).GetAttribute("value"), "Total pay doesn't match hour, wage and day calculation");
-            Assert.AreEqual("$" + (hourlyWage * hourRange * daysWork).ToString("F"), WaitForElement(By.Id(prefix + "totalRange")).GetAttribute("value"), "Max Total pay doesn't match hourRange, wage and day calculation");
+            Assert.AreEqual("$" + (hourlyWage * hoursWork * daysWork).ToString("F2"), WaitForElement(By.Id(prefix + "total")).GetAttribute("value"), "Total pay doesn't match hour, wage and day calculation");
+            Assert.AreEqual("$" + (hourlyWage * hourRange * daysWork).ToString("F2"), WaitForElement(By.Id(prefix + "totalRange")).GetAttribute("value"), "Max Total pay doesn't match hourRange, wage and day calculation");
 
             //select fixed job and verify hourly pay is fixed
             // TODO: Find another way of testing this. I took fixed categories out of the Lookups.
