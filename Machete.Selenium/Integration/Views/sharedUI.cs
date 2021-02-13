@@ -188,17 +188,21 @@ namespace Machete.Test.Selenium.View
 
         public bool workerValidate(Worker _wkr)
         {
+            WaitThenClickElement((By.Id("personGeneralTab")));
+            WaitThenClickElement((By.Id("workerCreateTab")));
             string prefix = "worker"+_wkr.ID+"-";
+            string dateFormat1 = "M/dd/yy";
+            string dateFormat2 = "MM/dd/yyyy";
             bool result = WaitForElementValue(By.Id("workerCreateTab"), "Worker information");
             Assert.IsTrue(result, "Create tab label not updated by formSubmit");            
-            Assert.AreEqual(_wkr.dateOfMembership.ToShortDateString(), WaitForElement(By.Id(prefix + "dateOfMembership")).GetAttribute("value"));
-            Assert.AreEqual(((DateTime)_wkr.dateOfBirth.Value).ToShortDateString(), WaitForElement(By.Id(prefix + "dateOfMembership")).GetAttribute("value"));
+            Assert.AreEqual(_wkr.dateOfMembership.ToString(dateFormat1), WaitForElement(By.Id(prefix + "dateOfMembership")).GetAttribute("value"));
+            Assert.AreEqual(((DateTime)_wkr.dateOfBirth.Value).ToString(dateFormat2), WaitForElement(By.Id(prefix + "dateOfMembership")).GetAttribute("value"));
             
             Thread.Sleep(5000);
             
-            Assert.AreEqual(((DateTime)_wkr.dateinUSA).ToShortDateString(), WaitForElement(By.Id(prefix + "dateinUSA")).GetAttribute("value"));
-            Assert.AreEqual(((DateTime)_wkr.dateinseattle).ToShortDateString(), WaitForElement(By.Id(prefix + "dateinseattle")).GetAttribute("value"));
-            Assert.AreEqual(_wkr.memberexpirationdate.ToShortDateString(), WaitForElement(By.Id(prefix + "memberexpirationdate")).GetAttribute("value"));
+            Assert.AreEqual(((DateTime)_wkr.dateinUSA).ToString(dateFormat2), WaitForElement(By.Id(prefix + "dateinUSA")).GetAttribute("value"));
+            Assert.AreEqual(((DateTime)_wkr.dateinseattle).ToString(dateFormat2), WaitForElement(By.Id(prefix + "dateinseattle")).GetAttribute("value"));
+            Assert.AreEqual(_wkr.memberexpirationdate.ToString(dateFormat2), WaitForElement(By.Id(prefix + "memberexpirationdate")).GetAttribute("value"));
             Assert.AreEqual(_wkr.height, WaitForElement(By.Id(prefix + "height")).GetAttribute("value"));
             Assert.AreEqual(_wkr.weight, WaitForElement(By.Id(prefix + "weight")).GetAttribute("value"));
             
