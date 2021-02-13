@@ -30,9 +30,11 @@ using Machete.Domain;
 using Machete.Service;
 using Machete.Service.DTO;
 using Machete.Web.Helpers;
+using Machete.Web.Helpers.Api;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Machete.Web.Controllers
 {
@@ -123,19 +125,16 @@ namespace Machete.Web.Controllers
                     rtnMessage = $"Membership # is already taken. The next available number is {serv.GetNextWorkerNum()}"
                     });
             }
-            else if (modelIsValid) {
-                if (imagefile != null) await updateImage(worker, imagefile, userName);
-                var newWorker = serv.Create(worker, userName);
-                var result = map.Map<Worker, ViewModel.Worker>(newWorker);
-                return Json(new {
-                    sNewRef = result.tabref,
-                    sNewLabel = result.tablabel,
-                    iNewID = result.ID,
-                    jobSuccess = true
-                });
-            } else {
-                return Json(new {jobSuccess = false});
-            }
+            if (!modelIsValid) return Json(new {jobSuccess = false});
+            if (imagefile != null) await updateImage(worker, imagefile, userName);
+            var newWorker = serv.Create(worker, userName);
+            var result = map.Map<Worker, ViewModel.Worker>(newWorker);
+            return Json(new {
+                sNewRef = result.tabref,
+                sNewLabel = result.tablabel,
+                iNewID = result.ID,
+                jobSuccess = true,
+            });
         }
 
         /// <summary>
@@ -164,8 +163,20 @@ namespace Machete.Web.Controllers
         public async Task<ActionResult> Edit(int id, string userName, IFormFile imagefile)
         {
             ModelState.ThrowIfInvalid();
-            
+            var vmDwccardnumAttempted = HttpContext.Request.Form["dwccardnum"];
             Worker worker = serv.Get(id);
+            int tryInt;
+            var vmDwccardnumAttemptedInt = 
+                int.TryParse(vmDwccardnumAttempted, out tryInt) 
+                ? int.Parse(vmDwccardnumAttempted) 
+                : 0;
+            if (serv.MemberExists(vmDwccardnumAttemptedInt , id) || vmDwccardnumAttemptedInt == 0)
+            {
+                return Json(new {
+                    jobSuccess = false,
+                    rtnMessage = $"Membership # is already taken. The next available number is {serv.GetNextWorkerNum()}"
+                });
+            } 
             if (await _adaptor.TryUpdateModelAsync(this, worker)) {
 
                 if (imagefile != null) await updateImage(worker, imagefile, userName);
