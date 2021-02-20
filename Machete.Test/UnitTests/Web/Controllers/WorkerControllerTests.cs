@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Machete.Data.Infrastructure;
@@ -30,7 +31,9 @@ using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Controllers;
 using Machete.Web.Helpers;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using ViewModel = Machete.Web.ViewModel;
@@ -64,6 +67,13 @@ namespace Machete.Test.UnitTests.Controllers
                 .Returns(Task.FromResult(true));
             
             _controller = new WorkerController(_wserv.Object, _iserv.Object, def.Object, map.Object, _adaptor.Object);
+            
+            _controller.ControllerContext.HttpContext = new DefaultHttpContext();
+            var formDictionary = new Dictionary<string, StringValues>();
+            var fakeDwcCardNum = "12344";
+            formDictionary.Add("dwccardnum", fakeDwcCardNum);
+            var formCollection = new FormCollection(formDictionary);
+            _controller.Request.Form = formCollection;
 
             var fakeFormValues = new Worker {
                 ID = 12345,
@@ -171,7 +181,7 @@ namespace Machete.Test.UnitTests.Controllers
         [DataTestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Workers)]
         [DataRow(true)]
         [DataRow(false)]
-        public async Task create_post_duplicate_card_num_returns_job_success_false(bool memberExists)
+        public async Task create_and_edit_post_duplicate_card_num_returns_job_success_false(bool memberExists)
         {
             //Arrange
             var w = new Machete.Web.ViewModel.Worker {
@@ -182,19 +192,38 @@ namespace Machete.Test.UnitTests.Controllers
                 .Returns(w);
             var worker = new Worker();
             var person = new Person();
+            
             //
             _wserv.Setup(p => p.Create(worker, "UnitTest")).Returns(worker);
+            _wserv.Setup(p => p.Save(worker, "UnitTest"));
+            _wserv.Setup(p => p.
+                MemberExists(12344, worker.dwccardnum))
+                .Returns(memberExists); // used in _controller.Edit
             _wserv.Setup(p => p.MemberExists(worker.dwccardnum)).Returns(memberExists);
             _wserv.Setup(p => p.GetNextWorkerNum()).Returns(12346);
             _pserv.Setup(p => p.Create(person, "UnitTest")).Returns(person);
+            
+            var expectedCreateSuccessResult = "{ sNewRef = , sNewLabel = , iNewID = 12345, jobSuccess = True }";
+            var expectedEditSuccessResult = "{ jobSuccess = True }";
+            var shareDFailResult =
+                "{ jobSuccess = False, rtnMessage = Membership # is already taken. The next available number is 12346 }";
+            var expectedCreateFailResult = shareDFailResult;
+            var expectedEditFailResult = shareDFailResult;
 
             //Act
-            var result = await _controller.Create(worker, "UnitTest", null) as JsonResult;
-            
+            var actualCreateResult = await _controller.Create(worker, "UnitTest", null) as JsonResult;
+            var actualEditResult= await _controller.Edit(worker.ID, "UnitTest", null) as JsonResult;
+
             if (memberExists)
-                Assert.AreEqual("{ jobSuccess = False, rtnMessage = Membership # is already taken. The next available number is 12346 }", result.Value.ToString());
-            else 
-                Assert.AreEqual("{ sNewRef = , sNewLabel = , iNewID = 12345, jobSuccess = True }", result.Value.ToString());
+            {
+                Assert.AreEqual(expectedCreateFailResult, actualCreateResult.Value.ToString());
+                Assert.AreEqual(expectedEditFailResult, actualEditResult.Value.ToString());
+            }
+            else
+            {
+                Assert.AreEqual(expectedCreateSuccessResult, actualCreateResult.Value.ToString());
+                Assert.AreEqual(expectedEditSuccessResult, actualEditResult.Value.ToString());
+            }
         }
 
         //

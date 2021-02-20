@@ -406,6 +406,11 @@
                                     if (callback) {
                                         callback();
                                     }
+                                    // changing tabs will refresh form mode from create to edit
+                                    if (recType === 'worker') {
+                                        SelTab = 0;
+                                        $(parentTab).tabs("select", SelTab);        
+                                    }
                                 }
                             }
                         });

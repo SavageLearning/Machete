@@ -36,6 +36,7 @@ namespace Machete.Service
     {
         Worker GetByMemberID(int dwccardnum);
         bool MemberExists(int dwccardnum);
+        bool MemberExists(int dwccardnum, int excludeId);
         int GetNextWorkerNum();
         dataTableResult<DTO.WorkerList> GetIndexView(viewOptions o);
         // IQueryable<Worker> GetPriorEmployees(int employerId);
@@ -73,10 +74,28 @@ namespace Machete.Service
         {
             return wRepo.GetByMemberID(dwccardnum);
         }
-
+        
+        /// <summary>
+        /// Finds if membernumber exists in db.
+        /// </summary>
+        /// <param name="dwccardnum">the number to check for a duplicate</param>
+        /// <returns>bool</returns>
         public bool MemberExists(int dwccardnum)
         {
             return !(wRepo.GetByMemberID(dwccardnum) is null);
+        }
+        
+        /// <summary>
+        /// Finds if membernumber exists in db, excludes excludedId from search
+        /// </summary>
+        /// <param name="dwccardnum">the number to check for a duplicate</param>
+        /// <param name="excludeId">the worker record to exclude from duplicate search.</param>
+        /// <returns>bool</returns>
+        public bool MemberExists(int dwccardnum, int excludeId)
+        {
+            var workerToExclude= Get(excludeId);
+            var searchCriteriaMet = dwccardnum != workerToExclude.dwccardnum;
+            return searchCriteriaMet && MemberExists(dwccardnum);
         }
 
         public int GetNextWorkerNum()

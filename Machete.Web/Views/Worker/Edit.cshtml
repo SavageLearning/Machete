@@ -67,8 +67,9 @@
         //
         // submit edit
         $('#workerEditTab-@Model.ID').mUI('tabFormSubmit', {
+            recType: "@(recType)",
             create: false,
-            selectTab: 0,
+            selectTab: 1,
             formLevel: 1
         });
         // 
