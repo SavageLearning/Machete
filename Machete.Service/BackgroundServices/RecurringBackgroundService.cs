@@ -11,10 +11,10 @@ namespace Machete.Service.BackgroundServices
         private readonly ILogger<RecurringBackgroundService> _logger;
         private IWorkerActions _workerActions;
         private Timer _timer;
+        public HostedBackgroundServiceState State { get; set; }
 
         public double DelayMinutes { get; set; }
         public double RecurringMinutes { get; set; }
-        public bool Executed { get; set; }
 
 
         public RecurringBackgroundService(
@@ -23,6 +23,9 @@ namespace Machete.Service.BackgroundServices
         {
             _logger = logger;
             _workerActions = workerActions;
+            
+            // State
+            State = HostedBackgroundServiceState.NotStarted;
 
             // When to first run the task setting it to 6:00 am UTC (~11pm PST, ~2am NYC)
             var nextRunTime = DateTime
@@ -40,11 +43,16 @@ namespace Machete.Service.BackgroundServices
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            Executed = false;
+            State = HostedBackgroundServiceState.Started;
             try
             {
                 _timer = new Timer(
-                    x => Executed = _workerActions.Execute(), // callback
+                    x =>
+                    {
+                        _workerActions.Execute();
+                        if (State != HostedBackgroundServiceState.RanOnce) 
+                            State = HostedBackgroundServiceState.RanOnce;
+                    }, // callback
                     null, // object state
                     TimeSpan.FromMinutes(DelayMinutes), // delayByMinutes
                     TimeSpan.FromMinutes(RecurringMinutes) // interval
@@ -59,6 +67,7 @@ namespace Machete.Service.BackgroundServices
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
+            State = HostedBackgroundServiceState.Stopped;
             _logger.LogInformation($"Timed Hosted Service {nameof(RecurringBackgroundService)} is stopping.");
             _timer?.Change(Timeout.Infinite, 0);
             return Task.CompletedTask;
@@ -68,5 +77,13 @@ namespace Machete.Service.BackgroundServices
         {
             _timer?.Dispose();
         }
+    }
+
+    public enum HostedBackgroundServiceState
+    {
+        NotStarted,
+        Started,
+        Stopped,
+        RanOnce
     }
 }
