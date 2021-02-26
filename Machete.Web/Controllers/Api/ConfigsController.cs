@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
-using Machete.Web.Controllers.Api.Abstracts;
 using Machete.Web.Helpers.Api;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,14 +14,12 @@ namespace Machete.Web.Controllers.Api
 {
     [Route("api/configs")]
     [ApiController]
-    public class ConfigsController : MacheteApiController
+    public class ConfigsController : MacheteApi2Controller<Config, ConfigVM>
     {
-        private readonly IConfigService _serv;
         private IConfiguration _configuration;
 
-        public ConfigsController(IConfigService serv, IConfiguration configuration)
+        public ConfigsController(IConfigService serv, IConfiguration configuration, IMapper map) : base(serv, map)
         {
-            _serv = serv;
             _configuration = configuration;
         }
 
@@ -29,21 +28,25 @@ namespace Machete.Web.Controllers.Api
         [AllowAnonymous]
         [HttpGet]
         [Route("")]
-        public ActionResult Get()
+        public ActionResult<ConfigVM> Get()
         {
-            var result = _serv.GetMany(c => c.publicConfig).ToList();
+            List<ConfigVM> result = service.GetMany(c => c.publicConfig)
+                .DefaultIfEmpty()
+                .Select(a => map.Map<Config, ConfigVM>(a))
+                .DefaultIfEmpty()
+                .ToList();
             
-            var facebookConfig = new Config
+            var facebookConfig = new ConfigVM
             {
                 key = "FacebookAppId",
                 value = _configuration["Authentication:Facebook:AppId"]
             };
-            var googleConfig = new Config
+            var googleConfig = new ConfigVM
             {
                 key = "GoogleClientId",
                 value = _configuration["Authentication:Google:ClientId"]
             };
-            var state = new Config
+            var state = new ConfigVM
             {
                 key = "OAuthStateParameter",
                 //TODO value = this.httpContext.setCookie(foo, bar) => urlencode(bar)
@@ -54,38 +57,20 @@ namespace Machete.Web.Controllers.Api
             result.Add(googleConfig);
             result.Add(state);
             
-            return new JsonResult(new { data = result });
+            return Ok(result);
         }
 
-        // GET: api/Configs/5
-        [Authorize(Roles = "Administrator")]
-        [HttpGet]
-        [Route("{id}")]
-        public JsonResult Get(int id)
-        {
-            var result = _serv.Get(id);
-            return new JsonResult(new { data = result });
-        }
+        [HttpGet("{id}"), Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
+        public new ActionResult<ConfigVM> Get(int id) { return base.Get(id); }
 
-        // POST: api/Configs
-        [Authorize(Roles = "Administrator")]
-        [HttpPost("")]
-        public void Post([FromBody]string value)
-        {
-        }
+        [HttpPost, Authorize(Roles = "Administrator")]
+        public new ActionResult<ConfigVM> Post([FromBody]ConfigVM value) { return base.Post(value); }
 
-        // PUT: api/Configs/5
-        [Authorize(Roles = "Administrator")]
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
+        [HttpPut("{id}"), Authorize(Roles = "Administrator")]
+        public new ActionResult<ConfigVM> Put(int id, [FromBody]ConfigVM value) { return base.Put(id, value); }
 
-        // DELETE: api/Configs/5
-        [Authorize(Roles = "Administrator")]
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        [HttpDelete("{id}"), Authorize(Roles = "Administrator")]
+        public new ActionResult<ConfigVM> Delete(int id) { return base.Delete(id); }
+
     }
 }

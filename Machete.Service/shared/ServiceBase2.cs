@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using AutoMapper;
 
 namespace Machete.Service
 {
@@ -15,15 +16,18 @@ namespace Machete.Service
         protected readonly DbSet<T> dbset;
         protected Logger nlog = LogManager.GetCurrentClassLogger();
         protected LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "Service2", "");
+        protected readonly IMapper map;
         /// <summary>
         /// replace with service-specific string for logging
         /// </summary>
-        protected string logPrefix = "ServiceBase2";
+        protected string logPrefix;
 
-        protected ServiceBase2(IDatabaseFactory dbf)
+        protected ServiceBase2(IDatabaseFactory dbf, IMapper map)
         {
+            this.map = map;
             this.db = dbf.Get();
             this.dbset = db.Set<T>();
+            this.logPrefix = typeof(T).ToString();
         }
 
         public int TotalCount()

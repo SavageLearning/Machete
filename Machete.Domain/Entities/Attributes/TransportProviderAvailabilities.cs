@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Machete.Domain
 {
-//    [Table("TransportProviderAvailabilities")]
-    public class TransportProviderAvailabilities : Record
+    [Table("TransportProviderAvailabilities")]
+    public class TransportProviderAvailability : Record
     {
         public int transportProviderID { get; set; }
         [StringLength(50)]

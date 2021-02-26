@@ -10,7 +10,7 @@ namespace Machete.Web.Maps
     {
         public WorkAssignmentProfile()
         {
-            CreateMap<Domain.WorkAssignment, ViewModel.WorkAssignment>()
+            CreateMap<Domain.WorkAssignment, ViewModel.WorkAssignmentMVC>()
                 .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/WorkAssignment/Edit/" + Convert.ToString(d.ID)))
                 .ForMember(v => v.tablabel, opt => opt.MapFrom(d =>
                     Resources.WorkAssignments.tabprefix

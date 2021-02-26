@@ -1,57 +1,47 @@
+using AutoMapper;
+using Machete.Data.Infrastructure;
 using Machete.Domain;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Machete.Service
 {
-    public interface IOnlineOrdersService
+    public interface IOnlineOrdersService : IService<WorkOrder>
     {
-        WorkOrder Get(int id);
-        IEnumerable<WorkOrder> GetMany(Func<WorkOrder, bool> where);
-        WorkOrder Create(WorkOrder order, string user);
+        Employer GetEmployer(string userSubject);
+        dataTableResult<DTO.WorkOrdersList> GetIndexView(viewOptions opt);
     }
 
-    public class OnlineOrdersService : IOnlineOrdersService
+    public class OnlineOrdersService : ServiceBase2<WorkOrder>, IOnlineOrdersService
     {
-        private readonly IWorkOrderService woserv;
-        private readonly ITransportRuleService trServ;
-        private readonly ITransportProvidersService tpServ;
+        private readonly DbSet<TransportRule> trSet;
+        private readonly DbSet<TransportProvider> tpSet;
+        private readonly IWorkOrderService workOrderService;
 
-
-        public OnlineOrdersService(
-            IWorkOrderService woServ,
-            ITransportRuleService trServ,
-            ITransportProvidersService tpServ
-        )
+        public OnlineOrdersService(IDatabaseFactory dbf, IWorkOrderService woServ, IMapper map) : base(dbf, map)
         {
-            //this.eserv = eServ;
-            this.woserv = woServ;
-            this.trServ = trServ;
-            this.tpServ = tpServ;
+            this.workOrderService = woServ;
+            trSet = this.db.Set<TransportRule>();
+            tpSet = this.db.Set<TransportProvider>();
         }
 
-        public WorkOrder Get(int id)
-        {
-            return woserv.Get(id);
+        public Employer GetEmployer(string userSubject) {
+            return db.Set<Employer>().Where(e => e.onlineSigninID.Equals(userSubject)).SingleOrDefault();
         }
 
-        public IEnumerable<WorkOrder> GetMany(Func<WorkOrder, bool> where)
-        {
-            return woserv.GetMany(where);
-        }
-
-        public WorkOrder Create(WorkOrder order, string user)
+        public new WorkOrder Create(WorkOrder order, string user)
         {
             validateTransportRules(order);
-
-
             order.statusID = WorkOrder.iPending;
             var assignments = order.workAssignments;
             order.workAssignments = null;
-            var entity = woserv.Create(order, null, user, assignments);
-            return woserv.Get(entity.ID);
+            var entity = workOrderService.Create(order, null, user, assignments);
+            return workOrderService.Get(entity.ID);
         }
+
+        public dataTableResult<DTO.WorkOrdersList> GetIndexView(viewOptions opt) { return workOrderService.GetIndexView(opt); }
 
         public bool validateTransportRules(WorkOrder order)
         {
@@ -64,11 +54,11 @@ namespace Machete.Service
             if (order.transportProviderID == 0)
                 throw new MacheteValidationException("Transport provider can't be 0");
 
-            var transMethod = tpServ.Get(order.transportProviderID);
+            var transMethod = tpSet.Find(order.transportProviderID);
             if (transMethod == null)
                 throw new MacheteValidationException("Transport method lookup returned null");
 
-            var trRules = trServ.GetMany(a => a.lookupKey == transMethod.key);
+            var trRules = trSet.Where(a => a.lookupKey == transMethod.key).AsQueryable();
             if (trRules == null || trRules.Count() == 0)
                 throw new MacheteValidationException("TransportMethod does not have rules associated with it");
 

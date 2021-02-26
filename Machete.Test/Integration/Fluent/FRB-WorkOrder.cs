@@ -47,10 +47,10 @@ namespace Machete.Test.Integration.Fluent
             return _wo;
         }
 
-        public Web.ViewModel.WorkOrder CloneWorkOrder()
+        public Web.ViewModel.WorkOrderMVC CloneWorkOrder()
         {
             ToWebMapper();
-            var wo = _webMap.Map<WorkOrder, ViewModel.WorkOrder>((WorkOrder)Records.order.Clone());
+            var wo = _webMap.Map<WorkOrder, ViewModel.WorkOrderMVC>((WorkOrder)Records.order.Clone());
             wo.contactName = RandomString(10);
             return wo;
         }
