@@ -23,4 +23,5 @@ COPY ./UI/ssl /app/certs
 WORKDIR /app/api
 
 # start app
-CMD "/app/api/machete.sh"
+# CMD "/app/api/machete.sh"
+CMD "/bin/bash"
