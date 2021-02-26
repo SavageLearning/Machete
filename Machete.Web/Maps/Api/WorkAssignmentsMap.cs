@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using WorkAssignmentViewModel = Machete.Web.ViewModel.Api.WorkAssignment;
+using Machete.Domain;
+using Machete.Web.ViewModel.Api;
 
 namespace Machete.Web.Maps.Api
 {
@@ -7,11 +8,11 @@ namespace Machete.Web.Maps.Api
     {
         public WorkAssignmentsMap()
         {
-            CreateMap<Service.DTO.WorkAssignmentsList, WorkAssignmentViewModel>();
-            CreateMap<Domain.WorkAssignment, WorkAssignmentViewModel>()
+            CreateMap<Service.DTO.WorkAssignmentsList, WorkAssignmentVM>();
+            CreateMap<WorkAssignment, WorkAssignmentVM>()
                 .ForMember(v => v.skill, opt => opt.MapFrom(d => d.skillEN))
                 .ForMember(v => v.requiresHeavyLifting, opt => opt.MapFrom(d => d.weightLifted));
-            CreateMap<WorkAssignmentViewModel, Domain.WorkAssignment>()
+            CreateMap<WorkAssignmentVM, WorkAssignment>()
                 .ForMember(v => v.weightLifted, opt => opt.MapFrom(d => d.requiresHeavyLifting));
         }
     }

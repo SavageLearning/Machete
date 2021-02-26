@@ -8,6 +8,7 @@ namespace Machete.Web.Maps.Api
         public static void ConfigureApi(this IMapperConfigurationExpression c)
         {
             c.AddProfile<EmployersMap>();
+            c.AddProfile<ConfigsMap>();
             c.AddProfile<LookupsMap>();
             c.AddProfile<ReportDefinitionsMap>();
             c.AddProfile<WorkAssignmentsMap>();

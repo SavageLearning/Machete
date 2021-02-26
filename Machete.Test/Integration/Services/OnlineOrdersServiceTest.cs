@@ -5,6 +5,7 @@ using System.Linq;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Test.Integration.Fluent;
+using Machete.Web.ViewModel.Api;
 
 namespace Machete.Test.Integration.Services
 {
@@ -31,7 +32,7 @@ namespace Machete.Test.Integration.Services
             var map = frb.ToApiMapper();
             
             //Act
-            var result = map.Map<Machete.Web.ViewModel.Api.WorkOrder, WorkOrder>(wo);
+            var result = map.Map<WorkOrderVM, WorkOrder>(wo);
 
             //Assert
             Assert.IsNotNull(result, "DTO.WorkOrderList is Null");

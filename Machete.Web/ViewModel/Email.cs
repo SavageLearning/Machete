@@ -20,7 +20,7 @@ namespace Machete.Web.ViewModel
         public static int iSent { get; set; }
         public static int iTransmitError { get; set; }
         public static int iTransmitAttempts { get; set; }
-        public virtual ICollection<WorkOrder> WorkOrders { get; set; }
+        public virtual ICollection<WorkOrderMVC> WorkOrders { get; set; }
         [StringLength(50)]
         public string emailFrom { get; set; }
         [StringLength(50), Required()]
@@ -44,14 +44,14 @@ namespace Machete.Web.ViewModel
                 return false;
             }
         }
-        public IQueryable<WorkOrder> AssociatedWorkOrders
+        public IQueryable<WorkOrderMVC> AssociatedWorkOrders
         {
             get
             {
                 return this.WorkOrders.AsQueryable();
             }
         }
-        public WorkOrder currentAssociatedWorkorder
+        public WorkOrderMVC currentAssociatedWorkorder
         {
             get
             {

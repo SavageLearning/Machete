@@ -1,0 +1,23 @@
+version: '2.0'
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/code
+      - logvolume01:/var/log
+    networks:
+      - machete-bridge
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server
+    ports:
+      - 1433:1433
+    networks:
+      - machete-bridge
+volumes:
+  logvolume01: {}
+
+networks:
+  machete-bridge:
+    driver: bridge

@@ -15,14 +15,8 @@ namespace Machete.Service
 
     }
 
-    public class ScheduleRuleService : ServiceBase<ScheduleRule>, IScheduleRuleService
+    public class ScheduleRuleService : ServiceBase2<ScheduleRule>, IScheduleRuleService
     {
-        private readonly IMapper map;
-
-        public ScheduleRuleService(IScheduleRuleRepository repo, IUnitOfWork uow, IMapper map) : base(repo, uow)
-        {
-            this.map = map;
-            this.logPrefix = "ScheduleRule";
-        }
+        public ScheduleRuleService(IDatabaseFactory db, IMapper map) : base(db, map) {}
     }
 }
