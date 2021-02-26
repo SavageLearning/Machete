@@ -29,7 +29,7 @@ namespace Machete.Test.UnitTests.Services
             _logger
                 .Setup(x => x.BeginScope<RecurringBackgroundService>(_recurringBackgroundService));
             
-            _recurringBackgroundService.DelayMinutes = 0;
+            _recurringBackgroundService.DelayMinutes = 1;
             _recurringBackgroundService.RecurringMinutes = 1;
 
             _cts = new CancellationTokenSource();
@@ -44,33 +44,49 @@ namespace Machete.Test.UnitTests.Services
                 .Setup(x => x.Execute())
                 .Returns(true);
 
+            Assert.IsTrue(_recurringBackgroundService.State == HostedBackgroundServiceState.NotStarted);
+            
             // act
             await _recurringBackgroundService.StartAsync(CancellationToken.None);
-            await Task
-                .Delay(10000);
 
             //assert
-            Assert.IsTrue(_recurringBackgroundService.Executed);
+            Assert.IsTrue(_recurringBackgroundService.State == HostedBackgroundServiceState.Started);
 
             // cleanup
             await _recurringBackgroundService.StopAsync(_cts.Token);
         }
 
+        ///
+        /// Testing that .Net Core IHostedService does what it promises 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Workers)]
-        public async Task Should_Not_Start()
+        public async Task Should_Start_Run_and_Stop()
         {
              // Arrange
             _workerActions
                 .Setup(x => x.Execute())
                 .Returns(true);
-
-            // act
-            await _recurringBackgroundService.StartAsync(_cts.Token);
-            await Task
-                .Delay(((int)_recurringBackgroundService.DelayMinutes) * 60000);
             
             //assert
-            Assert.IsFalse(_recurringBackgroundService.Executed);
+            Assert.IsTrue(_recurringBackgroundService.State == HostedBackgroundServiceState.NotStarted);
+            
+            // act
+            await _recurringBackgroundService.StartAsync(CancellationToken.None);
+            
+            //assert
+            Assert.IsTrue(_recurringBackgroundService.State == HostedBackgroundServiceState.Started);
+            
+            await Task
+                .Delay(((int)_recurringBackgroundService.DelayMinutes) * 62000); // delay until slightly after the first iteration
+            
+            //assert
+            Assert.IsTrue(_recurringBackgroundService.State == HostedBackgroundServiceState.RanOnce);
+            
+            //act
+            await _recurringBackgroundService.StopAsync(CancellationToken.None);
+            await Task.Delay(100);
+            
+            //assert
+            Assert.IsTrue(_recurringBackgroundService.State == HostedBackgroundServiceState.Stopped);
         }
     }
 }
