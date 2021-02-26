@@ -273,13 +273,18 @@ namespace Machete.Web
                 RequestPath = "/Content"
             });
 
-
-            using (var serviceScope = app.ApplicationServices.CreateScope())
-            {
-                var services = serviceScope.ServiceProvider;
-                var svc = services.GetService<ILookupService>();
-                //svc.populateStaticIds();
-            }
+            // The following code is trying to get lookup static IDs as if they were coming from a singleton database.
+            // It ignores the fact that the database provider is multi-tenant, and does not expose a singleton tenant.
+            //
+            // Alas, the serviceScope object does nothing anyway as the line which populates static IDs is commented out.
+            // The apparent purpose is better achieved by improving the Lookups initialization (above).
+            //
+            // using (var serviceScope = app.ApplicationServices.CreateScope())
+            // {
+            //     var services = serviceScope.ServiceProvider;
+            //     var svc = services.GetService<ILookupService>();
+            //     //svc.populateStaticIds();
+            // }
         }
     }
 }
