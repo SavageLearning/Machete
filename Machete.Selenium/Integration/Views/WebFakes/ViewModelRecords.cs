@@ -22,10 +22,27 @@
 // 
 #endregion
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using Machete.Web.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using Machete.Data.Initialize;
+using Machete.Domain;
+using Machete.Service;
+using Machete.Test.Integration.Fluent;
+using Machete.Test.Integration.HttpClientUtil;
+using Activity = Machete.Web.ViewModel.Activity;
+using ActivitySignin = Machete.Web.ViewModel.ActivitySignin;
+using Email = Machete.Web.ViewModel.Email;
+using Employer = Machete.Web.ViewModel.Employer;
+using Event = Machete.Web.ViewModel.Event;
+using Lookup = Machete.Web.ViewModel.Lookup;
+using Person = Machete.Web.ViewModel.Person;
+using WorkAssignment = Machete.Web.ViewModel.WorkAssignment;
+using Worker = Machete.Web.ViewModel.Worker;
+using WorkerRequest = Machete.Web.ViewModel.WorkerRequest;
+using WorkerSignin = Machete.Web.ViewModel.WorkerSignin;
+using WorkOrder = Machete.Web.ViewModel.WorkOrder;
 
 namespace Machete.Test 
 {
@@ -56,7 +73,7 @@ namespace Machete.Test
         public static Worker worker = new Worker
         {
             typeOfWorkID = 20,
-            RaceID = MacheteLookups.cache.First(x => x.category == "race" && x.text_EN =="Latino").ID,                     //byte
+            RaceID = HttpClientUtil.GetFirstLookupInCategory(LCategory.race),                     //byte
             raceother = "Records._worker1", //string
             height = "too tall",            //string
             weight = "too big",             //string
@@ -66,18 +83,18 @@ namespace Machete.Test
             dateinseattle = DateTime.Now,   //datetime
             disabled = true,                //bool
             disabilitydesc = "foo",         //string
-            maritalstatus = MacheteLookups.cache.First(x => x.category == "maritalstatus" && x.text_EN == "Single").ID,            //string
+            maritalstatus = HttpClientUtil.GetFirstLookupInCategory(LCategory.maritalstatus), //string
             livewithchildren = true,        //bool
             numofchildren = 0,              //byte
-            incomeID = MacheteLookups.cache.First(x => x.category == "income" && x.text_EN == "Poor (Less than $15,000)").ID,                   //byte
+            incomeID =  HttpClientUtil.GetFirstLookupInCategory(LCategory.income), //byte
             livealone = true,               //bool
             emcontUSAname = "Bill Clinton", //string
             emcontUSAphone = "1234567890",  //string
             emcontUSArelation = "idol",     //string
             dwccardnum = 0,             //int
-            neighborhoodID = MacheteLookups.cache.First(x => x.category == "neighborhood" && x.text_EN == "Primary City").ID,             //byte
+            neighborhoodID =  HttpClientUtil.GetFirstLookupInCategory(LCategory.neighborhood), //byte
             immigrantrefugee = true,        //bool
-            countryoforiginID = MacheteLookups.cache.First(x => x.category == "countryoforigin" && x.text_EN == "Mexico").ID,        //string
+            countryoforiginID = HttpClientUtil.GetFirstLookupInCategory(LCategory.countryoforigin),        //string
             emcontoriginname = "Barak Obama",   //string
             emcontoriginphone = "1234567890",   //string
             emcontoriginrelation = "friend",    //string
@@ -92,7 +109,7 @@ namespace Machete.Test
             updatedby = "initialization script",
             dateOfBirth = DateTime.Now,
             dateOfMembership = DateTime.Now,
-            memberStatusID = MacheteLookups.cache.First(x => x.category == "memberstatus" && x.text_EN == "Active").ID
+            memberStatusID = HttpClientUtil.GetLookup(LCategory.memberstatus, "Active")
         };
 
         public static Person person = new Person
@@ -105,7 +122,7 @@ namespace Machete.Test
             phone = "206-555-3825",
             state = "CO",
             zipcode = "67123",
-            gender = MacheteLookups.cache.First(x => x.category == "gender" && x.text_EN == "Male").ID,
+            gender = HttpClientUtil.GetFirstLookupInCategory(LCategory.gender),
             active = true, //true
             datecreated = DateTime.Now,
             dateupdated = DateTime.Now,
@@ -121,7 +138,7 @@ namespace Machete.Test
             dateupdated = DateTime.Now,
             dateFrom = DateTime.Now,
             dateTo = DateTime.Now + TimeSpan.FromDays(30),
-            eventTypeID = MacheteLookups.cache.First(x => x.category == "eventtype" && x.text_EN == "Complaint").ID,
+            eventTypeID = HttpClientUtil.GetLookup(LCategory.eventtype, "Complaint"),
             notes = "Event note"
         };
 
@@ -149,7 +166,7 @@ namespace Machete.Test
             zipcode = "98124-4749",
             phone = "206-684-4000",
             cellphone = "123-456-7890",
-            referredby = MacheteLookups.cache.First(c => c.category == "emplrreference" && c.text_EN == "Facebook").ID,
+            referredby = HttpClientUtil.GetFirstLookupInCategory(LCategory.emplrreference),
             email = "willy@wonka.com",
             driverslicense = "wonkawi028f5",
             licenseplate = "123-CDY",
@@ -168,12 +185,12 @@ namespace Machete.Test
             contactName = "Oompa Loompa",
             workSiteAddress1 = "2400 Main Ave E",
             workSiteAddress2 = "Apt 207",
-            statusID = 42,
+            statusID = HttpClientUtil.GetLookup(LCategory.orderstatus, LOrderStatus.Active),
             city = "Seattle",
             state = "WA",
             zipcode = "12345",
             phone = "123-456-7890",
-            typeOfWorkID = 20,
+            typeOfWorkID = HttpClientUtil.GetFirstLookupInCategory(LCategory.worktype),
             timeFlexible = true,
             englishRequired = false,
             lunchSupplied = false,
@@ -229,7 +246,7 @@ namespace Machete.Test
             hours = 5,
             //chambita = false,
             hourlyWage = 20.50,
-            skillID = 69,
+            skillID = HttpClientUtil.GetFirstLookupInCategory(LCategory.skill),
             description = "init script",
             englishLevelID = 1,
             //evaluation
@@ -247,9 +264,11 @@ namespace Machete.Test
 
         public static Activity activity = new Activity
         {
-            typeID = MacheteLookups.cache.First(x => x.category == Domain.LCategory.activityType && x.text_EN == Domain.LActType.Class).ID,
-            nameID = MacheteLookups.cache.First(x => x.category == Domain.LCategory.activityName && x.text_EN == "Basic English").ID,
-            teacher = "jadmin",
+            // typeID = HttpClientUtil.TenantLookupsCache.First(x => x.category == Domain.LCategory.activityType && x.text_EN == Domain.LActType.Class).ID,
+            typeID = HttpClientUtil.GetFirstLookupInCategory(LCategory.activityType),
+            // nameID = HttpClientUtil.TenantLookupsCache.First(x => x.category == Domain.LCategory.activityName && x.text_EN == "Basic English").ID,
+            nameID = HttpClientUtil.GetFirstLookupInCategory(LCategory.activityName),
+            teacher = "selenium.uitest",
             notes = "foo too",
             dateStart = DateTime.Now,
             dateEnd = DateTime.Now,

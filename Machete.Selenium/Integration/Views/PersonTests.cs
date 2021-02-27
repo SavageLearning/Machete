@@ -6,9 +6,11 @@ using System;
 using System.Configuration;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Machete.Data.Initialize;
 using Machete.Web.Maps;
 using Machete.Test.Integration.Fluent;
+using Machete.Test.Integration.HttpClientUtil;
 
 namespace Machete.Test.Selenium.View
 {
@@ -17,7 +19,7 @@ namespace Machete.Test.Selenium.View
     {
         private IWebDriver driver;
         private StringBuilder verificationErrors;
-        private string baseURL;
+        private static string baseURL;
         private sharedUI ui;
         //private static string testdir;
         private static string testimagefile;
@@ -25,12 +27,15 @@ namespace Machete.Test.Selenium.View
         static IMapper map;
 
         [ClassInitialize]
-        public static void ClassInitialize(TestContext testContext) {
+        public static async Task ClassInitialize(TestContext testContext) {
             string solutionDirectory = sharedUI.SolutionDirectory();
             //testdir = solutionDirectory + "\\Machete.test\\";
             testimagefile = solutionDirectory + "/jimmy_machete.jpg";
             var mapperConfig = new MapperConfiguration(config => { config.ConfigureMvc(); });
             map = mapperConfig.CreateMapper();
+            baseURL = SharedConfig.BaseSeleniumTestUrl;
+            // Get this tenant's lookups based on the baseURL from appsettings.json
+            await HttpClientUtil.SetTenantLookUpCache(baseURL);
         }
 
         [TestInitialize]
@@ -38,11 +43,10 @@ namespace Machete.Test.Selenium.View
         {
             frb = FluentRecordBaseFactory.Get();
 
-            driver = new ChromeDriver("/usr/local/bin");
-            baseURL = "http://localhost:4213/";
+            driver = new ChromeDriver(SharedConfig.ChromeDriverPath);
             ui = new sharedUI(driver, baseURL, map);
             verificationErrors = new StringBuilder();
-            ui.login();
+            ui.login(SharedConfig.SeleniumUser, SharedConfig.SeleniumUserPassword);
         }
 
         [TestCleanup]
