@@ -9,8 +9,8 @@ using AutoMapper;
 using Machete.Domain;
 using Machete.Web.Maps.Api;
 using Newtonsoft.Json;
-using LookupViewModel = Machete.Web.ViewModel.Api.Lookup;
-using WorkAssignmentViewModel = Machete.Web.ViewModel.Api.WorkAssignment;
+using LookupViewModel = Machete.Web.ViewModel.Api.LookupVM;
+using WorkAssignmentViewModel = Machete.Web.ViewModel.Api.WorkAssignmentVM;
 
 namespace Machete.Test.Integration.HttpClientUtil
 {
