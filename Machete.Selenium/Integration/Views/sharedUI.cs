@@ -16,14 +16,16 @@ using Machete.Domain;
 using Machete.Test.Integration.Fluent;
 using Machete.Test.Integration.HttpClientUtil;
 using Machete.Web.Helpers;
+using Machete.Web.ViewModel;
+using Machete.Web.ViewModel.Api;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical;
 using Activity = Machete.Web.ViewModel.Activity;
 using Employer = Machete.Web.ViewModel.Employer;
 using Event = Machete.Web.ViewModel.Event;
 using Person = Machete.Web.ViewModel.Person;
-using WorkAssignment = Machete.Web.ViewModel.WorkAssignment;
+using WorkAssignment = Machete.Web.ViewModel.WorkAssignmentMVC;
 using Worker = Machete.Web.ViewModel.Worker;
-using WorkOrder = Machete.Web.ViewModel.WorkOrder;
+using WorkOrder = Machete.Web.ViewModel.WorkOrderMVC;
 
 namespace Machete.Test.Selenium.View
 {
