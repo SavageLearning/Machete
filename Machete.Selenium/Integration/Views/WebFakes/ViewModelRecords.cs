@@ -38,11 +38,11 @@ using Employer = Machete.Web.ViewModel.Employer;
 using Event = Machete.Web.ViewModel.Event;
 using Lookup = Machete.Web.ViewModel.Lookup;
 using Person = Machete.Web.ViewModel.Person;
-using WorkAssignment = Machete.Web.ViewModel.WorkAssignment;
+using WorkAssignmentMVC = Machete.Web.ViewModel.WorkAssignmentMVC;
 using Worker = Machete.Web.ViewModel.Worker;
 using WorkerRequest = Machete.Web.ViewModel.WorkerRequest;
 using WorkerSignin = Machete.Web.ViewModel.WorkerSignin;
-using WorkOrder = Machete.Web.ViewModel.WorkOrder;
+using WorkOrderMVC = Machete.Web.ViewModel.WorkOrderMVC;
 
 namespace Machete.Test 
 {
