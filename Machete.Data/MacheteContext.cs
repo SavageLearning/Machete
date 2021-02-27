@@ -85,7 +85,7 @@ namespace Machete.Data
         public DbSet<ReportDefinition> ReportDefinitions { get; set; }
         public DbSet<ScheduleRule> ScheduleRules { get; set; }
         public DbSet<TransportCostRule> TransportCostRules { get; set; }
-        public DbSet<TransportProviderAvailabilities> TransportProviderAvailabilities { get; set; }
+        public DbSet<TransportProviderAvailability> TransportProviderAvailabilities { get; set; }
         public DbSet<TransportProvider> TransportProviders { get; set; }
         public DbSet<TransportRule> TransportRules { get; set; }
         public DbSet<WorkAssignment> WorkAssignments { get; set; }
@@ -872,7 +872,7 @@ namespace Machete.Data
                     .HasConstraintName("FK_dbo.TransportCostRules_dbo.TransportRules_transportRuleID");
             });
 
-            modelBuilder.Entity<TransportProviderAvailabilities>(entity =>
+            modelBuilder.Entity<TransportProviderAvailability>(entity =>
             {
                 entity.HasIndex(e => e.transportProviderID)
                     .HasName("IX_transportProviderID");

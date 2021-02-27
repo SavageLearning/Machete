@@ -48,10 +48,10 @@ namespace Machete.Test.Integration.Fluent
             return _wa;
         }
 
-        public ViewModel.WorkAssignment CloneWorkAssignment()
+        public ViewModel.WorkAssignmentMVC CloneWorkAssignment()
         {
             ToWebMapper();
-            var wa = _webMap.Map<WorkAssignment, ViewModel.WorkAssignment>
+            var wa = _webMap.Map<WorkAssignment, ViewModel.WorkAssignmentMVC>
                 ((WorkAssignment)Records.assignment.Clone());
             wa.description = RandomString(10);
             return wa;

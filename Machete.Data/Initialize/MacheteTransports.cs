@@ -23,9 +23,9 @@ namespace Machete.Data.Initialize
             if (!context.TransportProviderAvailabilities.Any()) {
                 var providers = context.TransportProviders.ToList();
                 foreach (var provider in providers) {
-                    provider.AvailabilityRules = new List<TransportProviderAvailabilities>();
+                    provider.AvailabilityRules = new List<TransportProviderAvailability>();
                     for (var dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
-                        provider.AvailabilityRules.Add(new TransportProviderAvailabilities {
+                        provider.AvailabilityRules.Add(new TransportProviderAvailability {
                             transportProviderID = provider.ID,
                             day = dayOfWeek,
                             available = dayOfWeek != 0 || (provider.key == "transport_pickup"),

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using LookupViewModel = Machete.Web.ViewModel.Api.Lookup;
+using Machete.Domain;
+using Machete.Web.ViewModel.Api;
 
 namespace Machete.Web.Maps.Api
 {
@@ -7,7 +8,7 @@ namespace Machete.Web.Maps.Api
     {
         public LookupsMap()
         {
-            CreateMap<Domain.Lookup, LookupViewModel>()
+            CreateMap<Lookup, LookupVM>()
                 .ForMember(v => v.id, opt => opt.MapFrom(d => d.ID))
                 ;
             CreateMap<LookupViewModel, Domain.Lookup>()
