@@ -8,8 +8,10 @@ using System;
 using System.Configuration;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Machete.Web.Maps;
 using Machete.Test.Integration.Fluent;
+using Machete.Test.Integration.HttpClientUtil;
 
 namespace Machete.Test.Selenium.View
 {
@@ -18,27 +20,29 @@ namespace Machete.Test.Selenium.View
     {
         private IWebDriver driver;
         private StringBuilder verificationErrors;
-        private string baseURL;
+        static private string baseURL;
         private sharedUI ui;
         private FluentRecordBase frb;
         private static IMapper map;
 
         [ClassInitialize]
-        public static void ClassInitialize(TestContext testContext)
+        public static async Task ClassInitialize(TestContext testContext)
         {
             var webMapperConfig = new MapperConfiguration(config => { config.ConfigureMvc(); });
             map = webMapperConfig.CreateMapper();
+            baseURL = SharedConfig.BaseSeleniumTestUrl;
+            // Get this tenant's lookups based on the baseURL
+            await HttpClientUtil.SetTenantLookUpCache(baseURL);
         }
 
         [TestInitialize]
         public void SetupTest()
         {
             frb = FluentRecordBaseFactory.Get();
-            driver = new ChromeDriver("/usr/local/bin");
-            baseURL = "http://localhost:4213/";
+            driver = new ChromeDriver(SharedConfig.ChromeDriverPath);
             ui = new sharedUI(driver, baseURL, map);
             verificationErrors = new StringBuilder();
-            ui.login();
+            ui.login(SharedConfig.SeleniumUser, SharedConfig.SeleniumUserPassword);
         }
 
         [TestCleanup]
@@ -86,7 +90,7 @@ namespace Machete.Test.Selenium.View
             //Arrange
             var _emp = frb.CloneEmployer();
             var _wo = frb.CloneWorkOrder();
-            _wo.statusID = frb.ToServ<ILookupService>().GetByKey(LCategory.orderstatus, LOrderStatus.Pending).ID; // start work order off as pending
+            _wo.statusID = HttpClientUtil.GetLookup(LCategory.orderstatus, LOrderStatus.Pending); // start work order off as pending
             //Act
             ui.employerCreate(_emp);
             ui.workOrderCreate(_emp, _wo);
@@ -119,20 +123,20 @@ namespace Machete.Test.Selenium.View
             _wo.zipcode = _emp.zipcode;
             _wo.phone = _emp.phone;
             _wo.description = "";
-            _wo.statusID = frb.ToServ<ILookupService>().GetByKey(LCategory.orderstatus, LOrderStatus.Pending).ID;
+            _wo.statusID = HttpClientUtil.GetLookup(LCategory.orderstatus, LOrderStatus.Pending);
             _wo.ID = ui.getSelectedTabRecordID("WO");
             //Assert
             ui.workOrderValidate(_wo);
         }
         [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Employers)]
-        public void SeEmployer_Create_and_Activate_WorkAssignment()
+        public async Task SeEmployer_Create_and_Activate_WorkAssignment()
         {
             //Arrange
             var _employer1 = frb.CloneEmployer();
             var _wo = frb.CloneWorkOrder();
             var _wa1 = frb.CloneWorkAssignment();
             _wo.contactName = ui.RandomString(10);
-            _wo.statusID = frb.ToServ<ILookupService>().GetByKey(LCategory.orderstatus, LOrderStatus.Pending).ID; // status = pending
+            _wo.statusID = HttpClientUtil.GetLookup(LCategory.orderstatus, LOrderStatus.Pending); // status = pending
             //
             // Create employer
             ui.employerCreate(_employer1);
@@ -144,7 +148,7 @@ namespace Machete.Test.Selenium.View
             //_wa1.workOrder = _wo;
             _wa1.workOrderID = _wo.ID;
             // pseudoID needs to be updated; created on save above
-            _wa1.pseudoID = frb.ToServ<IWorkAssignmentService>().Get(_wa1.ID).pseudoID;
+            _wa1.pseudoID = await HttpClientUtil.GetWorkAssignment(_wa1.ID);
             // Activate assignment
             ui.workAssignmentActivate(_employer1, _wo, _wa1);
             //
