@@ -257,8 +257,8 @@ namespace Machete.Test.Selenium.View
 
             // Test good search first
             ui.WaitForElement(By.Id("activityTable_searchbox")).Clear();
-            ui.WaitForElement(By.Id("activityTable_searchbox")).SendKeys("selenium.uitest");
-            result = ui.WaitForElementValue(By.XPath("//table[@id='activityTable']/tbody/tr[5]/td[3]"), "selenium.uitest");
+            ui.WaitForElement(By.Id("activityTable_searchbox")).SendKeys(SharedConfig.SeleniumUser);
+            result = ui.WaitForElementValue(By.XPath("//table[@id='activityTable']/tbody/tr[5]/td[3]"), SharedConfig.SeleniumUser);
             Assert.IsTrue(result, "Activities search not returning proper results");
         }
 

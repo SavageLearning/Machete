@@ -268,7 +268,7 @@ namespace Machete.Test
             typeID = HttpClientUtil.GetFirstLookupInCategory(LCategory.activityType),
             // nameID = HttpClientUtil.TenantLookupsCache.First(x => x.category == Domain.LCategory.activityName && x.text_EN == "Basic English").ID,
             nameID = HttpClientUtil.GetFirstLookupInCategory(LCategory.activityName),
-            teacher = "selenium.uitest",
+            teacher = SharedConfig.SeleniumUser,
             notes = "foo too",
             dateStart = DateTime.Now,
             dateEnd = DateTime.Now,
