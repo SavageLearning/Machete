@@ -8,28 +8,23 @@ namespace Machete.Service
 {
     public interface ITransportProvidersService : IService<TransportProvider>
     {
-        TransportProviderAvailabilities CreateAvailability(int id, TransportProviderAvailabilities tpa, string user);
-
+        TransportProviderAvailability CreateAvailability(int id, TransportProviderAvailability tpa, string user);
     }
-    public class TransportProvidersService : ServiceBase<TransportProvider>, ITransportProvidersService
+    public class TransportProvidersService : ServiceBase2<TransportProvider>, ITransportProvidersService
     {
-        private readonly IMapper map;
         private readonly ITransportProvidersAvailabilityService tpaServ;
 
         public TransportProvidersService(
-            ITransportProvidersRepository repo, 
+            IDatabaseFactory db,
             ITransportProvidersAvailabilityService tpaServ,
-            IUnitOfWork uow, 
-            IMapper map) : base(repo, uow)
+            IMapper map) : base(db, map)
         {
             this.tpaServ = tpaServ;
-            this.map = map;
-            this.logPrefix = "TransportRule";
         }
 
-        public TransportProviderAvailabilities CreateAvailability(int id, TransportProviderAvailabilities tpa, string user)
+        public TransportProviderAvailability CreateAvailability(int id, TransportProviderAvailability tpa, string user)
         {
-            TransportProviderAvailabilities entity;
+            TransportProviderAvailability entity;
             var provider = Get(id);
             if (provider.AvailabilityRules.SingleOrDefault(a => a.day == tpa.day) == null)
             {

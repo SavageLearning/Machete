@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using TransportRuleViewModel = Machete.Web.ViewModel.Api.TransportRule;
-using TransportCostRuleViewModel = Machete.Web.ViewModel.Api.TransportCostRule;
+using Machete.Domain;
+using Machete.Web.ViewModel.Api;
 
 namespace Machete.Web.Maps.Api
 {
@@ -8,10 +8,10 @@ namespace Machete.Web.Maps.Api
     {
         public TransportRulesMap()
         {
-            CreateMap<Domain.TransportRule, Machete.Web.ViewModel.Api.TransportRule>()
+            CreateMap<TransportRule, TransportRuleVM>()
                 .ForMember(v => v.id, opt => opt.MapFrom(d => d.ID))
                 .ForMember(v => v.costRules, opt => opt.Ignore());
-            CreateMap<Domain.TransportCostRule, TransportCostRuleViewModel>();
+            CreateMap<TransportCostRule, TransportCostRuleVM>();
         }
     }
 }

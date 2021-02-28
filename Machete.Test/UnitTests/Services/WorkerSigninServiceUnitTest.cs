@@ -60,8 +60,6 @@ namespace Machete.Test.UnitTests.Services
         {
         }
 
-        private TestContext testContextInstance;
-
         [TestInitialize()]
         public void TestInitialize()
         {

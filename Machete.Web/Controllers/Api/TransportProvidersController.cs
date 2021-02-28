@@ -1,132 +1,95 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
-using Machete.Web.Controllers.Api.Abstracts;
-using Machete.Web.Helpers.Api;
+using Machete.Web.ViewModel.Api;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TransportProvider = Machete.Web.ViewModel.Api.TransportProvider;
+using TransportProviderVM = Machete.Web.ViewModel.Api.TransportProviderVM;
 
 namespace Machete.Web.Controllers.Api
 {
-    [Route("api/transportproviders")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class TransportProvidersController : MacheteApiController
+    public class TransportProvidersController : MacheteApi2Controller<TransportProvider, TransportProviderVM>
     {
-        private readonly ITransportProvidersService serv;
-        private readonly IMapper map;
+        private ITransportProvidersService _serv;
 
-        public TransportProvidersController(ITransportProvidersService serv, IMapper map)
-        {
-            this.serv = serv;
-            this.map = map;
+        public TransportProvidersController(ITransportProvidersService serv, IMapper map) : base(serv, map) {
+            _serv = serv;
         }
 
         // GET: api/TransportRule
-        [Authorize(Roles = "Administrator, Check-in, Hirer, Manager, PhoneDesk, Teacher, User")]
-        [HttpGet]
-        [Route("")]
-        public ActionResult Get()
+        [HttpGet, Authorize(Roles = "Administrator, Check-in, Hirer, Manager, PhoneDesk, Teacher, User")]
+        public ActionResult<IEnumerable<TransportProviderVM>> Get()
         {
             try
             {
-                var result = serv.GetMany(w => w.active)
+                var result = service.GetMany(w => w.active)
                     .Select(e => 
-                    map.Map<Domain.TransportProvider, TransportProvider>(e))
+                    map.Map<Domain.TransportProvider, TransportProviderVM>(e))
                     .AsEnumerable();
-                return new JsonResult(new { data = result });
+                return Ok(result);
             }
             catch (Exception ex)
             {
-                return new JsonResult(ex);
+                return StatusCode(500, ex);
             }
         }
 
         // GET: api/TransportProvider/5
-        [Authorize(Roles = "Administrator, Check-in, Hirer, Manager, PhoneDesk, Teacher, User")]
-        [HttpGet]
-        [Route("{id}")]
-        public ActionResult Get(int id)
-        {
-            var result = map.Map<Domain.TransportProvider, TransportProvider>(serv.Get(id));
-            if (result == null) return NotFound();
-
-            return new JsonResult(new { data = result });
-        }
+        [HttpGet("{id}"), Authorize(Roles = "Administrator, Check-in, Hirer, Manager, PhoneDesk, Teacher, User")]
+        public new ActionResult<TransportProviderVM> Get(int id) { return base.Get(id); }
 
         // POST: api/TransportProvider
-        [Authorize(Roles = "Administrator, Manager")]
-        [HttpPost("")]
-        public void Post([FromBody]TransportProvider value)
-        {
-            var domain = map.Map<ViewModel.Api.TransportProvider, Domain.TransportProvider>(value);
-            serv.Save(domain, UserEmail);
-        }
+        [HttpPost, Authorize(Roles = "Administrator")]
+        public new ActionResult<TransportProviderVM> Post([FromBody]TransportProviderVM value) { return base.Post(value); }
 
         // PUT: api/TransportProvider/5
-        [Authorize(Roles = "Administrator, Manager")]
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]TransportProvider value)
-        {
-            var domain = serv.Get(value.id);
-            // TODO employers must only be able to edit their record
-            map.Map<TransportProvider, Domain.TransportProvider>(value, domain);
-            serv.Save(domain, UserEmail);
-        }
+        [HttpPut("{id}"), Authorize(Roles = "Administrator")]
+        public new ActionResult<TransportProviderVM> Put(int id, [FromBody]TransportProviderVM value) { return base.Put(id, value); }
 
-        // DELETE: api/TransportProvider/5
-        [Authorize(Roles = "Administrator")]
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
-
+        [HttpDelete("{id}"), Authorize(Roles = "Administrator")]
+        public new ActionResult<TransportProviderVM> Delete(int id) { return base.Delete(id); }
         //
         // TransportProvider Availabilities
-
         [Authorize(Roles = "Administrator, Check-in, Hirer, Manager, PhoneDesk, Teacher, User")]
-        [HttpGet]
-        [Route("{tpid}/availabilities")]
-        public ActionResult ARGet(int tpid)
+        [HttpGet("{tpid}/availabilities")]
+        public ActionResult<IEnumerable<TransportProviderAvailabilityVM>> ARGet(int tpid)
         {
             try
             {
-                var result = serv.Get(tpid).AvailabilityRules
+                var result = service.Get(tpid).AvailabilityRules
                     .Select(e =>
-                    map.Map<Domain.TransportProviderAvailabilities, TransportProviderAvailabilities>(e))
+                    map.Map<TransportProviderAvailability, TransportProviderAvailabilityVM>(e))
                     .AsEnumerable();
-                return new JsonResult(new { data = result });
+                return Ok(result);
             }
             catch (Exception ex)
             {
-                return new JsonResult(ex);
+                return StatusCode(500, ex);
             }
         }
 
         // POST: api/TransportProvider/{tpid}/AvailabilityRules
-        [Authorize(Roles = "Administrator")]
-        [HttpPost("{tpid}/availabilities")]
-        public ActionResult ARPost(int tpid, [FromBody]TransportProviderAvailabilities value)
+        [HttpPost("{tpid}/availabilities"), Authorize(Roles = "Administrator")]
+        public ActionResult<TransportProviderAvailabilityVM> ARPost(int tpid, [FromBody]TransportProviderAvailabilityVM value)
         {
-            var domain = map.Map<TransportProviderAvailabilities, Domain.TransportProviderAvailabilities>(value);
+            var domain = map.Map<TransportProviderAvailabilityVM, TransportProviderAvailability>(value);
 
             try
             {
-                var entity = serv.CreateAvailability(tpid, domain, UserEmail);
-                var result = map.Map<Domain.TransportProviderAvailabilities, TransportProviderAvailabilities>(entity);
-                return new JsonResult(new { data = result });
-
+                var entity = _serv.CreateAvailability(tpid, domain, UserEmail);
+                var result = map.Map<TransportProviderAvailability, TransportProviderAvailabilityVM>(entity);
+                return Ok(result);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError, new {
-                    Content = new StringContent(e.Message),
-                    ReasonPhrase = "Create new availability failed"
-                });
+                return StatusCode(500, ex);
             }
         }
     }

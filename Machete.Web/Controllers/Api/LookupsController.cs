@@ -1,68 +1,62 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
+using Machete.Domain;
 using Machete.Service;
+using Machete.Web.ViewModel.Api;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Web.Controllers.Api
 {
-    [Route("api/lookups")]
-    [ApiController]
-    public class LookupsController : ControllerBase
+        [Route("api/[controller]")]
+        [ApiController]
+    public class LookupsController : MacheteApi2Controller<Lookup, LookupVM> 
     {
-        private readonly ILookupService serv;
-        private readonly IMapper map;
-
-        public LookupsController(ILookupService serv, IMapper map)
-        {
-            this.serv = serv;
-            this.map = map;
-        }
+        public LookupsController(ILookupService serv, IMapper map) : base(serv, map) {}
 
         // GET: api/Lookups
         [HttpGet]
-        [Route("")]
-        public ActionResult Get()
+        public virtual ActionResult<IEnumerable<LookupVM>> Get()
         {
-            var result = serv.GetMany(l => l.active)
-                .Select(e => map.Map<Domain.Lookup, Machete.Web.ViewModel.Api.Lookup>(e))
-                .AsEnumerable();
-            return new JsonResult(new { data = result });
+            IEnumerable<LookupVM> result;
+            try {
+                result = service.GetMany(l => l.active)
+                    .Select(e => map.Map<Lookup, LookupVM>(e))
+                    .AsEnumerable();
+            }
+            catch(Exception ex) {
+                return StatusCode(500, ex);
+            }
+            return Ok(result);
         }
 
-        [HttpGet]
-        [Route("{category}")]
-        public ActionResult Get(string category)
+        [HttpGet("{category}")]
+        public ActionResult<IEnumerable<LookupVM>> GetByCategory(string category)
         {
-            var result = serv.GetMany(w => w.category == category && w.active)
-                .Select(e => map.Map<Domain.Lookup, Machete.Web.ViewModel.Api.Lookup>(e))
-                .AsEnumerable();
-            return new JsonResult(new { data = result });
+            IEnumerable<LookupVM> result;
+            try {
+                result = service.GetMany(w => w.category == category && w.active)
+                    .Select(e => map.Map<Lookup, LookupVM>(e))
+                    .AsEnumerable();
+            }
+            catch (Exception ex) {
+                return StatusCode(500, ex);
+            }
+            return Ok(result);
         }
 
-        // GET: api/Lookups/5
-        [HttpGet]
-        [Route("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+        [HttpGet("{id}"), Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
+        public new ActionResult<LookupVM> Get(int id) { return base.Get(id); }
 
-        // POST: api/Lookups
-        [HttpPost("")]
-        public void Post([FromBody]string value)
-        {
-        }
+        [HttpPost, Authorize(Roles = "Administrator")]
+        public new ActionResult<LookupVM> Post([FromBody]LookupVM value) { return base.Post(value); }
 
-        // PUT: api/Lookups/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
+        [HttpPut("{id}"), Authorize(Roles = "Administrator")]
+        public new ActionResult<LookupVM> Put(int id, [FromBody]LookupVM value) { return base.Put(id, value); }
 
-        [HttpDelete("{id}")]
-        // DELETE: api/Lookups/5
-        public void Delete(int id)
-        {
-        }
+        [HttpDelete("{id}"), Authorize(Roles = "Administrator")]
+        public new ActionResult<LookupVM> Delete(int id) { return base.Delete(id); }
     }
 }

@@ -1,6 +1,6 @@
 using AutoMapper;
-using TransportProviderAvailabilityViewModel = Machete.Web.ViewModel.Api.TransportProviderAvailability;
-using TransportProviderViewModel = Machete.Web.ViewModel.Api.TransportProvider;
+using Machete.Domain;
+using Machete.Web.ViewModel.Api;
 
 namespace Machete.Web.Maps.Api
 {
@@ -8,12 +8,12 @@ namespace Machete.Web.Maps.Api
     {
         public TransportProvidersMap()
         {
-            CreateMap<Domain.TransportProvider, TransportProviderViewModel>()
+            CreateMap<TransportProvider, TransportProviderVM>()
                 .ForMember(v => v.id, opt => opt.MapFrom(d => d.ID))
                 .ForMember(v => v.text, opt => opt.MapFrom(d => d.text_EN));
-            CreateMap<Domain.TransportProviderAvailabilities, TransportProviderAvailabilityViewModel>();
+            CreateMap<TransportProviderAvailability, TransportProviderAvailabilityVM>();
 
-            CreateMap<TransportProviderAvailabilityViewModel, Domain.TransportProviderAvailabilities>();
+            CreateMap<TransportProviderAvailabilityVM, TransportProviderAvailability>();
         }
     }
 }

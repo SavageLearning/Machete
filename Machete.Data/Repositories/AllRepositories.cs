@@ -49,10 +49,6 @@ namespace Machete.Data
     // Interfaces referenced in Service layer 
     //
     public interface IWorkerSigninRepository : IRepository<WorkerSignin> { }
-    public interface IEmployerRepository : IRepository<Employer>
-    {
-        Employer GetBySubject(string subject);
-    }
     public interface IEmailRepository : IRepository<Email> 
     {
         IEnumerable<Email> GetEmailsToSend();
@@ -129,19 +125,7 @@ namespace Machete.Data
             return dbset.AsNoTracking().AsQueryable();
         }
     }
-    
-    public class EmployerRepository : RepositoryBase<Employer>, IEmployerRepository
-    {
-        public EmployerRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
 
-        public Employer GetBySubject(string subject)
-        {
-            var q = from e in dbset.AsQueryable()
-                    where e.onlineSigninID.Equals(subject)
-                    select e;
-            return q.SingleOrDefault();
-        }
-    }
     /// <summary>
     /// 
     /// </summary>

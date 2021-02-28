@@ -1,11 +1,10 @@
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
 @using WorkOrder = Machete.Domain.WorkOrder
-@model Machete.Web.ViewModel.WorkOrder
+@model Machete.Web.ViewModel.WorkOrderMVC
 
 @{
     string recType = "WO";
-    string empRecType = "employer";
     string idPrefix = recType + Model.ID + "-";
     int editDisable = 0;
     if (!Html.IsInRole("Administrator", "Manager") && Html.IsInRole("Administrator", "Manager", "PhoneDesk") && Model.dateTimeofWork < DateTime.Today)

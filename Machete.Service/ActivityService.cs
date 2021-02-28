@@ -48,15 +48,12 @@ namespace Machete.Service
     {
         private IActivitySigninService asServ;
         private TimeZoneInfo _clientTimeZoneInfo;
-        private readonly IMapper map;
-        public ActivityService(IDatabaseFactory db,
+        public ActivityService(
+            IDatabaseFactory db,
             IActivitySigninService asServ,
-            IMapper map,
-            ITenantService tenantService
-        ) : base(db)
+            ITenantService tenantService,
+            IMapper map) : base(db, map)
         {
-            this.logPrefix = "Activity";
-            this.map = map;
             this.asServ = asServ;
             _clientTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(tenantService.GetCurrentTenant().Timezone);
         }

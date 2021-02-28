@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Globalization;
 using AutoMapper;
-using Machete.Web.Helpers;
+using Machete.Domain;
+using Machete.Web.ViewModel.Api;
 
 namespace Machete.Web.Maps.Api
 {
@@ -9,20 +10,20 @@ namespace Machete.Web.Maps.Api
     {
         public WorkOrdersMap()
         {
-            CreateMap<Service.DTO.WorkOrdersList, ViewModel.Api.WorkOrder>()
+            CreateMap<Service.DTO.WorkOrdersList, WorkOrderVM>()
                 .ForMember(v => v.dateTimeofWork, opt => opt.MapFrom(d => d.dateTimeofWork.ToString("o", CultureInfo.InvariantCulture)))
                 .ForMember(v => v.datecreated, opt => opt.MapFrom(d => d.datecreated.ToString("o", CultureInfo.InvariantCulture)))
                 .ForMember(v => v.dateupdated, opt => opt.MapFrom(d => d.dateupdated.ToString("o", CultureInfo.InvariantCulture)))
                 ;
-            CreateMap<Domain.WorkOrder, ViewModel.Api.WorkOrder>()
+            CreateMap<WorkOrder, WorkOrderVM>()
                 .ForMember(v => v.dateTimeofWork, opt => opt.MapFrom(d => d.dateTimeofWork.ToString("o", CultureInfo.InvariantCulture)))
                 .ForMember(v => v.datecreated, opt => opt.MapFrom(d => d.datecreated.ToString("o", CultureInfo.InvariantCulture)))
                 .ForMember(v => v.dateupdated, opt => opt.MapFrom(d => d.dateupdated.ToString("o", CultureInfo.InvariantCulture)))
                 ;
-            //CreateMap<Domain.WorkOrder, Service.DTO.WorkOrdersList>()
-            //    .ForMember(v => v.workers, opt => opt.MapFrom(d => d.workerRequests ?? new List<Domain.WorkerRequest>()))
+            //CreateMap<WorkOrder, Service.DTO.WorkOrdersList>()
+            //    .ForMember(v => v.workers, opt => opt.MapFrom(d => d.workerRequests ?? new List<WorkerRequest>()))
             //    ;
-            CreateMap<ViewModel.Api.WorkOrder, Domain.WorkOrder>()
+            CreateMap<WorkOrderVM, WorkOrder>()
                 // Don't convert Date; JavaScript dates are already UTC + timezone offset. NEW api should get/return UTC.
                 .ForMember(v => v.dateTimeofWork, opt => opt.MapFrom(d => d.dateTimeofWork)) //.ToUtcDateTime()))
                 .ForMember(v => v.datecreated, opt => opt.Ignore())

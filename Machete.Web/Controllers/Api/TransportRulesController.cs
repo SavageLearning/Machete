@@ -4,60 +4,50 @@ using System.Linq;
 using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
-using Machete.Web.Controllers.Api.Abstracts;
-using Machete.Web.Helpers.Api;
+using Machete.Web.ViewModel.Api;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TransportCostRule = Machete.Web.ViewModel.Api.TransportCostRule;
-using TransportRule = Machete.Web.ViewModel.Api.TransportRule;
 
 namespace Machete.Web.Controllers.Api
 {
-    [Route("api/transportrules")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class TransportRulesController : MacheteApiController
+    public class TransportRulesController : MacheteApi2Controller<TransportRule, TransportRuleVM>
     {
-        private readonly ITransportRuleService serv;
         private readonly ITransportCostRuleService _costServ;
-        private readonly IMapper map;
-
         public TransportRulesController(
             ITransportRuleService serv,
             ITransportCostRuleService costServ, 
-            IMapper map)
+            IMapper map) : base(serv, map)
         {
-            this.serv = serv;
             _costServ = costServ;
-            this.map = map;
         }
 
         // GET: api/TransportRule
-        [Authorize(Roles = "Administrator, Hirer")]
-        [HttpGet]
-        [Route("")]
-        public ActionResult Get()
+        [HttpGet, Authorize(Roles = "Administrator, Hirer")]
+        public ActionResult<IEnumerable<TransportRuleVM>> Get()
         {
             try
             {
-                var result = serv.GetAll()
-                    .Select(e => map.Map<Domain.TransportRule, ViewModel.Api.TransportRule>(e))
+                var result = service.GetAll()
+                    .Select(e => map.Map<Domain.TransportRule, TransportRuleVM>(e))
                     .ToList();
 
                 var transportCostRules = _costServ.GetAll().ToList();
                 foreach (var p in result)
                 {
                     var pCostRules = transportCostRules.Where(costRule => costRule.transportRuleID == p.id).ToList();
-                    p.costRules = new List<TransportCostRule>();
+                    p.costRules = new List<TransportCostRuleVM>();
 
                     // TODO mapper
                     foreach (var q in pCostRules)
                     {
-                        p.costRules.Add(new TransportCostRule
+                        p.costRules.Add(new TransportCostRuleVM
                         {
                             cost = q.cost,
                             createdby = q.createdby,
-                            datecreated = q.datecreated,
-                            dateupdated = q.dateupdated,
+                            datecreated = q.datecreated.ToString(),
+                            dateupdated = q.dateupdated.ToString(),
                             id = q.ID,
                             maxWorker = q.maxWorker,
                             minWorker = q.minWorker,
@@ -67,38 +57,24 @@ namespace Machete.Web.Controllers.Api
                     }
                 }    
                 
-                return new JsonResult(new { data = result });
+                return Ok(result);
             }
             catch (Exception ex)
             {
-                return new JsonResult(ex);
+                return StatusCode(500, ex);
             }
         }
 
-        // GET: api/TransportRule/5
-        [HttpGet]
-        [Route("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+        [HttpGet("{id}"), Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
+        public new ActionResult<TransportRuleVM> Get(int id) { return base.Get(id); }
 
-        // POST: api/TransportRule
-        [HttpPost("")]
-        public void Post([FromBody]string value)
-        {
-        }
+        [HttpPost, Authorize(Roles = "Administrator")]
+        public new ActionResult<TransportRuleVM> Post([FromBody]TransportRuleVM value) { return base.Post(value); }
 
-        // PUT: api/TransportRule/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
+        [HttpPut("{id}"), Authorize(Roles = "Administrator")]
+        public new ActionResult<TransportRuleVM> Put(int id, [FromBody]TransportRuleVM value) { return base.Put(id, value); }
 
-        // DELETE: api/TransportRule/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        [HttpDelete("{id}"), Authorize(Roles = "Administrator")]
+        public new ActionResult<TransportRuleVM> Delete(int id) { return base.Delete(id); }
     }
 }

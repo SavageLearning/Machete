@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using Machete.Data.Tenancy;
+using Machete.Domain;
 using Machete.Service;
-using Machete.Web.Controllers.Api.Abstracts;
 using Machete.Web.Helpers;
+using Machete.Web.ViewModel.Api;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DTO = Machete.Service.DTO;
@@ -14,79 +16,58 @@ namespace Machete.Web.Controllers.Api
 {
     [Route("api/workorders")]
     [ApiController]
-    public class WorkOrdersController : MacheteApiController
+    public class WorkOrdersController : MacheteApi2Controller<WorkOrder, WorkOrderVM>
     {
-        private readonly IWorkOrderService _serv;
-        private readonly IMapper _map;
+        private readonly IWorkOrderService serv;
         private readonly TimeZoneInfo _clientTimeZoneInfo;
 
-        public WorkOrdersController(IWorkOrderService workOrderService, ITenantService tenantService,
-            IMapper map)
+        public WorkOrdersController(IWorkOrderService serv, ITenantService tenantService,
+            IMapper map) : base(serv, map)
         {
-            _serv = workOrderService;
-            _map = map;
+            this.serv = serv;
+            this.map = map;
             _clientTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(tenantService.GetCurrentTenant().Timezone);
         }
 
 
         // GET api/values
-        [Authorize(Roles = "Administrator")]
-        [HttpGet]
-        [Route("")]
-        public ActionResult Get()
+        [HttpGet, Authorize(Roles = "Administrator")]
+        public new ActionResult<IEnumerable<WorkOrderVM>> Get(
+            [FromQuery]int displayLength = 10,
+            [FromQuery]int displayStart = 0)
         {
             var vo = new viewOptions();
             vo.displayLength = 10;
             vo.displayStart = 0;
             vo.employerGuid = UserSubject;
-            dataTableResult<DTO.WorkOrdersList> list = _serv.GetIndexView(vo);
+            dataTableResult<DTO.WorkOrdersList> list = serv.GetIndexView(vo);
             
             MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
             
             var result = list.query
                 .Select(
-                    e => _map.Map<DTO.WorkOrdersList, ViewModel.Api.WorkOrder>(e)
+                    e => map.Map<DTO.WorkOrdersList, WorkOrderVM>(e)
                 ).AsEnumerable();            
-            return new JsonResult(new { data =  result });
+            return Ok(result);
         }
 
         // GET api/values/5
-        [Authorize(Roles = "Administrator")]
-        [HttpGet]
-        [Route("{id}")]
-        public ActionResult Get(int id)
+        [HttpGet("{id}"), Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
+        public new ActionResult<WorkOrderVM> Get(int id)
         {
             MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
         
-            var result = _map.Map<Domain.WorkOrder, ViewModel.Api.WorkOrder>(_serv.Get(id));
-            return new JsonResult(new { data = result });
+            var result = map.Map<Domain.WorkOrder, WorkOrderVM>(serv.Get(id));
+            return Ok(result);
         }
 
-        // POST api/values
-        [Authorize(Roles = "Administrator")]
-        [HttpPost("")]
-        public void Post([FromBody]ViewModel.Api.WorkOrder order)
-        {
-            var domain = _map.Map<ViewModel.Api.WorkOrder, Domain.WorkOrder>(order);
-            _serv.Save(domain, UserEmail);
-        }
+        [HttpPost, Authorize(Roles = "Administrator")]
+        public new ActionResult<WorkOrderVM> Post([FromBody]WorkOrderVM value) { return base.Post(value); }
 
-        // PUT api/values/5
-        [Authorize(Roles = "Administrator")]
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]ViewModel.Api.WorkOrder order)
-        {
-            var domain = _serv.Get(order.id);
-            // TODO employers must only be able to edit their record
-            _map.Map<ViewModel.Api.WorkOrder, Domain.WorkOrder>(order, domain);
-            _serv.Save(domain,UserEmail);
-        }
+        [HttpPut("{id}"), Authorize(Roles = "Administrator")]
+        public new ActionResult<WorkOrderVM> Put(int id, [FromBody]WorkOrderVM value) { return base.Put(id, value); }
 
-        // DELETE api/values/5
-        [Authorize(Roles = "Administrator")]
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        [HttpDelete("{id}"), Authorize(Roles = "Administrator")]
+        public new ActionResult<WorkOrderVM> Delete(int id) { return base.Delete(id); }
     }
 }

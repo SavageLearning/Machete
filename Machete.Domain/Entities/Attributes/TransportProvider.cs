@@ -8,7 +8,7 @@ namespace Machete.Domain
 {
     public class TransportProvider : Attribute
     {
-        public virtual ICollection<TransportProviderAvailabilities> AvailabilityRules { get; set; }
+        public virtual ICollection<TransportProviderAvailability> AvailabilityRules { get; set; }
 
     }
 }

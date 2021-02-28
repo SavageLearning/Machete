@@ -1,71 +1,42 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
-using Machete.Web.Controllers.Api.Abstracts;
-using Machete.Web.Helpers.Api;
+using Machete.Web.ViewModel.Api;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ScheduleRule = Machete.Web.ViewModel.Api.ScheduleRule;
 
 namespace Machete.Web.Controllers.Api
 {
-    [Route("api/schedulerules")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class ScheduleRulesController : MacheteApiController
+    public class ScheduleRulesController : MacheteApi2Controller<ScheduleRule, ScheduleRuleVM>
     {
-        private readonly IScheduleRuleService serv;
-        private readonly IMapper map;
 
-        public ScheduleRulesController(IScheduleRuleService serv, IMapper map)
-        {
-            this.serv = serv;
-            this.map = map;
-        }
+        public ScheduleRulesController(IScheduleRuleService serv, IMapper map) : base(serv, map) {}
 
         // GET: api/ScheduleRules
-        [Authorize(Roles = "Administrator, Hirer")]
-        [HttpGet]
-        public ActionResult Get()
-        {
-            try
-            {
-                var result = serv.GetAll()
-                    .Select(e => map.Map<Domain.ScheduleRule, ScheduleRule>(e))
-                    .AsEnumerable();
-                return new JsonResult(new { data = result });
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(ex);
-            }
+        [HttpGet, Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
+        public new ActionResult<IEnumerable<ScheduleRuleVM>> Get(
+            [FromQuery]int displayLength = 10,
+            [FromQuery]int displayStart = 0) 
+        { 
+            return base.Get(displayLength, displayStart); 
         }
 
-        // GET: api/ScheduleRules/5
-        [HttpGet]
-        [Route("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+        [HttpGet("{id}"), Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
+        public new ActionResult<ScheduleRuleVM> Get(int id) { return base.Get(id); }
 
-        // POST: api/ScheduleRules
-        [HttpPost("")]
-        public void Post([FromBody]string value)
-        {
-        }
+        [HttpPost, Authorize(Roles = "Administrator")]
+        public new ActionResult<ScheduleRuleVM> Post([FromBody]ScheduleRuleVM value) { return base.Post(value); }
 
-        // PUT: api/ScheduleRules/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
+        [HttpPut("{id}"), Authorize(Roles = "Administrator")]
+        public new ActionResult<ScheduleRuleVM> Put(int id, [FromBody]ScheduleRuleVM value) { return base.Put(id, value); }
 
-        // DELETE: api/ScheduleRules/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        [HttpDelete("{id}"), Authorize(Roles = "Administrator")]
+        public new ActionResult<ScheduleRuleVM> Delete(int id) { return base.Delete(id); }
+
     }
 }

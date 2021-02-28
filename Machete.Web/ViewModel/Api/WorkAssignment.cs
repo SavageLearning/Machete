@@ -2,7 +2,7 @@
 
 namespace Machete.Web.ViewModel.Api
 {
-    public class WorkAssignment
+    public class WorkAssignmentVM
     {
         public string createdby { get; set; }
         public DateTime datecreated { get; set; }

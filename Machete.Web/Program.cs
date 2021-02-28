@@ -61,6 +61,9 @@ namespace Machete.Web
                     logging.AddConsole();
                     logging.AddDebug();
                     logging.AddEventSourceLogger();
+                    logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
+                    logging.AddFilter("Microsoft.EntityFrameworkCore.Infrastructure", LogLevel.Warning);
+
                 })
                 .UseStartup<Startup>()
                 .UseUrls("http://*:4213");

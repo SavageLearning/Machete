@@ -5,9 +5,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Machete.Web.ViewModel
 {
-    public class WorkAssignment : Record
+    public class WorkAssignmentMVC : Record
     {
-        public WorkAssignment()
+        public WorkAssignmentMVC()
         {
             idString = "WA";
         }

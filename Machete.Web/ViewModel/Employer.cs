@@ -10,7 +10,7 @@ namespace Machete.Web.ViewModel
         {
             idString = "employer";
         }
-        public virtual ICollection<WorkOrder> WorkOrders { get; set; }
+        public virtual ICollection<WorkOrderMVC> WorkOrders { get; set; }
 
         public string tabref { get; set; }
         public string tablabel { get; set; }

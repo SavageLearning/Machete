@@ -1,6 +1,6 @@
 ﻿namespace Machete.Web.ViewModel.Api
 {
-    public class ScheduleRule : BaseModel
+    public class ScheduleRuleVM : RecordVM
     {
         public int day { get; set; }
         public int leadHours { get; set; }

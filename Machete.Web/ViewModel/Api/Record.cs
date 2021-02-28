@@ -2,7 +2,7 @@
 
 namespace Machete.Web.ViewModel.Api
 {
-    public class Record : ICloneable
+    public class RecordVM : ICloneable
     {
         public string createdby { get; set; }
         public string datecreated { get; set; }

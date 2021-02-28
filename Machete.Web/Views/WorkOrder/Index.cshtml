@@ -217,16 +217,16 @@
         // print and complete buttons from summary page
         //
         $('#printActiveBtn').click(function() {
-            window.open('/WorkOrder/GroupView?assignedOnly=false&date='+$('#activeDate').val());
+            window.open('/WorkOrder/GroupView?assignedOnly=false&targetDate='+$('#activeDate').val());
         });
         $('#printActiveAssignedBtn').click(function() {
-            window.open('/WorkOrder/GroupView?assignedOnly=true&date='+$('#activeDate').val());
+            window.open('/WorkOrder/GroupView?assignedOnly=true&targetDate='+$('#activeDate').val());
         });
         $('#completeActiveBtn').click(function() {
             $.post("/WorkOrder/CompleteOrders",
                 {
                     // Make sure that C# recognizes this as a DateTime value; i.e., return as Date().toJSON();
-                    date: (function () { var val = $('#activeDate').val().split('/'); return new Date(parseInt(val[2], 10), parseInt(val[0], 10) - 1, parseInt(val[1], 10)).toJSON(); })()
+                    targetDate: (function () { var val = $('#activeDate').val().split('/'); return new Date(parseInt(val[2], 10), parseInt(val[0], 10) - 1, parseInt(val[1], 10)).toJSON(); })()
                 },
                 function (data) {
                         alert("Number of orders completed: "+data.completedCount);

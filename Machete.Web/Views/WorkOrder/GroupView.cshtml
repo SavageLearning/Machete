@@ -6,7 +6,7 @@
 }
 else
 {
-foreach (Machete.Web.ViewModel.WorkOrder order in Model.orders)
+foreach (Machete.Web.ViewModel.WorkOrderMVC order in Model.orders)
 {
     @await Html.PartialAsync("View", order);
     <div style="page-break-before: always;">

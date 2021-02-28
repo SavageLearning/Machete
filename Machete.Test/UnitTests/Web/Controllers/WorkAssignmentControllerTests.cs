@@ -105,21 +105,21 @@ namespace Machete.Test.UnitTests.Controllers
         public void create_get_returns_workAssignment()
         {
             // Arrange
-            var vmwo = new ViewModel.WorkAssignment();
+            var vmwo = new ViewModel.WorkAssignmentMVC();
 //            _map.Setup(x => x.Map<WorkAssignment, ViewModel.WorkAssignment>(It.IsAny<WorkAssignment>()))
 //                .Returns(vmwo);
             var lc = new List<Domain.Lookup>();
             //Act
             var result = (PartialViewResult)_controller.Create(0, "Unit WA Controller desc");
             //Assert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(ViewModel.WorkAssignment));
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(ViewModel.WorkAssignmentMVC));
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WAs)]
         public async Task create_valid_post_returns_json()
         {
             //Arrange            
-            var vmwo = new ViewModel.WorkAssignment();
+            var vmwo = new ViewModel.WorkAssignmentMVC();
             Domain.WorkAssignment asmt = new Domain.WorkAssignment();
             asmt.ID = 4242;
             asmt.pseudoID = 01;
@@ -164,7 +164,7 @@ namespace Machete.Test.UnitTests.Controllers
         public void Unit_WA_Controller_edit_get_returns_workAssignment()
         {
             //Arrange
-            var vmwo = new Machete.Web.ViewModel.WorkAssignment();
+            var vmwo = new Machete.Web.ViewModel.WorkAssignmentMVC();
 //            _map.Setup(x => x.Map<Domain.WorkAssignment, Machete.Web.ViewModel.WorkAssignment>(It.IsAny<Domain.WorkAssignment>()))
 //                .Returns(vmwo);
             int testid = 4242;
@@ -174,7 +174,7 @@ namespace Machete.Test.UnitTests.Controllers
             //Act
             PartialViewResult result = (PartialViewResult)_controller.Edit(testid);
             //Assert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Machete.Web.ViewModel.WorkAssignment));
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Machete.Web.ViewModel.WorkAssignmentMVC));
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WAs)]

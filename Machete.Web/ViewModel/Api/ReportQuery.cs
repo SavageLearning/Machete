@@ -1,6 +1,6 @@
 ﻿namespace Machete.Web.ViewModel.Api
 {
-    public class ReportQuery
+    public class ReportQueryVM
     {
         public string query { get; set; }
     }

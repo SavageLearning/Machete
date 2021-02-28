@@ -13,8 +13,9 @@ using Machete.Data.Repositories;
 using Machete.Data.Tenancy;
 using Machete.Domain;
 using Machete.Service;
+using Machete.Web.Controllers.Api;
 using Machete.Service.BackgroundServices;
-using Machete.Web.Controllers.Api.Abstracts;
+//using Machete.Web.Controllers.Api.Abstracts;
 using Machete.Web.Helpers;
 using Machete.Web.Helpers.Api;
 using Machete.Web.Helpers.Api.Identity;
@@ -165,7 +166,6 @@ namespace Machete.Web
             services.AddScoped<IConfigRepository, ConfigRepository>();
             services.AddScoped<IEmailConfig, EmailConfig>();
             services.AddScoped<IEmailRepository, EmailRepository>();
-            services.AddScoped<IEmployerRepository, EmployerRepository>();
             services.AddScoped<IEventRepository, EventRepository>();
             services.AddScoped<IImageRepository, ImageRepository>();
             services.AddScoped<ILookupRepository, LookupRepository>();
@@ -179,8 +179,6 @@ namespace Machete.Web
             services.AddScoped<IScheduleRuleRepository, ScheduleRuleRepository>();
             services.AddScoped<ITransportRuleRepository, TransportRuleRepository>();
             services.AddScoped<ITransportCostRuleRepository, TransportCostRuleRepository>();
-            services.AddScoped<ITransportProvidersRepository, TransportProvidersRepository>();
-            services.AddScoped<ITransportProvidersAvailabilityRepository, TransportProvidersAvailabilityRepository>();
 
             services.AddScoped<IActivityService, ActivityService>();
             services.AddScoped<IActivitySigninService, ActivitySigninService>();
@@ -218,7 +216,7 @@ namespace Machete.Web
             var controllerNames = Assembly.GetCallingAssembly()
                 .GetTypes()
                 .Where(x =>
-                    x.IsSubclassOf(typeof(MacheteApiController)) &&
+                    x.IsSubclassOf(typeof(ControllerBase)) &&
                     x.FullName.StartsWith(MethodBase.GetCurrentMethod().DeclaringType.Namespace + ".Controllers"))
                 .ToList()
                 .Select(x => x.Name.Replace("Controller", ""));

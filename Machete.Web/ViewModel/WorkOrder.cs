@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Machete.Web.ViewModel
 {
-    public class WorkOrder : Record
+    public class WorkOrderMVC : Record
     {
         public IDefaults def { get; set; }
 
@@ -29,14 +29,14 @@ namespace Machete.Web.ViewModel
         public int EmployerID { get; set; }
         public virtual Employer Employer { get; set; }
 
-        public virtual ICollection<WorkAssignment> workAssignments { get; set; }
+        public virtual ICollection<WorkAssignmentMVC> workAssignments { get; set; }
 
         [LocalizedDisplayName("workerRequests", NameResourceType = typeof(Resources.WorkOrder))]
         public virtual ICollection<WorkerRequest> workerRequestsAAA { get; set; }
         public virtual ICollection<Email> Emails { get; set; }
 
         // Constructor
-        public WorkOrder()
+        public WorkOrderMVC()
         {
             idString = "WO";
         }

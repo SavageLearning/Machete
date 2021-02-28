@@ -50,7 +50,6 @@ namespace Machete.Test.UnitTests.Services
         private WorkAssignmentService waServ;
         private Mock<IMapper> _map;
         private Mock<IWorkOrderRepository> woRepo;
-        private TestContext testContextInstance;
         private Mock<ITenantService> _tenantService;
 
         public WorkAssignmentTests()

@@ -7,8 +7,8 @@ using AutoMapper;
 using Machete.Data.Tenancy;
 using Machete.Domain;
 using Machete.Service;
-using Machete.Web.Controllers.Api.Abstracts;
 using Machete.Web.Helpers;
+using Machete.Web.ViewModel.Api;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -19,31 +19,25 @@ namespace Machete.Web.Controllers.Api
 {
     [Route("api/onlineorders")]
     [ApiController]
-    public class OnlineOrdersController : MacheteApiController
+    public class OnlineOrdersController : MacheteApi2Controller<WorkOrder, WorkOrderVM>
     {
         private readonly IOnlineOrdersService serv;
-        private readonly IEmployerService eServ;
-        private readonly IWorkOrderService woServ;
-        private readonly IMapper map;
         private readonly string paypalId;
         private readonly string paypalSecret;
         private readonly string paypalUrl;
         private readonly TimeZoneInfo _clientTimeZoneInfo;
 
-        private Employer Employer => eServ.Get(guid: UserSubject) ??
-            throw new MacheteNullObjectException($"Not found: employer record; no employer record associated with claim {UserSubject}");
+        //private Employer Employer;
+        private Employer Employer => serv.GetEmployer(UserSubject) ??
+                throw new MacheteNullObjectException($"Not found: employer record; no employer record associated with claim {UserSubject}");
 
         public OnlineOrdersController(
             IOnlineOrdersService serv, 
-            IEmployerService eServ,
-            IWorkOrderService woServ,
             ITenantService tenantService,
             IMapper map,
-            IConfigService cServ)
+            IConfigService cServ) : base(serv, map)
         {
             this.serv = serv;
-            this.eServ = eServ;
-            this.woServ = woServ;
             this.map = map;
 
             paypalId = cServ.getConfig(Cfg.PaypalId);
@@ -54,9 +48,7 @@ namespace Machete.Web.Controllers.Api
         }
 
         // GET: api/onlineorders
-        [Authorize(Roles = "Administrator, Hirer")]
-        [HttpGet]
-        [Route("")]
+        [HttpGet, Authorize(Roles = "Administrator, Hirer")]
         public ActionResult Get()
         {
             var vo = new viewOptions();
@@ -64,24 +56,22 @@ namespace Machete.Web.Controllers.Api
             vo.displayStart = 0;
             vo.employerGuid = UserSubject;
             vo.CI = Thread.CurrentThread.CurrentCulture;
-            dataTableResult<Service.DTO.WorkOrdersList> list = woServ.GetIndexView(vo);
+            dataTableResult<Service.DTO.WorkOrdersList> list = serv.GetIndexView(vo);
             
             MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
             
             var result = list.query
                 .Select(
-                    e => map.Map<Service.DTO.WorkOrdersList, ViewModel.Api.WorkOrder>(e)
+                    e => map.Map<Service.DTO.WorkOrdersList, WorkOrderVM>(e)
                 ).AsEnumerable();
             return new JsonResult(new { data = result });
         }
 
         // GET: api/onlineorders/5
-        [Authorize(Roles = "Administrator, Hirer")]
-        [HttpGet]
-        [Route("{orderID}")]
-        public ActionResult Get(int orderID)
+        [HttpGet("{orderID}"), Authorize(Roles = "Administrator, Hirer")]
+        public new ActionResult<WorkOrderVM> Get(int orderID)
         {
-            Domain.WorkOrder order = null;
+            WorkOrder order = null;
             try
             {
                 order = serv.Get(orderID);
@@ -94,22 +84,22 @@ namespace Machete.Web.Controllers.Api
 
             // TODO: Not mapping to view object throws JsonSerializationException, good to test error
             // handling with...(delay in error)
-            ViewModel.Api.WorkOrder result = map.Map<Domain.WorkOrder, ViewModel.Api.WorkOrder>(order);
-            return new JsonResult(new { data = result });
+            WorkOrderVM result = map.Map<WorkOrder, WorkOrderVM>(order);
+            return Ok(result);
         }
 
         // POST: api/OnlineOrders
         [Authorize(Roles = "Administrator, Hirer")]
         [HttpPost("")]
-        public ActionResult Post([FromBody]ViewModel.Api.WorkOrder viewmodel)
+        public new ActionResult<WorkOrderVM> Post([FromBody]WorkOrderVM viewmodel)
         {
             MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
             
-            var workOrder = map.Map<ViewModel.Api.WorkOrder, Domain.WorkOrder>(viewmodel);
+            var workOrder = map.Map<WorkOrderVM, WorkOrder>(viewmodel);
             workOrder.Employer = Employer;
             workOrder.EmployerID = Employer.ID;
             workOrder.onlineSource = true;
-            Domain.WorkOrder newOrder;
+            WorkOrder newOrder;
             try {
                 newOrder = serv.Create(workOrder, Employer.email ?? Employer.name);
             }
@@ -130,8 +120,8 @@ namespace Machete.Web.Controllers.Api
                 };
                 return BadRequest(res);
             }
-            ViewModel.Api.WorkOrder result = map.Map<Domain.WorkOrder, ViewModel.Api.WorkOrder>(newOrder);
-            return new JsonResult(new { data = result });
+            WorkOrderVM result = map.Map<WorkOrder, WorkOrderVM>(newOrder);
+            return Ok(result);
         }
 
         // POST: api/onlineorders/{orderid}/paypalexecute
@@ -156,17 +146,17 @@ namespace Machete.Web.Controllers.Api
                 order.ppPaymentID = data.paymentID;
                 order.ppPaymentToken = data.paymentToken;
                 order.ppState = "created";
-                woServ.Save(order, UserEmail);
+                serv.Save(order, UserEmail);
             }
 
             var result = postExecute(data);
             order.ppResponse = result;
-            woServ.Save(order, UserEmail);
+            serv.Save(order, UserEmail);
             return new JsonResult(result);
         }
 
         [NonAction]
-        public void validateNoPreviousPayment(Domain.WorkOrder wo, PaypalPayment pp)
+        public void validateNoPreviousPayment(WorkOrder wo, PaypalPayment pp)
         {
             if (wo.ppPayerID != null && wo.ppPayerID != pp.payerID)
             {

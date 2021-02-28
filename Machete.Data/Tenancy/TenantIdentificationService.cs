@@ -29,7 +29,7 @@ namespace Machete.Data.Tenancy
                           ?? _tenants.Tenants["default"];
             
             if (tenantName == _tenants.Tenants["default"] && !_defaultAllowed)
-                throw new UnauthorizedAccessException("Requested default provider, but default not allowed. You have probably misconfigured a production host. Contact your administrator for assistance.");
+                throw new UnauthorizedAccessException($"Requested default provider, but default not allowed. You have probably misconfigured a production host. Tried to get host matching {host}.");
             
             return tenantName;
         }

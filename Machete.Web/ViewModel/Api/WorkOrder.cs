@@ -2,7 +2,7 @@
 
 namespace Machete.Web.ViewModel.Api
 {
-    public class WorkOrder : Record
+    public class WorkOrderVM : RecordVM
     {
         public string city { get; set; }
         public string contactName { get; set; }
@@ -33,6 +33,6 @@ namespace Machete.Web.ViewModel.Api
         public string workSiteAddress1 { get; set; }
         public string workSiteAddress2 { get; set; }
         public string zipcode { get; set; }
-        public Collection<WorkAssignment> workAssignments { get; set; }
+        public Collection<WorkAssignmentVM> workAssignments { get; set; }
     }
 }
