@@ -201,18 +201,21 @@ namespace Machete.Test.Selenium.View
         public bool workerValidate(Worker _wkr)
         {
             WaitThenClickElement((By.Id("personGeneralTab")));
+            Thread.Sleep(1000);
             WaitThenClickElement((By.Id("workerCreateTab")));
             string prefix = "worker"+_wkr.ID+"-";
+            Thread.Sleep(1000);
+            bool result = WaitForElementValue(By.Id("workerCreateTab"), "Worker information");
             string dateFormat1 = "M/dd/yy";
             string dateFormat2 = "MM/dd/yyyy";
-            bool result = WaitForElementValue(By.Id("workerCreateTab"), "Worker information");
-            Assert.IsTrue(result, "Create tab label not updated by formSubmit");       
-            Assert.AreEqual(_wkr.dateOfMembership.ToString(dateFormat1), WaitForElement(By.Id(prefix + "dateOfMembership")).GetAttribute("value"));
-            
-            Thread.Sleep(5000);
-            
+            Assert.IsTrue(result, "Create tab label not updated by formSubmit");
+            var expectedDateOfMembership = _wkr.dateOfMembership.ToString(dateFormat2);
+            var actualDateOfMembership = WaitForElement(By.Id(prefix + "dateOfMembership")).GetAttribute("value");
+            Thread.Sleep(1000);
+            Assert.AreEqual(expectedDateOfMembership, actualDateOfMembership);
             var expectedDateOfBirth = ((DateTime) _wkr.dateOfBirth.Value).ToString(dateFormat2);
             var actualDateOfBirth = WaitForElement(By.Id(prefix + "dateOfBirth")).GetAttribute("value");
+            Thread.Sleep(1000);
             Assert.AreEqual(expectedDateOfBirth, actualDateOfBirth);
             
             Thread.Sleep(5000);

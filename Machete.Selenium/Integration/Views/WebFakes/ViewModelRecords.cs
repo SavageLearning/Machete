@@ -72,7 +72,7 @@ namespace Machete.Test
 
         public static Worker worker = new Worker
         {
-            typeOfWorkID = 20,
+            typeOfWorkID = HttpClientUtil.GetFirstLookupInCategory(LCategory.worktype),
             RaceID = HttpClientUtil.GetFirstLookupInCategory(LCategory.race),                     //byte
             raceother = "Records._worker1", //string
             height = "too tall",            //string
