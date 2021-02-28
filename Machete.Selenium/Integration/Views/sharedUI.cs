@@ -186,14 +186,18 @@ namespace Machete.Test.Selenium.View
 
         public bool workerSanction(Worker _wkr)
         {
+            Thread.Sleep(2000);
             WaitThenClickElement(By.Id("workerCreateTab"));
             WaitForElement(By.Id(_wkr.idPrefix + "memberStatusID"));
             
             Thread.Sleep(5000);
             
             WaitThenClickElement(By.Id(_wkr.idPrefix + "memberStatusID"));
+            Thread.Sleep(1000);
             SelectOption(By.Id(_wkr.idPrefix + "memberStatusID"), "Sanctioned");
+            Thread.Sleep(1000);
             WaitThenClickElement(By.Id(_wkr.idPrefix + "SaveButton"));
+            Thread.Sleep(1000);
             _d.FindElement(By.Id("workerCreateTab")).Click();  
             return true;
         }
@@ -240,8 +244,11 @@ namespace Machete.Test.Selenium.View
         public bool workerDelete(Worker _wkr)
         {
             WaitThenClickElement((By.Id("personGeneralTab")));
+            Thread.Sleep(1000);
             WaitThenClickElement((By.Id("workerCreateTab")));
+            Thread.Sleep(1000);
             WaitThenClickElement(By.Id("deleteWorkerButton-" + _wkr.ID.ToString()));
+            Thread.Sleep(1000);
             WaitThenClickElement(By.Id("popup_ok"));
 
             return true;
