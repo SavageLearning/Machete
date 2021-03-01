@@ -35,11 +35,11 @@ namespace Machete.Test.Selenium.View
         public void SetupTest()
         {
             frb = FluentRecordBaseFactory.Get();
-            driver = new ChromeDriver("/usr/local/bin");
-            baseURL = "http://localhost:4213/";
+            driver = new ChromeDriver(SharedConfig.ChromeDriverPath);
+            baseURL = SharedConfig.BaseSeleniumTestUrl;
             ui = new sharedUI(driver, baseURL, map);
             verificationErrors = new StringBuilder();
-            ui.login();
+            ui.login(SharedConfig.SeleniumUser, SharedConfig.SeleniumUserPassword);
             ui.gotoMachete();
         }
 

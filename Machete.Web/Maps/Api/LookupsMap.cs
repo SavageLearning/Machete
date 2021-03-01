@@ -11,6 +11,8 @@ namespace Machete.Web.Maps.Api
             CreateMap<Lookup, LookupVM>()
                 .ForMember(v => v.id, opt => opt.MapFrom(d => d.ID))
                 ;
+            CreateMap<LookupVM, Domain.Lookup>()
+                .ForMember(d => d.ID, opt => opt.MapFrom(v => v.id));
         }
     }
 }

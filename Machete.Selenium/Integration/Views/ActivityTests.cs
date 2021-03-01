@@ -6,12 +6,13 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Machete.Web.Maps;
 using Machete.Test.Integration.Fluent;
+using Machete.Test.Integration.HttpClientUtil;
 
 namespace Machete.Test.Selenium.View
 {
@@ -26,22 +27,24 @@ namespace Machete.Test.Selenium.View
         static IMapper map;
 
         [ClassInitialize]
-        public static void ClassInitialize(TestContext testContext)
+        public static async Task ClassInitialize(TestContext testContext)
         {
             //WebServer.StartIis();
             var webMapperConfig = new MapperConfiguration(config => config.ConfigureMvc());
             map = webMapperConfig.CreateMapper();
+            baseURL = SharedConfig.BaseSeleniumTestUrl;
+            // Get this tenant's lookups based on the baseURL
+            await HttpClientUtil.SetTenantLookUpCache(baseURL);
         }
 
         [TestInitialize]
         public void SetupTest()
         {
             frb = FluentRecordBaseFactory.Get();
-            driver = new ChromeDriver("/usr/local/bin");
-            baseURL = "http://localhost:4213/";
+            driver = new ChromeDriver(SharedConfig.ChromeDriverPath);
             ui = new sharedUI(driver, baseURL, map);
             verificationErrors = new StringBuilder();
-            ui.login();
+            ui.login(SharedConfig.SeleniumUser, SharedConfig.SeleniumUserPassword);
         }
 
         [TestCleanup]
@@ -254,8 +257,8 @@ namespace Machete.Test.Selenium.View
 
             // Test good search first
             ui.WaitForElement(By.Id("activityTable_searchbox")).Clear();
-            ui.WaitForElement(By.Id("activityTable_searchbox")).SendKeys("jadmin");
-            result = ui.WaitForElementValue(By.XPath("//table[@id='activityTable']/tbody/tr[5]/td[3]"), "jadmin");
+            ui.WaitForElement(By.Id("activityTable_searchbox")).SendKeys(SharedConfig.SeleniumUser);
+            result = ui.WaitForElementValue(By.XPath("//table[@id='activityTable']/tbody/tr[5]/td[3]"), SharedConfig.SeleniumUser);
             Assert.IsTrue(result, "Activities search not returning proper results");
         }
 

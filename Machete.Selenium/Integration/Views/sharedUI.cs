@@ -1,19 +1,31 @@
 ﻿using AutoMapper;
 using Machete.Data;
-using Machete.Web.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using System;
+using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
 using Machete.Data.Initialize;
+using Machete.Domain;
 using Machete.Test.Integration.Fluent;
+using Machete.Test.Integration.HttpClientUtil;
 using Machete.Web.Helpers;
+using Machete.Web.ViewModel;
+using Machete.Web.ViewModel.Api;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical;
+using Activity = Machete.Web.ViewModel.Activity;
+using Employer = Machete.Web.ViewModel.Employer;
+using Event = Machete.Web.ViewModel.Event;
+using Person = Machete.Web.ViewModel.Person;
+using WorkAssignment = Machete.Web.ViewModel.WorkAssignmentMVC;
+using Worker = Machete.Web.ViewModel.Worker;
+using WorkOrder = Machete.Web.ViewModel.WorkOrderMVC;
 
 namespace Machete.Test.Selenium.View
 {
@@ -91,7 +103,7 @@ namespace Machete.Test.Selenium.View
             _d.FindElement(By.Id(prefix + "address2")).SendKeys(_per.address2);
             _d.FindElement(By.Id(prefix + "phone")).Clear();
             _d.FindElement(By.Id(prefix + "phone")).SendKeys(_per.phone);
-            SelectOption(By.Id(prefix + "gender"), MacheteLookups.cache.First(c => c.category == "gender" && c.ID == _per.gender).text_EN);
+            SelectOption(By.Id(prefix + "gender"), HttpClientUtil.GetFirstLookupTextEn(_per.gender));
             _d.FindElement(By.Id(prefix + "city")).Clear();
             _d.FindElement(By.Id(prefix + "city")).SendKeys(_per.city);
             if (_per.genderother != null)
@@ -160,7 +172,7 @@ namespace Machete.Test.Selenium.View
             _d.FindElement(By.Id(prefix + "dwccardnum")).SendKeys(_wkr.dwccardnum.ToString());
 
             SelectOption(By.Id(prefix + "memberStatusID"), "Active");
-            SelectOption(By.Id(prefix + "neighborhoodID"), "Primary City");
+            SelectOption(By.Id(prefix + "neighborhoodID"), HttpClientUtil.GetFirstLookupInCategory(LCategory.neighborhood).TextEN());
             SelectOption(By.Id(prefix + "typeOfWorkID"), @"Day Worker Center");
             SelectOption(By.Id(prefix + "englishlevelID"), "1");
             SelectOption(By.Id(prefix + "incomeID"), @"Poor (Less than $15,000)");
@@ -174,14 +186,18 @@ namespace Machete.Test.Selenium.View
 
         public bool workerSanction(Worker _wkr)
         {
+            Thread.Sleep(2000);
             WaitThenClickElement(By.Id("workerCreateTab"));
             WaitForElement(By.Id(_wkr.idPrefix + "memberStatusID"));
             
             Thread.Sleep(5000);
             
             WaitThenClickElement(By.Id(_wkr.idPrefix + "memberStatusID"));
+            Thread.Sleep(1000);
             SelectOption(By.Id(_wkr.idPrefix + "memberStatusID"), "Sanctioned");
+            Thread.Sleep(1000);
             WaitThenClickElement(By.Id(_wkr.idPrefix + "SaveButton"));
+            Thread.Sleep(1000);
             _d.FindElement(By.Id("workerCreateTab")).Click();  
             return true;
         }
@@ -189,14 +205,22 @@ namespace Machete.Test.Selenium.View
         public bool workerValidate(Worker _wkr)
         {
             WaitThenClickElement((By.Id("personGeneralTab")));
+            Thread.Sleep(1000);
             WaitThenClickElement((By.Id("workerCreateTab")));
             string prefix = "worker"+_wkr.ID+"-";
+            Thread.Sleep(1000);
+            bool result = WaitForElementValue(By.Id("workerCreateTab"), "Worker information");
             string dateFormat1 = "M/dd/yy";
             string dateFormat2 = "MM/dd/yyyy";
-            bool result = WaitForElementValue(By.Id("workerCreateTab"), "Worker information");
-            Assert.IsTrue(result, "Create tab label not updated by formSubmit");            
-            Assert.AreEqual(_wkr.dateOfMembership.ToString(dateFormat1), WaitForElement(By.Id(prefix + "dateOfMembership")).GetAttribute("value"));
-            Assert.AreEqual(((DateTime)_wkr.dateOfBirth.Value).ToString(dateFormat2), WaitForElement(By.Id(prefix + "dateOfMembership")).GetAttribute("value"));
+            Assert.IsTrue(result, "Create tab label not updated by formSubmit");
+            var expectedDateOfMembership = _wkr.dateOfMembership.ToString(dateFormat2);
+            Thread.Sleep(3000);
+            var actualDateOfMembership = WaitForElement(By.Id(prefix + "dateOfMembership")).GetAttribute("value");
+            Assert.AreEqual(expectedDateOfMembership, actualDateOfMembership);
+            var expectedDateOfBirth = ((DateTime) _wkr.dateOfBirth.Value).ToString(dateFormat2);
+            Thread.Sleep(3000);
+            var actualDateOfBirth = WaitForElement(By.Id(prefix + "dateOfBirth")).GetAttribute("value");
+            Assert.AreEqual(expectedDateOfBirth, actualDateOfBirth);
             
             Thread.Sleep(5000);
             
@@ -220,8 +244,11 @@ namespace Machete.Test.Selenium.View
         public bool workerDelete(Worker _wkr)
         {
             WaitThenClickElement((By.Id("personGeneralTab")));
+            Thread.Sleep(1000);
             WaitThenClickElement((By.Id("workerCreateTab")));
+            Thread.Sleep(1000);
             WaitThenClickElement(By.Id("deleteWorkerButton-" + _wkr.ID.ToString()));
+            Thread.Sleep(1000);
             WaitThenClickElement(By.Id("popup_ok"));
 
             return true;
@@ -330,7 +357,7 @@ namespace Machete.Test.Selenium.View
             SelectOptionByIndex(By.Id(prefix + "blogparticipate"), _emp.blogparticipate.Value ? 2 : 1);
             SelectOptionByIndex(By.Id(prefix + "business"), _emp.business ? 2 : 1);
             SelectOption(By.Id(prefix + "referredby"), 
-                MacheteLookups.cache.First(c => c.category == "emplrreference" && c.ID == _emp.referredby).text_EN);
+                HttpClientUtil.GetFirstLookupTextEn((int)_emp.referredby));
             // save employer
             _d.FindElement(By.Id(prefix + "SaveBtn")).Click();
             //
@@ -395,7 +422,7 @@ namespace Machete.Test.Selenium.View
             WaitForElement(By.Id(prefix + "business"));
             Assert.AreEqual(_emp.business ? 2 : 1, GetOptionIndex(By.Id(prefix + "business")));
             WaitForElement(By.Id(prefix + "referredbyOther"));
-            Assert.AreEqual(_emp.referredby, MacheteLookups.cache.First(c => c.category == "emplrreference" && c.text_EN == GetOptionText(By.Id(prefix + "referredby"))).ID);
+            Assert.AreEqual(_emp.referredby, HttpClientUtil.GetLookup(LCategory.emplrreference, GetOptionText(By.Id(prefix + "referredby"))));
             return true;
         }
 
@@ -507,7 +534,8 @@ namespace Machete.Test.Selenium.View
 
             WaitForElement(By.Id(prefix + "status"));
             string optionText = GetOptionText(By.Id(prefix + "status"));
-            Assert.AreEqual(_wo.statusID, MacheteLookups.cache.First(c => c.category == "orderstatus" && c.text_EN == optionText).ID);
+            var actual = HttpClientUtil.GetLookup(LCategory.orderstatus, optionText);
+            Assert.AreEqual(_wo.statusID, actual);
             WaitForElement(By.Id(prefix + "timeFlexible"));
             Assert.AreEqual(_wo.timeFlexible ? 2:1, GetOptionIndex(By.Id(prefix + "timeFlexible")));
             WaitForElement(By.Id(prefix + "permanentPlacement"));
@@ -587,7 +615,7 @@ namespace Machete.Test.Selenium.View
             Thread.Sleep(1000);
             WaitThenClickElement(By.Id("activateWorkOrderButton-" + _wo.ID));
             // todo: find a way to change this hard-coded value assignment
-            _wo.statusID = 40; // changing test object to reflect activate status from previous action
+            _wo.statusID = HttpClientUtil.GetLookup(LCategory.orderstatus, LOrderStatus.Active); // changing test object to reflect activate status from previous action
             return true;
         }
 
@@ -609,10 +637,14 @@ namespace Machete.Test.Selenium.View
             Thread.Sleep(1000);
             WaitForElement(By.Id("workAssignTable-wo-" + _wo.ID + "_searchbox"));
             string idString = _wo.ID.ToString("D5") + "-" + ((int)_wa.pseudoID).ToString("D2");
-            ReplaceElementText(By.Id("workAssignTable-wo-" + _wo.ID + "_searchbox"), idString);
+            string lookUpTextEN = HttpClientUtil.GetFirstLookupTextEn(_wa.skillID);
+            ReplaceElementText(By.Id("workAssignTable-wo-" + _wo.ID + "_searchbox"), lookUpTextEN);
             Thread.Sleep(1000);
-            string xpath = "//*[@id='workAssignTable-wo-" + _wo.ID + "']/tbody/tr/td[.='" + idString + "']";
-            Assert.IsTrue(WaitAndDoubleClick(By.XPath(xpath)),
+            string xpath = "//*[@id='workAssignTable-wo-" + _wo.ID + "']/tbody/tr/td[.='" + lookUpTextEN + "']";
+            var workAssignmentRowExists = _d.FindElement(By.XPath(xpath)).Displayed;
+            Assert.IsTrue(workAssignmentRowExists);
+            if (workAssignmentRowExists)
+                Assert.IsTrue(WaitAndDoubleClick(By.XPath(xpath)),
                 "Cannot find work assignment row to click.");
 
             //Now, check each of the fields
