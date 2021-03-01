@@ -214,12 +214,12 @@ namespace Machete.Test.Selenium.View
             string dateFormat2 = "MM/dd/yyyy";
             Assert.IsTrue(result, "Create tab label not updated by formSubmit");
             var expectedDateOfMembership = _wkr.dateOfMembership.ToString(dateFormat2);
+            Thread.Sleep(3000);
             var actualDateOfMembership = WaitForElement(By.Id(prefix + "dateOfMembership")).GetAttribute("value");
-            Thread.Sleep(1000);
             Assert.AreEqual(expectedDateOfMembership, actualDateOfMembership);
             var expectedDateOfBirth = ((DateTime) _wkr.dateOfBirth.Value).ToString(dateFormat2);
+            Thread.Sleep(3000);
             var actualDateOfBirth = WaitForElement(By.Id(prefix + "dateOfBirth")).GetAttribute("value");
-            Thread.Sleep(1000);
             Assert.AreEqual(expectedDateOfBirth, actualDateOfBirth);
             
             Thread.Sleep(5000);
