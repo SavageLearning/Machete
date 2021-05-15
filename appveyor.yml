@@ -15,10 +15,6 @@ init:
   - docker network create --driver bridge machete-bridge
   - docker network inspect machete-bridge
 
-# (/etc/hosts)
-#hosts:
-#  sqlserver: 127.0.0.1
-
 # https://ci.appveyor.com/account/savagelearning/tools/encrypt
 environment:
   MSBUILDDISABLENODEREUSE: 1
@@ -47,10 +43,10 @@ build:
 # - sh: dotnet build
 # after_build:
 #before_package:
-# test:
-#  assemblies:
-#   only:
-#     - Machete.test.dll
+test:
+ assemblies:
+  only:
+    - Machete.test.dll
 #    only:
 #      - asm1.dll
 #      - asm2.dll
