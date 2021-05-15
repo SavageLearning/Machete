@@ -18,23 +18,21 @@ namespace Machete.Web.Controllers.Api
         public WorkAssignmentsController(IWorkAssignmentService serv, IMapper map) : base(serv, map) {}
 
         [HttpGet, Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
-        public new ActionResult<IEnumerable<WorkAssignmentVM>> Get(
-            [FromQuery]int displayLength = 10,
-            [FromQuery]int displayStart = 0) 
-        { 
-            return base.Get(displayLength, displayStart); 
+        public new ActionResult<IEnumerable<WorkAssignmentVM>> Get(ApiRequestParams apiRequestParams) 
+        {
+            return base.Get(apiRequestParams); 
         }
 
         [HttpGet("{id}"), Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
-        public new ActionResult<WorkAssignmentVM> Get(int id) { return base.Get(id); }
+        public new ActionResult<WorkAssignmentVM> Get([FromRoute]int id) { return base.Get(id); }
 
         [HttpPost, Authorize(Roles = "Administrator")]
         public new ActionResult<WorkAssignmentVM> Post([FromBody]WorkAssignmentVM value) { return base.Post(value); }
 
         [HttpPut("{id}"), Authorize(Roles = "Administrator")]
-        public new ActionResult<WorkAssignmentVM> Put(int id, [FromBody]WorkAssignmentVM value) { return base.Put(id, value); }
+        public new ActionResult<WorkAssignmentVM> Put([FromRoute]int id, [FromBody]WorkAssignmentVM value) { return base.Put(id, value); }
 
         [HttpDelete("{id}"), Authorize(Roles = "Administrator")]
-        public new ActionResult<WorkAssignmentVM> Delete(int id) { return base.Delete(id); }
+        public new ActionResult Delete([FromRoute]int id) { return base.Delete(id); }
     }
 }

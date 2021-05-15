@@ -15,11 +15,9 @@ namespace Machete.Web.Controllers.Api
         public TransportProvidersAvailabilityController(ITransportProvidersAvailabilityService serv, IMapper map) : base(serv, map) {}
 
         [HttpGet, Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
-        public new ActionResult<IEnumerable<TransportProviderAvailabilityVM>> Get(
-            [FromQuery]int displayLength = 10,
-            [FromQuery]int displayStart = 0) 
+        public new ActionResult<IEnumerable<TransportProviderAvailabilityVM>> Get() 
         { 
-            return base.Get(displayLength, displayStart); 
+            return base.Get(new ApiRequestParams() {AllRecords = true}); 
         }
 
         [HttpGet("{id}"), Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
@@ -32,6 +30,6 @@ namespace Machete.Web.Controllers.Api
         public new ActionResult<TransportProviderAvailabilityVM> Put(int id, [FromBody]TransportProviderAvailabilityVM value) { return base.Put(id, value); }
 
         [HttpDelete("{id}"), Authorize(Roles = "Administrator")]
-        public new ActionResult<TransportProviderAvailabilityVM> Delete(int id) { return base.Delete(id); }
+        public new ActionResult Delete(int id) { return base.Delete(id); }
     }
 }

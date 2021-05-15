@@ -37,27 +37,10 @@ namespace Machete.Web.Controllers.Api
                 foreach (var p in result)
                 {
                     var pCostRules = transportCostRules.Where(costRule => costRule.transportRuleID == p.id).ToList();
-                    p.costRules = new List<TransportCostRuleVM>();
-
-                    // TODO mapper
-                    foreach (var q in pCostRules)
-                    {
-                        p.costRules.Add(new TransportCostRuleVM
-                        {
-                            cost = q.cost,
-                            createdby = q.createdby,
-                            datecreated = q.datecreated.ToString(),
-                            dateupdated = q.dateupdated.ToString(),
-                            id = q.ID,
-                            maxWorker = q.maxWorker,
-                            minWorker = q.minWorker,
-                            transportRuleId = q.transportRuleID,
-                            updatedby = q.updatedby
-                        });
-                    }
+                    p.costRules = map.Map<List<TransportCostRuleVM>>(pCostRules);
                 }    
                 
-                return Ok(result);
+                return Ok(new {data = result});
             }
             catch (Exception ex)
             {
@@ -75,6 +58,6 @@ namespace Machete.Web.Controllers.Api
         public new ActionResult<TransportRuleVM> Put(int id, [FromBody]TransportRuleVM value) { return base.Put(id, value); }
 
         [HttpDelete("{id}"), Authorize(Roles = "Administrator")]
-        public new ActionResult<TransportRuleVM> Delete(int id) { return base.Delete(id); }
+        public new ActionResult Delete(int id) { return base.Delete(id); }
     }
 }

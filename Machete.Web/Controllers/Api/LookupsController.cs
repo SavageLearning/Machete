@@ -29,7 +29,7 @@ namespace Machete.Web.Controllers.Api
             catch(Exception ex) {
                 return StatusCode(500, ex);
             }
-            return Ok(result);
+            return Ok(new {data = result});
         }
 
         [HttpGet("{category}")]
@@ -44,7 +44,7 @@ namespace Machete.Web.Controllers.Api
             catch (Exception ex) {
                 return StatusCode(500, ex);
             }
-            return Ok(result);
+            return Ok(new {data = result});
         }
 
         [HttpGet("{id}"), Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
@@ -57,6 +57,6 @@ namespace Machete.Web.Controllers.Api
         public new ActionResult<LookupVM> Put(int id, [FromBody]LookupVM value) { return base.Put(id, value); }
 
         [HttpDelete("{id}"), Authorize(Roles = "Administrator")]
-        public new ActionResult<LookupVM> Delete(int id) { return base.Delete(id); }
+        public new ActionResult Delete(int id) { return base.Delete(id); }
     }
 }
