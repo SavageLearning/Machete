@@ -24,6 +24,7 @@
 
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Machete.Domain;
@@ -116,7 +117,14 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "PhoneDesk, Manager, Teacher, Administrator")]
         public async Task<ActionResult> Create(Worker worker, string userName, IFormFile imagefile)
         {
-            ModelState.ThrowIfInvalid();
+            // ModelState.ThrowIfInvalid();
+            if(!ModelState.IsValid)
+            {
+                return Json(new {
+                    jobSuccess = false,
+                    rtnMessage = $"{ModelState.GetErrorMessageIfInvalid()}"
+                    });
+            }
 
             var modelIsValid = await _adaptor.TryUpdateModelAsync(this, worker);
             if (serv.MemberExists(worker.dwccardnum)) {
@@ -160,9 +168,17 @@ namespace Machete.Web.Controllers
         /// <returns></returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "PhoneDesk, Manager, Teacher, Administrator")]
-        public async Task<ActionResult> Edit(int id, string userName, IFormFile imagefile)
+        public async Task<ActionResult> Edit(Worker vm, int id, string userName, IFormFile imagefile)
         {
-            ModelState.ThrowIfInvalid();
+            // ModelState.ThrowIfInvalid();
+             if(!ModelState.IsValid)
+            {
+                return Json(new {
+                    jobSuccess = false,
+                    rtnMessage = $"{ModelState.GetErrorMessageIfInvalid()}"
+                    });
+            }
+
             var vmDwccardnumAttempted = HttpContext.Request.Form["dwccardnum"];
             Worker worker = serv.Get(id);
             int tryInt;
@@ -184,7 +200,7 @@ namespace Machete.Web.Controllers
                 return Json(new {
                     jobSuccess = true
                 });
-            } else { return Json(new { jobSuccess = false }); }
+            } else { return Json(new { jobSuccess = false, rtnMessage = "There was an error with your request." }); }
         }
         /// <summary>
         /// 
