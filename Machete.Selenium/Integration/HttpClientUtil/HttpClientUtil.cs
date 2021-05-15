@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Machete.Domain;
 using Machete.Web.Maps.Api;
+using Machete.Web.ViewModel.Api;
 using Newtonsoft.Json;
+using SimpleJson;
 using LookupViewModel = Machete.Web.ViewModel.Api.LookupVM;
 using WorkAssignmentViewModel = Machete.Web.ViewModel.Api.WorkAssignmentVM;
 
@@ -62,11 +64,9 @@ namespace Machete.Test.Integration.HttpClientUtil
                     throw new Exception("Cannot retrieve records");
                 }
                 var content = await httpResponse.Content.ReadAsStringAsync();
-                var deserializedContent = JsonConvert.DeserializeObject<List<LookupViewModel>>(content);
-                var resultList = _mapper.Map<List<Lookup>>(deserializedContent);
+                var deserializedContent = JsonConvert.DeserializeObject<JsonObject>(content);
+                var resultList = _mapper.Map<List<Lookup>>(deserializedContent["data"]);
                 _tenantLookupsCache = new List<Lookup>(resultList);
-                var temp = _tenantLookupsCache.First(x => x.category == "race" && x.text_EN == "Latino").ID;
-                Console.WriteLine("asdfasdf");
             }
         }
 
@@ -116,8 +116,8 @@ namespace Machete.Test.Integration.HttpClientUtil
             var waResponse = await
                 HttpClient.GetAsync($"{SharedConfig.BaseSeleniumTestUrl}api/workassignments/{id}");
             var httpResponseString = await waResponse.Content.ReadAsStringAsync();
-            var deserializedResponse = JsonConvert.DeserializeObject<WorkAssignmentViewModel>(httpResponseString);
-            var domainWA = _mapper.Map<WorkAssignment>(deserializedResponse);
+            var deserializedResponse = JsonConvert.DeserializeObject<JsonObject>(httpResponseString);
+            var domainWA = _mapper.Map<WorkAssignment>(deserializedResponse["data"]);
             return domainWA.pseudoID ?? 0;
         }
     }

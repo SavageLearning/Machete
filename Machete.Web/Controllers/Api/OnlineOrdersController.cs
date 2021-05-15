@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -49,7 +50,7 @@ namespace Machete.Web.Controllers.Api
 
         // GET: api/onlineorders
         [HttpGet, Authorize(Roles = "Administrator, Hirer")]
-        public ActionResult Get()
+        public ActionResult<IEnumerable<WorkOrderVM>> Get()
         {
             var vo = new viewOptions();
             vo.displayLength = 500; // TODO dumping on the client; will address Angular using search later
@@ -64,7 +65,7 @@ namespace Machete.Web.Controllers.Api
                 .Select(
                     e => map.Map<Service.DTO.WorkOrdersList, WorkOrderVM>(e)
                 ).AsEnumerable();
-            return new JsonResult(new { data = result });
+            return Ok(new {data = result});
         }
 
         // GET: api/onlineorders/5
@@ -85,7 +86,7 @@ namespace Machete.Web.Controllers.Api
             // TODO: Not mapping to view object throws JsonSerializationException, good to test error
             // handling with...(delay in error)
             WorkOrderVM result = map.Map<WorkOrder, WorkOrderVM>(order);
-            return Ok(result);
+            return Ok(new {data = result});
         }
 
         // POST: api/OnlineOrders
@@ -94,7 +95,7 @@ namespace Machete.Web.Controllers.Api
         public new ActionResult<WorkOrderVM> Post([FromBody]WorkOrderVM viewmodel)
         {
             MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
-            
+            if (!ModelState.IsValid) return BadRequest(ModelState);
             var workOrder = map.Map<WorkOrderVM, WorkOrder>(viewmodel);
             workOrder.Employer = Employer;
             workOrder.EmployerID = Employer.ID;
@@ -121,7 +122,7 @@ namespace Machete.Web.Controllers.Api
                 return BadRequest(res);
             }
             WorkOrderVM result = map.Map<WorkOrder, WorkOrderVM>(newOrder);
-            return Ok(result);
+            return CreatedAtAction(nameof(Get), new {result.id}, new {data = result});
         }
 
         // POST: api/onlineorders/{orderid}/paypalexecute

@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Machete.Data.Tenancy;
 using Machete.Service;
 using Machete.Service.DTO;
 using Machete.Web.Helpers;
@@ -32,10 +33,15 @@ namespace Machete.Web.Controllers.Api
     public class ExportsController : ControllerBase
     {
         private readonly IReportsV2Service serv;
+        private readonly ITenantService _tenantService;
+        private readonly TimeZoneInfo _clientTimeZoneInfo;
 
-        public ExportsController(IReportsV2Service serv)
+        public ExportsController(IReportsV2Service serv, ITenantService tenantService)
         {
             this.serv = serv;
+            _tenantService = tenantService;
+            _clientTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(tenantService.GetCurrentTenant().Timezone);
+            MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
         }
 
         //  GET api/<controller>
@@ -61,7 +67,7 @@ namespace Machete.Web.Controllers.Api
             };
             var result = tables.Select(a => new { name = a });
 
-            return new JsonResult(new { data = result });
+            return Ok(new { data = result });
         }
         
         [Authorize(Roles = "Administrator, Manager")]
@@ -71,7 +77,7 @@ namespace Machete.Web.Controllers.Api
         {
             Enum.TryParse<ValidTableNames>(tableName, out var unused); // validate that we've only received a table name
             var result = serv.getColumns(tableName);
-            return new JsonResult(new { data = result });
+            return Ok(new { data = result });
         }
 
         // https://stackoverflow.com/questions/36274985/how-to-map-webapi-routes-correctly

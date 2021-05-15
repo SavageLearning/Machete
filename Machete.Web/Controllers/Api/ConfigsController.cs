@@ -6,6 +6,7 @@ using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Helpers.Api;
+using Machete.Web.ViewModel.Api;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -28,7 +29,7 @@ namespace Machete.Web.Controllers.Api
         [AllowAnonymous]
         [HttpGet]
         [Route("")]
-        public ActionResult<ConfigVM> Get()
+        public ActionResult<IEnumerable<ConfigVM>> Get()
         {
             List<ConfigVM> result = service.GetMany(c => c.publicConfig)
                 .DefaultIfEmpty()
@@ -56,21 +57,20 @@ namespace Machete.Web.Controllers.Api
             result.Add(facebookConfig);
             result.Add(googleConfig);
             result.Add(state);
-            
-            return Ok(result);
+            return Ok( new {data = result});
         }
 
         [HttpGet("{id}"), Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
-        public new ActionResult<ConfigVM> Get(int id) { return base.Get(id); }
+        public new ActionResult<ConfigVM> Get([FromRoute] int id) { return base.Get(id); }
 
         [HttpPost, Authorize(Roles = "Administrator")]
-        public new ActionResult<ConfigVM> Post([FromBody]ConfigVM value) { return base.Post(value); }
+        public new ActionResult<ConfigVM> Post([FromBody] ConfigVM value) { return base.Post(value); }
 
         [HttpPut("{id}"), Authorize(Roles = "Administrator")]
-        public new ActionResult<ConfigVM> Put(int id, [FromBody]ConfigVM value) { return base.Put(id, value); }
+        public new ActionResult<ConfigVM> Put([FromRoute] int id, [FromBody] ConfigVM value) { return base.Put(id, value); }
 
         [HttpDelete("{id}"), Authorize(Roles = "Administrator")]
-        public new ActionResult<ConfigVM> Delete(int id) { return base.Delete(id); }
+        public new ActionResult Delete([FromRoute] int id) { return base.Delete(id); }
 
     }
 }

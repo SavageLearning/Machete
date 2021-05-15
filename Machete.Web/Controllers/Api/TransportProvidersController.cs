@@ -25,7 +25,7 @@ namespace Machete.Web.Controllers.Api
 
         // GET: api/TransportRule
         [HttpGet, Authorize(Roles = "Administrator, Check-in, Hirer, Manager, PhoneDesk, Teacher, User")]
-        public ActionResult<IEnumerable<TransportProviderVM>> Get()
+        public ActionResult<TransportProviderVM> Get()
         {
             try
             {
@@ -33,7 +33,7 @@ namespace Machete.Web.Controllers.Api
                     .Select(e => 
                     map.Map<Domain.TransportProvider, TransportProviderVM>(e))
                     .AsEnumerable();
-                return Ok(result);
+                return Ok(new {data = result});
             }
             catch (Exception ex)
             {
@@ -54,12 +54,12 @@ namespace Machete.Web.Controllers.Api
         public new ActionResult<TransportProviderVM> Put(int id, [FromBody]TransportProviderVM value) { return base.Put(id, value); }
 
         [HttpDelete("{id}"), Authorize(Roles = "Administrator")]
-        public new ActionResult<TransportProviderVM> Delete(int id) { return base.Delete(id); }
+        public new ActionResult Delete(int id) { return base.Delete(id); }
         //
         // TransportProvider Availabilities
         [Authorize(Roles = "Administrator, Check-in, Hirer, Manager, PhoneDesk, Teacher, User")]
         [HttpGet("{tpid}/availabilities")]
-        public ActionResult<IEnumerable<TransportProviderAvailabilityVM>> ARGet(int tpid)
+        public ActionResult<TransportProviderAvailabilityVM> ARGet(int tpid)
         {
             try
             {
@@ -67,7 +67,7 @@ namespace Machete.Web.Controllers.Api
                     .Select(e =>
                     map.Map<TransportProviderAvailability, TransportProviderAvailabilityVM>(e))
                     .AsEnumerable();
-                return Ok(result);
+                return Ok(new {data = result});
             }
             catch (Exception ex)
             {
@@ -77,7 +77,7 @@ namespace Machete.Web.Controllers.Api
 
         // POST: api/TransportProvider/{tpid}/AvailabilityRules
         [HttpPost("{tpid}/availabilities"), Authorize(Roles = "Administrator")]
-        public ActionResult<TransportProviderAvailabilityVM> ARPost(int tpid, [FromBody]TransportProviderAvailabilityVM value)
+        public ActionResult<IEnumerable<TransportProviderAvailabilityVM>> ARPost(int tpid, [FromBody]TransportProviderAvailabilityVM value)
         {
             var domain = map.Map<TransportProviderAvailabilityVM, TransportProviderAvailability>(value);
 
@@ -85,7 +85,7 @@ namespace Machete.Web.Controllers.Api
             {
                 var entity = _serv.CreateAvailability(tpid, domain, UserEmail);
                 var result = map.Map<TransportProviderAvailability, TransportProviderAvailabilityVM>(entity);
-                return Ok(result);
+                return Ok(new {data = result});
             }
             catch (Exception ex)
             {

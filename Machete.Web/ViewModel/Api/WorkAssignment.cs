@@ -2,15 +2,10 @@
 
 namespace Machete.Web.ViewModel.Api
 {
-    public class WorkAssignmentVM
+    public class WorkAssignmentVM : RecordVM
     {
-        public string createdby { get; set; }
-        public DateTime datecreated { get; set; }
-        public DateTime dateupdated { get; set; }
-        public int ID { get; set; }
         public string idPrefix { get; }
         public string idString { get; set; }
-        public string updatedby { get; set; }
 
         public bool active { get; set; }
         public int attitude { get; set; }

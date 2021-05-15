@@ -31,17 +31,16 @@ namespace Machete.Web.Controllers.Api
         [Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
         [HttpGet]
         public new ActionResult<IEnumerable<EmployersList>> Get(
-            [FromQuery]int displayLength = 10,
-            [FromQuery]int displayStart = 0
+            [FromQuery]ApiRequestParams apiRequestParams
             )
         {
             var list = serv.GetIndexView(new viewOptions {
-                displayLength = displayLength,
-                displayStart = displayStart
+                displayLength = apiRequestParams.pageSize,
+                displayStart = apiRequestParams.Skip
             });
 
             if (list.query == null) return NotFound();
-            return Ok(list.query);
+            return Ok(new {data = list.query});
         }
 
         // GET api/values/5
@@ -75,7 +74,7 @@ namespace Machete.Web.Controllers.Api
             }
             if (e.onlineSigninID != UserSubject) return Conflict();
             var result = map.Map<Employer, EmployerVM>(e);
-            return Ok(result);
+            return Ok(new {data = result});
         }
 
         [NonAction]
@@ -131,7 +130,7 @@ namespace Machete.Web.Controllers.Api
             {
                 return StatusCode(500, ex);
             }
-            return Ok(newEmployer);
+            return Ok(new {data = newEmployer});
         }
 
         // For editing any employer record
@@ -172,7 +171,7 @@ namespace Machete.Web.Controllers.Api
 
             }
             var mapped = map.Map<Employer, EmployerVM>(result);
-            return Ok(mapped);
+            return Ok(new {data = mapped});
 
         }
 
