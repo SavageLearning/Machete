@@ -152,7 +152,7 @@ namespace Machete.Test.UnitTests.Controllers
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
         [ExpectedException(typeof(InvalidOperationException), "An invalid UpdateModel was inappropriately allowed.")]
-        public async Task create_post_invalid_throws_exception()
+        public async Task person_create_post_invalid_throws_exception()
         {
             //Arrange
             var person = new Person { firstname1 = null };
@@ -200,7 +200,7 @@ namespace Machete.Test.UnitTests.Controllers
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
         [ExpectedException(typeof(InvalidOperationException), "An invalid UpdateModel was inappropriately allowed.")]
-        public async Task edit_post_invalid_throws_exception()
+        public async Task person_edit_post_invalid_throws_exception()
         {
             //Arrange
             var person = new Person();

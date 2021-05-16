@@ -145,7 +145,7 @@ namespace Machete.Test.UnitTests.Controllers
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WAs)]
         [ExpectedException(typeof(InvalidOperationException), "An invalid UpdateModel was inappropriately allowed.")]
-        public async Task create_post_invalid_throws_exception()
+        public async Task work_assignment_create_post_invalid_throws_exception()
         {
             //Arrange
             Domain.WorkAssignment _asmt = new Domain.WorkAssignment();

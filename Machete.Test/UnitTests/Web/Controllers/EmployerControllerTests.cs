@@ -124,7 +124,7 @@ namespace Machete.Test.UnitTests.Controllers
         // https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/testing?view=aspnetcore-2.2
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
         [ExpectedException(typeof(InvalidOperationException), "An invalid UpdateModel was inappropriately allowed.")]
-        public async Task create_post_invalid_throws_exception()
+        public async Task employer_create_post_invalid_throws_exception()
         {
             //Arrange
             var employer = new Employer { ID = testId, name = string.Empty };
@@ -173,22 +173,6 @@ namespace Machete.Test.UnitTests.Controllers
             Assert.AreEqual("blah", _savedemployer.name);
             Assert.AreEqual("UnitTest", _savedemployer.address1);
             Assert.AreEqual("footown", _savedemployer.city);
-        }
-
-        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
-        [ExpectedException(typeof(InvalidOperationException), "An invalid UpdateModel was inappropriately allowed.")]
-        public async Task EmployerController_edit_post_invalid_throws_exception()
-        {
-            //Arrange
-            var employer = new Employer();
-            _serv.Setup(p => p.Save(employer, "UnitTest"));
-            _serv.Setup(p => p.Get(testId)).Returns(employer);
-            _controller.ModelState.AddModelError("TestError", "foo");
-
-            //Act
-            await _controller.Edit(testId, "UnitTest");
-            
-            //Assert
         }
 
         //

@@ -164,21 +164,6 @@ namespace Machete.Test.UnitTests.Controllers
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Workers)]
-        [ExpectedException(typeof(InvalidOperationException),
-            "An invalid UpdateModel was inappropriately allowed."), Ignore]
-        public async Task create_post_invalid_throws_exception()
-        {
-            //Arrange
-            var worker = new Worker();
-
-            //Act
-            _controller.ModelState.AddModelError("hell no", "not happening");
-            await _controller.Create(worker, "UnitTest", null);
-
-            //Assert
-        }
-
-        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Workers)]
         public async Task create_post_invalid_returns_error_message()
         {
             //Arrange
