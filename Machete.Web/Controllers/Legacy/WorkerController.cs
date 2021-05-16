@@ -24,18 +24,15 @@
 
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Service.DTO;
 using Machete.Web.Helpers;
-using Machete.Web.Helpers.Api;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Machete.Web.Controllers
 {
@@ -171,7 +168,7 @@ namespace Machete.Web.Controllers
         public async Task<ActionResult> Edit(Worker vm, int id, string userName, IFormFile imagefile)
         {
             // ModelState.ThrowIfInvalid();
-             if(!ModelState.IsValid)
+            if(!ModelState.IsValid)
             {
                 return Json(new {
                     jobSuccess = false,

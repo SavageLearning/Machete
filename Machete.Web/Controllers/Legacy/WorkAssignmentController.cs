@@ -143,7 +143,10 @@ namespace Machete.Web.Controllers
                     sNewLabel = result.tablabel,
                     iNewID = result.ID
                 });
-            } else { return StatusCode(500); }
+            } else { return Json(new {
+                    jobSuccess = false,
+                    rtnMessage = $"{ModelState.GetErrorMessageIfInvalid()}"
+                    }); }
         }
 
 
