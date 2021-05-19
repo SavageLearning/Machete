@@ -5,6 +5,7 @@ using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Helpers.Api;
+using Machete.Web.ViewModel.Api;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Web.Controllers.Api
@@ -15,7 +16,8 @@ namespace Machete.Web.Controllers.Api
     // 
     // Controllers that extend this class will need to `new` an override method that calls the base method for each
     // method that is mean to be re-used.
-    public abstract class MacheteApi2Controller<TD, TVM> : ControllerBase where TD : Record
+    public abstract class MacheteApi2Controller<TD, TVM> : ControllerBase 
+        where TD : Record where TVM : RecordVM 
     {
         protected string UserSubject => User?.FindFirst(CAType.nameidentifier)?.Value;
         protected string UserEmail => User?.FindFirst(CAType.email)?.Value;
@@ -33,17 +35,22 @@ namespace Machete.Web.Controllers.Api
         }
         // GET: api/TransportRule
         protected virtual ActionResult<IEnumerable<TVM>> Get(
-            int displayLength = 10,
-            int displayStart = 0
+            ApiRequestParams requestParams
         ) {
             try
             {
+                // Some controllers return all records in DB, e.g. Schedule Rules
+                if (requestParams.AllRecords)
+                    return Ok(new {data = service.GetAll()
+                        .Select(e => map.Map<TD, TVM>(e))});
                 var result = service.GetAll()
-                    .Skip(displayStart)
-                    .Take(displayLength)
+                    .Skip(requestParams.Skip)
+                    .Take(requestParams.pageSize)
                     .Select(e => map.Map<TD, TVM>(e))
                     .AsEnumerable();
-                return Ok(result);
+                //!!TODO Implement pagination and filtering
+                var paginationMetaData = new PaginationMetaData();
+                return Ok(new {metaData = paginationMetaData, data = result});
             }
             catch (Exception ex)
             {
@@ -62,12 +69,13 @@ namespace Machete.Web.Controllers.Api
                 return StatusCode(500, ex);
             }
             if (result == null) return NotFound();
-            return Ok(result);
+            return Ok(new {data = result});
         }
 
         // POST: api/TransportRule
         protected virtual  ActionResult<TVM> Post(TVM value)
         {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
             TVM newValue;
             try {
                 newValue = Create(value);
@@ -75,7 +83,7 @@ namespace Machete.Web.Controllers.Api
             catch (Exception ex) {
                 return StatusCode(500, ex);
             }
-            return Ok(newValue);
+            return CreatedAtAction(nameof(Get), new {newValue.id}, new {data = newValue});
         }
 
         [NonAction]
@@ -97,24 +105,27 @@ namespace Machete.Web.Controllers.Api
         // PUT: api/TransportRule/5
         protected virtual  ActionResult<TVM> Put(int id, TVM value)
         {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
             TVM newValue;
 
             try {
                 if (id == 0) {
                     newValue = Create(value);
                 } else {
+                    if (service.Get(id) == null) return NotFound();
                     newValue = Update(id, value);
                 }
             } 
             catch(Exception ex) {
                 return StatusCode(500, ex);
             }
-            return Ok(newValue);
+            return Ok(new {data = newValue});
         }
 
         // DELETE: api/TransportRule/5
         protected virtual  ActionResult Delete(int id)
         {
+            if (service.Get(id) == null) return NotFound();
             try {
                 service.Delete(id, UserEmail);
             }

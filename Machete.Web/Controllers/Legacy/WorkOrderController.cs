@@ -219,9 +219,11 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public async Task<ActionResult> Create(WorkOrder wo, string userName, [FromForm] List<int> workerRequestsAAA)
         {
-            ModelState.ThrowIfInvalid();
             var modelUpdated = await _adaptor.TryUpdateModelAsync(this, wo);
-            if (!modelUpdated) return StatusCode(500);
+            if (!modelUpdated) return Json(new {
+                    jobSuccess = false,
+                    rtnMessage = $"{ModelState.GetErrorMessageIfInvalid()}"
+                    });
             
             List<Domain.WorkerRequest> wRequests = new List<Domain.WorkerRequest>();
 
@@ -286,11 +288,12 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public async Task<ActionResult> Edit(int id, string userName, List<int> workerRequestsAAA)
         {
-            ModelState.ThrowIfInvalid();
-            
             var workOrder = _woServ.Get(id);
             var modelUpdated = await _adaptor.TryUpdateModelAsync(this, workOrder);
-            if (!modelUpdated) return StatusCode(500);
+            if (!modelUpdated) return Json(new {
+                    jobSuccess = false,
+                    rtnMessage = $"{ModelState.GetErrorMessageIfInvalid()}"
+                });
             
             var workerRequestList = _reqServ.GetAllByWorkOrderID(workOrder.ID).ToList();
 

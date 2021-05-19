@@ -32,13 +32,12 @@ namespace Machete.Web.Controllers.Api
 
         // GET api/values
         [HttpGet, Authorize(Roles = "Administrator")]
-        public new ActionResult<IEnumerable<WorkOrderVM>> Get(
-            [FromQuery]int displayLength = 10,
-            [FromQuery]int displayStart = 0)
+        public new ActionResult<WorkOrderVM> Get(
+            [FromQuery] ApiRequestParams apiRequestParams)
         {
             var vo = new viewOptions();
-            vo.displayLength = 10;
-            vo.displayStart = 0;
+            vo.displayLength = apiRequestParams.pageSize;
+            vo.displayStart = apiRequestParams.Skip;
             vo.employerGuid = UserSubject;
             dataTableResult<DTO.WorkOrdersList> list = serv.GetIndexView(vo);
             
@@ -48,7 +47,7 @@ namespace Machete.Web.Controllers.Api
                 .Select(
                     e => map.Map<DTO.WorkOrdersList, WorkOrderVM>(e)
                 ).AsEnumerable();            
-            return Ok(result);
+            return Ok(new {data = result});
         }
 
         // GET api/values/5
@@ -58,7 +57,7 @@ namespace Machete.Web.Controllers.Api
             MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
         
             var result = map.Map<Domain.WorkOrder, WorkOrderVM>(serv.Get(id));
-            return Ok(result);
+            return Ok(new {data = result});
         }
 
         [HttpPost, Authorize(Roles = "Administrator")]
@@ -68,6 +67,6 @@ namespace Machete.Web.Controllers.Api
         public new ActionResult<WorkOrderVM> Put(int id, [FromBody]WorkOrderVM value) { return base.Put(id, value); }
 
         [HttpDelete("{id}"), Authorize(Roles = "Administrator")]
-        public new ActionResult<WorkOrderVM> Delete(int id) { return base.Delete(id); }
+        public new ActionResult Delete(int id) { return base.Delete(id); }
     }
 }

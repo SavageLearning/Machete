@@ -30,6 +30,8 @@
         public const string Lookups = "Area-Lookups";
         public const string Configs = "Area-Configs";
         public const string TransportRules = "Area-TransportRules";
+        public const string TransportProvidersAvailabilities = "Area-TransportProvidersAvailabilities";
+        public const string TransportProviders = "Area-TransportProviders";
         public const string ScheduleRules = "Area-ScheduleRules";
     }
 }

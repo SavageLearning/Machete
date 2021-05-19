@@ -24,6 +24,7 @@
 
 using System;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Machete.Data.Identity;
@@ -60,6 +61,23 @@ namespace Machete.Web.Helpers
             if (modelState.IsValid) return;
             var errors = modelState.Values.SelectMany(entry => entry.Errors).ToString();
             throw new InvalidOperationException(errors);
+        }
+
+        /// <summary>
+        /// Returns null if valid
+        /// </summary>
+        public static string GetErrorMessageIfInvalid(this ModelStateDictionary modelState)
+        {
+            if (!modelState.IsValid)
+            {
+                StringBuilder sb = new StringBuilder();
+                foreach(var fieldError in modelState.Values.SelectMany(entry => entry.Errors))
+                {
+                    sb.AppendLine(fieldError.ErrorMessage);
+                }
+                return sb.ToString();
+            }
+            return null;
         }
 
         public static string getCI()

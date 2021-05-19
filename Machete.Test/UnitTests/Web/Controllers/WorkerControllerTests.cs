@@ -164,18 +164,21 @@ namespace Machete.Test.UnitTests.Controllers
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Workers)]
-        [ExpectedException(typeof(InvalidOperationException),
-            "An invalid UpdateModel was inappropriately allowed.")]
-        public async Task create_post_invalid_throws_exception()
+        public async Task create_post_invalid_returns_error_message()
         {
             //Arrange
-            var worker = new Worker();
+            var worker = new Worker { dateOfMembership = DateTime.Now };
+            _controller.ModelState.AddModelError("dateOfMembership", "Date");
 
             //Act
-            _controller.ModelState.AddModelError("hell no", "not happening");
-            await _controller.Create(worker, "UnitTest", null);
-
+            var result = await _controller.Create(worker, "UnitTest", null) as JsonResult;
+            
             //Assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(JsonResult));
+            Assert.AreEqual(@"{ jobSuccess = False, rtnMessage = Date
+ }",
+                result.Value.ToString());
         }
 
         [DataTestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Workers)]
@@ -212,7 +215,7 @@ namespace Machete.Test.UnitTests.Controllers
 
             //Act
             var actualCreateResult = await _controller.Create(worker, "UnitTest", null) as JsonResult;
-            var actualEditResult= await _controller.Edit(worker.ID, "UnitTest", null) as JsonResult;
+            var actualEditResult= await _controller.Edit(worker, worker.ID, "UnitTest", null) as JsonResult;
 
             if (memberExists)
             {
@@ -273,12 +276,31 @@ namespace Machete.Test.UnitTests.Controllers
                                          });
 
             //Act
-            var unused = await _controller.Edit(testid, "UnitTest", null) as PartialViewResult;
+            var unused = await _controller.Edit(fakeworker, testid, "UnitTest", null) as PartialViewResult;
             
             //Assert
             Assert.AreEqual(fakeworker, savedworker);
             Assert.AreEqual("UnitTest", savedworker.height);
             Assert.AreEqual("UnitTest", savedworker.weight);
+        }
+
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Workers)]
+        public async Task edit_post_invalid_returns_error_message()
+        {
+            //Arrange
+            var fakeworker = new Worker { dateOfMembership = DateTime.Now };
+            int fakeId = 1;
+            _controller.ModelState.AddModelError("dateOfMembership", "Date");
+
+            //Act
+            var result = await _controller.Edit(fakeworker, fakeId, "UnitTest", null) as JsonResult;
+            
+            //Assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(JsonResult));
+            Assert.AreEqual(@"{ jobSuccess = False, rtnMessage = Date
+ }",
+                result.Value.ToString());
         }
     }
 }

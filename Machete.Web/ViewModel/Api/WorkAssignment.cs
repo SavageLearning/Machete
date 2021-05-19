@@ -1,21 +1,19 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Machete.Web.ViewModel.Api
 {
-    public class WorkAssignmentVM
+    public class WorkAssignmentVM : RecordVM
     {
-        public string createdby { get; set; }
-        public DateTime datecreated { get; set; }
-        public DateTime dateupdated { get; set; }
-        public int ID { get; set; }
         public string idPrefix { get; }
         public string idString { get; set; }
-        public string updatedby { get; set; }
 
         public bool active { get; set; }
         public int attitude { get; set; }
         public string comments { get; set; }
         public int days { get; set; }
+
+        [StringLength(1000, ErrorMessage = "field must be atleast 6 characters")]
         public string description { get; set; }
         public int englishLevelID { get; set; }
         public int followDirections { get; set; }

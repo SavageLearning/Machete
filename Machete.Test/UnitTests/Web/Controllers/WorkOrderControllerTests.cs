@@ -149,21 +149,6 @@ namespace Machete.Test.UnitTests.Controllers
             Assert.AreEqual(result.Value.ToString(), "{ sNewRef = /WorkOrder/Edit/4242, sNewLabel = Order #: 42424 @ blah, iNewID = 4242 }");
         }
 
-        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WorkOrders)]
-        [ExpectedException(typeof(InvalidOperationException), "An invalid UpdateModel was inappropriately allowed.")]
-        public async Task create_post_invalid_throws_exception()
-        {
-            //Arrange
-            var workOrder = new WorkOrder();
-            _serv.Setup(p => p.Create(workOrder, "UnitTest", null)).Returns(workOrder);
-
-            //Act
-            _controller.ModelState.AddModelError("this is supposed to um...", "throw");
-            await _controller.Create(workOrder, "UnitTest", new List<int>());
-            
-            //Assert
-        }
-
         //   Testing /Edit functionality
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WorkOrders)]
         public void edit_get_returns_workOrder()
@@ -208,26 +193,6 @@ namespace Machete.Test.UnitTests.Controllers
             Assert.AreEqual(1, _savedWorkOrder.transportMethodID);
             Assert.AreEqual(20.00, _savedWorkOrder.transportFee);
             //Assert.AreEqual(5, savedworkOrder.workerRequests.Count()); // TODO investigate wr broken?
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WorkOrders)]
-        [ExpectedException(typeof(InvalidOperationException), "An invalid UpdateModel was inappropriately allowed.")]
-        public async Task edit_post_invalid_throws_exception()
-        {
-            //Arrange
-            var workOrder = new WorkOrder { workerRequestsDDD = _workerRequest };
-            _testid = 4242;
-            _serv.Setup(p => p.Get(_testid)).Returns(workOrder);
-            var list = new List<WorkerRequest>();
-
-            //Act    
-            _controller.ModelState.AddModelError("hell to the", "NO");
-            await _controller.Edit(_testid, "UnitTest", list.Select(x => x.ID).ToList());
-
-            //Assert
         }
 
         #region delete tests

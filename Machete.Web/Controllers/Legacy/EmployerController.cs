@@ -127,7 +127,10 @@ namespace Machete.Web.Controllers
                     jobSuccess = true
                 });
             } else {
-                return Json(new { jobSuccess = false });
+                return Json(new {
+                    jobSuccess = false,
+                    rtnMessage = $"{ModelState.GetErrorMessageIfInvalid()}"
+                    });
             }
         }
 
@@ -163,7 +166,10 @@ namespace Machete.Web.Controllers
                 _serv.Save(employer, userName);
                 return Json(new { jobSuccess = true });
             } else {
-                return Json(new { jobSuccess = false });
+                return Json(new {
+                    jobSuccess = false,
+                    rtnMessage = $"{ModelState.GetErrorMessageIfInvalid()}"
+                    });
             }
         }
 

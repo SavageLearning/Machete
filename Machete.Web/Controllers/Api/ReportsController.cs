@@ -32,11 +32,11 @@ namespace Machete.Web.Controllers.Api
             var result = serv.getList()
                 .Select(a => map.Map<ReportDefinition, ReportDefinitionVM>(a));
 
-            return Ok(result);
+            return Ok(new {data = result});
         }
 
         [HttpGet("{id?}"), Authorize(Roles = "Administrator")]
-        public ActionResult Get(
+        public ActionResult<List<dynamic>> Get(
             [FromRoute] string id,
             [FromQuery] DateTime? beginDate,
             [FromQuery] DateTime? endDate,
@@ -52,7 +52,7 @@ namespace Machete.Web.Controllers.Api
                     beginDate = beginDate.ToUtcDatetime(),
                     dwccardnum = memberNumber
                 });
-            return new JsonResult(new { data = result });
+            return Ok(new { data = result });
         }
 
         // POST api/values

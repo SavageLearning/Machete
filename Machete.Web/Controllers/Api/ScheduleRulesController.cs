@@ -19,11 +19,9 @@ namespace Machete.Web.Controllers.Api
 
         // GET: api/ScheduleRules
         [HttpGet, Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
-        public new ActionResult<IEnumerable<ScheduleRuleVM>> Get(
-            [FromQuery]int displayLength = 10,
-            [FromQuery]int displayStart = 0) 
-        { 
-            return base.Get(displayLength, displayStart); 
+        public new ActionResult<IEnumerable<ScheduleRuleVM>> Get()
+        {
+            return base.Get(new ApiRequestParams() { AllRecords = true }); 
         }
 
         [HttpGet("{id}"), Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
@@ -36,7 +34,7 @@ namespace Machete.Web.Controllers.Api
         public new ActionResult<ScheduleRuleVM> Put(int id, [FromBody]ScheduleRuleVM value) { return base.Put(id, value); }
 
         [HttpDelete("{id}"), Authorize(Roles = "Administrator")]
-        public new ActionResult<ScheduleRuleVM> Delete(int id) { return base.Delete(id); }
+        public new ActionResult Delete(int id) { return base.Delete(id); }
 
     }
 }
