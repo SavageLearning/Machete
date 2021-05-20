@@ -6,8 +6,8 @@ using System.Net.Http.Headers;
 using System.Security.Authentication;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Machete.Data;
 using Machete.Data.Identity;
+using Machete.Service;
 using Machete.Web.Helpers.Api;
 using Machete.Web.Helpers.Api.Identity;
 using Machete.Web.ViewModel.Api.Identity;
@@ -18,10 +18,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using RestSharp;
 
 namespace Machete.Web.Controllers.Api.Identity
 {
@@ -54,11 +54,11 @@ namespace Machete.Web.Controllers.Api.Identity
     {
         private readonly UserManager<MacheteUser> _userManager;
         private readonly SignInManager<MacheteUser> _signinManager;
-
         private readonly IJwtFactory _jwtFactory;
+        private readonly IIdentityService _service;
+        private readonly IConfiguration _configuration;
         private readonly JwtIssuerOptions _jwtOptions;
         private readonly List<MacheteRole> _roles;
-        private readonly IConfiguration _configuration;
 
         const string CookieName = ".AspNetCore.Identity.Application";
         const string CookieAuthenticationType = "Identity.Application";
@@ -68,6 +68,7 @@ namespace Machete.Web.Controllers.Api.Identity
             SignInManager<MacheteUser> signInManager,
             RoleManager<MacheteRole> roleManager,
             IJwtFactory jwtFactory,
+            IIdentityService identityService,
             IOptions<JwtIssuerOptions> jwtOptions,
             IConfiguration configuration
         )
@@ -79,6 +80,7 @@ namespace Machete.Web.Controllers.Api.Identity
 
             _roles = roleManager.Roles.ToList();
             _jwtFactory = jwtFactory;
+            _service = identityService;
             _jwtOptions = jwtOptions.Value;
             _configuration = configuration;
         }
@@ -93,7 +95,7 @@ namespace Machete.Web.Controllers.Api.Identity
             foreach (var role in _roles)
             {
                 var hasRole = await _userManager.IsInRoleAsync(verifiedUser, role.Name);
-                if (hasRole) verifiedUser.UserRoles.Add(new MacheteUserRole { Role = role, User = verifiedUser }); // TODO completely untested
+                if (hasRole) verifiedUser.UserRoles.Add(new MacheteUserRole { Role = role, User = verifiedUser });
             }
             _jwtOptions.Issuer = Routes.GetHostFrom(Request).IdentityRoute();
             _jwtOptions.Nonce = Guid.NewGuid().ToString(); // corners were cut; this is supposed to identify the client
@@ -130,19 +132,18 @@ namespace Machete.Web.Controllers.Api.Identity
 
             if (viewModel.State == _configuration["Authentication:State"])
             {
-                var httpClient = new HttpClient();
                 var appId = _configuration["Authentication:Facebook:AppId"];
                 var redirectUri = Routes.FacebookSignin(host);
                 var appSecret = _configuration["Authentication:Facebook:AppSecret"];
 
-                var tokenResponse = await httpClient.GetAsync(
+                var tokenResponse = await _service.GetAsync(
                     $"https://graph.facebook.com/v3.2/oauth/access_token?" +
                     $"client_id={appId}&" +
                     $"redirect_uri={redirectUri}&" +
                     $"client_secret={appSecret}&" +
                     $"code={viewModel.Code}");
 
-                await SigninByEmailAsync(tokenResponse, httpClient, "facebook", redirectUri);
+                await SigninByEmailAsync(tokenResponse, "facebook", redirectUri);
             }
             // They're either logged in now, or they aren't.
             return await Task.FromResult<IActionResult>(new RedirectResult(host.V2AuthorizationEndpoint()));
@@ -158,9 +159,8 @@ namespace Machete.Web.Controllers.Api.Identity
 
             if (viewModel.State == _configuration["Authentication:State"])
             {
-                var httpClient = new HttpClient();
                 var appId = _configuration["Authentication:Google:ClientId"];
-                var redirectUri = $"{host}id/signin-google"; // TODO
+                var redirectUri = $"{host}id/signin-google";
                 var appSecret = _configuration["Authentication:Google:ClientSecret"];
 
                 var content = new StringContent($@"
@@ -174,24 +174,24 @@ namespace Machete.Web.Controllers.Api.Identity
 "
                 );
 
-                // TODO we *should* get this URL from https://accounts.google.com/.well-known/openid-configuration
-                var tokenResponse = await httpClient.PostAsync("https://oauth2.googleapis.com/token", content);
-                
-                await SigninByEmailAsync(tokenResponse, httpClient, "google", redirectUri);
+                // TODO: Test the following
+                // var oidcConfig = await _service.GetStringAsync("https://accounts.google.com/.well-known/openid-configuration");
+                // var tokenEndpoint = JsonConvert.DeserializeObject<Dictionary<string, string>>(oidcConfig)["token_endpoint"];
+                var tokenResponse = await _service.PostAsync("https://oauth2.googleapis.com/token", content);
+                await SigninByEmailAsync(tokenResponse, "google", redirectUri);
             }
             // They're either logged in now, or they aren't.
             return await Task.FromResult<IActionResult>(new RedirectResult(host.V2AuthorizationEndpoint()));
         }
 
-        private async Task SigninByEmailAsync(HttpResponseMessage tokenResponse, HttpClient httpClient, string provider, string redirectUri)
+        private async Task SigninByEmailAsync(HttpResponseMessage tokenResponse, string provider, string redirectUri)
         {
             var tokenResponseContent = tokenResponse.Content.ReadAsStringAsync();
             if (tokenResponse.IsSuccessStatusCode)
             {
                 var tokenObject = JsonConvert.DeserializeObject<ExternalLoginAccessToken>(tokenResponseContent.Result);
 
-                httpClient.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Bearer", tokenObject.access_token);
+                _service.Authorization = new AuthenticationHeaderValue("Bearer", tokenObject.access_token);
 
                 string profileResponseUrl;
                 switch (provider)
@@ -209,7 +209,7 @@ namespace Machete.Web.Controllers.Api.Identity
                         throw new Exception("Unable to parse provider.");
                 }
                 
-                var profileResponse = await httpClient.GetAsync(profileResponseUrl);
+                var profileResponse = await _service.GetAsync(profileResponseUrl);
                 var profileResponseContent = profileResponse.Content.ReadAsStringAsync();
                 var profile = JsonConvert.DeserializeObject<ExternalLoginProfile>(profileResponseContent.Result);
                 var user = await _userManager.FindByEmailAsync(profile.email);
@@ -229,7 +229,6 @@ namespace Machete.Web.Controllers.Api.Identity
                     await _userManager.CreateAsync(macheteUser);
                     user = await _userManager.FindByEmailAsync(profile.email);
                     await _userManager.AddToRoleAsync(user, "Hirer");
-                    /* **** me */
                 }
 
                 await VerifyClaimsExistFor(user.UserName);
