@@ -173,9 +173,9 @@ namespace Machete.Test.Selenium.View
 
             SelectOption(By.Id(prefix + "memberStatusID"), "Active");
             SelectOption(By.Id(prefix + "neighborhoodID"), HttpClientUtil.GetFirstLookupInCategory(LCategory.neighborhood).TextEN());
-            SelectOption(By.Id(prefix + "typeOfWorkID"), @"Day Worker Center");
+            SelectOption(By.Id(prefix + "typeOfWorkID"), HttpClientUtil.GetFirstLookupInCategory(LCategory.worktype).TextEN());
             SelectOption(By.Id(prefix + "englishlevelID"), "1");
-            SelectOption(By.Id(prefix + "incomeID"), @"Poor (Less than $15,000)");
+            SelectOption(By.Id(prefix + "incomeID"), HttpClientUtil.GetFirstLookupInCategory(LCategory.income).TextEN());
             _d.FindElement(By.Id(prefix + "imagefile")).SendKeys(imagepath);
             _d.FindElement(By.Id("createWorkerBtn")).Click();
             //
@@ -194,7 +194,7 @@ namespace Machete.Test.Selenium.View
             
             WaitThenClickElement(By.Id(_wkr.idPrefix + "memberStatusID"));
             Thread.Sleep(1000);
-            SelectOption(By.Id(_wkr.idPrefix + "memberStatusID"), "Sanctioned");
+            SelectOption(By.Id(_wkr.idPrefix + "memberStatusID"), HttpClientUtil.GetLookup(LCategory.memberstatus, "Sanctioned").TextEN());
             Thread.Sleep(1000);
             WaitThenClickElement(By.Id(_wkr.idPrefix + "SaveButton"));
             Thread.Sleep(1000);
@@ -234,10 +234,10 @@ namespace Machete.Test.Selenium.View
             
             Assert.AreEqual(_wkr.dwccardnum.ToString(), WaitForElement(By.Id(prefix + "dwccardnum")).GetAttribute("value"));
             Assert.AreEqual("Active", GetOptionText(WaitForElement(By.Id(prefix + "memberStatusID"))));
-            Assert.AreEqual("Primary City", GetOptionText(WaitForElement(By.Id(prefix + "neighborhoodID"))));
-            Assert.AreEqual(@"Day Worker Center", GetOptionText(WaitForElement(By.Id(prefix + "typeOfWorkID"))));
+            Assert.AreEqual(HttpClientUtil.GetFirstLookupInCategory(LCategory.neighborhood).TextEN(), GetOptionText(WaitForElement(By.Id(prefix + "neighborhoodID"))));
+            Assert.AreEqual(HttpClientUtil.GetFirstLookupInCategory(LCategory.worktype).TextEN(), GetOptionText(WaitForElement(By.Id(prefix + "typeOfWorkID"))));
             Assert.AreEqual("1", GetOptionText(WaitForElement(By.Id(prefix + "englishlevelID"))));
-            Assert.AreEqual(@"Poor (Less than $15,000)", GetOptionText(WaitForElement(By.Id(prefix + "incomeID"))));
+            Assert.AreEqual(HttpClientUtil.GetFirstLookupInCategory(LCategory.income).TextEN(), GetOptionText(WaitForElement(By.Id(prefix + "incomeID"))));
             return true;
         }
 
@@ -431,8 +431,9 @@ namespace Machete.Test.Selenium.View
             WaitThenClickElement(By.Id("deleteEmployerButton-" + _emp.ID.ToString()));
             WaitThenClickElement(By.Id("popup_ok"));
 
-            Thread.Sleep(5000);
+            Thread.Sleep(1000);
             WaitForElement(By.Id("employerTable_searchbox")).SendKeys(_emp.name);
+            Thread.Sleep(1000);
             bool result = WaitForElementValue(By.XPath("//table[@id='employerTable']/tbody/tr/td[1]"), "No matching records found");
             Assert.IsTrue(result, "Employer not deleted properly");
             return true;
@@ -1076,7 +1077,7 @@ namespace Machete.Test.Selenium.View
         }
         public static int nextAvailableDwccardnum(MacheteContext DB)
         {
-            int attempt = 30000;
+            int attempt = DB.Workers.Last().dwccardnum;
             while (DB.Workers.Any(x => x.dwccardnum == attempt))
             {
                 ++attempt;
