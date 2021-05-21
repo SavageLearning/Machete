@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Castle.Core.Internal;
 using Machete.Data.Identity;
 using Microsoft.AspNetCore.Identity;
 
