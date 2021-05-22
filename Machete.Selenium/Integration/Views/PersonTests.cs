@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Machete.Data.Initialize;
+using Machete.Domain;
 using Machete.Web.Maps;
 using Machete.Test.Integration.Fluent;
 using Machete.Test.Integration.HttpClientUtil;
@@ -141,7 +142,7 @@ namespace Machete.Test.Selenium.View
             _wkr.dwccardnum = sharedUI.nextAvailableDwccardnum(frb.ToFactory());
             var _san = (Web.ViewModel.Event)ViewModelRecords.event1.Clone();
             _san.Person = _per;
-            _san.eventTypeID = MacheteLookups.cache.First(x => x.category == "eventtype" && x.text_EN == "Sanction").ID;
+            _san.eventTypeID = HttpClientUtil.GetLookup(LCategory.eventtype, "Sanction");
             var _act = (Web.ViewModel.Activity)ViewModelRecords.activity.Clone();
 
             //Act
