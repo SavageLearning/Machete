@@ -5,10 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using AutoMapper;
-using AutoMapper.EquivalencyExpression;
-using Machete.Data;
-using Machete.Data.Tenancy;
-using Machete.Service;
 using Machete.Web.Controllers.Api;
 using Machete.Web.Maps;
 using Machete.Web.Maps.Api;
@@ -21,6 +17,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Proxies;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -28,6 +25,10 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Microsoft.EntityFrameworkCore.SqlServer;
+using Machete.Data;
+using Machete.Data.Tenancy;
+using Microsoft.Extensions.DependencyInjection;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -76,7 +77,7 @@ namespace Machete.Web
             var mapperConfig = new MapperConfiguration(maps =>
             {
                 maps.AllowNullCollections = true;
-                maps.CreateMissingTypeMaps = false;
+                //maps.CreateMissingTypeMaps = false;
                 maps.ConfigureMvc();
                 maps.ConfigureApi();
             });
@@ -93,6 +94,11 @@ namespace Machete.Web
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/localization?view=aspnetcore-2.2#configure-localization
             // https://github.com/aspnet/AspNetCore/issues/6332
             // https://stackoverflow.com/questions/34753498/self-referencing-loop-detected-in-asp-net-core
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
             services.AddMvc(options =>
             {
                 options.MaxValidationDepth = 4; // if there is a recursive error, don't go crazy
@@ -100,11 +106,7 @@ namespace Machete.Web
                 // if (LocalEnv.IsDevelopment()) options.Filters.Add(new AllowAnonymousFilter());
                 // options.Filters.Add(new AuthorizeFilter()); }) // <~ for JWT auth                    
             })
-            .AddJsonOptions(options =>
-            {
-                options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            })
+
             .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
             .AddDataAnnotationsLocalization()
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
