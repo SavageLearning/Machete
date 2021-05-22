@@ -18,6 +18,7 @@ init:
 # https://ci.appveyor.com/account/savagelearning/tools/encrypt
 environment:
   MSBUILDDISABLENODEREUSE: 1
+  DOTNET_ROLL_FORWARD_ON_NO_CANDIDATE_FX: 2
   DOCKER_PASSWORD:
     secure: q4kZwveA7LCpRBLmWNpf5Q==
   GIT_TOKEN:
@@ -38,34 +39,14 @@ before_build:
 build: 
   project: Machete.sln
 
-# THIS is the build step
-# build_script:
-# - sh: dotnet build
-# after_build:
-#before_package:
 test:
  assemblies:
   only:
     - Machete.test.dll
-#    only:
-#      - asm1.dll
-#      - asm2.dll
-#  categories:
-#    only:
-#      - UI
-#      - E2E
-#before_test:
-# test_script:
-#   - sh: dotnet test Machete.Test
-#after_test:
-#artifacts:
-#deploy:
+
 deploy_script:
   - ./appveyor_deploy.sh
-#after_deploy:
-#deploy_script:
-#on_success
-#on_failure
+
 #on_finish
 # CE: Slack disabled this webhook the last time I committed it. We need an environment variable.
 # notifications:

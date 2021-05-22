@@ -57,13 +57,16 @@ namespace Machete.Web
                 )
                 .ConfigureLogging((app, logging) =>
                 {
+                    // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-5.0
                     logging.AddConfiguration(app.Configuration.GetSection("Logging"));
-                    logging.AddConsole();
-                    logging.AddDebug();
-                    logging.AddEventSourceLogger();
                     logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
                     logging.AddFilter("Microsoft.EntityFrameworkCore.Infrastructure", LogLevel.Warning);
+                    logging.AddConsole();
+                    logging.AddEventSourceLogger();
 
+                    if (app.HostingEnvironment.IsDevelopment()) {
+                        logging.AddDebug();
+                    }
                 })
                 .UseStartup<Startup>()
                 .UseUrls("http://*:4213");
