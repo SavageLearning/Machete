@@ -67,26 +67,37 @@ namespace Machete.Test.Integration.Fluent
         private IMapper _apiMap;
         private readonly IServiceProvider container;
 
-        public FluentRecordBase() {
-            var webHost = new WebHostBuilder()
-                .ConfigureAppConfiguration((host, config) =>
+        public FluentRecordBase()
+        {
+            // var webHost = new HostBuilder()
+            IHostBuilder webHostBuilder = Host.CreateDefaultBuilder()
+                .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    config.SetBasePath(Directory.GetCurrentDirectory());
-                    config.AddJsonFile("appsettings.json");
+                    webBuilder
+                        .ConfigureKestrel(serverOptions =>
+                        {
+                            // Set properties and call methods on options
+                        })
+                        .ConfigureAppConfiguration((host, config) =>
+                        {
+                            config.SetBasePath(Directory.GetCurrentDirectory());
+                            config.AddJsonFile("appsettings.json");
 
-                    if (host.HostingEnvironment.IsDevelopment())
-                        config.AddUserSecrets<Startup>();
-                })
-                .UseKestrel()
-                .ConfigureLogging((app, logging) =>
-                {
-                    logging.AddConfiguration(app.Configuration.GetSection("Logging"));
-                    logging.AddConsole();
-                    logging.AddDebug();
-                    logging.AddEventSourceLogger();
-                })
-                .UseStartup<Startup>().Build();
-                
+                            if (host.HostingEnvironment.IsDevelopment())
+                                config.AddUserSecrets<Startup>();
+                        })
+
+                        .ConfigureLogging((app, logging) =>
+                        {
+                            logging.AddConfiguration(app.Configuration.GetSection("Logging"));
+                            logging.AddConsole();
+                            logging.AddDebug();
+                            logging.AddEventSourceLogger();
+                        })
+                        .UseStartup<Startup>();
+                });
+            IHost webHost = webHostBuilder.Build();
+            
             webHost.CreateOrMigrateDatabase().GetAwaiter().GetResult();
                 
             var serviceScope = webHost.Services.CreateScope();

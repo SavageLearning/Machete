@@ -18,8 +18,8 @@ namespace Machete.Web
         /// </summary>
         public static async Task Main(string[] args)
         {
-            IWebHost webhost = CreateWebHostBuilder(args).Build();
-
+            // IHostBuilder webhost = CreateHostBuilder(args).Build();
+            IHost webhost = CreateHostBuilder(args).Build();
             await webhost.CreateOrMigrateDatabase();
 
             await webhost.RunAsync();
@@ -30,20 +30,51 @@ namespace Machete.Web
         /// basics necessary to run an MVC app on POSIX. It does not contain configuration for IIS, instead using only
         /// the Kestrel development server; ideal for hosting with containers.
         /// </summary>
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            new WebHostBuilder()
-             // .UseContentRoute() //uncomment for static content route
-                .ConfigureAppConfiguration((host, config) =>
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    config.SetBasePath(Directory.GetCurrentDirectory());
-                    config.AddJsonFile("appsettings.json");
+                    webBuilder
+                        .ConfigureKestrel(serverOptions =>
+                        {
+                            // Set properties and call methods on options
+                        })
+                        .ConfigureAppConfiguration((host, config) =>
+                        {
+                            config.SetBasePath(Directory.GetCurrentDirectory());
+                            config.AddJsonFile("appsettings.json");
 
-                    if (host.HostingEnvironment.IsDevelopment())
-                        config.AddUserSecrets<Startup>();
-                    else
-                        config.AddEnvironmentVariables(prefix: "MACHETE_");
-                })
-                .UseKestrel(
+                            if (host.HostingEnvironment.IsDevelopment())
+                                config.AddUserSecrets<Startup>();
+                            else
+                                config.AddEnvironmentVariables(prefix: "MACHETE_");
+                        })
+                        .ConfigureLogging((app, logging) =>
+                        {
+                            logging.AddConfiguration(app.Configuration.GetSection("Logging"));
+                            logging.AddConsole();
+                            logging.AddDebug();
+                            logging.AddEventSourceLogger();
+                            logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
+                            logging.AddFilter("Microsoft.EntityFrameworkCore.Infrastructure", LogLevel.Warning);
+
+                        })
+                        .UseStartup<Startup>()
+                        .UseUrls("http://*:4213");
+                });
+            // new WebHostBuilder()
+            //  // .UseContentRoute() //uncomment for static content route
+            //     .ConfigureAppConfiguration((host, config) =>
+            //     {
+            //         config.SetBasePath(Directory.GetCurrentDirectory());
+            //         config.AddJsonFile("appsettings.json");
+            //
+            //         if (host.HostingEnvironment.IsDevelopment())
+            //             config.AddUserSecrets<Startup>();
+            //         else
+            //             config.AddEnvironmentVariables(prefix: "MACHETE_");
+            //     })
+            //     .UseKestrel(
 //                (context, kestrelOptions) =>
 //                {
 //                    var certSettings = context.Configuration.GetSection("CertificateSettings");
@@ -55,18 +86,18 @@ namespace Machete.Web
 //                        listenerOptions.UseHttps(certificate);
 //                    });
 //                }
-                )
-                .ConfigureLogging((app, logging) =>
-                {
-                    logging.AddConfiguration(app.Configuration.GetSection("Logging"));
-                    logging.AddConsole();
-                    logging.AddDebug();
-                    logging.AddEventSourceLogger();
-                    logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
-                    logging.AddFilter("Microsoft.EntityFrameworkCore.Infrastructure", LogLevel.Warning);
-
-                })
-                .UseStartup<Startup>()
-                .UseUrls("http://*:4213");
+                // )
+                // .ConfigureLogging((app, logging) =>
+                // {
+                //     logging.AddConfiguration(app.Configuration.GetSection("Logging"));
+                //     logging.AddConsole();
+                //     logging.AddDebug();
+                //     logging.AddEventSourceLogger();
+                //     logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
+                //     logging.AddFilter("Microsoft.EntityFrameworkCore.Infrastructure", LogLevel.Warning);
+                //
+                // })
+                // .UseStartup<Startup>()
+                // .UseUrls("http://*:4213");
     }
 }

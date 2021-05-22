@@ -10,7 +10,7 @@ using Machete.Domain;
 using Machete.Web.Maps.Api;
 using Machete.Web.ViewModel.Api;
 using Newtonsoft.Json;
-using SimpleJson;
+// using SimpleJson;
 using LookupViewModel = Machete.Web.ViewModel.Api.LookupVM;
 using WorkAssignmentViewModel = Machete.Web.ViewModel.Api.WorkAssignmentVM;
 

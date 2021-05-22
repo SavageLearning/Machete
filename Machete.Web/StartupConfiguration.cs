@@ -31,6 +31,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 // ReSharper disable ArrangeStaticMemberQualifier
 // ReSharper disable InvalidXmlDocComment
@@ -46,7 +47,7 @@ namespace Machete.Web
         /// <para>Part of the WebHost extension method pipeline. Calls the Entity Framework Core Migrate() method for the WebHost.</para>
         /// <para>Demonstrates the use of the `using` statement with a context provided by the .NET Core DI container.</para>
         /// </summary>
-        public static async Task<IWebHost> CreateOrMigrateDatabase(this IWebHost webhost)
+        public static async Task<IHost> CreateOrMigrateDatabase(this IHost webhost)
         {
             using (var serviceScope = webhost.Services.CreateScope())
             {
@@ -227,41 +228,43 @@ namespace Machete.Web
         /// <summary>
         /// IRouteBuilder extension method. Defines the routes for the legacy application.
         /// </summary>
-        public static void MapLegacyMvcRoutes(this IRouteBuilder routes)
+        public static void MapLegacyMvcRoutes(this IEndpointRouteBuilder routes)
         {
-            routes.MapRoute(
-                name: "default",
-                template: "{controller=Account}/{action=Login}/{id?}");
+            // routes.MapRoute(
+            //     name: "default",
+            //     template: "{controller=Account}/{action=Login}/{id?}");
+            routes.MapControllerRoute(
+                "default",
+                "{controller=Account}/{action=Login}/{id?}");
         }
         
         /// <summary>
         /// IRouteBuilder extension method. Defines the routes for the API.
         /// </summary>
-        public static void MapApiRoutes(this IRouteBuilder routes)
+        public static void MapApiRoutes(this IEndpointRouteBuilder routes)
         {
             var host = string.Empty;
-
-            routes.MapRoute(
+            routes.MapControllerRoute(
                 name: "DefaultApi",
-                template: "api/{controller}/{id?}", // {id?} == RouteParameter.Optional
-                defaults: new { controller = "Home" },
-                constraints: new { controller = GetControllerNames() }
-            );
-            routes.MapRoute(
+                pattern: "api/{controller}/{id?}",
+                defaults: new {controller = "Home"},
+                constraints: new {controller = GetControllerNames()}
+                );
+            routes.MapControllerRoute(
                 name: "LoginApi",
-                template: $"{host.IdentityRoute()}{{action}}",
+                pattern: $"{host.IdentityRoute()}{{action}}",
                 defaults: new { controller = "Identity" },
                 constraints: new { action = "accounts|login|authorize|logoff" }
             );
-            routes.MapRoute(
+            routes.MapControllerRoute(
                 name: "WellKnownToken",
-                template: $"{host.WellKnownRoute()}{{action}}",
+                pattern: $"{host.WellKnownRoute()}{{action}}",
                 defaults: new { controller = "Identity" },
                 constraints: new { action = "openid-configuration|jwks" }
             );
-            routes.MapRoute(
+            routes.MapControllerRoute(
                 name: "NotFound",
-                template: "{*path}",
+                pattern: "{*path}",
                 defaults: new { controller = "Error", action = "NotFound" }
             );
         }
