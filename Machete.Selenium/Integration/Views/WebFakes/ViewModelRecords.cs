@@ -138,7 +138,7 @@ namespace Machete.Test
             dateupdated = DateTime.Now,
             dateFrom = DateTime.Now,
             dateTo = DateTime.Now + TimeSpan.FromDays(30),
-            eventTypeID = HttpClientUtil.GetLookup(LCategory.eventtype, "Complaint"),
+            eventTypeID = HttpClientUtil.GetLookup(LCategory.eventtype, "Sanction"),
             notes = "Event note"
         };
 
