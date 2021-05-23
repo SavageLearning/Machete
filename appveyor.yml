@@ -42,7 +42,7 @@ build:
 test:
  assemblies:
   only:
-    - Machete.test.dll
+    - Machete.Test.dll
 
 deploy_script:
   - ./appveyor_deploy.sh
