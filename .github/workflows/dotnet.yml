@@ -2,15 +2,15 @@ name: .NET
 
 on:
   push:
-    branches: [ master, feature/* ]
+    branches: [ master]
   pull_request:
-    branches: [ master ]
+    branches: [ master, feature/*  ]
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    # https://docs.github.com/en/actions/guides/about-service-containers
     services:
       mssql:
         image: mcr.microsoft.com/mssql/server
