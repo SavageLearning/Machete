@@ -141,7 +141,7 @@ namespace Machete.Data
             sb.AppendFormat("select * from Emails e  with (UPDLOCK) where e.statusID = {0} or ", Email.iReadyToSend);
             sb.AppendFormat("(e.statusID = {0} and e.transmitAttempts < {1})", Email.iTransmitError, Email.iTransmitAttempts);
             var set = (DbSet<Email>)dbset;
-            return set.FromSql(sb.ToString()).AsEnumerable();
+            return set.FromSqlRaw(sb.ToString()).AsEnumerable();
         }
     }
     /// <summary>

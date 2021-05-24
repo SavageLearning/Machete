@@ -29,6 +29,7 @@ using Machete.Domain;
 using System;
 using System.Linq;
 using Machete.Data.Tenancy;
+using Microsoft.EntityFrameworkCore;
 
 // ReSharper disable ReplaceWithSingleCallToCount
 
@@ -198,8 +199,12 @@ namespace Machete.Service
 
             var qID = foo.FirstOrDefault(the => 
                 the.dwccardnum == dwccardnum
-                    && the.dateforsignin.DateTimeFrom(ClientTimeZoneInfo) >= clientDate
-                    && the.dateforsignin.DateTimeFrom(ClientTimeZoneInfo) <= endOfClientDay
+                && SqlServerDbFunctionsExtensions.DateDiffDay(null, 
+                    the.dateforsignin, 
+                    dateforsignin) == 0
+                    // TODO use DateTimeOffset with DbFunctions
+                    // && the.dateforsignin.DateTimeFrom(ClientTimeZoneInfo) >= clientDate
+                    // && the.dateforsignin.DateTimeFrom(ClientTimeZoneInfo) <= endOfClientDay
             )?.ID;
             if (qID != null) return workerSignins.FirstOrDefault(wsi => wsi.ID == qID);
 
