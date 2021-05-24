@@ -4,7 +4,6 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
-using Castle.Core.Internal;
 using Machete.Data.DTO;
 using Machete.Data.Dynamic;
 using Machete.Data.Infrastructure;
@@ -39,7 +38,7 @@ namespace Machete.Data.Repositories
             var currentTenant = tenantService.GetCurrentTenant();
             _readonlyConnectionString = currentTenant.ReadOnlyConnectionString;
             
-            if (_readonlyConnectionString.IsNullOrEmpty()) throw new ArgumentNullException(
+            if (String.IsNullOrEmpty(_readonlyConnectionString)) throw new ArgumentNullException(
                 $"ReportsRepository requires valid currentTenant.ReadOnlyConnectionString; was: {currentTenant.ReadOnlyConnectionString ?? "null"}"
             );
         }

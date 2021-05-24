@@ -12,6 +12,10 @@ namespace Machete.Web.Maps.Api
                 .ForMember(v => v.id, opt => opt.MapFrom(d => d.ID))
                 .ForMember(v => v.costRules, opt => opt.Ignore());
             CreateMap<TransportCostRule, TransportCostRuleVM>();
+
+            CreateMap<TransportRuleVM, TransportRule>()
+                .ForMember(v => v.ID, opt => opt.MapFrom(d => d.id));
+            CreateMap<TransportCostRuleVM, TransportCostRule>();
         }
     }
 }

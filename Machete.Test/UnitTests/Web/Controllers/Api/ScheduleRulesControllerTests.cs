@@ -163,7 +163,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // act
             var result = _controller.Post(validViewModel);
             //assert
-            Assert.IsInstanceOfType(result.Result, typeof(CreatedAtActionResult));
+            Assert.IsInstanceOfType(result.Result, typeof(ObjectResult));
         }
         
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.ScheduleRules)]

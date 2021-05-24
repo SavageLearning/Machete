@@ -1,21 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
-    <RuntimeFrameworkVersion>2.2.4</RuntimeFrameworkVersion>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.2.0"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.4"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="2.2.4"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.2.4"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.4"/>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2"/>
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0"/>
-    <PackageReference Include="System.Data.SqlClient" Version="4.6.0"/>
-    <PackageReference Include="System.Reflection.Emit" Version="4.3.0"/>
-    <PackageReference Include="TimeZoneConverter" Version="3.3.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.15" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.15" />
+
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.6.0" />
+    <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
+    <PackageReference Include="TimeZoneConverter" Version="3.3.0" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Machete.Domain\Machete.Domain.csproj"/>
+    <ProjectReference Include="..\Machete.Domain\Machete.Domain.csproj" />
   </ItemGroup>
 </Project>

@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
-    <RuntimeFrameworkVersion>2.2.4</RuntimeFrameworkVersion>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>aspnet-Machete.Web-989B45A2-280E-40E5-85C9-2EA24160C6D1</UserSecretsId>
     <LangVersion>7.1</LangVersion>
   </PropertyGroup>
@@ -16,23 +15,7 @@
     <None Remove="Machete.Web.csproj.DotSettings" />
     <None Remove="published\**" />
   </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="AutoMapper.Collection" Version="5.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="BuildBundlerMinifier" Version="2.8.391" />
-    <PackageReference Include="BundlerMinifier.Core" Version="2.8.391" />
-    <PackageReference Include="ElmahCore" Version="1.2.5" />
-    <PackageReference Include="ElmahCore.Sql" Version="1.2.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.WebApiCompatShim" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
-    <PackageReference Include="Unity.Container" Version="5.9.*" />
-    <PackageReference Include="RestSharp" Version="106.6.5" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc4" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <ProjectReference Include="..\Machete.Data\Machete.Data.csproj" />
     <ProjectReference Include="..\Machete.Service\Machete.Service.csproj" />
@@ -98,11 +81,6 @@
     <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\LICENSE.txt" />
     <_ContentIncludedByDefault Remove="Views\ReportsV2\Index.cshtml" />
     <_ContentIncludedByDefault Remove="Views\V2\Index.cshtml" />
-    <_ContentIncludedByDefault Remove="published\published\published\published\published\published\web.config" />
-    <_ContentIncludedByDefault Remove="published\published\published\published\published\web.config" />
-    <_ContentIncludedByDefault Remove="published\published\published\published\web.config" />
-    <_ContentIncludedByDefault Remove="published\published\published\web.config" />
-    <_ContentIncludedByDefault Remove="published\published\web.config" />
     <_ContentIncludedByDefault Remove="published\web.config" />
     <_ContentIncludedByDefault Remove="published\appsettings.Development.json" />
     <_ContentIncludedByDefault Remove="published\appsettings.json" />
@@ -111,38 +89,6 @@
     <_ContentIncludedByDefault Remove="published\dist\assets\jobs-dispatched-count.json" />
     <_ContentIncludedByDefault Remove="published\Machete.Web.deps.json" />
     <_ContentIncludedByDefault Remove="published\Machete.Web.runtimeconfig.json" />
-    <_ContentIncludedByDefault Remove="published\published\appsettings.Development.json" />
-    <_ContentIncludedByDefault Remove="published\published\appsettings.json" />
-    <_ContentIncludedByDefault Remove="published\published\appsettings.Release.json" />
-    <_ContentIncludedByDefault Remove="published\published\bundleconfig.json" />
-    <_ContentIncludedByDefault Remove="published\published\dist\assets\jobs-dispatched-count.json" />
-    <_ContentIncludedByDefault Remove="published\published\Machete.Web.deps.json" />
-    <_ContentIncludedByDefault Remove="published\published\Machete.Web.runtimeconfig.json" />
-    <_ContentIncludedByDefault Remove="published\published\published\appsettings.Development.json" />
-    <_ContentIncludedByDefault Remove="published\published\published\appsettings.json" />
-    <_ContentIncludedByDefault Remove="published\published\published\appsettings.Release.json" />
-    <_ContentIncludedByDefault Remove="published\published\published\bundleconfig.json" />
-    <_ContentIncludedByDefault Remove="published\published\published\dist\assets\jobs-dispatched-count.json" />
-    <_ContentIncludedByDefault Remove="published\published\published\Machete.Web.deps.json" />
-    <_ContentIncludedByDefault Remove="published\published\published\Machete.Web.runtimeconfig.json" />
-    <_ContentIncludedByDefault Remove="published\published\published\published\appsettings.Development.json" />
-    <_ContentIncludedByDefault Remove="published\published\published\published\appsettings.json" />
-    <_ContentIncludedByDefault Remove="published\published\published\published\appsettings.Release.json" />
-    <_ContentIncludedByDefault Remove="published\published\published\published\bundleconfig.json" />
-    <_ContentIncludedByDefault Remove="published\published\published\published\dist\assets\jobs-dispatched-count.json" />
-    <_ContentIncludedByDefault Remove="published\published\published\published\Machete.Web.deps.json" />
-    <_ContentIncludedByDefault Remove="published\published\published\published\Machete.Web.runtimeconfig.json" />
-    <_ContentIncludedByDefault Remove="published\published\published\published\published\appsettings.Development.json" />
-    <_ContentIncludedByDefault Remove="published\published\published\published\published\appsettings.json" />
-    <_ContentIncludedByDefault Remove="published\published\published\published\published\bundleconfig.json" />
-    <_ContentIncludedByDefault Remove="published\published\published\published\published\dist\assets\jobs-dispatched-count.json" />
-    <_ContentIncludedByDefault Remove="published\published\published\published\published\Machete.Web.deps.json" />
-    <_ContentIncludedByDefault Remove="published\published\published\published\published\Machete.Web.runtimeconfig.json" />
-    <_ContentIncludedByDefault Remove="published\published\published\published\published\published\appsettings.Development.json" />
-    <_ContentIncludedByDefault Remove="published\published\published\published\published\published\appsettings.json" />
-    <_ContentIncludedByDefault Remove="published\published\published\published\published\published\bundleconfig.json" />
-    <_ContentIncludedByDefault Remove="published\published\published\published\published\published\Machete.Web.deps.json" />
-    <_ContentIncludedByDefault Remove="published\published\published\published\published\published\Machete.Web.runtimeconfig.json" />
     <_ContentIncludedByDefault Remove="Views\Reports\Activities.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Reports\Employers.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Reports\Index.cshtml" />
@@ -150,6 +96,23 @@
     <_ContentIncludedByDefault Remove="Views\Reports\SSRS.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Reports\Summary.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Reports\Workers.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.15" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.15" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="3.1.15" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.15" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="3.1.15" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.15" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.15" />
+    <PackageReference Include="Microsoft.OpenApi" Version="1.2.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="RestSharp" Version="106.11.7" />
+    <PackageReference Include="Swashbuckle" Version="5.6.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
   </ItemGroup>
 
 </Project>
