@@ -58,6 +58,7 @@ make_env_file() {
 }
 
 run_local() {
+  kill -9 $(lsof -n -i :4200 | grep node | awk '{print $2}')
   cd UI
   npm run start-local-dev &
   cd ..

@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using Machete.Domain;
-using Machete.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
-using System.Configuration;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,7 +13,7 @@ using Machete.Test.Integration.HttpClientUtil;
 
 namespace Machete.Test.Selenium.View
 {
-    [TestClass]
+  [TestClass]
     public class EmployerTests
     {
         private IWebDriver driver;

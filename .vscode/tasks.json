@@ -41,6 +41,7 @@
     {
         "label": "test",
         "command": "dotnet",
+        "group": "test",
         "type": "process",
         "args": [
             "test",
@@ -51,6 +52,7 @@
     {
         "label": "selenium",
         "command": "dotnet",
+        "group": "test",
         "type": "process",
         "args": [
             "test",
