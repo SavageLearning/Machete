@@ -6,7 +6,8 @@ ENV MACHETE_USE_HTTPS_SCHEME=https
 
 # install dotnet core 
 RUN apt-get update && \
-    apt-get install --no-install-recommends -yq wget gnupg apt-transport-https ca-certificates lsof vim iputils-ping && \
+    apt-get install --no-install-recommends -yq \
+    telnet host nslookup tcptraceroute wget gnupg apt-transport-https ca-certificates lsof vim iputils-ping && \
     wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.asc.gpg && \
     mv microsoft.asc.gpg /etc/apt/trusted.gpg.d/ && \
     wget -q https://packages.microsoft.com/config/debian/9/prod.list && \
