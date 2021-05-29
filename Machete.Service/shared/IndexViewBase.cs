@@ -371,16 +371,16 @@ namespace Machete.Service
         }
         public static void filterEmployerByGuid(viewOptions o, ref IQueryable<WorkOrder> q)
         {
-            q = q.Where(p => p.Employer.onlineSigninID.Equals((string)o.employerGuid)); //EmployerID for WorkOrderIndex view
+            q = q.Where(p => p.Employer.onlineSigninID == o.employerGuid); //EmployerID for WorkOrderIndex view
         }
 
         public static void filterEmployer(viewOptions o, ref IQueryable<WorkOrder> q)
         {
-            q = q.Where(p => p.EmployerID.Equals((int)o.EmployerID)); //EmployerID for WorkOrderIndex view
+            q = q.Where(p => p.EmployerID == o.EmployerID); //EmployerID for WorkOrderIndex view
         }
         public static void filterStatus(viewOptions o, ref IQueryable<WorkOrder> q)
         {
-            q = q.Where(p => p.statusID.Equals((int)o.status));
+            q = q.Where(p => p.statusID == o.status);
         }
         public static void filterOnlineSource(viewOptions o, ref IQueryable<WorkOrder> q)
         {

@@ -150,7 +150,19 @@ namespace Machete.Data
     public class WorkOrderRepository : RepositoryBase<WorkOrder>, IWorkOrderRepository
     {
         public WorkOrderRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
-        
+
+        override public IQueryable<WorkOrder> GetAllQ()
+        {
+            return dbset
+                .Include(wo => wo.workAssignments)
+                    .ThenInclude(was => was.workerAssignedDDD)
+                        .ThenInclude(wad => wad.Person)
+                .Include(wo => wo.EmailWorkOrders)
+                    .ThenInclude(ewo => ewo.Email)
+                // AsNoTracking is not needed since we are not lazy loading.
+                .AsQueryable();
+        }
+
         public IEnumerable<WorkOrder> GetActiveOrders(DateTime date)
         {
            // date parameter comes in as Utc datetime, e.g 6/29/20 + some offset hour
