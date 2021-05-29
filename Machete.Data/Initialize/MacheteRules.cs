@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Machete.Domain;
 using Microsoft.EntityFrameworkCore;
 
@@ -71,48 +72,61 @@ namespace Machete.Data.Initialize
                     updatedby = "Init T. Script",
                 },
             };
+            context.Database.OpenConnection();
             
             transportRules.ForEach(rule =>
                 context.TransportRules.Add(rule)
             );
-            context.Database.OpenConnection();
-            if (context.Database.GetDbConnection().GetType().Name == "SqlConnection")
-            {
-                context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT dbo.TransportRules ON");
-                context.SaveChanges();
-                context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT dbo.TransportRules OFF");
-            } else {
-                context.SaveChanges();
-            }
+
+            context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT dbo.TransportRules ON");
+            context.SaveChanges();
+            context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT dbo.TransportRules OFF");
             
-            transportRules.Find(rule => rule.ID == 1).costRules = new List<TransportCostRule> {
-                new TransportCostRule { ID = 1, minWorker = 0, maxWorker = 100, cost = 5, datecreated = DateTime.Now, dateupdated = DateTime.Now, createdby = "Init T. Script", updatedby = "Init T. Script" }
-            };
-            transportRules.Find(rule => rule.ID == 2).costRules = new List<TransportCostRule> {
-                new TransportCostRule { ID = 2, minWorker = 0, maxWorker = 100, cost = 10, datecreated = DateTime.Now, dateupdated = DateTime.Now, createdby = "Init T. Script", updatedby = "Init T. Script" }
-            };
-            transportRules.Find(rule => rule.ID == 3).costRules = new List<TransportCostRule> {
-                new TransportCostRule { ID = 3, minWorker = 0, maxWorker = 1, cost = 15, datecreated = DateTime.Now, dateupdated = DateTime.Now, createdby = "Init T. Script", updatedby = "Init T. Script" },
-                new TransportCostRule { ID = 4, minWorker = 1, maxWorker = 2, cost = 5, datecreated = DateTime.Now, dateupdated = DateTime.Now, createdby = "Init T. Script", updatedby = "Init T. Script" },
-                new TransportCostRule { ID = 5, minWorker = 2, maxWorker = 10, cost = 0, datecreated = DateTime.Now, dateupdated = DateTime.Now, createdby = "Init T. Script", updatedby = "Init T. Script" }
-            };
-            transportRules.Find(rule => rule.ID == 4).costRules = new List<TransportCostRule> {
-                new TransportCostRule { ID = 6, minWorker = 0, maxWorker = 1, cost = 25, datecreated = DateTime.Now, dateupdated = DateTime.Now, createdby = "Init T. Script", updatedby = "Init T. Script" },
-                new TransportCostRule { ID = 7, minWorker = 1, maxWorker = 10, cost = 0, datecreated = DateTime.Now, dateupdated = DateTime.Now, createdby = "Init T. Script", updatedby = "Init T. Script" }
-            };      
-            transportRules.Find(rule => rule.ID == 5).costRules = new List<TransportCostRule> {
-                new TransportCostRule { ID = 8, minWorker = 0, maxWorker = 100, cost = 0, datecreated = DateTime.Now, dateupdated = DateTime.Now, createdby = "Init T. Script", updatedby = "Init T. Script" }
-            };
-            
-            context.Database.OpenConnection();
-            if (context.Database.GetDbConnection().GetType().Name == "SqlConnection")
+            context.TransportCostRules.Add(new TransportCostRule
             {
-                context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT dbo.TransportCostRules ON");
-                context.SaveChanges();
-                context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT dbo.TransportCostRules OFF");
-            } else {
-                context.SaveChanges();
-            }
+                ID = 1, transportRuleID = 1, minWorker = 0, maxWorker = 100, cost = 5, datecreated = DateTime.Now, 
+                dateupdated = DateTime.Now, createdby = "Init T. Script", updatedby = "Init T. Script"
+            });
+            context.TransportCostRules.Add(new TransportCostRule
+            {
+                ID = 2, transportRuleID = 2, minWorker = 0, maxWorker = 100, cost = 10, datecreated = DateTime.Now,
+                dateupdated = DateTime.Now, createdby = "Init T. Script", updatedby = "Init T. Script"
+            });
+            context.TransportCostRules.Add(new TransportCostRule
+            {
+                ID = 3, transportRuleID = 3, minWorker = 0, maxWorker = 1, cost = 15, datecreated = DateTime.Now,
+                dateupdated = DateTime.Now, createdby = "Init T. Script", updatedby = "Init T. Script"
+            });
+            context.TransportCostRules.Add(new TransportCostRule
+            {
+                ID = 4, transportRuleID = 3, minWorker = 1, maxWorker = 2, cost = 5, datecreated = DateTime.Now, 
+                dateupdated = DateTime.Now, createdby = "Init T. Script", updatedby = "Init T. Script"
+            });
+            context.TransportCostRules.Add(new TransportCostRule
+            {
+                ID = 5, transportRuleID = 3, minWorker = 2, maxWorker = 10, cost = 0, datecreated = DateTime.Now,
+                dateupdated = DateTime.Now, createdby = "Init T. Script", updatedby = "Init T. Script"
+            });
+            context.TransportCostRules.Add(new TransportCostRule
+            {
+                ID = 6, transportRuleID = 4, minWorker = 0, maxWorker = 1, cost = 25, datecreated = DateTime.Now, 
+                dateupdated = DateTime.Now, createdby = "Init T. Script", updatedby = "Init T. Script"
+            });
+            context.TransportCostRules.Add(new TransportCostRule
+            {
+                ID = 7, transportRuleID = 4, minWorker = 1, maxWorker = 10, cost = 0, datecreated = DateTime.Now,
+                dateupdated = DateTime.Now, createdby = "Init T. Script", updatedby = "Init T. Script"
+            });
+            context.TransportCostRules.Add(new TransportCostRule
+            {
+                ID = 8, transportRuleID = 5, minWorker = 0, maxWorker = 100, cost = 0, datecreated = DateTime.Now,
+                dateupdated = DateTime.Now, createdby = "Init T. Script", updatedby = "Init T. Script"
+            });
+        
+            context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT dbo.TransportCostRules ON");
+            context.SaveChanges();
+            context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT dbo.TransportCostRules OFF");
+
             // Schedule Rules
             for (var i = 0; i < 7; i++)
             {
