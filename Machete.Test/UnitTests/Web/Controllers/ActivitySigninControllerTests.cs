@@ -1,5 +1,5 @@
 using AutoMapper;
-using Machete.Data.Tenancy;
+using Machete.Service.Tenancy;
 using Machete.Service;
 using Machete.Web.Controllers;
 using Machete.Web.Helpers;

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Machete.Data.Dynamic;
-using Machete.Data.Tenancy;
+using Machete.Service.Dynamic;
+using Machete.Service.Tenancy;
 using Machete.Service;
 using Machete.Test.UnitTests.Controllers.Helpers;
 using Machete.Web.Controllers.Api;

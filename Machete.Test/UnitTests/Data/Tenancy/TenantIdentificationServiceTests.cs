@@ -1,6 +1,6 @@
 using System.IO;
 using FluentAssertions;
-using Machete.Data.Tenancy;
+using Machete.Service.Tenancy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

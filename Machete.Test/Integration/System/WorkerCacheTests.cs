@@ -21,7 +21,6 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using Machete.Data;
 using Machete.Domain;
 using Machete.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

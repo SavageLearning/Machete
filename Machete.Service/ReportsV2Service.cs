@@ -1,5 +1,5 @@
 using AutoMapper;
-using Machete.Data.Infrastructure;
+using Machete.Service.Infrastructure;
 using Machete.Domain;
 using OfficeOpenXml;
 using System;
@@ -9,16 +9,15 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using Machete.Data;
-using Machete.Data.DTO;
-using Machete.Data.Dynamic;
-using Machete.Data.Tenancy;
+using Machete.Service.DTO;
+using Machete.Service.Dynamic;
+using Machete.Service.Tenancy;
 
 namespace Machete.Service
 {
     public interface IReportsV2Service : IService<ReportDefinition>
     {
-        List<dynamic> GetQuery(DTO.SearchOptions o);
+        List<dynamic> GetQuery(SearchOptions o);
         List<ReportDefinition> GetList();
         ReportDefinition Get(string idOrName);
         List<QueryMetadata> GetColumns(string tableName);
@@ -51,7 +50,7 @@ namespace Machete.Service
                 id = GetMany(r => string.Equals(r.name, o.idOrName, StringComparison.OrdinalIgnoreCase)).First().ID;
             }
 
-            var oo = map.Map<DTO.SearchOptions, Data.DTO.SearchOptions>(o);
+            var oo = map.Map<DTO.SearchOptions, SearchOptions>(o);
             return GetDynamicQuery(id, oo);
         }
 
@@ -85,7 +84,7 @@ namespace Machete.Service
 
         public void GetXlsxFile(DTO.SearchOptions o, ref byte[] bytes)
         {
-            var oo = map.Map<DTO.SearchOptions, Data.DTO.SearchOptions>(o);
+            var oo = map.Map<DTO.SearchOptions, SearchOptions>(o);
             var exportQuery = BuildExportQuery(o);
             var tbl = GetDataTable(exportQuery);
 
@@ -160,7 +159,7 @@ namespace Machete.Service
             ReportDefinition report = dbset.Single(a => a.ID == id);
             List<QueryMetadata> meta = MacheteAdoContext.getMetadata(report.sqlquery, _readonlyConnectionString);
             Type queryType = ILVoodoo.buildQueryType(meta);
-            MethodInfo method = Type.GetType("Machete.Data.MacheteAdoContext")
+            MethodInfo method = Type.GetType("Machete.Service.MacheteAdoContext")
                 .GetMethod("SqlQuery", new[] { typeof(string), typeof(string), typeof(SqlParameter[]) });
             MethodInfo man = method.MakeGenericMethod(queryType);
 

@@ -27,7 +27,7 @@ using System.Globalization;
 using System.Linq;
 using Machete.Domain;
 using Microsoft.EntityFrameworkCore;
-using Machete.Data.Initialize;
+using Machete.Service.Initialize;
 using Machete.Web.ViewModel.Api;
 
 namespace Machete.Test 

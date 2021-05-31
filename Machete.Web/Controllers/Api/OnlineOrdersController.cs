@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using AutoMapper;
-using Machete.Data.Tenancy;
+using Machete.Service.Tenancy;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Helpers;

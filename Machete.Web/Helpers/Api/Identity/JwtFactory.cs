@@ -6,8 +6,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using Machete.Data;
-using Machete.Data.Identity;
+using Machete.Service;
+using Machete.Service.Identity;
 using Machete.Web.ViewModel.Api.Identity;
 
 namespace Machete.Web.Helpers.Api.Identity

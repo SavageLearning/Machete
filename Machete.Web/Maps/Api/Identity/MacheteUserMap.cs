@@ -1,6 +1,6 @@
 using AutoMapper;
-using Machete.Data;
-using Machete.Data.Identity;
+using Machete.Service;
+using Machete.Service.Identity;
 using Machete.Web.ViewModel.Api.Identity;
 
 namespace Machete.Web.Maps.Api.Identity {

@@ -23,7 +23,7 @@
 #endregion
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Machete.Data.Infrastructure;
+using Machete.Service.Infrastructure;
 using Machete.Domain;
 using Machete.Service.DTO;
 using Microsoft.EntityFrameworkCore;

@@ -25,8 +25,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using Machete.Data;
-using Machete.Data.Infrastructure;
+using Machete.Service;
+using Machete.Service.Infrastructure;
 using Machete.Domain;
 using Microsoft.EntityFrameworkCore;
 

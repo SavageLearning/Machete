@@ -25,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Machete.Data\Machete.Data.csproj" />
     <ProjectReference Include="..\Machete.Service\Machete.Service.csproj" />
     <ProjectReference Include="..\Machete.Web\Machete.Web.csproj" />
   </ItemGroup>

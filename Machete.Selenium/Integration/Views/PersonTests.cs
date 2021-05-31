@@ -7,7 +7,7 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Machete.Data.Initialize;
+using Machete.Service.Initialize;
 using Machete.Domain;
 using Machete.Web.Maps;
 using Machete.Test.Integration.Fluent;

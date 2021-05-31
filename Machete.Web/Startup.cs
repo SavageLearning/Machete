@@ -23,8 +23,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using Machete.Data;
-using Machete.Data.Tenancy;
+using Machete.Service;
+using Machete.Service.Tenancy;
 using Microsoft.Extensions.Hosting;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -66,7 +66,7 @@ namespace Machete.Web
             services.AddDbContext<MacheteContext>(builder =>
             {
                 builder.UseLazyLoadingProxies()
-                       .UseSqlServer(connString, with => with.MigrationsAssembly("Machete.Data"));
+                       .UseSqlServer(connString, with => with.MigrationsAssembly("Machete.Service"));
             });
 
             services.ConfigureAuthentication(Configuration);

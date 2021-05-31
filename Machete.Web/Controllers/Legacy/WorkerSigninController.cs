@@ -26,7 +26,7 @@ using System;
 using System.Globalization;
 using System.Linq;
 using AutoMapper;
-using Machete.Data.Tenancy;
+using Machete.Service.Tenancy;
 using Machete.Service;
 using Machete.Service.DTO;
 using Machete.Web.Helpers;

@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Machete.Data.Tenancy;
+using Machete.Service.Tenancy;
 using Machete.Service;
 using Machete.Service.DTO;
 using Machete.Web.Helpers;

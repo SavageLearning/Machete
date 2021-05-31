@@ -23,7 +23,7 @@
 #endregion
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Machete.Data.Infrastructure;
+using Machete.Service.Infrastructure;
 using Machete.Domain;
 using System;
 using System.Collections.Generic;
@@ -31,7 +31,7 @@ using System.Globalization;
 using System.Linq;
 using Machete.Service.DTO;
 using Microsoft.EntityFrameworkCore;
-using Machete.Data.Tenancy;
+using Machete.Service.Tenancy;
 
 namespace Machete.Service
 {

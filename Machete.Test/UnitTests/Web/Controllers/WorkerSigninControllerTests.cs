@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using Machete.Data.Tenancy;
+using Machete.Service.Tenancy;
 using Machete.Service;
 using Machete.Test.UnitTests.Controllers.Helpers;
 using Machete.Web.Controllers;

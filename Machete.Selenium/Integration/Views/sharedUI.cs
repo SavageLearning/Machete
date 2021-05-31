@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Machete.Data;
+using Machete.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
-using Machete.Data.Initialize;
+using Machete.Service.Initialize;
 using Machete.Domain;
 using Machete.Test.Integration.Fluent;
 using Machete.Test.Integration.HttpClientUtil;

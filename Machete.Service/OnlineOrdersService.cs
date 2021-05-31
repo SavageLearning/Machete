@@ -1,5 +1,5 @@
 using AutoMapper;
-using Machete.Data.Infrastructure;
+using Machete.Service.Infrastructure;
 using Machete.Domain;
 using Microsoft.EntityFrameworkCore;
 using System;

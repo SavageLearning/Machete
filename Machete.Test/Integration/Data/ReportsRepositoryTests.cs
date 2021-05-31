@@ -1,8 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Machete.Data.DTO;
+using Machete.Service.DTO;
 using System.Linq;
-using Machete.Data;
 using Machete.Service;
 using Machete.Test.Integration.Fluent;
 

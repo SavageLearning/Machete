@@ -27,7 +27,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
-using Machete.Data.Identity;
+using Machete.Service.Identity;
 using Machete.Domain;
 using Machete.Service;
 using Microsoft.AspNetCore.Identity;

@@ -25,8 +25,8 @@ using Machete.Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using Machete.Data;
-using Machete.Data.Initialize;
+using Machete.Service;
+using Machete.Service.Initialize;
 using Machete.Test.Integration.Fluent;
 using Microsoft.Extensions.DependencyInjection;
 

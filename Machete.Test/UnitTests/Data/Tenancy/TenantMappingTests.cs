@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using FluentAssertions;
-using Machete.Data.Tenancy;
+using Machete.Service.Tenancy;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Machete.Test.UnitTests.Data.Tenancy
