@@ -36,7 +36,8 @@ namespace Machete.Test.Integration.Services
             {
                 idOrName = "DispatchesByJob",
                 beginDate = DateTime.Parse("1/1/2013"),
-                endDate = DateTime.Parse("1/1/2014")
+                endDate = DateTime.Parse("1/1/2014"),
+                dwccardnum = 0
             };
             // Act
             List<dynamic> result = frb.ToServ<IReportsV2Service>().GetQuery(o);
@@ -55,7 +56,8 @@ namespace Machete.Test.Integration.Services
             {
                 idOrName = "1",
                 beginDate = DateTime.Parse("1/1/2013"),
-                endDate = DateTime.Parse("1/1/2014")
+                endDate = DateTime.Parse("1/1/2014"),
+                dwccardnum = 0
             };
             // Act
             List<dynamic> result = frb.ToServ<IReportsV2Service>().GetQuery(o);
@@ -74,7 +76,8 @@ namespace Machete.Test.Integration.Services
             {
                 idOrName = "dispatchesbyjob",
                 beginDate = DateTime.Parse("1/1/2013"),
-                endDate = DateTime.Parse("1/1/2014")
+                endDate = DateTime.Parse("1/1/2014"),
+                dwccardnum = 0
             };
             // Act
             List<dynamic> result = frb.ToServ<IReportsV2Service>().GetQuery(o);
@@ -93,7 +96,8 @@ namespace Machete.Test.Integration.Services
             {
                 idOrName = "blah",
                 beginDate = DateTime.Parse("1/1/2013"),
-                endDate = DateTime.Parse("1/1/2014")
+                endDate = DateTime.Parse("1/1/2014"),
+                dwccardnum = 0
             };
             // Act
             List<dynamic> result = frb.ToServ<IReportsV2Service>().GetQuery(o);
