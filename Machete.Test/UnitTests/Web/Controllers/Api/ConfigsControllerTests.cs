@@ -21,7 +21,6 @@ namespace Machete.Test.UnitTests.Controllers.Api
         private ConfigsController _controller;
         private Mock<IConfigService> _serv;
         private Mock<IConfiguration> _configuration;
-        private Mock<IConfigurationSection> _configurationSection;
         private IMapper _map;
         private List<Config> _fakeConfigs = new List<Config>();
         private Config _fakeConfig;
@@ -47,7 +46,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             _configuration = new Mock<IConfiguration>();
 
             _serv.Setup(s => s.GetMany(It.IsAny<Func<Config, bool>>()))
-                .Returns(_fakeConfigs.AsEnumerable);
+                .Returns(_fakeConfigs.AsQueryable);
             _serv.Setup(s => s.Get(1000))
                 .Returns((Config) null);
             _serv.Setup(s => s.Get(1))

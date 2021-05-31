@@ -23,10 +23,10 @@
 #endregion
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
 using Machete.Service.DTO;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text;
 
@@ -39,26 +39,19 @@ namespace Machete.Service
 
     // Business logic for Person record management
     // Ïf I made a non-web app, would I still need the code? If yes, put in here.
-    public class PersonService : ServiceBase<Person>, IPersonService
+    public class PersonService : ServiceBase2<Person>, IPersonService
     {
-        private readonly ILookupRepository lRepo;
-        private readonly IMapper map;
-        public PersonService(IPersonRepository pRepo,
-                             IUnitOfWork unitOfWork,
-                             ILookupRepository lRepo,
-                             IMapper map
-                             ) : base(pRepo, unitOfWork)
-        {
-            this.logPrefix = "Person";
-            this.lRepo = lRepo;
-            this.map = map;
-        }
+        public PersonService(IDatabaseFactory db, IMapper map) : base(db, map) {}
 
+        public new IQueryable<Person> GetAll()
+        {
+            return dbset.Include(a => a.Worker).AsNoTracking().AsQueryable();
+        }
         public dataTableResult<DTO.PersonList> GetIndexView(viewOptions o)
         {
             var result = new dataTableResult<DTO.PersonList>();
             //Get all the records
-            IQueryable<Person> q = repo.GetAllQ();
+            IQueryable<Person> q = GetAll();
             result.totalCount = q.Count();
             //
             //Search based on search-bar string 
@@ -67,24 +60,24 @@ namespace Machete.Service
             if (o.showNotWorkers == true) IndexViewBase.getNotWorkers(o, ref q);
             if (o.showExpiredWorkers == true) {
                 IndexViewBase.getExpiredWorkers(o, 
-                    lRepo.GetByKey(LCategory.memberstatus, LMemberStatus.Expired).ID,
+                    WorkOrder.iExpired,
                     ref q);
             }
             if (o.showSExWorkers == true) {
                 IndexViewBase.getSExWorkers(o,
-                    lRepo.GetByKey(LCategory.memberstatus, LMemberStatus.Sanctioned).ID,
-                    lRepo.GetByKey(LCategory.memberstatus, LMemberStatus.Expelled).ID, 
+                    Worker.iSanctioned,
+                    Worker.iExpelled, 
                     ref q);
 
             }
             if (o.showActiveWorkers == true) {
-                IndexViewBase.GetActiveWorkers(lRepo.GetByKey(LCategory.memberstatus, LMemberStatus.Active).ID,
+                IndexViewBase.GetActiveWorkers(Worker.iActive,
                     ref q);
             }
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
 
             result.filteredCount = q.Count();
-            result.totalCount = repo.GetAllQ().Count();
+            result.totalCount = GetAll().Count();
             result.query = q.ProjectTo<DTO.PersonList>(map.ConfigurationProvider)
                 .Skip(o.displayStart)
                 .Take(o.displayLength)

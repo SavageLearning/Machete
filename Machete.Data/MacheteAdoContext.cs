@@ -11,8 +11,7 @@ using Newtonsoft.Json;
 namespace Machete.Data
 {
     /// <summary>
-    /// In a reading of the code, you might be tempted to think of this as the "readonly" context. You would be wrong.
-    /// There is no "readonly" context. This is an ADO context; i.e., it's a context that doesn't use DbContext (EF) and
+    /// This is an ADO context; i.e., it's a context that doesn't use DbContext (EF) and
     /// permits you to execute queries directly against the database. Use with extreme caution and perform secure code
     /// reviews for any changes involving this class.
     /// </summary>

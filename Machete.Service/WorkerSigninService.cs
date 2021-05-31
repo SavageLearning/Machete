@@ -48,20 +48,19 @@ namespace Machete.Service
         private TimeZoneInfo ClientTimeZoneInfo { get; }
 
         public WorkerSigninService(
-            IWorkerSigninRepository repo, 
-            IWorkerService wServ,
-            IImageService iServ,
-            IWorkerRequestService wrServ,
-            IUnitOfWork uow,
+            IDatabaseFactory db,
             IMapper map,
-            IConfigService cfg,
             ITenantService tenantService
-        ) : base(repo, wServ, iServ, wrServ, uow, map, cfg)
+        ) : base(db, map)
         {
             logPrefix = "WorkerSignin";
             ClientTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(tenantService.GetCurrentTenant().Timezone);
         }
 
+        public new IQueryable<WorkerSignin> GetAll()
+        {
+            return dbset.Include(a => a.worker).AsNoTracking().AsQueryable();   
+        }
         /// <summary>
         /// This method moves a worker down in numerical order in
         /// the daily ('lottery') list, and moves
@@ -72,7 +71,7 @@ namespace Machete.Service
         /// <returns>bool</returns>
         public void moveDown(int id, string user)
         {
-            WorkerSignin wsiDown = repo.GetById(id); // 4
+            WorkerSignin wsiDown = dbset.Find(id); // 4
             DateTime date = wsiDown.dateforsignin;
 
             int nextID = (wsiDown.lottery_sequence ?? 0) + 1; // 5
@@ -80,11 +79,11 @@ namespace Machete.Service
             if (nextID == 1) return;
             //this can't happen with current GUI settings (10/10/2013)
 
-            var firstOrDefault = repo.GetAllQ()
+            var firstOrDefault = GetAll()
                 .Where(up => up.lottery_sequence == nextID
                              && up.dateforsignin.Date == date.Date)
                 .Select(g => g.ID).FirstOrDefault();
-            WorkerSignin wsiUp = repo.GetById(firstOrDefault); //up.ID = 5
+            WorkerSignin wsiUp = dbset.Find(firstOrDefault); //up.ID = 5
 
             int? spotInQuestion = wsiDown.lottery_sequence; // 4
             wsiDown.lottery_sequence = wsiUp.lottery_sequence; // 5
@@ -104,18 +103,18 @@ namespace Machete.Service
         /// <returns>bool</returns>
         public void moveUp(int id, string user)
         {
-            WorkerSignin wsiUp = repo.GetById(id); // 4
+            WorkerSignin wsiUp = dbset.Find(id); // 4
             DateTime date = wsiUp.dateforsignin;
 
             int prevID = (wsiUp.lottery_sequence ?? 0) - 1; // 3
 
             if (prevID < 1) return;
 
-            var firstOrDefault = repo.GetAllQ()
+            var firstOrDefault = GetAll()
                 .Where(up => up.lottery_sequence == prevID
                              && up.dateforsignin.Date == date.Date)
                 .Select(g => g.ID).FirstOrDefault();
-            WorkerSignin wsiDown = repo.GetById(
+            WorkerSignin wsiDown = dbset.Find(
                                     firstOrDefault
                                  ); //down.lotSq = 3
 
@@ -135,7 +134,7 @@ namespace Machete.Service
         public dataTableResult<DTO.WorkerSigninList> GetIndexView(viewOptions o)
         {
             var result = new dataTableResult<DTO.WorkerSigninList>();
-            IQueryable<WorkerSignin> q = repo.GetAllQ();
+            IQueryable<WorkerSignin> q = GetAll();
 
             var unused = q.Count();
 
@@ -156,13 +155,13 @@ namespace Machete.Service
             }
 
             if (o.typeofwork_grouping != null) IndexViewBase.typeOfWork(o, ref q);
-            IndexViewBase.waGrouping(o, ref q, wrServ);
+            IndexViewBase.waGrouping(o, ref q, db.WorkerRequests.AsNoTracking().AsQueryable());
             if (o.dwccardnum > 0) IndexViewBase.dwccardnum(o, ref q);
             if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
 
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
             result.filteredCount = q.Count();
-            result.totalCount = repo.GetAllQ().Count();
+            result.totalCount = GetAll().Count();
             if (o.displayLength > 0)
             {
                 result.query = q.ProjectTo<DTO.WorkerSigninList>(map.ConfigurationProvider)
@@ -187,10 +186,10 @@ namespace Machete.Service
         public virtual WorkerSignin CreateSignin(int dwccardnum, DateTime dateforsignin, string user)
         {
             //Search for worker with matching card number
-            var worker = wServ.GetAll().FirstOrDefault(d => d.dwccardnum == dwccardnum);
+            var worker = db.Workers.FirstOrDefault(d => d.dwccardnum == dwccardnum);
             if (worker == null) throw new NullReferenceException("Card ID doesn't match a worker!");
 
-            var workerSignins = repo.GetAllQ();
+            var workerSignins = GetAll();
 
             var clientDate = dateforsignin.DateBasedOn(ClientTimeZoneInfo); // 12:00:00 AM client time
             var endOfClientDay = clientDate.AddDays(1).AddMilliseconds(-1);

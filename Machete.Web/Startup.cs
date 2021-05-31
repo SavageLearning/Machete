@@ -14,10 +14,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Proxies;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -25,10 +23,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using Microsoft.EntityFrameworkCore.SqlServer;
 using Machete.Data;
 using Machete.Data.Tenancy;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -39,7 +36,7 @@ namespace Machete.Web
 
         private readonly RsaSecurityKey _signingKey;
 
-        public Startup(IConfiguration configuration, IHostingEnvironment env)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
             LocalEnv = env;
@@ -51,7 +48,7 @@ namespace Machete.Web
         }
 
         public IConfiguration Configuration { get; }
-        public IHostingEnvironment LocalEnv { get; }
+        public IWebHostEnvironment LocalEnv { get; }
 
     /// <summary>
     /// Defines the ASP.NET Core middleware pipeline. This method gets called by the runtime.
@@ -109,7 +106,7 @@ namespace Machete.Web
 
             .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
             .AddDataAnnotationsLocalization()
-            .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
                             
             services.AddSpaStaticFiles(angularApp =>
             {
@@ -148,7 +145,7 @@ namespace Machete.Web
         ///
         /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         /// </summary>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             // The pipeline is sequential; since all other elements rely on the headers, this must remain at the top
             app.UseForwardedHeaders();

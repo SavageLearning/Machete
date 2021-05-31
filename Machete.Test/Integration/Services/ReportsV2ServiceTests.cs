@@ -39,7 +39,7 @@ namespace Machete.Test.Integration.Services
                 endDate = DateTime.Parse("1/1/2014")
             };
             // Act
-            List<dynamic> result = frb.ToServ<IReportsV2Service>().getQuery(o);
+            List<dynamic> result = frb.ToServ<IReportsV2Service>().GetQuery(o);
             // Assert
             Assert.IsNotNull(result);
             Assert.AreNotEqual(0, result.Count);
@@ -58,7 +58,7 @@ namespace Machete.Test.Integration.Services
                 endDate = DateTime.Parse("1/1/2014")
             };
             // Act
-            List<dynamic> result = frb.ToServ<IReportsV2Service>().getQuery(o);
+            List<dynamic> result = frb.ToServ<IReportsV2Service>().GetQuery(o);
             // Assert
             Assert.IsNotNull(result);
             Assert.AreNotEqual(0, result.Count);
@@ -77,7 +77,7 @@ namespace Machete.Test.Integration.Services
                 endDate = DateTime.Parse("1/1/2014")
             };
             // Act
-            List<dynamic> result = frb.ToServ<IReportsV2Service>().getQuery(o);
+            List<dynamic> result = frb.ToServ<IReportsV2Service>().GetQuery(o);
             // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual("20130101-20140101-DispatchesByJob-63", result[0].id);
@@ -96,7 +96,7 @@ namespace Machete.Test.Integration.Services
                 endDate = DateTime.Parse("1/1/2014")
             };
             // Act
-            List<dynamic> result = frb.ToServ<IReportsV2Service>().getQuery(o);
+            List<dynamic> result = frb.ToServ<IReportsV2Service>().GetQuery(o);
             // Assert
 
         }
@@ -107,7 +107,7 @@ namespace Machete.Test.Integration.Services
             // arrange
             // act
             var result = frb.ToServ<IReportsV2Service>()
-                .getList();
+                .GetList();
             // assert
             Assert.IsNotNull(result);
             Assert.AreEqual(1, result.Where(a => a.name == "DispatchesByJob").Count());
@@ -143,7 +143,7 @@ namespace Machete.Test.Integration.Services
             };
             // act
             frb.ToServ<IReportsV2Service>()
-                .getXlsxFile(o, ref result);
+                .GetXlsxFile(o, ref result);
             // assert
             Assert.IsNotNull(result);
         }
@@ -166,7 +166,7 @@ namespace Machete.Test.Integration.Services
             };
             // act
             frb.ToServ<IReportsV2Service>()
-                .getXlsxFile(o, ref result);
+                .GetXlsxFile(o, ref result);
             // assert
             Assert.IsNotNull(result);
         }
@@ -190,7 +190,7 @@ namespace Machete.Test.Integration.Services
             };
             // act
             frb.ToServ<IReportsV2Service>()
-                .getXlsxFile(o, ref result);
+                .GetXlsxFile(o, ref result);
             // assert
             Assert.IsNotNull(result);
         }
@@ -199,7 +199,7 @@ namespace Machete.Test.Integration.Services
         public void ValidateReturnsEmptyList_WhenNoErrorsAreFound() {
             var errorList = new List<string>();
             var query = "SELECT 1 from dbo.ReportDefinitions";
-            errorList = frb.ToServ<IReportsV2Service>().validateQuery(query);
+            errorList = frb.ToServ<IReportsV2Service>().ValidateQuery(query);
             Assert.AreEqual(0, errorList.Count);
         }
 
@@ -208,7 +208,7 @@ namespace Machete.Test.Integration.Services
         {
             var errorList = new List<string>();
             var query = "DROP TABLE dbo.ReportDefinitions";
-            errorList = frb.ToServ<IReportsV2Service>().validateQuery(query);
+            errorList = frb.ToServ<IReportsV2Service>().ValidateQuery(query);
             Assert.AreEqual(1, errorList.Count);
             Assert.IsTrue(errorList[0].Equals("Cannot drop the table 'ReportDefinitions', because it does not exist or you do not have permission."));
         }

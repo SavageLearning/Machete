@@ -53,7 +53,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
 
             _waServ  = new Mock<IWorkAssignmentService>();
             _waServ .Setup(s => s.GetAll())
-                .Returns(_fakeWorkAssignments);
+                .Returns(_fakeWorkAssignments.AsQueryable);
             _waServ .Setup(s => s.Get(1))
                 .Returns(_fakeWorkAssignment);            
             _waServ .Setup(s => s.Get(1000))

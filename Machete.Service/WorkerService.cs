@@ -23,9 +23,9 @@
 #endregion
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,36 +43,28 @@ namespace Machete.Service
         bool ExpireMembers();
         bool ReactivateMembers();
     }
-    public class WorkerService : ServiceBase<Worker>, IWorkerService
+    public class WorkerService : ServiceBase2<Worker>, IWorkerService
     {
-        private readonly IWorkAssignmentRepository waRepo;
-        private readonly IWorkOrderRepository woRepo;
-        private readonly IPersonRepository pRepo;
-        private readonly IMapper map;
-        private readonly ILookupRepository lRepo;
-        private readonly IWorkerRepository wRepo;
+        private readonly DbSet<Lookup> lSet;
+        private readonly DbSet<Person> pSet;
 
-        public WorkerService(IWorkerRepository wRepo, 
-            ILookupRepository lRepo,
-            IUnitOfWork uow, 
-            IWorkAssignmentRepository waRepo, 
-            IWorkOrderRepository woRepo, 
-            IPersonRepository pRepo,
-            IMapper map)
-            : base(wRepo, uow)
+        public WorkerService(IDatabaseFactory dbf, IMapper map) : base(dbf, map)
         {
             this.logPrefix = "Worker";
-            this.waRepo = waRepo;
-            this.woRepo = woRepo;
-            this.pRepo = pRepo;
-            this.map = map;
-            this.lRepo = lRepo;
-            this.wRepo = wRepo;
+            lSet = this.db.Set<Lookup>();
+            pSet = this.db.Set<Person>();
         }
 
+        public new IQueryable<Worker> GetAll()
+        {
+            return dbset.Include(a => a.Person).AsNoTracking().AsQueryable();
+        }
         public Worker GetByMemberID(int dwccardnum)
         {
-            return wRepo.GetByMemberID(dwccardnum);
+                        var q = from o in dbset.AsQueryable()
+                    where o.dwccardnum.Equals(dwccardnum)
+                    select o;
+            return q.FirstOrDefault();
         }
         
         /// <summary>
@@ -82,7 +74,7 @@ namespace Machete.Service
         /// <returns>bool</returns>
         public bool MemberExists(int dwccardnum)
         {
-            return !(wRepo.GetByMemberID(dwccardnum) is null);
+            return !(this.GetByMemberID(dwccardnum) is null);
         }
         
         /// <summary>
@@ -100,7 +92,7 @@ namespace Machete.Service
 
         public int GetNextWorkerNum()
         {
-            var all = repo.GetAllQ().Select(x => x.dwccardnum);
+            var all = GetAll().Select(x => x.dwccardnum);
             var asc = all.OrderBy(x => x).FirstOrDefault();
             if (asc == 0)
             {
@@ -123,10 +115,9 @@ namespace Machete.Service
 
         public override Worker Create(Worker record, string user)
         {
-            record.Person = pRepo.GetById(record.ID);
+            record.Person = pSet.Find(record.ID);
             updateComputedFields(ref record);
             var result = base.Create(record, user);
-            uow.SaveChanges();
             return result;
         }
 
@@ -138,9 +129,9 @@ namespace Machete.Service
 
         private void updateComputedFields(ref Worker record)
         {
-            record.memberStatusEN = lRepo.GetById(record.memberStatusID).text_EN;
-            record.memberStatusES = lRepo.GetById(record.memberStatusID).text_ES;
-            record.typeOfWork = lRepo.GetById(record.typeOfWorkID).ltrCode;
+            record.memberStatusEN = lSet.Find(record.memberStatusID).text_EN;
+            record.memberStatusES = lSet.Find(record.memberStatusID).text_ES;
+            record.typeOfWork = lSet.Find(record.typeOfWorkID).ltrCode;
             record.skillCodes = getSkillCodes(record);
             record.fullNameAndID = record.dwccardnum + " " + record.Person.fullName;
         }
@@ -150,17 +141,17 @@ namespace Machete.Service
             string rtnstr = "E" + w.englishlevelID + " ";
             if (w.skill1 != null)
             {
-                var lookup = lRepo.GetById((int)w.skill1);
+                var lookup = lSet.Find((int)w.skill1);
                 rtnstr = rtnstr + lookup.ltrCode + lookup.level + " ";
             }
             if (w.skill2 != null)
             {
-                var lookup = lRepo.GetById((int)w.skill2);
+                var lookup = lSet.Find((int)w.skill2);
                 rtnstr = rtnstr + lookup.ltrCode + lookup.level + " ";
             }
             if (w.skill3 != null)
             {
-                var lookup = lRepo.GetById((int)w.skill3);
+                var lookup = lSet.Find((int)w.skill3);
                 rtnstr = rtnstr + lookup.ltrCode + lookup.level;
             }
             return rtnstr;
@@ -174,7 +165,7 @@ namespace Machete.Service
         {
             var result = new dataTableResult<DTO.WorkerList>();
             //Get all the records
-            IQueryable<Worker> q = repo.GetAllQ();
+            IQueryable<Worker> q = GetAll();
             result.totalCount = q.Count();
             //Search based on search-bar string 
             if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);

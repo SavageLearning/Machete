@@ -50,7 +50,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             
             _scheduleRuleServ = new Mock<IScheduleRuleService>();
             _scheduleRuleServ.Setup(s => s.GetAll())
-                .Returns(_fakeScheduleRules);
+                .Returns(_fakeScheduleRules.AsQueryable);
             _scheduleRuleServ.Setup(s => s.Get(1000))
                 .Returns((ScheduleRule) null);
             _scheduleRuleServ.Setup(s => s.Get(1))

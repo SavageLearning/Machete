@@ -76,7 +76,7 @@ namespace Machete.Web.Controllers.Api
         public ActionResult Get(string tableName)
         {
             Enum.TryParse<ValidTableNames>(tableName, out var unused); // validate that we've only received a table name
-            var result = serv.getColumns(tableName);
+            var result = serv.GetColumns(tableName);
             return Ok(new { data = result });
         }
 
@@ -114,7 +114,7 @@ namespace Machete.Web.Controllers.Api
             // http://epplus.codeplex.com/wikipage?title=WebapplicationExample
             // https://stackoverflow.com/questions/30570336/export-to-excel-as-a-response-in-web-api
             byte[] bytes = null;
-            serv.getXlsxFile(o, ref bytes);
+            serv.GetXlsxFile(o, ref bytes);
 
 //            HttpResponseMessage response = new HttpResponseMessage();
 //            response.Content = new ByteArrayContent(bytes);

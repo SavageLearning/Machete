@@ -50,54 +50,23 @@ namespace Machete.Service
         WorkOrder Create(WorkOrder wo, string userName, ICollection<WorkAssignment> was = null);
     }
 
-    public class WorkOrderService : ServiceBase<WorkOrder>, IWorkOrderService
+    public class WorkOrderService : ServiceBase2<WorkOrder>, IWorkOrderService
     {
         private readonly IWorkAssignmentService waServ;
-        private readonly IWorkerRequestService wrServ;
-        private readonly IWorkerService wServ;
-        private readonly IMapper map;
-        private readonly ILookupRepository lRepo;
-        private readonly IConfigService cfg;
-        private readonly ITransportProvidersService tpServ;
         private readonly TimeZoneInfo _clientTimeZoneInfo;
-        private new readonly IWorkOrderRepository repo;
 
         /// <summary>
         /// Business logic object for WorkOrder record management. Contains logic specific
         /// to processing work orders, and not necessarily related to a web application.
         /// </summary>
-        /// <param name="repo"></param>
-        /// <param name="waServ">Work Assignment service</param>
-        /// <param name="tpServ"></param>
-        /// <param name="wrServ"></param>
-        /// <param name="wServ"></param>
-        /// <param name="lRepo"></param>
-        /// <param name="uow">Unit of Work</param>
-        /// <param name="map"></param>
-        /// <param name="cfg"></param>
-        /// <param name="tenantService"></param>
-        public WorkOrderService(IWorkOrderRepository repo, 
-                                IWorkAssignmentService waServ,
-                                ITransportProvidersService tpServ,
-                                IWorkerRequestService wrServ,
-                                IWorkerService wServ,
-                                ILookupRepository lRepo,
-                                IUnitOfWork uow,
-                                IMapper map,
-                                IConfigService cfg,
-                                ITenantService tenantService
-        ) : base(repo, uow)
+        public WorkOrderService(
+            IDatabaseFactory db, 
+            IWorkAssignmentService waServ, 
+            ITenantService tServ, 
+            IMapper map) : base(db, map)
         {
-            this.repo = repo;
             this.waServ = waServ;
-            this.wrServ = wrServ;
-            this.wServ = wServ;
-            this.map = map;
-            this.lRepo = lRepo;
-            this.cfg = cfg;
-            this.tpServ = tpServ;
-            this.logPrefix = "WorkOrder";
-            _clientTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(tenantService.GetCurrentTenant().Timezone);
+            _clientTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(tServ.GetCurrentTenant().Timezone);
         }
 
         /// <summary>
@@ -108,9 +77,20 @@ namespace Machete.Service
         /// <returns>WorkOrders associated with a given date that are active</returns>
         public IEnumerable<WorkOrder> GetActiveOrders(DateTime date, bool assignedOnly)
         {
-            var matching = repo.GetActiveOrders(date);
-//                .Where(wo => wo.statusID == WorkOrder.iActive
-//                          && wo.dateTimeofWork.Date == date.Date).ToList();
+            // date parameter comes in as Utc datetime, e.g 6/29/20 + some offset hour
+            var dateEndUtc = date.AddHours(24); // UTC end search dateTime
+            var matching = dbset.Where(wo => 
+                    wo.statusID == WorkOrder.iActive &&
+                    wo.dateTimeofWork >= date &&
+                    wo.dateTimeofWork < dateEndUtc
+                ).Include(a => a.Employer)
+                .Include(a => a.workerRequestsDDD)
+                .ThenInclude(a => a.workerRequested)
+                .ThenInclude(a=>a.Person)
+                .Include(a => a.workAssignments)
+                .ThenInclude(a => a.workerAssignedDDD)
+                .ThenInclude(a => a.Person)
+                .ToList();            
 
             if (!assignedOnly) return matching;
             
@@ -163,7 +143,7 @@ namespace Machete.Service
         {
             //Get all the records
             var result = new dataTableResult<DTO.WorkOrdersList>();
-            IQueryable<WorkOrder> q = repo.GetAllQ();
+            IQueryable<WorkOrder> q = GetAll();
             //
             if (o.EmployerID != null) IndexViewBase.filterEmployer(o, ref q);
             if (o.employerGuid != null) IndexViewBase.filterEmployerByGuid(o, ref q);
@@ -179,7 +159,7 @@ namespace Machete.Service
             .Take(o.displayLength)
             .AsEnumerable();
                 
-            result.totalCount = repo.GetAllQ().Count();
+            result.totalCount = GetAll().Count();
             return result;
         }
 
@@ -196,20 +176,20 @@ namespace Machete.Service
             // workOrder.timeZoneOffset = Convert.ToDouble(cfg.getConfig(Cfg.TimeZoneDifferenceFromPacific));
             updateComputedValues(ref workOrder);
             workOrder.createdByUser(username);
-            var createdWorkOrder = repo.Add(workOrder);
+            var createdWorkOrder = dbset.Add(workOrder).Entity;
             createdWorkOrder.workerRequestsDDD = new Collection<WorkerRequest>();
             if (workerRequestList != null)
             {
                 foreach (var workerRequest in workerRequestList)
                 {
                     workerRequest.workOrder = createdWorkOrder;
-                    workerRequest.workerRequested = wServ.Get(workerRequest.WorkerID);
+                    workerRequest.workerRequested = db.Workers.Find(workerRequest.WorkerID);
                     workerRequest.updatedByUser(username);
                     workerRequest.createdByUser(username);
                     createdWorkOrder.workerRequestsDDD.Add(workerRequest);
                 }
             }
-            uow.SaveChanges();
+            db.SaveChanges();
             
             if (createdWorkOrder.paperOrderNum == null || createdWorkOrder.paperOrderNum == 0)
             {
@@ -226,7 +206,7 @@ namespace Machete.Service
                 }
             }
 
-            uow.SaveChanges();
+            db.SaveChanges();
 
             _log(workOrder.ID, username, "WorkOrder created");
             return createdWorkOrder;
@@ -239,8 +219,8 @@ namespace Machete.Service
 
         private void updateComputedValues(ref WorkOrder record)
         {
-            var lookup = lRepo.GetById(record.statusID);
-            var transportProvider = tpServ.Get(record.transportProviderID);
+            var lookup = db.Lookups.Find(record.statusID);
+            var transportProvider = db.TransportProviders.Find(record.transportProviderID);
 
             record.statusES = lookup.text_ES;
             record.statusEN = lookup.text_EN;
@@ -253,8 +233,11 @@ namespace Machete.Service
             // Stale requests to remove
             foreach (var rem in workOrder.workerRequestsDDD.Except(wrList, new WorkerRequestComparer()).ToArray())
             {
-                var request = wrServ.GetByID(workOrder.ID, rem.WorkerID);
-                wrServ.Delete(request.ID, user);
+                var request = db.WorkerRequests.AsQueryable()
+                    .Where(o => o.WorkOrderID.Equals(workOrder.ID) && o.WorkerID.Equals(rem.WorkerID))
+                    .FirstOrDefault();
+                  
+                db.WorkerRequests.Remove(request);
                 workOrder.workerRequestsDDD.Remove(rem);
             }
 
@@ -262,7 +245,7 @@ namespace Machete.Service
             foreach (var add in wrList.Except(workOrder.workerRequestsDDD, new WorkerRequestComparer()))
             {
                 add.workOrder = workOrder;
-                add.workerRequested = wServ.Get(add.WorkerID);
+                add.workerRequested = db.Workers.Find(add.WorkerID);
                 add.updatedByUser(user);
                 add.createdByUser(user);
                 workOrder.workerRequestsDDD.Add(add);
@@ -295,7 +278,7 @@ namespace Machete.Service
         {
             var result = new dataTableResult<WOWASummary>();
 
-                var q = repo.GetCombinedSummary("", true, 0, 1);
+                var q = db.Query<WOWASummary>().AsQueryable();
                 if (orderDescending)
                     q = q.OrderByDescending(p => p.sortableDate);
                 else
@@ -303,7 +286,7 @@ namespace Machete.Service
 
                 result.filteredCount = q.Count();
                 result.query = q.Skip<WOWASummary>((int)displayStart).Take((int)displayLength);
-                result.totalCount = repo.GetAllQ().Count();
+                result.totalCount = GetAll().Count();
                 return result;
         }
 

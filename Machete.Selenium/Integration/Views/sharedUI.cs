@@ -210,7 +210,6 @@ namespace Machete.Test.Selenium.View
             string prefix = "worker"+_wkr.ID+"-";
             Thread.Sleep(1000);
             bool result = WaitForElementValue(By.Id("workerCreateTab"), "Worker information");
-            string dateFormat1 = "M/dd/yy";
             string dateFormat2 = "MM/dd/yyyy";
             Assert.IsTrue(result, "Create tab label not updated by formSubmit");
             var expectedDateOfMembership = _wkr.dateOfMembership.ToString(dateFormat2);

@@ -21,6 +21,8 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+
+using AutoMapper;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
@@ -28,12 +30,8 @@ using Machete.Domain;
 namespace Machete.Service
 {
     public interface IImageService : IService<Image> {}
-    public class ImageService : ServiceBase<Image>, IImageService
+    public class ImageService : ServiceBase2<Image>, IImageService
     {
-        //
-        public ImageService(IImageRepository iRepo, IUnitOfWork uow) : base(iRepo, uow)
-        {
-            this.logPrefix = "Image";
-        }
+        public ImageService(IDatabaseFactory db, IMapper map) : base(db, map) {}
     }
 }

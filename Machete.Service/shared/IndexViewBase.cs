@@ -73,8 +73,9 @@ namespace Machete.Service
             q = q.Where(wsi => wsi.worker.typeOfWorkID == o.typeofwork_grouping)
                  .Select(wsi => wsi);
         }
-        public static void waGrouping(viewOptions o, ref IQueryable<WorkerSignin> q, IWorkerRequestService wrServ)
+        public static void waGrouping(viewOptions o, ref IQueryable<WorkerSignin> q, IQueryable<WorkerRequest> wr)
         {
+
             switch (o.wa_grouping)
             {
                 case "open": q = q.Where(p => p.WorkAssignmentID == null); break;
@@ -90,7 +91,7 @@ namespace Machete.Service
                 case "requested":
                     if (o.date == null) throw new MacheteIntegrityException("Date cannot be null for Requested filter");
                     q = q.Where(p => p.WorkAssignmentID == null);
-                    q = q.Join(wrServ.GetAll(), //LINQ
+                    q = q.Join(wr.AsNoTracking().AsQueryable(), //LINQ
                                 wsi => new
                                 {
                                     K1 = (int)wsi.WorkerID,
@@ -127,9 +128,9 @@ namespace Machete.Service
         }
         #endregion
         #region WORKASSIGNMENTS
-        public static void typeOfWork(viewOptions o, ref IQueryable<WorkAssignment> q, ILookupRepository lRepo)
+        public static void typeOfWork(viewOptions o, ref IQueryable<WorkAssignment> q, IQueryable<Lookup> lRepo)
         {
-            q = q.Join(lRepo.GetAllQ(),
+            q = q.Join(lRepo,
                         wa => wa.skillID,
                         sk => sk.ID,
                         (wa, sk) => new { wa, sk })
@@ -168,7 +169,7 @@ namespace Machete.Service
         {
             q = q.Where(p => p.workOrder.statusID != WorkOrder.iPending);
         }
-        public static void waGrouping(viewOptions o, ref IQueryable<WorkAssignment> q, ILookupRepository lRepo)
+        public static void waGrouping(viewOptions o, ref IQueryable<WorkAssignment> q, IQueryable<Lookup> lRepo)
         {
             switch (o.wa_grouping)
             {
@@ -183,7 +184,7 @@ namespace Machete.Service
                                   && p.workOrder.statusID == WorkOrder.iActive);
 
                     break;
-                case "skilled": q = q.Join(lRepo.GetAllQ(),
+                case "skilled": q = q.Join(lRepo,
                                     wa => wa.skillID,
                                     sk => sk.ID,
                                     (wa, sk) => new { wa, sk })
@@ -229,7 +230,7 @@ namespace Machete.Service
                 filterOnDatePart(search, parsedTime, ref query);
         }
         
-        public static void search(viewOptions o, ref IQueryable<WorkAssignment> q, ILookupRepository lRepo)
+        public static void search(viewOptions o, ref IQueryable<WorkAssignment> q, IQueryable<Lookup> lRepo)
         {
             bool isDateTime = false;
             DateTime parsedTime;
@@ -239,7 +240,7 @@ namespace Machete.Service
             {
                 o.sSearch = o.sSearch.ToLower();
                   q = q
-                    .Join(lRepo.GetAllQ(), wa => wa.skillID, sk => sk.ID, (wa, sk) => new { wa, sk })
+                    .Join(lRepo, wa => wa.skillID, sk => sk.ID, (wa, sk) => new { wa, sk })
                     .Where(p => 
                             p.wa.workOrder.paperOrderNum.ToString().Contains(o.sSearch) ||
                             (p.wa.description != null && p.wa.description.ToLower().Contains(o.sSearch)) ||
@@ -255,8 +256,7 @@ namespace Machete.Service
         public static IEnumerable<WorkAssignment> filterOnSkill(
             viewOptions o, 
             IQueryable<WorkAssignment> q,
-            ILookupRepository l,
-            Worker worker)
+            MacheteContext db)
         {
             //  "Machete --A series of good intentions, marinated in panic."
             //
@@ -264,6 +264,8 @@ namespace Machete.Service
             // Skills have hierarchy (painter, skilled painter, master painter)
             // kludge assumes hierarchy tree will never lead to more than 6 skill IDs to
             // match against. Hacked this late one night. 
+            var worker = db.Workers.Find((int)o.dwccardnum);
+            var l = db.Lookups.AsNoTracking().AsQueryable();
             int? skill1 = null;
             int? skill2 = null;
             int? skill3 = null;
@@ -284,8 +286,8 @@ namespace Machete.Service
                 foreach (var skillid in primeskills)
                 {
                     skills.Push(skillid);
-                    Lookup skill = l.GetById(skillid);
-                    foreach (var subskill in l.GetManyQ(a => a.category == skill.category &&
+                    Lookup skill = db.Lookups.Find(skillid);
+                    foreach (var subskill in l.Where(a => a.category == skill.category &&
                                     a.subcategory == skill.subcategory &&
                                     a.level < skill.level))
                     {
@@ -298,7 +300,7 @@ namespace Machete.Service
                 if (skills.Count() != 0) skill4 = skills.Pop();
                 if (skills.Count() != 0) skill5 = skills.Pop();
                 if (skills.Count() != 0) skill6 = skills.Pop();
-                filteredWA = filteredWA.Join(l.GetAllQ(), //LINQ
+                filteredWA = filteredWA.Join(l, //LINQ
                                                    wa => wa.skillID,
                                                    sk => sk.ID,
                                                    (wa, sk) => new { wa, sk }

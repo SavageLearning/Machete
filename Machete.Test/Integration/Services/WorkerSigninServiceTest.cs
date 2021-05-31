@@ -72,7 +72,7 @@ namespace Machete.Test.Integration.Services
             
             var wsi = frb.ToWorkerSignin();
             // Act
-            var result = frb.ToServ<IWorkerSigninRepository>().GetAllQ()
+            var result = frb.ToServ<IWorkerSigninService>().GetAll()
                 .FirstOrDefault(r => r.dwccardnum == w.dwccardnum && r.dateforsignin.Date == wsi.dateforsignin.Date);
             var wsiDate = new DateTime(wsi.dateforsignin.Year, wsi.dateforsignin.Month, wsi.dateforsignin.Day, wsi.dateforsignin.Hour, wsi.dateforsignin.Minute, wsi.dateforsignin.Second);
             var resultDate = new DateTime(result.dateforsignin.Year, result.dateforsignin.Month, result.dateforsignin.Day, result.dateforsignin.Hour, result.dateforsignin.Minute, result.dateforsignin.Second);

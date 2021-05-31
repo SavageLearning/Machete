@@ -1,56 +1,63 @@
 using AutoMapper;
-using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
-using Machete.Service.DTO.Reports;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
+using Machete.Data;
+using Machete.Data.DTO;
 using Machete.Data.Dynamic;
-using Machete.Data.Repositories;
-using DTO = Machete.Service.DTO;
+using Machete.Data.Tenancy;
 
 namespace Machete.Service
 {
     public interface IReportsV2Service : IService<ReportDefinition>
     {
-        List<dynamic> getQuery(DTO.SearchOptions o);
-        List<ReportDefinition> getList();
+        List<dynamic> GetQuery(DTO.SearchOptions o);
+        List<ReportDefinition> GetList();
         ReportDefinition Get(string idOrName);
-        List<QueryMetadata> getColumns(string tableName);
-        void getXlsxFile(DTO.SearchOptions o, ref byte[] bytes);
-        List<string> validateQuery(string query);
+        List<QueryMetadata> GetColumns(string tableName);
+        void GetXlsxFile(DTO.SearchOptions o, ref byte[] bytes);
+        List<string> ValidateQuery(string query);
+        
+        List<dynamic> GetDynamicQuery(int id, SearchOptions o);
+        DataTable GetDataTable(string query);
+        List<string> Validate(string query);
     }
 
-    public class ReportsV2Service : ServiceBase<ReportDefinition>, IReportsV2Service
+    public class ReportsV2Service : ServiceBase2<ReportDefinition>, IReportsV2Service
     {
-        private readonly IReportsRepository rRepo;
-        private readonly IMapper map;
-        public ReportsV2Service(IReportsRepository rRepo, IUnitOfWork unitOfWork, IMapper map) : base(rRepo, unitOfWork)
+        private readonly string _readonlyConnectionString;
+        public ReportsV2Service(IDatabaseFactory db, ITenantService tenantService, IMapper map) : base(db, map)
         {
-            this.rRepo = rRepo;
-            this.map = map;
+            var currentTenant = tenantService.GetCurrentTenant();
+            _readonlyConnectionString = currentTenant.ReadOnlyConnectionString;
+            
+            if (String.IsNullOrEmpty(_readonlyConnectionString)) throw new ArgumentNullException(
+                $"ReportsRepository requires valid currentTenant.ReadOnlyConnectionString; was: {currentTenant.ReadOnlyConnectionString ?? "null"}"
+            );
         }
 
-        public List<dynamic> getQuery(DTO.SearchOptions o)
+        public List<dynamic> GetQuery(DTO.SearchOptions o)
         {
             // if name, get id for report definition
             if (!Int32.TryParse(o.idOrName, out var id))
             {
-                id = repo.GetManyQ(r => string.Equals(r.name, o.idOrName, StringComparison.OrdinalIgnoreCase)).First().ID;
+                id = GetMany(r => string.Equals(r.name, o.idOrName, StringComparison.OrdinalIgnoreCase)).First().ID;
             }
 
             var oo = map.Map<DTO.SearchOptions, Data.DTO.SearchOptions>(o);
-            return rRepo.getDynamicQuery(id, oo);
+            return GetDynamicQuery(id, oo);
         }
 
-        public List<ReportDefinition> getList()
+        public List<ReportDefinition> GetList()
         {
-            return rRepo.getList();
+            return db.ReportDefinitions.AsEnumerable().ToList();
         }
 
         public ReportDefinition Get(string idOrName)
@@ -60,27 +67,27 @@ namespace Machete.Service
             // accept vanityname or ID
             if (Int32.TryParse(idOrName, out id))
             {
-                result = repo.GetById(id);
+                result = dbset.Find(id);
             }
             else
             {
-                result = repo.GetManyQ(r => string.Equals(r.name, idOrName, StringComparison.OrdinalIgnoreCase)).First();
+                result = GetMany(r => string.Equals(r.name, idOrName, StringComparison.OrdinalIgnoreCase)).First();
             }
             return result;
         }
 
-        public List<QueryMetadata> getColumns(string tableName)
+        public List<QueryMetadata> GetColumns(string tableName)
         {
-            var result = rRepo.getColumns(tableName);
+            var result = MacheteAdoContext.getMetadata($"select top 0 * from {tableName}", _readonlyConnectionString);
             result.ForEach(c => c.include = true);
             return result;
         }
 
-        public void getXlsxFile(DTO.SearchOptions o, ref byte[] bytes)
+        public void GetXlsxFile(DTO.SearchOptions o, ref byte[] bytes)
         {
             var oo = map.Map<DTO.SearchOptions, Data.DTO.SearchOptions>(o);
-            var exportQuery = buildExportQuery(o);
-            var tbl = rRepo.getDataTable(exportQuery);
+            var exportQuery = BuildExportQuery(o);
+            var tbl = GetDataTable(exportQuery);
 
             using (ExcelPackage pck = new ExcelPackage())
             {
@@ -90,7 +97,7 @@ namespace Machete.Service
             }
         }
 
-        private string buildExportQuery(DTO.SearchOptions o)
+        private string BuildExportQuery(DTO.SearchOptions o)
         {
             bool firstSelect = true;
             bool firstWhere = true;
@@ -143,9 +150,46 @@ namespace Machete.Service
             return "[" + col + "]";
         }
 
-        public List<string> validateQuery(string query)
+        public List<string> ValidateQuery(string query)
         {
-            return rRepo.validate(query).ToList();
+            return Validate(query).ToList();
+        }
+        
+        public List<dynamic> GetDynamicQuery(int id, SearchOptions o)
+        {
+            ReportDefinition report = dbset.Single(a => a.ID == id);
+            List<QueryMetadata> meta = MacheteAdoContext.getMetadata(report.sqlquery, _readonlyConnectionString);
+            Type queryType = ILVoodoo.buildQueryType(meta);
+            MethodInfo method = Type.GetType("Machete.Data.MacheteAdoContext")
+                .GetMethod("SqlQuery", new[] { typeof(string), typeof(string), typeof(SqlParameter[]) });
+            MethodInfo man = method.MakeGenericMethod(queryType);
+
+            dynamic dynamicQuery = man.Invoke(null, new object[] {
+                report.sqlquery,
+                _readonlyConnectionString,
+                new[] {
+                    new SqlParameter { ParameterName = "beginDate", Value = o.beginDate },
+                    new SqlParameter { ParameterName = "endDate", Value = o.endDate },
+                    new SqlParameter { ParameterName = "dwccardnum", Value = o.dwccardnum }
+                }
+            });
+
+            var dynamicList = new List<dynamic>();
+            foreach (var row in dynamicQuery) {
+                dynamicList.Add(row);
+            }
+
+            return dynamicList;
+        }
+        public DataTable GetDataTable(string query)
+        {
+            // https://stackoverflow.com/documentation/epplus/8223/filling-the-document-with-data
+            return MacheteAdoContext.Fill(query, _readonlyConnectionString);
+        }
+
+        public List<string> Validate(string query)
+        {
+            return MacheteAdoContext.ValidateQuery(query, _readonlyConnectionString).ToList();
         }
     }
 }

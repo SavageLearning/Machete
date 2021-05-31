@@ -297,7 +297,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             _employerServ.Setup(s => s.Get(userGuidString))
                 .Returns((Employer) null);
             _employerServ.Setup(s => s.GetMany(It.IsAny<Func<Employer, bool>>()))
-                .Returns(fakeEmployersD);
+                .Returns(fakeEmployersD.AsQueryable);
             
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
@@ -318,7 +318,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             _employerServ.Setup(s => s.Get("9245fe4a-d402-451c-b9ed-9c1a04247482"))
                 .Returns((Employer) null);
             _employerServ.Setup(s => s.GetMany(It.IsAny<Func<Employer, bool>>()))
-                .Returns(fakeEmployersD);
+                .Returns(fakeEmployersD.AsQueryable);
             
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
@@ -338,7 +338,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             _employerServ.Setup(s => s.Get("9245fe4a-d402-451c-b9ed-9c1a04247482"))
                 .Returns((Employer) null);
             _employerServ.Setup(s => s.GetMany(It.IsAny<Func<Employer, bool>>()))
-                .Returns(fakeEmployersD);
+                .Returns(fakeEmployersD.AsQueryable);
             
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {

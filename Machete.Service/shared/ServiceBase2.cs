@@ -10,6 +10,17 @@ using AutoMapper;
 
 namespace Machete.Service
 {
+    public interface IService<T> where T : Record
+    {
+        T Get(int id);
+        //T Get(Func<T, bool> where);
+        IQueryable<T> GetAll();
+        IQueryable<T> GetMany(Func<T, bool> where);
+        T Create(T record, string user);
+        void Delete(int id, string user);
+        void Save(T record, string user);
+        int TotalCount();
+    }
     public abstract class ServiceBase2<T> where T : Record
     {
         protected readonly MacheteContext db;
@@ -35,14 +46,14 @@ namespace Machete.Service
             return dbset.AsNoTracking().Count();
         }
 
-        public IEnumerable<T> GetAll()
+        public IQueryable<T> GetAll()
         {
             return dbset.AsNoTracking().AsQueryable();
         }
 
-        public IEnumerable<T> GetMany(Func<T, bool> where)
+        public IQueryable<T> GetMany(Func<T, bool> where)
         {
-            return dbset.Where(where).AsQueryable();
+            return dbset.Where(where).AsQueryable().AsNoTracking();
         }
 
         public virtual T Get(int id)

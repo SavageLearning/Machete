@@ -9,20 +9,16 @@ using Machete.Data;
 using Machete.Data.Identity;
 using Machete.Data.Infrastructure;
 using Machete.Data.Initialize;
-using Machete.Data.Repositories;
 using Machete.Data.Tenancy;
 using Machete.Domain;
 using Machete.Service;
-using Machete.Web.Controllers.Api;
 using Machete.Service.BackgroundServices;
-//using Machete.Web.Controllers.Api.Abstracts;
 using Machete.Web.Helpers;
 using Machete.Web.Helpers.Api;
 using Machete.Web.Helpers.Api.Identity;
 using Machete.Web.ViewModel.Api.Identity;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -66,9 +62,8 @@ namespace Machete.Web
                     await MacheteConfiguration.SeedAsync(macheteContext);
 
                     // populate static variables
-                    var lookupServiceHelper = new LookupServiceHelper();
-                    lookupServiceHelper.setContext(macheteContext);
-                    lookupServiceHelper.populateStaticIds();
+                    var lookupServiceHelper = new LookupServiceHelper(macheteContext);
+                    lookupServiceHelper.PopulateStaticIds();
                 }
             }
 
@@ -158,29 +153,8 @@ namespace Machete.Web
             
             services.AddScoped<ITenantIdentificationService, TenantIdentificationService>();
             services.AddScoped<ITenantService, TenantService>();
-            
             services.AddScoped<IDatabaseFactory, DatabaseFactory>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-            services.AddScoped<IActivityRepository, ActivityRepository>();
-            services.AddScoped<IActivitySigninRepository, ActivitySigninRepository>();
-            services.AddScoped<IConfigRepository, ConfigRepository>();
             services.AddScoped<IEmailConfig, EmailConfig>();
-            services.AddScoped<IEmailRepository, EmailRepository>();
-            services.AddScoped<IEventRepository, EventRepository>();
-            services.AddScoped<IImageRepository, ImageRepository>();
-            services.AddScoped<ILookupRepository, LookupRepository>();
-            services.AddScoped<IPersonRepository, PersonRepository>();
-            services.AddScoped<IReportsRepository, ReportsRepository>();
-            services.AddScoped<IWorkAssignmentRepository, WorkAssignmentRepository>();
-            services.AddScoped<IWorkerRepository, WorkerRepository>();
-            services.AddScoped<IWorkerRequestRepository, WorkerRequestRepository>();
-            services.AddScoped<IWorkerSigninRepository, WorkerSigninRepository>();
-            services.AddScoped<IWorkOrderRepository, WorkOrderRepository>();
-            services.AddScoped<IScheduleRuleRepository, ScheduleRuleRepository>();
-            services.AddScoped<ITransportRuleRepository, TransportRuleRepository>();
-            services.AddScoped<ITransportCostRuleRepository, TransportCostRuleRepository>();
-
             services.AddScoped<IActivityService, ActivityService>();
             services.AddScoped<IActivitySigninService, ActivitySigninService>();
             services.AddScoped<IConfigService, ConfigService>();

@@ -47,7 +47,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
 
             _transportRuleServ  = new Mock<ITransportRuleService>();
             _transportRuleServ .Setup(s => s.GetAll())
-                .Returns(_fakeTransportRules);
+                .Returns(_fakeTransportRules.AsQueryable);
             _transportRuleServ .Setup(s => s.Get(1))
                 .Returns(_fakeTransportRule);            
             _transportRuleServ .Setup(s => s.Get(1000))
@@ -82,7 +82,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
 
             _transportCostServ = new Mock<ITransportCostRuleService>();
             _transportCostServ.Setup(s => s.GetAll())
-                .Returns(_fakeTransportCostRules);
+                .Returns(_fakeTransportCostRules.AsQueryable);
             
             var mapperConfig = new MapperConfiguration(config =>
             {

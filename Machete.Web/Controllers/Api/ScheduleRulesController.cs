@@ -19,7 +19,7 @@ namespace Machete.Web.Controllers.Api
 
         // GET: api/ScheduleRules
         [HttpGet, Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
-        public new ActionResult<IEnumerable<ScheduleRuleVM>> Get()
+        public ActionResult<IEnumerable<ScheduleRuleVM>> Get()
         {
             return base.Get(new ApiRequestParams() { AllRecords = true }); 
         }

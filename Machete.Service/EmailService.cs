@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Text;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace Machete.Service
 {
@@ -22,14 +25,11 @@ namespace Machete.Service
         dataTableResult<Email> GetIndexView(viewOptions o);
     }
 
-    public class EmailService : ServiceBase<Email>, IEmailService
+    public class EmailService : ServiceBase2<Email>, IEmailService
     {
-        IWorkOrderService _woServ;
         IEmailConfig _emCfg;
-        public EmailService(IEmailRepository emRepo, IWorkOrderService woServ, IUnitOfWork uow, IEmailConfig emCfg) : base(emRepo, uow)
+        public EmailService(IDatabaseFactory db, IMapper map, IEmailConfig emCfg) : base(db, map)
         {
-            this.logPrefix = "Email";
-            _woServ = woServ;
             _emCfg = emCfg;
         }
 
@@ -49,10 +49,10 @@ namespace Machete.Service
 
             if (woid != null)
             {
-                WorkOrder wo = _woServ.Get((int)woid);
+                WorkOrder wo = db.WorkOrders.Find((int)woid);
                 newEmail.WorkOrders.Add(wo);
             }
-            uow.SaveChanges();
+            db.SaveChanges();
             return newEmail;
         }
 
@@ -80,7 +80,7 @@ namespace Machete.Service
 
         public Email GetLatestConfirmEmailBy(int woid)
         {
-            var wo = _woServ.Get(woid);
+            var wo = db.WorkOrders.Find(woid);
             if (wo == null) throw new MacheteServiceException("Cannot find workorder.");
             var email = wo.Emails.OrderByDescending(e => e.datecreated).FirstOrDefault();
             if (email == null) {return null;}
@@ -102,7 +102,7 @@ namespace Machete.Service
 
         public WorkOrder GetAssociatedWorkOrderFor(int woid)
         {
-            return _woServ.Get(woid);
+            return db.WorkOrders.Find(woid);
         }
         /// <summary>
         /// Makes sure an email being edited doesn't get sent by service during edit
@@ -112,7 +112,7 @@ namespace Machete.Service
         /// <returns></returns>
         public Email GetExclusive(int eid, string user)
         {
-            var e =  repo.GetById(eid);
+            var e =  dbset.Find(eid);
             if (e.statusID == Email.iSending ||
                 e.statusID == Email.iSent)
             {
@@ -126,24 +126,31 @@ namespace Machete.Service
             // transmit errors will remain as error re-sent
             e.updatedByUser(user);
             log(e.ID, user, logPrefix + " get exclusive for email");
-            uow.SaveChanges();
+            db.SaveChanges();
             return e;
         }
 
         new public IEnumerable<Email> GetMany(Func<Email, bool> predicate)
         {
-            return repo.GetManyQ(predicate);
+            return dbset.Where(predicate);
         }
 
         public IEnumerable<Email> GetEmailsToSend()
         {
-            return ((EmailRepository)repo).GetEmailsToSend();
+            //var emails = dbset.Where(e => e.statusID == Email.iReadyToSend ||
+            //               (e.statusID == Email.iTransmitError && e.transmitAttempts < 10)
+            //               );
+            var sb = new StringBuilder();
+            sb.AppendFormat("select * from Emails e  with (UPDLOCK) where e.statusID = {0} or ", Email.iReadyToSend);
+            sb.AppendFormat("(e.statusID = {0} and e.transmitAttempts < {1})", Email.iTransmitError, Email.iTransmitAttempts);
+            var set = (DbSet<Email>)dbset;
+            return set.FromSqlRaw(sb.ToString()).AsEnumerable();
         }
 
         public dataTableResult<Email> GetIndexView(viewOptions o)
         {
             var result = new dataTableResult<Email>();
-            IQueryable<Email> q = repo.GetAllQ();
+            IQueryable<Email> q = dbset.AsNoTracking().AsQueryable();
             if (o.woid > 0) IndexViewBase.filterOnWorkorder(o, ref q);
             if (o.emailID.HasValue) IndexViewBase.filterOnID(o, ref q);
             if (o.EmployerID.HasValue) IndexViewBase.filterOnEmployer(o, ref q);
@@ -152,7 +159,7 @@ namespace Machete.Service
             IEnumerable<Email> e = q.AsEnumerable();
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref e);
             result.filteredCount = e.Count();
-            result.totalCount = repo.GetAllQ().Count();
+            result.totalCount = dbset.AsNoTracking().AsQueryable().Count();
             result.query = e.Skip(o.displayStart).Take(o.displayLength);
             return result;
         }

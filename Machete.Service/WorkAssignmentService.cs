@@ -29,6 +29,7 @@ using Machete.Domain;
 using System;
 using System.Linq;
 using Machete.Data.Tenancy;
+using Microsoft.EntityFrameworkCore;
 
 namespace Machete.Service
 {
@@ -42,36 +43,16 @@ namespace Machete.Service
 
     // Business logic for WorkAssignment record management
     // Ïf I made a non-web app, would I still need the code? If yes, put in here.
-    public class WorkAssignmentService : ServiceBase<WorkAssignment>, IWorkAssignmentService
+    public class WorkAssignmentService : ServiceBase2<WorkAssignment>, IWorkAssignmentService
     {
-        private readonly IWorkAssignmentRepository waRepo;
-        private readonly IWorkerRepository wRepo;
-        private readonly IWorkOrderRepository _woRepo;
-        private readonly IWorkerSigninRepository wsiRepo;
-        private readonly IUnitOfWork unitOfWork;
-        private readonly ILookupRepository lRepo;
-        private readonly IMapper map;
         private readonly TimeZoneInfo _clientTimeZoneInfo;
 
         public WorkAssignmentService(
-            IWorkAssignmentRepository waRepo, 
-            IWorkerRepository wRepo,
-            IWorkOrderRepository woRepo,
-            ILookupRepository lRepo, 
-            IWorkerSigninRepository wsiRepo,
-            IUnitOfWork unitOfWork,
-            IMapper map,
-            ITenantService tenantService
-        ) : base(waRepo, unitOfWork)
+            IDatabaseFactory db,
+            ITenantService tenantService,
+            IMapper map
+        ) : base(db, map)
         {
-            this.waRepo = waRepo;
-            this.unitOfWork = unitOfWork;
-            this.wRepo = wRepo;
-            _woRepo = woRepo;
-            this.lRepo = lRepo;
-            this.wsiRepo = wsiRepo;
-            this.map = map;
-            this.logPrefix = "WorkAssignment";
             _clientTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(tenantService.GetCurrentTenant().Timezone);
         }
         /// <summary>
@@ -80,18 +61,29 @@ namespace Machete.Service
         /// <returns></returns>
         public override WorkAssignment Get(int id)
         {
-            var wa = waRepo.GetById(id);
+            var wa = dbset.Find(id);
             if (wa.workerAssignedID != null)
             {
-                wa.workerAssignedDDD = wRepo.GetById((int)wa.workerAssignedID);
+                wa.workerAssignedDDD = db.Workers.Find((int)wa.workerAssignedID);
             }         
             return wa;
+        }
+
+        public new IQueryable<WorkAssignment> GetAll()
+        {
+            return dbset.Include(a => a.workOrder)
+                .ThenInclude(a => a.workerRequestsDDD)
+                .ThenInclude(a => a.workerRequested)
+                .Include(b => b.workOrder)
+                .ThenInclude(a => a.Employer)
+                .Include(b => b.workerAssignedDDD)
+                .AsNoTracking()
+                .AsQueryable();
         }
         public dataTableResult<DTO.WorkAssignmentsList> GetIndexView(viewOptions o)
         {
             var result = new dataTableResult<DTO.WorkAssignmentsList>();
-            IQueryable<WorkAssignment> q = waRepo.GetAllQ();
-
+            IQueryable<WorkAssignment> q = GetAll();
             //
             // 
             if (o.date != null)
@@ -99,7 +91,9 @@ namespace Machete.Service
                 var requestedDate = o.date.Value.DateBasedOn(_clientTimeZoneInfo);
 
                 IndexViewBase.diffDays( requestedDate, _clientTimeZoneInfo, ref q);
-            } 
+            }
+
+            var lRepo = db.Lookups.AsNoTracking().AsQueryable();
             if (o.typeofwork_grouping > 0) IndexViewBase.typeOfWork(o, ref q, lRepo);
             if (o.woid > 0) IndexViewBase.WOID(o, ref q);
             if (o.personID > 0) IndexViewBase.WID(o, ref q);
@@ -109,8 +103,8 @@ namespace Machete.Service
             if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q, lRepo);
             if (o.dwccardnum > 0)
             {
-                var worker = wRepo.GetById((int)o.dwccardnum);
-                IndexViewBase.filterOnSkill(o, q, lRepo, worker);
+                var worker = db.Workers.Find((int)o.dwccardnum);
+                IndexViewBase.filterOnSkill(o, q, db);
             }
             //Sort the Persons based on column selection
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
@@ -128,7 +122,7 @@ namespace Machete.Service
                 result.query = q.ProjectTo<DTO.WorkAssignmentsList>(map.ConfigurationProvider)
                 .AsEnumerable();
             }
-            result.totalCount = waRepo.GetAllQ().Count();
+            result.totalCount = dbset.AsNoTracking().AsQueryable().Count();
            return result;
        }
 
@@ -160,7 +154,7 @@ namespace Machete.Service
             // update timestamps and save
             asmt.updatedByUser(user);
             signin.updatedByUser(user);
-            unitOfWork.SaveChanges();
+            db.SaveChanges();
             log(asmt.ID, user, "WSIID:" + signin.ID + " Assign successful");
             return true;
         }
@@ -224,7 +218,7 @@ namespace Machete.Service
         /// <returns></returns>
         private int assignCheckWSI_cardnumber_match(WorkerSignin wsi)
         {
-            Worker worker = wRepo.GetByMemberID(wsi.dwccardnum);
+            Worker worker = db.Workers.FirstOrDefault(w => w.dwccardnum.Equals(wsi.dwccardnum));
             if (worker == null) throw new NullReferenceException("Worker for key " + wsi.dwccardnum.ToString() + " is null");
             if (worker.ID != wsi.WorkerID) throw new MacheteIntegrityException("WorkerSignin's internal WorkerID and public worker ID don't match");
             return worker.ID;
@@ -256,7 +250,7 @@ namespace Machete.Service
         private void unassignWorkAssignmentOnly(int waid, string user)
         {
             // Get assignment
-            WorkAssignment wa = waRepo.GetById((int)waid);
+            WorkAssignment wa = dbset.Find((int)waid);
             if (wa == null) throw new NullReferenceException("WAID " + waid.ToString() +
                 "returned a null Work Assignment record");
             //
@@ -266,7 +260,7 @@ namespace Machete.Service
             {
                 // clear any orphan assignment
                 wa.workerAssignedID = null;
-                unitOfWork.SaveChanges();
+                db.SaveChanges();
                 return;
             }
             //
@@ -274,19 +268,19 @@ namespace Machete.Service
             if (matchWAWSI(wa, null))
             {
                 // Unassign both
-                WorkerSignin wsi = wsiRepo.GetById((int)wa.workerSigninID);
+                WorkerSignin wsi = db.WorkerSignins.Find((int)wa.workerSigninID);
                 unassignBoth(wa, wsi, user);
                 return;
             }
             //
             // 3. If points to something, but doesn't link bach, does something
             //    match it's link?
-            WorkerSignin linkedWSI = wsiRepo.GetById((int)wa.workerSigninID);
+            WorkerSignin linkedWSI = db.WorkerSignins.Find((int)wa.workerSigninID);
             if (linkedWSI.WorkAssignmentID == null || matchWAWSI(null, linkedWSI))
             {
                 //Something matches its link. My link to something assumed bad.
                 wa.workerSigninID = null;
-                unitOfWork.SaveChanges();
+                db.SaveChanges();
                 return;
             }
             else throw new MacheteIntegrityException("Unassign found chain of mislinked records, starting with WAID " + wa.ID.ToString());
@@ -298,14 +292,14 @@ namespace Machete.Service
             {
                 // only have WSI and wsi.WAID is null. no match.
                 if (wsi.WorkAssignmentID == null) return false;
-                wa = waRepo.GetById((int)wsi.WorkAssignmentID);
+                wa = dbset.Find((int)wsi.WorkAssignmentID);
                 if (wa == null) throw new NullReferenceException("WorkAssignment GetById returned null");
             }
             if (wsi == null)
             {
                 // only have WA and wa.WSIID is null. no match
                 if (wa.workerSigninID == null) return false;
-                wsi = wsiRepo.GetById((int)wa.workerSigninID);
+                wsi = db.WorkerSignins.Find((int)wa.workerSigninID);
                 if (wsi == null) throw new NullReferenceException("WorkerSignin GetById returned null");
             }
 
@@ -319,7 +313,7 @@ namespace Machete.Service
         private void unassignWorkerSigninOnly(int wsiid, string user)
         {
             // get workersignin
-            WorkerSignin wsi = wsiRepo.GetById(wsiid);
+            WorkerSignin wsi = db.WorkerSignins.Find(wsiid);
             if (wsi == null) throw new NullReferenceException("WSIID " + wsiid.ToString() +
                 "returned a null Worker Signin record");
             //
@@ -332,7 +326,7 @@ namespace Machete.Service
             if (matchWAWSI(null, wsi)) // yes
             {
                 //Unassign both
-                WorkAssignment wa = waRepo.GetById((int)wsi.WorkAssignmentID);
+                WorkAssignment wa = dbset.Find((int)wsi.WorkAssignmentID);
                 unassignBoth(wa, wsi, user);
                 return;
             }
@@ -340,20 +334,20 @@ namespace Machete.Service
             // 3. If points to something, but something doesn't link back,
             //    does something match it's link?
             //if (wsi.WorkAssignmentID == null) throw new MacheteIntegrityException("Unassign called on non-assigned WorkerSignin");
-            WorkAssignment linkedWA = waRepo.GetById((int)wsi.WorkAssignmentID);
+            WorkAssignment linkedWA = dbset.Find((int)wsi.WorkAssignmentID);
             if (matchWAWSI(linkedWA, null))
             {
                 //Something matches its link. My link to something assumed bad. 
                 wsi.WorkAssignmentID = null;
-                unitOfWork.SaveChanges();
+                db.SaveChanges();
                 return;
             }
             else throw new MacheteIntegrityException("Unassign found chain of mislinked records, starting with WSIID " + wsi.ID.ToString());
         }
         private void unassignBoth(int waid, int wsiid, string user)
         {
-            WorkAssignment wa = waRepo.GetById(waid);
-            WorkerSignin wsi = wsiRepo.GetById(wsiid);
+            WorkAssignment wa = dbset.Find(waid);
+            WorkerSignin wsi = db.WorkerSignins.Find(wsiid);
             if (matchWAWSI(wa, wsi))
             {
                 unassignBoth(wa, wsi, user);
@@ -370,7 +364,7 @@ namespace Machete.Service
             asmt.workerAssignedID = null;
             asmt.updatedByUser(user);
             signin.updatedByUser(user);
-            unitOfWork.SaveChanges();
+            db.SaveChanges();
             log(asmt.ID, user, "WSIID:" + signin.ID + " Unassign successful");
         }
         public override WorkAssignment Create(WorkAssignment record, string user)
@@ -378,7 +372,7 @@ namespace Machete.Service
             // no can lazy load virtual property in EF Core in this manner.
             //if (record.workOrder == null) throw new ArgumentNullException("workOrder object is null");
 
-            var wo = _woRepo.GetById(record.workOrderID);
+            var wo = db.WorkOrders.Find(record.workOrderID);
             
             wo.waPseudoIDCounter++;
             record.pseudoID = wo.waPseudoIDCounter;
@@ -389,7 +383,7 @@ namespace Machete.Service
         public void Save(WorkAssignment wa, int? workerAssignedID, string user)
         {
             //check if workerAssigned changed; if so, Unassign
-            var wo = _woRepo.GetById(wa.workOrderID);
+            var wo = db.WorkOrders.Find(wa.workOrderID);
             
             int? origWorker = wa.workerAssignedID;
             if (workerAssignedID != origWorker)
@@ -398,12 +392,12 @@ namespace Machete.Service
             // if changed from orphan assignment
             if (workerAssignedID != null)
             {
-                wa.workerAssignedDDD = wRepo.GetById((int)wa.workerAssignedID);
+                wa.workerAssignedDDD = db.Workers.Find((int)wa.workerAssignedID);
             }
             wa.updatedByUser(user);
             updateComputedValues(ref wa, wo.paperOrderNum);
             log(wa.ID, user, "WorkAssignment edited");
-            unitOfWork.SaveChanges();
+            db.SaveChanges();
         }
 
         public override void Save(WorkAssignment asmt, string user)
@@ -413,8 +407,8 @@ namespace Machete.Service
 
         private void updateComputedValues(ref WorkAssignment record, int? paperOrderNum)
         {
-            record.skillEN = lRepo.GetById(record.skillID).text_EN;
-            record.skillES = lRepo.GetById(record.skillID).text_ES;
+            record.skillEN = db.Lookups.Find(record.skillID).text_EN;
+            record.skillES = db.Lookups.Find(record.skillID).text_ES;
             record.minEarnings = (record.days * record.surcharge) + (record.hourlyWage * record.hours * record.days);
             record.maxEarnings = record.hourRange == null ? 0 : (record.days * record.surcharge) + (record.hourlyWage * (int)record.hourRange * record.days);
             var recordPseudoID = record.pseudoID ?? 0;

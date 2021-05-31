@@ -33,32 +33,9 @@ namespace Machete.Service
     {
         string getImageRef(int dwccardnum);        
     }
-    public abstract class SigninServiceBase<T> : ServiceBase<T> where T : Signin
+    public abstract class SigninServiceBase<T> : ServiceBase2<T> where T : Signin
     {
-        protected readonly IWorkerService wServ;
-        protected readonly IWorkerRequestService wrServ;
-        protected readonly IImageService iServ;
-        protected readonly IMapper map;
-        protected readonly IConfigService cfg;
-        //
-        //
-        protected SigninServiceBase(
-            IRepository<T> repo,
-            IWorkerService wServ,
-            IImageService iServ,
-            IWorkerRequestService wrServ,
-            IUnitOfWork uow,
-            IMapper map,
-            IConfigService cfg)
-            : base(repo, uow)
-        {
-            this.wServ = wServ;
-            this.wrServ = wrServ;
-            this.iServ = iServ;
-            this.map = map;
-            this.logPrefix = "SigninServiceBase";
-            this.cfg = cfg;
-        }
+        protected SigninServiceBase(IDatabaseFactory db, IMapper map) : base(db, map) {}
 
         /// <summary>
         /// 
@@ -69,7 +46,7 @@ namespace Machete.Service
         {
             // TODO2017: Make no-image-available.jpg configurable form the web UI
             string imageRef = "/Content/images/NO-IMAGE-AVAILABLE.jpg";
-            Worker w_query = wServ.GetAll().Where(w => w.dwccardnum == cardrequest).FirstOrDefault();
+            Worker w_query = db.Workers.Where(w => w.dwccardnum == cardrequest).FirstOrDefault();
             if (w_query == null) return imageRef;
             if (w_query.ImageID != null)
             {

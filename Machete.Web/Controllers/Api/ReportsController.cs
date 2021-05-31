@@ -29,7 +29,7 @@ namespace Machete.Web.Controllers.Api
         [HttpGet, Authorize(Roles = "Administrator")]
         public ActionResult<IEnumerable<ReportDefinitionVM>> Get()
         {
-            var result = serv.getList()
+            var result = serv.GetList()
                 .Select(a => map.Map<ReportDefinition, ReportDefinitionVM>(a));
 
             return Ok(new {data = result});
@@ -45,7 +45,7 @@ namespace Machete.Web.Controllers.Api
         {
             MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
             endDate = endDate?.AddDays(1); // date passed does not reflect desired range, and is of type string...
-            var result = serv.getQuery(
+            var result = serv.GetQuery(
                 new Service.DTO.SearchOptions {
                     idOrName = id,
                     endDate = endDate.ToUtcDatetime(),

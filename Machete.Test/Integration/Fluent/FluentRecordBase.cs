@@ -27,7 +27,6 @@ using System.IO;
 using System.Text;
 using AutoMapper;
 using Machete.Data;
-using Machete.Data.Repositories;
 using Machete.Data.Tenancy;
 using Machete.Domain;
 using Machete.Service;
@@ -325,11 +324,7 @@ namespace Machete.Test.Integration.Fluent
 
         #region Reports
 
-        public IReportsRepository ToRepoReports()
-        {
-            return container.GetRequiredService<IReportsRepository>();
-        }
-
+ 
         #endregion
 
         #region Emails

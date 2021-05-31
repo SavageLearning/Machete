@@ -15,7 +15,7 @@ namespace Machete.Web.Controllers.Api
         public TransportProvidersAvailabilityController(ITransportProvidersAvailabilityService serv, IMapper map) : base(serv, map) {}
 
         [HttpGet, Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
-        public new ActionResult<IEnumerable<TransportProviderAvailabilityVM>> Get() 
+        public ActionResult<IEnumerable<TransportProviderAvailabilityVM>> Get() 
         { 
             return base.Get(new ApiRequestParams() {AllRecords = true}); 
         }

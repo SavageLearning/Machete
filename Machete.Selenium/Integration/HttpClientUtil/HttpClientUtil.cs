@@ -103,7 +103,6 @@ namespace Machete.Test.Integration.HttpClientUtil
 
         public static async Task<int> GetWorkAssignment(int id)
         {
-            var waPseudoId = "";
             var creds = JsonConvert.SerializeObject(new
             {
                 username = SharedConfig.SeleniumUser,
