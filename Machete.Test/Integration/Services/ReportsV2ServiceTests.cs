@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Machete.Service;
@@ -56,8 +56,7 @@ namespace Machete.Test.Integration.Services
             {
                 idOrName = "1",
                 beginDate = DateTime.Parse("1/1/2013"),
-                endDate = DateTime.Parse("1/1/2014"),
-                dwccardnum = 0
+                endDate = DateTime.Parse("1/1/2014")
             };
             // Act
             List<dynamic> result = frb.ToServ<IReportsV2Service>().GetQuery(o);

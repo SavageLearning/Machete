@@ -146,7 +146,7 @@ namespace Machete.Service
                                                                   q.personID == p.ID);
             if (count == 0)
             {
-                s.timeZoneOffset = Convert.ToDouble(db.Configs.FirstOrDefault(c => c.key == Cfg.TimeZoneDifferenceFromPacific));
+                s.timeZoneOffset = Convert.ToDouble(db.Configs.FirstOrDefault(c => c.key == Cfg.TimeZoneDifferenceFromPacific).value);
                 Create(s, user);
             }
             return w;

@@ -162,15 +162,19 @@ namespace Machete.Service
             MethodInfo method = Type.GetType("Machete.Service.MacheteAdoContext")
                 .GetMethod("SqlQuery", new[] { typeof(string), typeof(string), typeof(SqlParameter[]) });
             MethodInfo man = method.MakeGenericMethod(queryType);
-
+            var blarg = new List<SqlParameter>()
+            {
+                new SqlParameter {ParameterName = "beginDate", Value = o.beginDate},
+                new SqlParameter {ParameterName = "endDate", Value = o.endDate}
+            };
+            if (o.dwccardnum != null)
+            {
+                blarg.Add(new SqlParameter {ParameterName = "dwccardnum", Value = o.dwccardnum});
+            }
             dynamic dynamicQuery = man.Invoke(null, new object[] {
                 report.sqlquery,
                 _readonlyConnectionString,
-                new[] {
-                    new SqlParameter { ParameterName = "beginDate", Value = o.beginDate },
-                    new SqlParameter { ParameterName = "endDate", Value = o.endDate },
-                    new SqlParameter { ParameterName = "dwccardnum", Value = o.dwccardnum }
-                }
+                blarg.ToArray<SqlParameter>()
             });
 
             var dynamicList = new List<dynamic>();
