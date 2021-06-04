@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Machete.Data.DTO;
+using Machete.Service.DTO;
 using System.Linq;
-using Machete.Data;
+using Machete.Service;
 using Machete.Test.Integration.Fluent;
 
 namespace Machete.Test.Integration.Data
@@ -26,8 +26,8 @@ namespace Machete.Test.Integration.Data
             // arrange
             frb.AddWorkOrder(dateTimeOfWork: DateTime.Parse("1/2/2013"), status: 42)
                 .AddWorkAssignment(skill: 63); // known skill ID from machete lookup initializer
-            var result = frb.ToRepoReports()
-                .getDynamicQuery(1, new SearchOptions {
+            var result = frb.ToServ<IReportsV2Service>()
+                .GetDynamicQuery(1, new SearchOptions {
                     beginDate = DateTime.Parse("2013/1/1"),
                     endDate = DateTime.Parse("2013/3/1"),
                     dwccardnum = 0
@@ -57,8 +57,8 @@ namespace Machete.Test.Integration.Data
         {
             // arrange
             // act
-            var result = frb.ToRepoReports()
-                .getList();
+            var result = frb.ToServ<IReportsV2Service>()
+                .GetList();
             // assert
             Assert.IsNotNull(result);
             Assert.AreNotEqual(0, result.Count);
@@ -68,8 +68,7 @@ namespace Machete.Test.Integration.Data
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Data), TestCategory(TC.Reports)]
         public void Analyze_columns()
         {
-            var repo = frb.ToRepoReports();
-            var list = repo.GetAllQ();
+            var list = frb.ToServ<IReportsV2Service>().GetList();
             foreach (var l in list)
             {
                 l.columnsJson = MacheteAdoContext.getUIColumnsJson(l.sqlquery, connectionString);

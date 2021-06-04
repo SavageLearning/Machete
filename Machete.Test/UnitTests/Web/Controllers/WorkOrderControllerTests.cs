@@ -27,7 +27,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Machete.Data.Tenancy;
+using Machete.Service.Tenancy;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Test.UnitTests.Controllers.Helpers;

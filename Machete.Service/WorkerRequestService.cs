@@ -24,9 +24,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Machete.Data;
-using Machete.Data.Infrastructure;
+using AutoMapper;
+using Machete.Service;
+using Machete.Service.Infrastructure;
 using Machete.Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace Machete.Service
 {
@@ -35,24 +37,25 @@ namespace Machete.Service
         WorkerRequest GetByID(int workOrderID, int workerID);
         List<WorkerRequest> GetAllByWorkOrderID(int workOrderID);
     }
-    public class WorkerRequestService : ServiceBase<WorkerRequest>, IWorkerRequestService
+    public class WorkerRequestService : ServiceBase2<WorkerRequest>, IWorkerRequestService
     {
-        //
-        private readonly IWorkerRequestRepository wrRepo;
-        public WorkerRequestService(IWorkerRequestRepository repo, IUnitOfWork uow) : base(repo, uow)
+        public WorkerRequestService(IDatabaseFactory db, IMapper map) : base(db, map)
         {
-            this.logPrefix = "WorkerRequest";
-            this.wrRepo = repo;
         }
 
         public WorkerRequest GetByID(int workOrderID, int workerID)
         {
-            return wrRepo.GetByID(workOrderID, workerID);
+            return dbset.Find(workOrderID, workerID);
         }
 
         public List<WorkerRequest> GetAllByWorkOrderID(int workOrderID)
         {
-            return wrRepo.GetManyQ(workerRequests => workerRequests.WorkOrderID == workOrderID).ToList();
+            return dbset.AsNoTracking().Where(workerRequests => workerRequests.WorkOrderID == workOrderID).ToList();
+        }
+
+        public new IQueryable<WorkerRequest> GetAll()
+        {
+            return dbset.Include(a => a.workerRequested).AsNoTracking().AsQueryable();
         }
     }
 }

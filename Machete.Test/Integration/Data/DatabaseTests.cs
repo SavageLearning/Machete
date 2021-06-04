@@ -25,8 +25,8 @@ using Machete.Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using Machete.Data;
-using Machete.Data.Initialize;
+using Machete.Service;
+using Machete.Service.Initialize;
 using Machete.Test.Integration.Fluent;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -53,10 +53,11 @@ namespace Machete.Test.Integration.Data
             var worker = frb.AddWorker();
             var signin = frb.AddWorkerSignin(worker).ToWorkerSignin();
             // Act
-            var q = frb.ToFactory().WorkerSignins.AsQueryable();
-            q = q.Where(r => r.dwccardnum == signin.dwccardnum
-                             && SqlServerDbFunctionsExtensions
-                                 .DateDiffDay(null, r.dateforsignin, signin.dateforsignin) == 0);           
+            var q = frb.ToFactory().WorkerSignins.AsQueryable()
+                .Where(r => r.dwccardnum == signin.dwccardnum 
+                            && SqlServerDbFunctionsExtensions.DateDiffDay(null, 
+                                r.dateforsignin, 
+                                signin.dateforsignin) == 0);           
             WorkerSignin result = q.FirstOrDefault();
             // Assert
             Assert.IsNotNull(result.ID);

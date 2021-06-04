@@ -10,6 +10,9 @@ namespace Machete.Web.Maps.Api
         {
             CreateMap<ScheduleRule, ScheduleRuleVM>()
                 .ForMember(v => v.id, opt => opt.MapFrom(d => d.ID));
+            CreateMap<ScheduleRuleVM, ScheduleRule>()
+                .ForMember(v => v.ID, opt => opt.MapFrom(d => d.id));
+            
         }
     }
 }

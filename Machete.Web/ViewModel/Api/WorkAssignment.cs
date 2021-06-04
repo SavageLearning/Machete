@@ -27,8 +27,6 @@ namespace Machete.Web.ViewModel.Api
         public int qualityOfWork { get; set; }
         public int reliability { get; set; }
         public string skill { get; set; }
-        //public string skillEN { get; set; }
-        //public string skillES { get; set; }
         public int skillID { get; set; }
         public double surcharge { get; set; }
         public double transportCost { get; set; }

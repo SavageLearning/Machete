@@ -5,24 +5,19 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Machete.Data;
-using Machete.Data.Identity;
-using Machete.Data.Infrastructure;
-using Machete.Data.Initialize;
-using Machete.Data.Repositories;
-using Machete.Data.Tenancy;
-using Machete.Domain;
 using Machete.Service;
-using Machete.Web.Controllers.Api;
+using Machete.Service.Identity;
+using Machete.Service.Infrastructure;
+using Machete.Service.Initialize;
+using Machete.Service.Tenancy;
+using Machete.Domain;
 using Machete.Service.BackgroundServices;
-//using Machete.Web.Controllers.Api.Abstracts;
 using Machete.Web.Helpers;
 using Machete.Web.Helpers.Api;
 using Machete.Web.Helpers.Api.Identity;
 using Machete.Web.ViewModel.Api.Identity;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +26,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 // ReSharper disable ArrangeStaticMemberQualifier
 // ReSharper disable InvalidXmlDocComment
@@ -46,7 +42,7 @@ namespace Machete.Web
         /// <para>Part of the WebHost extension method pipeline. Calls the Entity Framework Core Migrate() method for the WebHost.</para>
         /// <para>Demonstrates the use of the `using` statement with a context provided by the .NET Core DI container.</para>
         /// </summary>
-        public static async Task<IWebHost> CreateOrMigrateDatabase(this IWebHost webhost)
+        public static async Task<IHost> CreateOrMigrateDatabase(this IHost webhost)
         {
             using (var serviceScope = webhost.Services.CreateScope())
             {
@@ -65,9 +61,8 @@ namespace Machete.Web
                     await MacheteConfiguration.SeedAsync(macheteContext);
 
                     // populate static variables
-                    var lookupServiceHelper = new LookupServiceHelper();
-                    lookupServiceHelper.setContext(macheteContext);
-                    lookupServiceHelper.populateStaticIds();
+                    var lookupServiceHelper = new LookupServiceHelper(macheteContext);
+                    lookupServiceHelper.PopulateStaticIds();
                 }
             }
 
@@ -157,29 +152,8 @@ namespace Machete.Web
             
             services.AddScoped<ITenantIdentificationService, TenantIdentificationService>();
             services.AddScoped<ITenantService, TenantService>();
-            
             services.AddScoped<IDatabaseFactory, DatabaseFactory>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-            services.AddScoped<IActivityRepository, ActivityRepository>();
-            services.AddScoped<IActivitySigninRepository, ActivitySigninRepository>();
-            services.AddScoped<IConfigRepository, ConfigRepository>();
             services.AddScoped<IEmailConfig, EmailConfig>();
-            services.AddScoped<IEmailRepository, EmailRepository>();
-            services.AddScoped<IEventRepository, EventRepository>();
-            services.AddScoped<IImageRepository, ImageRepository>();
-            services.AddScoped<ILookupRepository, LookupRepository>();
-            services.AddScoped<IPersonRepository, PersonRepository>();
-            services.AddScoped<IReportsRepository, ReportsRepository>();
-            services.AddScoped<IWorkAssignmentRepository, WorkAssignmentRepository>();
-            services.AddScoped<IWorkerRepository, WorkerRepository>();
-            services.AddScoped<IWorkerRequestRepository, WorkerRequestRepository>();
-            services.AddScoped<IWorkerSigninRepository, WorkerSigninRepository>();
-            services.AddScoped<IWorkOrderRepository, WorkOrderRepository>();
-            services.AddScoped<IScheduleRuleRepository, ScheduleRuleRepository>();
-            services.AddScoped<ITransportRuleRepository, TransportRuleRepository>();
-            services.AddScoped<ITransportCostRuleRepository, TransportCostRuleRepository>();
-
             services.AddScoped<IActivityService, ActivityService>();
             services.AddScoped<IActivitySigninService, ActivitySigninService>();
             services.AddScoped<IConfigService, ConfigService>();
@@ -227,41 +201,43 @@ namespace Machete.Web
         /// <summary>
         /// IRouteBuilder extension method. Defines the routes for the legacy application.
         /// </summary>
-        public static void MapLegacyMvcRoutes(this IRouteBuilder routes)
+        public static void MapLegacyMvcRoutes(this IEndpointRouteBuilder routes)
         {
-            routes.MapRoute(
-                name: "default",
-                template: "{controller=Account}/{action=Login}/{id?}");
+            // routes.MapRoute(
+            //     name: "default",
+            //     template: "{controller=Account}/{action=Login}/{id?}");
+            routes.MapControllerRoute(
+                "default",
+                "{controller=Account}/{action=Login}/{id?}");
         }
         
         /// <summary>
         /// IRouteBuilder extension method. Defines the routes for the API.
         /// </summary>
-        public static void MapApiRoutes(this IRouteBuilder routes)
+        public static void MapApiRoutes(this IEndpointRouteBuilder routes)
         {
             var host = string.Empty;
-
-            routes.MapRoute(
+            routes.MapControllerRoute(
                 name: "DefaultApi",
-                template: "api/{controller}/{id?}", // {id?} == RouteParameter.Optional
-                defaults: new { controller = "Home" },
-                constraints: new { controller = GetControllerNames() }
-            );
-            routes.MapRoute(
+                pattern: "api/{controller}/{id?}",
+                defaults: new {controller = "Home"},
+                constraints: new {controller = GetControllerNames()}
+                );
+            routes.MapControllerRoute(
                 name: "LoginApi",
-                template: $"{host.IdentityRoute()}{{action}}",
+                pattern: $"{host.IdentityRoute()}{{action}}",
                 defaults: new { controller = "Identity" },
                 constraints: new { action = "accounts|login|authorize|logoff" }
             );
-            routes.MapRoute(
+            routes.MapControllerRoute(
                 name: "WellKnownToken",
-                template: $"{host.WellKnownRoute()}{{action}}",
+                pattern: $"{host.WellKnownRoute()}{{action}}",
                 defaults: new { controller = "Identity" },
                 constraints: new { action = "openid-configuration|jwks" }
             );
-            routes.MapRoute(
+            routes.MapControllerRoute(
                 name: "NotFound",
-                template: "{*path}",
+                pattern: "{*path}",
                 defaults: new { controller = "Error", action = "NotFound" }
             );
         }
@@ -348,7 +324,7 @@ EXEC sp_addrolemember 'db_datareader', 'readonlyuser';
                 {
                     command.ExecuteNonQuery();
                 }
-                catch (SqlException ex)
+                catch (Microsoft.Data.SqlClient.SqlException ex)
                 {
                     var userAlreadyExists = ex.Errors[0].Number.Equals(15025) || ex.Message.Contains("already exists");
                     if (!userAlreadyExists)

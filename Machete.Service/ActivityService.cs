@@ -23,7 +23,7 @@
 #endregion
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Machete.Data.Infrastructure;
+using Machete.Service.Infrastructure;
 using Machete.Domain;
 using System;
 using System.Collections.Generic;
@@ -31,7 +31,7 @@ using System.Globalization;
 using System.Linq;
 using Machete.Service.DTO;
 using Microsoft.EntityFrameworkCore;
-using Machete.Data.Tenancy;
+using Machete.Service.Tenancy;
 
 namespace Machete.Service
 {
@@ -46,15 +46,15 @@ namespace Machete.Service
     /// </summary>
     public class ActivityService : ServiceBase2<Activity>, IActivityService
     {
-        private IActivitySigninService asServ;
-        private TimeZoneInfo _clientTimeZoneInfo;
+        private readonly IActivitySigninService _asServ;
+        private readonly TimeZoneInfo _clientTimeZoneInfo;
         public ActivityService(
             IDatabaseFactory db,
             IActivitySigninService asServ,
             ITenantService tenantService,
             IMapper map) : base(db, map)
         {
-            this.asServ = asServ;
+            this._asServ = asServ;
             _clientTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(tenantService.GetCurrentTenant().Timezone);
         }
 
@@ -84,7 +84,7 @@ namespace Machete.Service
         public dataTableResult<ActivityList> GetIndexView(viewOptions o)
         {
             var result = new dataTableResult<DTO.ActivityList>();
-            IQueryable<Activity> q = dbset.AsNoTracking();
+            IQueryable<Activity> q = this.GetAll();
             
             if (o.personID > 0 && o.attendedActivities == false)
                 IndexViewBase.getUnassociated(o.personID, ref q, db);
@@ -114,7 +114,7 @@ namespace Machete.Service
 
                 if (matches == 0)
                 {
-                    asServ.CreateSignin(new ActivitySignin
+                    _asServ.CreateSignin(new ActivitySignin
                     {
                         activityID = activityID,
                         personID = personID,
@@ -136,7 +136,7 @@ namespace Machete.Service
 
 
                 if (asi == null) throw new NullReferenceException("ActivitySignin.GetByPersonID returned null");
-                asServ.Delete(asi.ID, user);
+                _asServ.Delete(asi.ID, user);
             }
         }
     }

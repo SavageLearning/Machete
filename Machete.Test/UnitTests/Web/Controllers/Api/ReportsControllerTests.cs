@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using AutoMapper;
-using Machete.Data.Tenancy;
+using Machete.Service.Tenancy;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Service.DTO;
@@ -60,9 +60,9 @@ namespace Machete.Test.UnitTests.Controllers.Api
             
             _tenantServ.Setup(s => s.GetCurrentTenant())
                 .Returns(new Tenant() {Timezone = FAKETIMEZONE});
-            _reportsServ.Setup(s => s.getList())
+            _reportsServ.Setup(s => s.GetList())
                 .Returns(_fakeReports);
-            _reportsServ.Setup(s => s.getQuery(It.Is<SearchOptions>(so=> so.idOrName == "fakeReportName")))
+            _reportsServ.Setup(s => s.GetQuery(It.Is<SearchOptions>(so=> so.idOrName == "fakeReportName")))
                 .Returns(_fakeDynamicReportResult);
             
             var mapperConfig = new MapperConfiguration(config =>

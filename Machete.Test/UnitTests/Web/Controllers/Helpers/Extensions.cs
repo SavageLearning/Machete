@@ -1,4 +1,4 @@
-using Machete.Data.Tenancy;
+using Machete.Service.Tenancy;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Machete.Test.UnitTests.Controllers.Helpers

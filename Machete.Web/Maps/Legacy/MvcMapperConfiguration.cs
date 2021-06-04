@@ -10,10 +10,6 @@ namespace Machete.Web.Maps
     {
         public static void ConfigureMvc(this IMapperConfigurationExpression config)
         {
-            config.CreateMap<SearchOptions, Data.DTO.SearchOptions>()
-                .ForMember(v => v.beginDate, opt => opt.MapFrom(d => d.beginDate ?? new DateTime(1753, 1, 1)))
-                .ForMember(v => v.endDate, opt => opt.MapFrom(d => d.endDate ?? DateTime.MaxValue))
-                .ForMember(v => v.dwccardnum, opt => opt.MapFrom(d => d.dwccardnum ?? 0));
             config.CreateMap<jQueryDataTableParam, viewOptions>()
                 .ForMember(vo => vo.CI, opt => opt.Ignore())
                 .ForMember(vo => vo.employerGuid, opt => opt.Ignore()) // API-only option

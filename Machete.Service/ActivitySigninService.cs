@@ -23,13 +23,14 @@
 #endregion
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Machete.Data;
-using Machete.Data.Infrastructure;
+using Machete.Service;
+using Machete.Service.Infrastructure;
 using Machete.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Machete.Data.Tenancy;
+using Machete.Service.Tenancy;
+using Microsoft.EntityFrameworkCore;
 
 namespace Machete.Service
 {
@@ -47,36 +48,25 @@ namespace Machete.Service
     public class ActivitySigninService : SigninServiceBase<ActivitySignin>, IActivitySigninService
     {
 
-        private readonly IPersonService pServ;
-
         public ActivitySigninService(
-            IActivitySigninRepository asiRepo,
-            IWorkerService wServ,
-            IPersonService pServ,
-            IImageService iServ,
-            IWorkerRequestService wrServ,
-            IUnitOfWork uow,
+            IDatabaseFactory db, 
             IMapper map, 
-            IConfigService cfg,
             ITenantService tenantService
-        ) : base(asiRepo, wServ, iServ, wrServ, uow, map, cfg)
+        ) : base(db, map)
         {
-            this.logPrefix = "ActivitySignin";
-            this.pServ = pServ;
             ClientTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(tenantService.GetCurrentTenant().Timezone);
         }
 
         private TimeZoneInfo ClientTimeZoneInfo { get; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="o"></param>
-        /// <returns></returns>
+        public new IQueryable<ActivitySignin> GetAll()
+        {
+            return dbset.Include(a => a.Activity).AsNoTracking().AsQueryable();
+        }
         public dataTableResult<DTO.ActivitySigninList> GetIndexView(viewOptions o)
         {
             var result = new dataTableResult<DTO.ActivitySigninList>();
-            IQueryable<ActivitySignin> q = repo.GetAllQ();
+            IQueryable<ActivitySignin> q = GetAll();
             //
             if (o.date != null)
             {
@@ -93,7 +83,7 @@ namespace Machete.Service
 
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
             result.filteredCount = q.Count();
-            result.totalCount = repo.GetAllQ().Count();
+            result.totalCount = GetAll().Count();
             if (o.displayLength > 0)
             {
                 result.query = q.ProjectTo<DTO.ActivitySigninList>(map.ConfigurationProvider)
@@ -129,7 +119,7 @@ namespace Machete.Service
 
             if (s.personID > 0)
             {
-                p = pServ.Get((int)s.personID);
+                p = db.Persons.Find((int)s.personID);
                 w = p.Worker;
                 if (w == null) throw new NullReferenceException("Worker object is null. A Worker record must exist to assign a person to activities.");
                 if (w.dwccardnum == 0) throw new ArgumentOutOfRangeException("Membership ID in Worker record is zero.");
@@ -139,7 +129,7 @@ namespace Machete.Service
             {
                 //
                 //TODO: GENERALIZE away from 5 digit dwccardnum
-                w = wServ.GetByMemberID(s.dwccardnum);
+                w = db.Workers.FirstOrDefault(w => w.dwccardnum.Equals(s.dwccardnum));
                 if (w == null) throw new NullReferenceException("card ID doesn't match a worker");
                 p = w.Person;
                 
@@ -152,14 +142,21 @@ namespace Machete.Service
             s.memberStatusID = p.Worker.memberStatusID;
             //
             //Search for duplicate signin for the same day
-            count = repo.GetAllQ().Count(q => q.activityID == s.activityID &&
-                                              q.personID == p.ID);
+            count = GetAll().Count(q => q.activityID == s.activityID &&
+                                                                  q.personID == p.ID);
             if (count == 0)
             {
-                s.timeZoneOffset = Convert.ToDouble(cfg.getConfig(Cfg.TimeZoneDifferenceFromPacific));
+                s.timeZoneOffset = Convert.ToDouble(db.Configs.FirstOrDefault(c => c.key == Cfg.TimeZoneDifferenceFromPacific).value);
                 Create(s, user);
             }
             return w;
+        }
+        public ActivitySignin GetByPersonID(int actID, int personID)
+        {
+            var q = from o in dbset.AsQueryable()
+                where (o.activityID.Equals(actID) && o.personID.Equals(personID))
+                select o;
+            return q.FirstOrDefault();
         }
     }
 }

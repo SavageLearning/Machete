@@ -23,8 +23,7 @@
 #endregion
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Machete.Data;
-using Machete.Data.Infrastructure;
+using Machete.Service.Infrastructure;
 using Machete.Domain;
 using System.Linq;
 
@@ -39,21 +38,10 @@ namespace Machete.Service
 
     // Business logic for Event record management
     // Ïf I made a non-web app, would I still need the code? If yes, put in here.
-    public class EventService : ServiceBase<Event>, IEventService
+    public class EventService : ServiceBase2<Event>, IEventService
     {
-        private readonly IMapper map;
-        private readonly ILookupRepository lRepo;
         //
-        public EventService(IEventRepository repo,
-                            IUnitOfWork unitOfWork,
-                            ILookupRepository lRepo,
-                            IMapper map) 
-                : base(repo, unitOfWork)
-        {
-            this.map = map;
-            this.lRepo = lRepo;
-            this.logPrefix = "Event";
-        }
+        public EventService(IDatabaseFactory db, IMapper map) : base(db, map) {}
         /// <summary>
         /// 
         /// </summary>
@@ -64,10 +52,10 @@ namespace Machete.Service
             IQueryable<Event> events;
             if (PID == null)
             {
-                events = repo.GetAllQ();
+                events = GetAll();
                 return events;
             }
-            events = repo.GetManyQ(e => e.PersonID == PID);
+            events = GetMany(e => e.PersonID == PID);
             return events;
         }
         /// <summary>
@@ -106,15 +94,15 @@ namespace Machete.Service
 
         public override Event Create(Event record, string user)
         {
-            record.eventTypeES = lRepo.GetById(record.eventTypeID).text_ES;
-            record.eventTypeEN = lRepo.GetById(record.eventTypeID).text_EN;
+            record.eventTypeES = db.Lookups.Find(record.eventTypeID).text_ES;
+            record.eventTypeEN = db.Lookups.Find(record.eventTypeID).text_EN;
             return base.Create(record, user);
         }
 
         public override void Save(Event record, string user)
         {
-            record.eventTypeES = lRepo.GetById(record.eventTypeID).text_ES;
-            record.eventTypeEN = lRepo.GetById(record.eventTypeID).text_EN;
+            record.eventTypeES = db.Lookups.Find(record.eventTypeID).text_ES;
+            record.eventTypeEN = db.Lookups.Find(record.eventTypeID).text_EN;
             base.Save(record, user);
         }
 

@@ -27,7 +27,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Machete.Data.Identity;
+using Machete.Service.Identity;
 using Machete.Service;
 using Machete.Web.ViewModel;
 using Microsoft.AspNetCore.Identity;

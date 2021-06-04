@@ -56,7 +56,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
 
             _lookupServ = new Mock<ILookupService>();
             _lookupServ.Setup(s => s.GetMany(It.IsAny<Func<Lookup, bool>>()))
-                .Returns(_fakeLookups);
+                .Returns(_fakeLookups.AsQueryable);
             _lookupServ.Setup(s => s.Get(1))
                 .Returns(_fakeLookup);
             _lookupServ.Setup(s => s.Get(1000))

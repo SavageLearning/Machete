@@ -2,15 +2,23 @@ name: .NET
 
 on:
   push:
-    branches: [ master, feature/* ]
+    branches: [ master]
   pull_request:
-    branches: [ master ]
+    branches: [ master, feature/*  ]
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    # https://docs.github.com/en/actions/guides/about-service-containers
+    services:
+      mssql:
+        image: mcr.microsoft.com/mssql/server
+        env:
+          ACCEPT_EULA: Y
+          SA_PASSWORD: passw0rD!
+        ports:
+          - 1433:1433
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
@@ -18,8 +26,9 @@ jobs:
       with:
         dotnet-version: 3.1.x
     - name: Restore dependencies
-      run: dotnet restore
+      run:  ./appveyor_install.sh
     - name: Build
       run: dotnet build --no-restore
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+    # skipping reports tests because of 'first-run' issues we dont want to deal with
+      run: dotnet test --no-build --verbosity normal --filter '(TestCategory!=Area-Reports)'

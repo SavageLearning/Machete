@@ -1,7 +1,7 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Machete.Data;
-using Machete.Data.Infrastructure;
+using Machete.Service;
+using Machete.Service.Infrastructure;
 using Machete.Domain;
 using System;
 using System.Collections.Generic;
@@ -17,19 +17,13 @@ namespace Machete.Service
 
     public class ConfigService : ServiceBase2<Config>, IConfigService
     {
-        private List<Config> config { get; set; }
-
         public ConfigService(IDatabaseFactory db, IMapper map) : base(db, map) {}
 
         public string getConfig(string key)
         {
-            if (config == null)
-            {
-                config = GetAll().ToList();
-            }
             try
             {
-                return config.Where(c => c.key == key).SingleOrDefault().value;
+                return dbset.SingleOrDefault(c => c.key == key).value;
             }
             catch(Exception e)
             {

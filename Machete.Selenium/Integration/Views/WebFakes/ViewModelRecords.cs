@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Machete.Data.Initialize;
+using Machete.Service.Initialize;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Test.Integration.Fluent;

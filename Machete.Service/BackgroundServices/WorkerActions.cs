@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
-using Machete.Data;
-using Machete.Data.Infrastructure;
-using Machete.Data.Tenancy;
+using Machete.Service;
+using Machete.Service.Infrastructure;
+using Machete.Service.Tenancy;
 using Machete.Domain;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

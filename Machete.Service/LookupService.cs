@@ -23,8 +23,8 @@
 #endregion
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Machete.Data;
-using Machete.Data.Infrastructure;
+using Machete.Service;
+using Machete.Service.Infrastructure;
 using Machete.Domain;
 using System;
 using System.Collections.Generic;
@@ -41,29 +41,14 @@ namespace Machete.Service
 
     // Business logic for Lookup record management
     // Ïf I made a non-web app, would I still need the code? If yes, put in here.
-    public class LookupService : ServiceBase<Lookup>, ILookupService
+    public class LookupService : ServiceBase2<Lookup>, ILookupService
     {
-        private readonly ILookupRepository lrepo;
-        private readonly IMapper map;
-        private LookupServiceHelper helper;
-
-        public LookupService(ILookupRepository lRepo,
-                             IMapper map,
-                             IUnitOfWork unitOfWork)
-            : base(lRepo, unitOfWork)
-        {
-            this.lrepo = lRepo;
-            this.map = map;
-            this.logPrefix = "Lookup";
-            this.helper = new LookupServiceHelper();
-            helper.setRepo(lRepo);
-            helper.populateStaticIds();
-        }
+        public LookupService(IDatabaseFactory db, IMapper map) : base(db, map) { }
 
         public IEnumerable<DTO.LookupList> GetIndexView(viewOptions o)
         {
             //Get all the records
-            IQueryable<Lookup> q = repo.GetAllQ();
+            IQueryable<Lookup> q = GetAll();
             //
             //Search based on search-bar string 
             if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
@@ -80,7 +65,7 @@ namespace Machete.Service
             // Only one record can be true in a given category
             if (record.selected == true)
             {
-                lrepo.clearSelected(record.category);
+                ClearSelected(record.category);
                 record.selected = true;
             }
 
@@ -91,15 +76,11 @@ namespace Machete.Service
             // Only one record can be true in a given category
             if (record.selected == true)
             {
-                lrepo.clearSelected(record.category);
+                ClearSelected(record.category);
                 record.selected = true;
             }
             base.Save(record, user);
         }
-
-        // copied from lookupcache because lookupcache will eventually die
-        public Lookup GetByKey(string category, string key) =>        
-            helper.GetByKey(category, key);        
 
         public string textByID(int ID, string locale)
         {
@@ -107,7 +88,7 @@ namespace Machete.Service
             if (ID == 0) return null;
             try
             {
-                record = lrepo.GetById(ID);
+                record = dbset.Find(ID);
             }
             catch
             {
@@ -120,14 +101,33 @@ namespace Machete.Service
             //defaults to English
             return record.text_EN;
         }
+
+        private void ClearSelected(string category) 
+        {
+            IEnumerable<Lookup> list  = dbset.Where(w => w.category == category).AsEnumerable();
+            foreach (var l in list)
+            {
+                l.selected = false;
+            }            
+        }
+
+        public Lookup GetByKey(string category, string key)
+        {
+            var q = from o in dbset.AsQueryable()
+                where (o.category.Equals(category) && o.key.Equals(key))
+                select o;
+            return q.FirstOrDefault();
+        }
     }
 
     public class LookupServiceHelper
     {
-        public MacheteContext context;
-        public ILookupRepository lrepo;
-
-        public void populateStaticIds()
+        private readonly MacheteContext _context;
+        public LookupServiceHelper(MacheteContext context)
+        {
+            this._context = context;
+        }
+        public void PopulateStaticIds()
         {
             #region WORKERS
             Worker.iActive = GetByKey(LCategory.memberstatus, LMemberStatus.Active).ID;
@@ -153,11 +153,11 @@ namespace Machete.Service
             #endregion
         }
 
-        public Lookup GetByKey(string category, string key)
+        private Lookup GetByKey(string category, string key)
         {
             try
             {
-                var lookup = lrepo?.GetByKey(category, key) ?? context?.Lookups.SingleOrDefault(row => row.category.Equals(category) && row.key.Equals(key));
+                var lookup = _context.Lookups.SingleOrDefault(row => row.category.Equals(category) && row.key.Equals(key));
                 if (lookup == null) throw new Exception("Result was null; please check the database.");
                 return lookup;
             }
@@ -165,16 +165,6 @@ namespace Machete.Service
             {
                 throw new MacheteIntegrityException("Unable to Lookup Category: " + category + ", text: " + key + "Exception:" + e.ToString());
             }
-        }
-
-        public void setRepo(ILookupRepository lRepo)
-        {
-            lrepo = lRepo;
-        }
-
-        public void setContext(MacheteContext macheteContext)
-        {
-            context = macheteContext;
         }
     }
 }

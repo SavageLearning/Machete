@@ -52,7 +52,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
 
             _transportAvailabilityServ = new Mock<ITransportProvidersAvailabilityService>();
             _transportAvailabilityServ.Setup(s => s.GetAll())
-                .Returns(_fakeTransportAvailabilities);
+                .Returns(_fakeTransportAvailabilities.AsQueryable);
             _transportAvailabilityServ.Setup(s => s.Get(1))
                 .Returns(_fakeTransportAvailability);            
             _transportAvailabilityServ.Setup(s => s.Get(1000))

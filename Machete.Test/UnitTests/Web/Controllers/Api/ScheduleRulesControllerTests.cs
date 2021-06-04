@@ -50,7 +50,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             
             _scheduleRuleServ = new Mock<IScheduleRuleService>();
             _scheduleRuleServ.Setup(s => s.GetAll())
-                .Returns(_fakeScheduleRules);
+                .Returns(_fakeScheduleRules.AsQueryable);
             _scheduleRuleServ.Setup(s => s.Get(1000))
                 .Returns((ScheduleRule) null);
             _scheduleRuleServ.Setup(s => s.Get(1))
@@ -163,7 +163,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // act
             var result = _controller.Post(validViewModel);
             //assert
-            Assert.IsInstanceOfType(result.Result, typeof(CreatedAtActionResult));
+            Assert.IsInstanceOfType(result.Result, typeof(ObjectResult));
         }
         
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.ScheduleRules)]

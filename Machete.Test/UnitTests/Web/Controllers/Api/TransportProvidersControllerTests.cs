@@ -48,7 +48,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
 
             _transportProvidersServ  = new Mock<ITransportProvidersService>();
             _transportProvidersServ .Setup(s => s.GetMany(It.IsAny<Func<TransportProvider,bool>>()))
-                .Returns(_fakeTransportProviders);
+                .Returns(_fakeTransportProviders.AsQueryable);
             _transportProvidersServ .Setup(s => s.Get(1))
                 .Returns(_fakeTransportProvider);            
             _transportProvidersServ .Setup(s => s.Get(1000))
