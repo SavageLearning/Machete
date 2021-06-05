@@ -6,95 +6,12 @@
     <LangVersion>7.1</LangVersion>
   </PropertyGroup>
 
-<ItemGroup>
-<DotNetCliToolReference Include="BundlerMinifier.Core" Version="2.6.362" />
-</ItemGroup>
   <ItemGroup>
-    <None Remove="App_Start\**" />
-    <None Remove="machete.db" />
-    <None Remove="Machete.Web.csproj.DotSettings" />
-    <None Remove="published\**" />
+  <DotNetCliToolReference Include="BundlerMinifier.Core" Version="2.6.362" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\Machete.Service\Machete.Service.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="App_Start\**" />
-    <Compile Remove="published\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Remove="App_Start\**" />
-    <EmbeddedResource Remove="published\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Remove="App_Start\**" />
-    <Content Include="Identity\favicon.ico" />
-    <Content Remove="published\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="wwwroot\css\site.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\css\site.min.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\favicon.ico" />
-    <_ContentIncludedByDefault Remove="wwwroot\images\banner1.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\images\banner2.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\images\banner3.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\js\site.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\js\site.min.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\.bower.json" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-theme.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-theme.css.map" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-theme.min.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-theme.min.css.map" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap.css.map" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap.min.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap.min.css.map" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\fonts\glyphicons-halflings-regular.eot" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\fonts\glyphicons-halflings-regular.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\fonts\glyphicons-halflings-regular.ttf" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\fonts\glyphicons-halflings-regular.woff" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\fonts\glyphicons-halflings-regular.woff2" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\npm.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\LICENSE" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation-unobtrusive\.bower.json" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation-unobtrusive\LICENSE.txt" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\.bower.json" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\dist\additional-methods.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\dist\additional-methods.min.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\dist\jquery.validate.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\dist\jquery.validate.min.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\LICENSE.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\.bower.json" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\dist\jquery.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\dist\jquery.min.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\dist\jquery.min.map" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\LICENSE.txt" />
-    <_ContentIncludedByDefault Remove="Views\ReportsV2\Index.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\V2\Index.cshtml" />
-    <_ContentIncludedByDefault Remove="published\web.config" />
-    <_ContentIncludedByDefault Remove="published\appsettings.Development.json" />
-    <_ContentIncludedByDefault Remove="published\appsettings.json" />
-    <_ContentIncludedByDefault Remove="published\appsettings.Release.json" />
-    <_ContentIncludedByDefault Remove="published\bundleconfig.json" />
-    <_ContentIncludedByDefault Remove="published\dist\assets\jobs-dispatched-count.json" />
-    <_ContentIncludedByDefault Remove="published\Machete.Web.deps.json" />
-    <_ContentIncludedByDefault Remove="published\Machete.Web.runtimeconfig.json" />
-    <_ContentIncludedByDefault Remove="Views\Reports\Activities.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Reports\Employers.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Reports\Index.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Reports\PrintView.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Reports\SSRS.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Reports\Summary.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Reports\Workers.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
