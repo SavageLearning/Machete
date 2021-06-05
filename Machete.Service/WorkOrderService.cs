@@ -278,7 +278,7 @@ namespace Machete.Service
         {
             var result = new dataTableResult<WOWASummary>();
 
-                var q = db.Query<WOWASummary>().AsQueryable();
+                var q = db.Set<WOWASummary>().AsQueryable();
                 if (orderDescending)
                     q = q.OrderByDescending(p => p.sortableDate);
                 else

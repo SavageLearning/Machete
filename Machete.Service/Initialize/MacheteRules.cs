@@ -78,9 +78,9 @@ namespace Machete.Service.Initialize
                 context.TransportRules.Add(rule)
             );
 
-            context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT dbo.TransportRules ON");
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.TransportRules ON");
             context.SaveChanges();
-            context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT dbo.TransportRules OFF");
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.TransportRules OFF");
             
             context.TransportCostRules.Add(new TransportCostRule
             {
@@ -123,9 +123,9 @@ namespace Machete.Service.Initialize
                 dateupdated = DateTime.Now, createdby = "Init T. Script", updatedby = "Init T. Script"
             });
         
-            context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT dbo.TransportCostRules ON");
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.TransportCostRules ON");
             context.SaveChanges();
-            context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT dbo.TransportCostRules OFF");
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.TransportCostRules OFF");
 
             // Schedule Rules
             for (var i = 0; i < 7; i++)

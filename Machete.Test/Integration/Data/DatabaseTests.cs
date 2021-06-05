@@ -72,7 +72,7 @@ namespace Machete.Test.Integration.Data
         {
             // Arrange - load test records
             var context = frb.ToFactory();
-            context.Database.ExecuteSqlCommand("TRUNCATE TABLE ReportDefinitions");
+            context.Database.ExecuteSqlRaw("TRUNCATE TABLE ReportDefinitions");
             var cache = MacheteReportDefinitions._cache;
             var count = cache.Count;
             

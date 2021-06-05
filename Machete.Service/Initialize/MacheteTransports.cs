@@ -11,7 +11,7 @@ namespace Machete.Service.Initialize
         public static void Initialize(MacheteContext context)
         {
             if (!context.TransportProviders.Any()) {
-                context.Database.ExecuteSqlCommand(@"insert into dbo.TransportProviders
+                context.Database.ExecuteSqlRaw(@"insert into dbo.TransportProviders
                         ( [key], text_EN, text_ES, defaultAttribute, sortorder, active, datecreated, dateupdated, Createdby, Updatedby )
                             select [key], text_EN, text_ES, selected, sortorder, active, datecreated, dateupdated, Createdby, Updatedby
                             from dbo.Lookups

@@ -1080,7 +1080,7 @@ namespace Machete.Service
                     .HasConstraintName("FK_dbo.WorkAssignments_dbo.WorkerSignins_workerSigninID");
             });
 
-            modelBuilder.Query<WOWASummary>().ToView("View_WOWASummary");
+            modelBuilder.Entity<WOWASummary>().HasNoKey().ToView("View_WOWASummary");
 
             modelBuilder.Entity<WorkOrder>(entity =>
             {
@@ -1528,7 +1528,7 @@ namespace Machete.Service
             });
             
             // VIEWS //
-            modelBuilder.Query<QueryMetadata>();
+            modelBuilder.Entity<QueryMetadata>().HasNoKey();
         }
     }
 }

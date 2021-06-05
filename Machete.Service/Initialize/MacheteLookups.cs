@@ -210,7 +210,7 @@ namespace Machete.Service.Initialize
             context.Database.OpenConnection();
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Lookups ON");
             context.SaveChanges();
-            context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT dbo.Lookups OFF");
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Lookups OFF");
         }
     }    
 }
