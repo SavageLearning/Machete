@@ -14,5 +14,13 @@ namespace Machete.Test.Integration.System
             var mapper = mapperConfig.CreateMapper();
             mapper.ConfigurationProvider.AssertConfigurationIsValid();
         }
+
+        [Ignore, TestMethod]
+        public void AutoMapper_ApiValidation()
+        {
+            var mapper = new Api.MapperConfig().getMapper();
+            mapper.ConfigurationProvider.AssertConfigurationIsValid();
+
+        }
     }
 }

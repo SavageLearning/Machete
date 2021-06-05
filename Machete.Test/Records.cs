@@ -327,5 +327,22 @@ namespace Machete.Test
             createdby = "TestInitializer",
             updatedby = "TestInitializer"
         };
+
+
+        public static TransportVehicleSchedule transportVehicleSchedule = new TransportVehicleSchedule
+        {
+            datecreated = DateTime.Now,             //datetime
+            dateupdated = DateTime.Now,              //datetime
+            createdby = "TestInitializer",
+            updatedby = "TestInitializer"
+        };
+
+        public static TransportVehicle transportVehicle = new TransportVehicle
+        {
+            datecreated = DateTime.Now,             //datetime
+            dateupdated = DateTime.Now,              //datetime
+            createdby = "TestInitializer",
+            updatedby = "TestInitializer"
+        };
     }
 }
