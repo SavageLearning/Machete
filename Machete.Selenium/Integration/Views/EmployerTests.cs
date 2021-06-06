@@ -191,6 +191,7 @@ namespace Machete.Test.Selenium.View
             // search for employer 1
             ui.WaitForElementValue(By.XPath("//table[@id='employerTable']/tbody/tr/td[2]"), _emp1.name);
             ui.WaitAndDoubleClick(By.XPath("//table[@id='employerTable']/tbody/tr/td[6]"));
+            Thread.Sleep(5000);
             var selectedTab = ui.WaitForElement(By.CssSelector("li.employer.ui-tabs-selected a"));
             var recID = Convert.ToInt32(selectedTab.GetAttribute("recordid"));
             ui.WaitForElement(By.Id("workOrderListTab_" + _emp1.ID));

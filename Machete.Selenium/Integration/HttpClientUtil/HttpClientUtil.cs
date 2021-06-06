@@ -63,7 +63,7 @@ namespace Machete.Test.Integration.HttpClientUtil
                     throw new Exception("Cannot retrieve records");
                 }
                 var content = await httpResponse.Content.ReadAsStringAsync();
-                dynamic deserializedContent = JsonConvert.DeserializeObject(content);
+                var deserializedContent = JsonConvert.DeserializeObject<ListResponseModel<LookupVM>>(content);
                 var resultList = _mapper.Map<List<Lookup>>(deserializedContent.data);
                 _tenantLookupsCache = new List<Lookup>(resultList);
             }
@@ -114,7 +114,7 @@ namespace Machete.Test.Integration.HttpClientUtil
             var waResponse = await
                 HttpClient.GetAsync($"{SharedConfig.BaseSeleniumTestUrl}api/workassignments/{id}");
             var httpResponseString = await waResponse.Content.ReadAsStringAsync();
-            dynamic deserializedResponse = JsonConvert.DeserializeObject(httpResponseString);
+            var deserializedResponse = JsonConvert.DeserializeObject<ItemResponseModel<WorkAssignmentVM>>(httpResponseString);
             var domainWA = _mapper.Map<WorkAssignment>(deserializedResponse.data);
             return domainWA.pseudoID ?? 0;
         }
