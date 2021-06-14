@@ -137,20 +137,29 @@ namespace Machete.Service
                     .Where(jj => jj.sk.typeOfWorkID == o.typeofwork_grouping)
                     .Select(jj => jj.wa);
         }
-        public static void diffDays(DateTime date, TimeZoneInfo clientTimeZoneInfo, ref IQueryable<WorkAssignment> q)
+        
+        /// <summary>
+        /// Edits queryable to filter on WO dateTimeofWork. dateUTC param expected as UTC
+        /// </summary>
+        /// <param name="dateUTC">dateUTC param expected as UTC</param>
+        /// <param name="q"></param>
+        public static void diffDays(DateTime dateUTC, ref IQueryable<WorkAssignment> q)
         {
+            var dateEndUTC = dateUTC.AddHours(24);
             DateTime sunday;
-            if (date.DayOfWeek == DayOfWeek.Saturday)
+            if (dateUTC.DayOfWeek == DayOfWeek.Saturday)
             {
-                sunday = date.AddDays(1);
+                sunday = dateUTC.AddDays(1);
+                var sundayEndUTC = sunday.AddHours(24);
+                
                 q = q.Where(p => 
-                    p.workOrder.dateTimeofWork.DateBasedOn(clientTimeZoneInfo) >= date.Date
-                 && p.workOrder.dateTimeofWork.DateBasedOn(clientTimeZoneInfo) <= sunday.Date
+                    p.workOrder.dateTimeofWork >= dateUTC
+                 && p.workOrder.dateTimeofWork <= sundayEndUTC
                 );
             }
             else
             {
-                q = q.Where(p => p.workOrder.dateTimeofWork.DateBasedOn( clientTimeZoneInfo) == date.Date);
+                q = q.Where(p => p.workOrder.dateTimeofWork >= dateUTC && p.workOrder.dateTimeofWork <= dateEndUTC);
             }
         }
         public static void WOID(viewOptions o, ref IQueryable<WorkAssignment> q)
