@@ -17,7 +17,8 @@ namespace Machete.Test.Integration.Fluent
             DateTime? dateupdated = null,
             DateTime? dateTimeOfWork = null,
             int? paperordernum = null,
-            int? status = null
+            int? status = null,
+            string contact = null
         )
         {
             //
@@ -35,6 +36,7 @@ namespace Machete.Test.Integration.Fluent
             if (paperordernum == null) _wo.paperOrderNum = new Random().Next(10000, 99999);
             if (dateTimeOfWork != null) _wo.dateTimeofWork = (DateTime)dateTimeOfWork;
             if (status != null) _wo.statusID = (int)status;
+            if (contact != null) _wo.contactName = contact;
             //
             // ACT
             _servWO.Create(_wo, _user);

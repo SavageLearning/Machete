@@ -29,6 +29,9 @@ using System.Linq;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Test.Integration.Fluent;
+using Machete.Web.ViewModel;
+using Machete.Web.Helpers;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DTO = Machete.Service.DTO;
 
@@ -123,6 +126,53 @@ namespace Machete.Test.Integration.Services
         //     Assert.AreEqual(1, wowa.pending_wo, "CombinedSummary returned unexpected pending_wo value");
 
         // }
+        
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
+        public void wo_list_filter_by_date_only_filters_on_utc_date_range()
+        {
+            // Arrange
+            var clientDate = new DateTime(2021, 1, 1).Date;
+            var woDateUTC = clientDate.ToUtcFrom(frb.ClientTimeZoneInfo);  // client date at midnight +/- offset
+            var woDateUTCEnd = woDateUTC.AddHours(24);
+            string randomId = $"{Faker.Name.Last()}{Faker.RandomNumber.Next()}";
+
+            frb.AddWorkOrder(status: WorkOrder.iActive, dateTimeOfWork: woDateUTC, contact: $"Machete{randomId}");
+            frb.AddWorkOrder(status: WorkOrder.iActive, dateTimeOfWork: woDateUTC.AddHours(-1), contact: $"Machete-1{randomId}");
+            frb.AddWorkOrder(status: WorkOrder.iActive, dateTimeOfWork: woDateUTC.AddHours(25), contact: $"Machete+1{randomId}");
+            
+            //Act
+            var map = frb.ToWebMapper();
+            var workOrders = frb.ToServ<IWorkOrderService>().GetIndexView(new viewOptions() 
+            {
+                date = null,
+                displayLength = 10,
+                displayStart = 0,
+                showActiveWorkers = false ,
+                showExpiredWorkers = false,
+                showNotWorkers = false,
+                showPending = false,
+                showWorkers = false,
+                showSExWorkers = false,
+                sortColName = "WOID",
+                wa_grouping = "False",
+                sSearch = randomId
+                
+            }).query.ToList();
+
+            var orderInDateRange = workOrders.Where(wo => wo.contactName == $"Machete{randomId}").First();
+            var orderBeforeDateRange = workOrders.Where(wo => wo.contactName == $"Machete-1{randomId}").First();
+            var orderAfterDateRange = workOrders.Where(wo => wo.contactName == $"Machete+1{randomId}").First();
+
+           // should be in range
+            Assert.IsTrue( orderInDateRange.dateTimeofWork >= woDateUTC
+                && orderInDateRange.dateTimeofWork <= woDateUTCEnd, "expected in range date not in range");
+            // outside range
+            Assert.IsFalse( orderBeforeDateRange.dateTimeofWork >= woDateUTC
+                && orderBeforeDateRange.dateTimeofWork <= woDateUTCEnd, "expected before range date not outside range");
+            Assert.IsFalse( orderAfterDateRange.dateTimeofWork >= woDateUTC
+                && orderAfterDateRange.dateTimeofWork <= woDateUTCEnd, "expected before range date not outside range");
+        }
+        
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
         public void get_GroupView()
         {
