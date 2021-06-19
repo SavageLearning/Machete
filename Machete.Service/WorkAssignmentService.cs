@@ -88,9 +88,8 @@ namespace Machete.Service
             // 
             if (o.date != null)
             {
-                var requestedDate = o.date.Value.DateBasedOn(_clientTimeZoneInfo);
 
-                IndexViewBase.diffDays( requestedDate, _clientTimeZoneInfo, ref q);
+                IndexViewBase.diffDays( o.date.Value, ref q);
             }
 
             var lRepo = db.Lookups.AsNoTracking().AsQueryable();

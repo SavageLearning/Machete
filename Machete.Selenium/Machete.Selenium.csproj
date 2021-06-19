@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -25,8 +25,9 @@
     </PackageReference>
     <PackageReference Include="SimpleJson" Version="0.38.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\Machete.Test\Machete.Test.csproj" />
     <ProjectReference Include="..\Machete.Web\Machete.Web.csproj" />
@@ -61,7 +62,7 @@
     <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.Machete.Selenium.manifest" />
     <ApplicationManifest Remove="obj\Debug\netcoreapp2.1\Native.Machete.Selenium.manifest" />
   </ItemGroup>
-
+  
   <ItemGroup>
     <DeployManifest Remove="obj\Debug\netcoreapp2.1\Machete.Selenium.application" />
     <DeployManifest Remove="obj\Debug\netcoreapp2.1\Machete.Selenium.application" />
@@ -72,5 +73,5 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
+  
 </Project>

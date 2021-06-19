@@ -90,6 +90,8 @@ namespace Machete.Service
                 .Include(a => a.workAssignments)
                 .ThenInclude(a => a.workerAssignedDDD)
                 .ThenInclude(a => a.Person)
+                .Include(wo => wo.EmailWorkOrders)
+                .ThenInclude(ewo => ewo.Email)
                 .ToList();            
 
             if (!assignedOnly) return matching;

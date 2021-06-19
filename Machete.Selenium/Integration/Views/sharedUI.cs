@@ -1076,7 +1076,7 @@ namespace Machete.Test.Selenium.View
         }
         public static int nextAvailableDwccardnum(MacheteContext DB)
         {
-            int attempt = DB.Workers.Last().dwccardnum;
+            int attempt = DB.Workers.OrderByDescending(x => x.dwccardnum).First().dwccardnum;
             while (DB.Workers.Any(x => x.dwccardnum == attempt))
             {
                 ++attempt;

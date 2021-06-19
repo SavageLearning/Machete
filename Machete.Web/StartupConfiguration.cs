@@ -105,7 +105,7 @@ namespace Machete.Web
             services.ConfigureApplicationCookie(options =>
             {
                 options.Cookie.HttpOnly = true; // prevent JavaScript access: https://tools.ietf.org/html/rfc6265
-                options.Cookie.Expiration = TimeSpan.FromHours(24);
+                options.ExpireTimeSpan = TimeSpan.FromHours(24);
                 options.Cookie.SameSite = SameSiteMode.None;
 
                 // these paths are the defaults, declared here explicitly:
