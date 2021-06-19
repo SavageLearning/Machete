@@ -14,7 +14,7 @@ namespace Machete.Service
                 // .ForMember(v => v.WAOrphanedCount,      opt => opt.MapFrom(d => d.workAssignments.Count(wa => wa.workerAssignedID != null && wa.workerSigninID == null)))
                 .ForMember(v => v.emailSentCount,       opt => opt.MapFrom(d => d.EmailWorkOrders.Count(ewos => ewos.Email.statusID == Email.iSent || ewos.Email.statusID == Email.iReadyToSend)))
                 .ForMember(v => v.emailErrorCount,      opt => opt.MapFrom(d => d.EmailWorkOrders.Count(ewos => ewos.Email.statusID == Email.iTransmitError)))
-                .ForMember(v => v.workers,              opt => opt.MapFrom(d => d.workAssignments))
+                .ForMember(v => v.workers,              opt => opt.MapFrom(d => d.workAssignments.Where(wa => wa.workerAssignedDDD != null)))
             ;
             //
             CreateMap<Domain.WorkAssignment, DTO.WorkerAssignedList>()
