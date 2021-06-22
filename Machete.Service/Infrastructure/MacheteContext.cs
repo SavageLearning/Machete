@@ -246,10 +246,10 @@ namespace Machete.Service
             modelBuilder.Entity<ActivitySignin>(entity =>
             {
                 entity.HasIndex(e => e.activityID)
-                    .HasName("IX_activityID");
+                    .HasDatabaseName("IX_activityID");
 
                 entity.HasIndex(e => e.personID)
-                    .HasName("IX_personID");
+                    .HasDatabaseName("IX_personID");
 
                 entity.Property(e => e.ID).HasColumnName("ID");
 
@@ -331,10 +331,10 @@ namespace Machete.Service
                     .HasName("PK_dbo.EmailWorkOrders");
 
                 entity.HasIndex(e => e.EmailID)
-                    .HasName("IX_Email_ID");
+                    .HasDatabaseName("IX_Email_ID");
 
                 entity.HasIndex(e => e.WorkOrderID)
-                    .HasName("IX_WorkOrder_ID");
+                    .HasDatabaseName("IX_WorkOrder_ID");
 
                 entity.Property(e => e.EmailID).HasColumnName("Email_ID");
 
@@ -501,7 +501,7 @@ namespace Machete.Service
             modelBuilder.Entity<Event>(entity =>
             {
                 entity.HasIndex(e => e.PersonID)
-                    .HasName("IX_PersonID");
+                    .HasDatabaseName("IX_PersonID");
 
                 entity.Property(e => e.ID).HasColumnName("ID");
 
@@ -583,10 +583,10 @@ namespace Machete.Service
             modelBuilder.Entity<JoinEventImage>(entity =>
             {
                 entity.HasIndex(e => e.EventID)
-                    .HasName("IX_EventID");
+                    .HasDatabaseName("IX_EventID");
 
                 entity.HasIndex(e => e.ImageID)
-                    .HasName("IX_ImageID");
+                    .HasDatabaseName("IX_ImageID");
 
                 entity.Property(e => e.ID).HasColumnName("ID");
 
@@ -842,7 +842,7 @@ namespace Machete.Service
             modelBuilder.Entity<TransportCostRule>(entity =>
             {
                 entity.HasIndex(e => e.transportRuleID)
-                    .HasName("IX_transportRuleID");
+                    .HasDatabaseName("IX_transportRuleID");
 
                 entity.Property(e => e.ID).HasColumnName("ID");
 
@@ -875,7 +875,7 @@ namespace Machete.Service
             modelBuilder.Entity<TransportProviderAvailability>(entity =>
             {
                 entity.HasIndex(e => e.transportProviderID)
-                    .HasName("IX_transportProviderID");
+                    .HasDatabaseName("IX_transportProviderID");
 
                 entity.Property(e => e.ID).HasColumnName("ID");
 
@@ -982,13 +982,13 @@ namespace Machete.Service
             modelBuilder.Entity<WorkAssignment>(entity =>
             {
                 entity.HasIndex(e => e.workOrderID)
-                    .HasName("IX_workOrderID");
+                    .HasDatabaseName("IX_workOrderID");
 
                 entity.HasIndex(e => e.workerAssignedID)
-                    .HasName("IX_workerAssignedID");
+                    .HasDatabaseName("IX_workerAssignedID");
 
                 entity.HasIndex(e => e.workerSigninID)
-                    .HasName("IX_workerSigninID");
+                    .HasDatabaseName("IX_workerSigninID");
 
                 entity.Property(e => e.ID).HasColumnName("ID");
 
@@ -1091,10 +1091,10 @@ namespace Machete.Service
                     .WithOne(e => e.workOrder);
                 
                 entity.HasIndex(e => e.dateTimeofWork)
-                    .HasName("dateTimeofWork");
+                    .HasDatabaseName("dateTimeofWork");
 
                 entity.HasIndex(e => e.EmployerID)
-                    .HasName("IX_EmployerID");
+                    .HasDatabaseName("IX_EmployerID");
 
                 entity.Property(e => e.ID).HasColumnName("ID");
 
@@ -1239,10 +1239,10 @@ namespace Machete.Service
             modelBuilder.Entity<WorkerRequest>(entity =>
             {
                 entity.HasIndex(e => e.WorkOrderID)
-                    .HasName("IX_WorkOrderID");
+                    .HasDatabaseName("IX_WorkOrderID");
 
                 entity.HasIndex(e => e.WorkerID)
-                    .HasName("IX_WorkerID");
+                    .HasDatabaseName("IX_WorkerID");
 
                 entity.Property(e => e.ID).HasColumnName("ID");
 
@@ -1276,7 +1276,7 @@ namespace Machete.Service
             modelBuilder.Entity<WorkerSignin>(entity =>
             {
                 entity.HasIndex(e => e.WorkerID)
-                    .HasName("IX_WorkerID");
+                    .HasDatabaseName("IX_WorkerID");
 
                 entity.Property(e => e.ID).HasColumnName("ID");
 
@@ -1321,7 +1321,7 @@ namespace Machete.Service
             modelBuilder.Entity<Worker>(entity =>
             {
                 entity.HasIndex(e => e.ID)
-                    .HasName("IX_ID");
+                    .HasDatabaseName("IX_ID");
 
                 entity.Property(e => e.ID)
                     .HasColumnName("ID")

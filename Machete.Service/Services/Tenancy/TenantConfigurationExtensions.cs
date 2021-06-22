@@ -6,7 +6,7 @@ namespace Machete.Service.Tenancy
     {
         public static TenantMapping GetTenantMapping(this IConfiguration configuration)
         {
-            return configuration.GetSection("Tenants").Get<TenantMapping>();
+            return configuration.GetSection("Tenants").GetTenantMapping();
         }
 
         public static Tenant GetTenant(this IConfiguration configuration, string tenantName)
