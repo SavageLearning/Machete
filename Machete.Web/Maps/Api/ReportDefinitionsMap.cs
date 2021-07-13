@@ -15,6 +15,11 @@ namespace Machete.Web.Maps.Api
                 .ForMember(v => v.columns, opt => opt.MapFrom(d => JsonConvert.DeserializeObject(d.columnsJson)))
                 .ForMember(v => v.inputs, opt => opt.MapFrom(d => JsonConvert.DeserializeObject(d.inputsJson)))
                 ;
+            CreateMap<ReportDefinitionVM, ReportDefinition>()
+                .ForMember(d => d.ID, opt => opt.MapFrom(v => v.id))
+                .ForMember(d => d.inputsJson, opt => opt.MapFrom(v => JsonConvert.SerializeObject(v.inputs)))
+                .ForMember(d => d.columnsJson, opt => opt.MapFrom(v => JsonConvert.SerializeObject(v.columns)))
+                ;
         }
     }
 }
