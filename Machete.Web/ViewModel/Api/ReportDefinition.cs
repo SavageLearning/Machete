@@ -15,7 +15,8 @@ namespace Machete.Web.ViewModel.Api
         [JsonIgnore] // !!todo deprecate. Not in use
         public string title         { get; set; } // if null use commonName
         public string description   { get; set; }
-        [Required]
+        [MinLength(5)]
+        [Required(ErrorMessage = "Query is required.", AllowEmptyStrings = false)]
         public string sqlquery      { get; set; }
         [Required]
         public string category      { get; set; }

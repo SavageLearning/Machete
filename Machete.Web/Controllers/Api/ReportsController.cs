@@ -89,32 +89,24 @@ namespace Machete.Web.Controllers.Api
         // PUT api/values
        [Authorize(Roles = "Administrator")]
        [HttpPut("{id}")]
-       public ActionResult Put([FromRoute] string id, [FromBody] ReportDefinitionVM reportDefinitionVM)
+       public ActionResult<ReportDefinitionVM> Put([FromRoute] string id, [FromBody] ReportDefinitionVM reportDefinitionVM)
        {
+           if (!ModelState.IsValid) return BadRequest(ModelState);
            if (!serv.Exists(id)) return NotFound();
 
            string query = reportDefinitionVM.sqlquery;
-           if (string.IsNullOrEmpty(query)) {
-               if (query == string.Empty) { // query is blank
-                   return StatusCode((int)HttpStatusCode.NoContent);
-               } else { // query is null; query cannot be null
-                   return StatusCode((int)HttpStatusCode.BadRequest);
-               }
-           }
            try {
                var validationMessages = serv.ValidateQuery(query);
                if (validationMessages.Count == 0) {
-                   // "no modification needed"; http speak good human
 
                    serv.Save(map.Map<ReportDefinition>(reportDefinitionVM), HttpContext.User.ToString());
-
-                   return StatusCode((int)HttpStatusCode.NotModified);
+                   return StatusCode((int)HttpStatusCode.OK);
                } else {
-                   // 200; we wanted validation messages, and got them.
-                   return new JsonResult(new { data = validationMessages });
+                   // 400; we wanted validation messages, and got them.
+                   return BadRequest(new { data = validationMessages });
                }
            } catch (Exception ex) {
-               // SQL errors are expected but they will be returned as strings (200).
+               // SQL errors are expected but they will be returned as strings (400).
                // in this case, something happened that we were not expecting; return 500.
                var message = ex.Message;
                return StatusCode((int)HttpStatusCode.InternalServerError, message);
