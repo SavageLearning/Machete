@@ -30,10 +30,9 @@ namespace Machete.Web.Controllers.Api
             try
             {
                 var result = service.GetMany(w => w.active)
-                    .Select(e => 
-                    map.Map<Domain.TransportProvider, TransportProviderVM>(e))
+                    .ToList()
                     .AsEnumerable();
-                return Ok(new {data = result});
+                return Ok(new {data = map.Map<IEnumerable<TransportProviderVM>>(result)});
             }
             catch (Exception ex)
             {

@@ -9,6 +9,7 @@ using Machete.Web.Helpers;
 using Machete.Web.ViewModel.Api;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace Machete.Web.Controllers.Api
 {
@@ -85,5 +86,31 @@ namespace Machete.Web.Controllers.Api
 //            }
 //        }
 
+        // PUT api/values
+       [Authorize(Roles = "Administrator")]
+       [HttpPut("{id}")]
+       public ActionResult<ReportDefinitionVM> Put([FromRoute] string id, [FromBody] ReportDefinitionVM reportDefinitionVM)
+       {
+           if (!ModelState.IsValid) return BadRequest(ModelState);
+           if (!serv.Exists(id)) return NotFound();
+
+           string query = reportDefinitionVM.sqlquery;
+           try {
+               var validationMessages = serv.ValidateQuery(query);
+               if (validationMessages.Count == 0) {
+
+                   serv.Save(map.Map<ReportDefinition>(reportDefinitionVM), HttpContext.User.ToString());
+                   return StatusCode((int)HttpStatusCode.OK);
+               } else {
+                   // 400; we wanted validation messages, and got them.
+                   return BadRequest(new { data = validationMessages });
+               }
+           } catch (Exception ex) {
+               // SQL errors are expected but they will be returned as strings (400).
+               // in this case, something happened that we were not expecting; return 500.
+               var message = ex.Message;
+               return StatusCode((int)HttpStatusCode.InternalServerError, message);
+           }
+       }
     }
 }

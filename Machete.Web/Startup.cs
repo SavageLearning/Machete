@@ -41,10 +41,11 @@ namespace Machete.Web
             Configuration = configuration;
             LocalEnv = env;
             
-            using (RSA rsa = RSA.Create()) {
-                rsa.KeySize = 4096;                
-                _signingKey = new RsaSecurityKey(rsa);
-            }
+            // wrapping in using () {} statememt throws as it interfears with 
+            // DI life mamangement: https://docs.microsoft.com/en-us/dotnet/core/extensions/dependency-injection#service-lifetimes
+            RSA rsa = RSA.Create();
+            rsa.KeySize = 4096;                
+            _signingKey = new RsaSecurityKey(rsa);
         }
 
         public IConfiguration Configuration { get; }

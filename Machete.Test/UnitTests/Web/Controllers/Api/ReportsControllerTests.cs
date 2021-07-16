@@ -14,6 +14,8 @@ using Machete.Web.ViewModel.Api;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace Machete.Test.UnitTests.Controllers.Api
 {
@@ -64,7 +66,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
                 .Returns(_fakeReports);
             _reportsServ.Setup(s => s.GetQuery(It.Is<SearchOptions>(so=> so.idOrName == "fakeReportName")))
                 .Returns(_fakeDynamicReportResult);
-            
+
             var mapperConfig = new MapperConfiguration(config =>
             {
                 config.ConfigureApi();
@@ -72,6 +74,15 @@ namespace Machete.Test.UnitTests.Controllers.Api
             _mapper = mapperConfig.CreateMapper();
 
             _controller = new ReportsController(_reportsServ.Object, _tenantServ.Object, _mapper);
+             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            {
+                new Claim(ClaimTypes.Email, "jciispam@gmail.com"),
+                new Claim(ClaimTypes.NameIdentifier, (new Guid("9245fe4a-d402-451c-b9ed-9c1a04247482")).ToString()),
+            }, "mock"));
+            _controller.ControllerContext = new ControllerContext()
+            {
+                HttpContext = new DefaultHttpContext() { User = user }
+            };
         }
 
         private DateTime DateTimeLocal(string tz)
@@ -137,6 +148,93 @@ namespace Machete.Test.UnitTests.Controllers.Api
         }
         
         #endregion GetOne
+
+        #region Put
+
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Reports)]
+        public void Put_Returns_Not_Found_when_invalid_id_passed()
+        {
+            // Arrange
+            _reportsServ.Setup(s => s.Exists(It.IsAny<string>()))
+                .Returns(false);
+            // act
+            var result =_controller.Put("placeholder", new ReportDefinitionVM()).Result;
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(NotFoundResult));
+        }
+
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Reports)]
+        public void Put_Returns_BadRequest_when_invalid_query_passed()
+        {
+            // Arrange
+            List<string> fakeValidationErrors = new List<string>() {"blah"};
+            _reportsServ.Setup(s => s.ValidateQuery(It.IsAny<string>()))
+                .Returns(fakeValidationErrors);
+            _reportsServ.Setup(s => s.Exists(It.IsAny<string>()))
+                .Returns(true);
+            // act
+            var result =_controller.Put("placeholder", new ReportDefinitionVM()).Result as ObjectResult;
+            var resPayload = UnitTestExtensions.ExtractFromDataObject<List<string>>(result.Value);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
+            Assert.IsTrue(fakeValidationErrors.FirstOrDefault() == resPayload.FirstOrDefault());
+            Assert.IsTrue(fakeValidationErrors.Count() == resPayload.Count());
+        }
+
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Reports)]
+        public void Put_validation_fails_when_empty_query_passed()
+        {
+            // Arrange
+            _reportsServ.Setup(s => s.Exists(It.IsAny<string>()))
+                .Returns(true);
+            _controller.ModelState.AddModelError("sqlquery", "Required");
+            // act
+            var result =_controller.Put("placeholder", new ReportDefinitionVM());
+            // Assert
+            Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
+        }
+
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Reports)]
+        public void Put_Returns_OKResult_when_valid_query_passed()
+        {
+            // Arrange
+            _reportsServ.Setup(s => s.ValidateQuery(It.IsAny<string>()))
+                .Returns(new List<string>());
+            _reportsServ.Setup(s => s.Exists(It.IsAny<string>()))
+                .Returns(true);
+            _reportsServ.Setup(s => s.Save(It.IsAny<ReportDefinition>(), It.IsAny<string>()))
+                .Verifiable();
+            // act
+            var result =_controller.Put("placeholder", new ReportDefinitionVM()).Result;
+            var resultStatusCode = UnitTestExtensions.ExtractFromUntypedProp<int>(result, "StatusCode");
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(StatusCodeResult));
+            Assert.IsTrue((int)resultStatusCode == (int)HttpStatusCode.OK);
+        }
+
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Reports)]
+        public void Put_Returns_500_when_serv_throws()
+        {
+            // Arrange
+            _reportsServ.Setup(s => s.ValidateQuery(It.IsAny<string>()))
+                .Returns(new List<string>());
+            _reportsServ.Setup(s => s.Exists(It.IsAny<string>()))
+                .Returns(true);
+            _reportsServ.Setup(s => s.Save(It.IsAny<ReportDefinition>(), It.IsAny<string>()))
+                .Callback(() => throw new Exception());
+            // act
+            var result =_controller.Put("placeholder", new ReportDefinitionVM()).Result;
+            var resultStatusCode = UnitTestExtensions.ExtractFromUntypedProp<int>(result, "StatusCode");
+            var message = UnitTestExtensions.ExtractFromUntypedProp<string>(result, "Value");
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(ObjectResult));
+            Assert.IsTrue((int)resultStatusCode == (int)HttpStatusCode.InternalServerError);
+            Assert.IsTrue(message == "Exception of type 'System.Exception' was thrown.");
+        }
+
+        #endregion Put
 
     }
 }

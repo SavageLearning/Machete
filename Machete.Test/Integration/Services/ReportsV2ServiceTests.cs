@@ -215,6 +215,17 @@ namespace Machete.Test.Integration.Services
             Assert.AreEqual(1, errorList.Count);
             Assert.IsTrue(errorList[0].Equals("Cannot drop the table 'ReportDefinitions', because it does not exist or you do not have permission."));
         }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
+        public void Validate_Returns_Empty_List_of_Errors_When_Query_references_params()
+        {
+            // queries reference pre-defined params defined outside of query,
+            // Method should account for them
+            var errorList = new List<string>();
+            var query = "SELECT @beginDate, @endDate, @dwccardnum";
+            errorList = frb.ToServ<IReportsV2Service>().ValidateQuery(query);
+            Assert.AreEqual(0, errorList.Count);
+        }
     }
 
 }
