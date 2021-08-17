@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Machete.Domain;
 using Machete.Service;
 using Machete.Test.Integration.Fluent;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -225,6 +226,27 @@ namespace Machete.Test.Integration.Services
             var query = "SELECT @beginDate, @endDate, @dwccardnum";
             errorList = frb.ToServ<IReportsV2Service>().ValidateQuery(query);
             Assert.AreEqual(0, errorList.Count);
+        }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
+        public void Definition_Save_Updates_Columns()
+        {
+            // arrange
+            var timeStamp = DateTime.Now.ToShortTimeString();
+            var fakeReport = new ReportDefinition()
+            {
+                name = $"fakeReportName-{timeStamp}",
+                commonName = $"Fake Report Name {timeStamp}",
+                sqlquery = "select * from ReportDefinitions",
+                inputsJson = "{\"beginDate\":false,\"endDate\":false,\"memberNumber\":false}"
+            };
+            var originalRecord = frb.ToServ<IReportsV2Service>().Create(fakeReport, "test");
+            originalRecord.sqlquery = "SELECT name, commonName, description FROM ReportDefinitions";
+            frb.ToServ<IReportsV2Service>().Save(originalRecord, "testbot");
+            var result = frb.ToServ<IReportsV2Service>().Get($"fakeReportName-{timeStamp}");
+
+            Assert.AreEqual(fakeReport.name, result.name);
+            Assert.AreEqual(fakeReport.columnsJson, "[{\"field\":\"name\",\"header\":\"name\",\"visible\":true},{\"field\":\"commonName\",\"header\":\"commonName\",\"visible\":true},{\"field\":\"description\",\"header\":\"description\",\"visible\":true}]");
         }
     }
 

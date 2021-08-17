@@ -36,6 +36,15 @@ namespace Machete.Web.Controllers.Api
             return Ok(new {data = result});
         }
 
+        // GET api/<controller>/definition/ReportId
+        [HttpGet("definition/{id?}"), Authorize(Roles = "Administrator")]
+        public ActionResult<ReportDefinitionVM> Get([FromRoute] string id)
+        {
+            if (!serv.Exists(id)) return NotFound();
+            var result = map.Map<ReportDefinitionVM>(serv.Get(id));
+            return Ok(new {data = result});
+        }
+
         [HttpGet("{id?}"), Authorize(Roles = "Administrator")]
         public ActionResult<List<dynamic>> Get(
             [FromRoute] string id,
@@ -100,7 +109,36 @@ namespace Machete.Web.Controllers.Api
                if (validationMessages.Count == 0) {
 
                    serv.Save(map.Map<ReportDefinition>(reportDefinitionVM), HttpContext.User.ToString());
-                   return StatusCode((int)HttpStatusCode.OK);
+                //    return StatusCode((int)HttpStatusCode.OK);
+                   return Ok(new { data = map.Map<ReportDefinitionVM>(serv.Get(id))});
+               } else {
+                   // 400; we wanted validation messages, and got them.
+                   return BadRequest(new { data = validationMessages });
+               }
+           } catch (Exception ex) {
+               // SQL errors are expected but they will be returned as strings (400).
+               // in this case, something happened that we were not expecting; return 500.
+               var message = ex.Message;
+               return StatusCode((int)HttpStatusCode.InternalServerError, message);
+           }
+       }
+
+        // POST api/values
+       [Authorize(Roles = "Administrator")]
+       [HttpPost]
+       public ActionResult<ReportDefinitionVM> Post([FromBody] ReportDefinitionVM reportDefinitionVM)
+       {
+           if (!ModelState.IsValid) return BadRequest(ModelState);
+        //    if (!serv.Exists(id)) return NotFound();
+
+           string query = reportDefinitionVM.sqlquery;
+           try {
+               var validationMessages = serv.ValidateQuery(query);
+               if (validationMessages.Count == 0) {
+
+                   var createdRecord = serv.Create(map.Map<ReportDefinition>(reportDefinitionVM), HttpContext.User.ToString());
+                //    return StatusCode((int)HttpStatusCode.OK);
+                return CreatedAtAction(nameof(Get), new {createdRecord.name}, new {data = map.Map<ReportDefinitionVM>(createdRecord)});
                } else {
                    // 400; we wanted validation messages, and got them.
                    return BadRequest(new { data = validationMessages });

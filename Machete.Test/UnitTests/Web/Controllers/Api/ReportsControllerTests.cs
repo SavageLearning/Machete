@@ -27,6 +27,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
         private IMapper _mapper;
         private ReportsController _controller;
         private List<ReportDefinition> _fakeReports;
+        private ReportDefinition _fakeGetReport;
         private List<dynamic> _fakeDynamicReportResult;
         private ReportDefinition _fakeReport;
         private const string FAKETIMEZONE = "America/Los_Angeles";
@@ -44,6 +45,12 @@ namespace Machete.Test.UnitTests.Controllers.Api
                     @"fake sql query"
             };
             _fakeReports = new List<ReportDefinition>();
+            _fakeGetReport = new ReportDefinition
+            {
+                name = "fakeReportName",
+                commonName = "Fake Report Name",
+                sqlquery = "SELECT * FROM FOO"
+            };
             _fakeDynamicReportResult = new List<dynamic>();
             _fakeDynamicReportResult.Add(new {fakeData = "fake AF"});
             _fakeReports.Add(_fakeReport);
@@ -64,6 +71,8 @@ namespace Machete.Test.UnitTests.Controllers.Api
                 .Returns(new Tenant() {Timezone = FAKETIMEZONE});
             _reportsServ.Setup(s => s.GetList())
                 .Returns(_fakeReports);
+            _reportsServ.Setup(r => r.Get("fakeReportName"))
+                .Returns(new ReportDefinition());
             _reportsServ.Setup(s => s.GetQuery(It.Is<SearchOptions>(so=> so.idOrName == "fakeReportName")))
                 .Returns(_fakeDynamicReportResult);
 
@@ -210,7 +219,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             var result =_controller.Put("placeholder", new ReportDefinitionVM()).Result;
             var resultStatusCode = UnitTestExtensions.ExtractFromUntypedProp<int>(result, "StatusCode");
             // Assert
-            Assert.IsInstanceOfType(result, typeof(StatusCodeResult));
+            Assert.IsInstanceOfType(result, typeof(ObjectResult));
             Assert.IsTrue((int)resultStatusCode == (int)HttpStatusCode.OK);
         }
 
@@ -235,6 +244,38 @@ namespace Machete.Test.UnitTests.Controllers.Api
         }
 
         #endregion Put
+
+        #region GETReportDefinition
+
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Reports)]
+        public void Get_Definition_by_existing_Id_returns_OkReponse()
+        {
+            // Arrange
+            _reportsServ.Setup(r => r.Exists("fakeReportName"))
+                .Returns(true);
+            // Act
+            var result = _controller.Get("fakeReportName").Result as ObjectResult;
+            var data = UnitTestExtensions.ExtractFromDataObject<ReportDefinitionVM>(result?.Value);
+            // assert
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+            Assert.IsInstanceOfType(data, typeof(ReportDefinitionVM));
+            Assert.AreEqual(data.name, data.name);
+            Assert.IsTrue(UnitTestExtensions.HasDataProperty(result));
+        }
+
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Reports)]
+        public void Get_invalid_Definition_returns_NotFound()
+        {
+            // Arrange
+            _reportsServ.Setup(r => r.Exists("fakeReportName"))
+                .Returns(false);
+            // Act
+            var result = _controller.Get("fakeReportName").Result;
+            // assert
+            Assert.IsInstanceOfType(result, typeof(NotFoundResult));
+        }
+        
+        #endregion
 
     }
 }

@@ -207,5 +207,24 @@ SET @dwccardnum = 10000
             var result = MacheteAdoContext.ValidateQuery(fullQuery, _readonlyConnectionString).ToList();
             return result;
         }
+
+        private string GetJsonColumns(string query)
+        {
+            return MacheteAdoContext.getUIColumnsJson(query, _readonlyConnectionString);
+        }
+
+        public override void Save(ReportDefinition reportDefinition, string user)
+        {
+            var cols = GetJsonColumns(reportDefinition.sqlquery);
+            reportDefinition.columnsJson = cols;
+            base.Save(reportDefinition, user);
+        }
+
+        public override ReportDefinition Create(ReportDefinition reportDefinition, string user)
+        {
+            var cols = GetJsonColumns(reportDefinition.sqlquery);
+            reportDefinition.columnsJson = cols;
+            return base.Create(reportDefinition, user);
+        }
     }
 }
