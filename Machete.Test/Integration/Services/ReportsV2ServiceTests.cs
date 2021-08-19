@@ -229,10 +229,10 @@ namespace Machete.Test.Integration.Services
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
-        public void Definition_Save_Updates_Columns()
+        public void Definition_Save_and_create_Updates_Columns()
         {
             // arrange
-            var timeStamp = DateTime.Now.ToShortTimeString();
+            var timeStamp = DateTime.UtcNow.ToString("MM-dd-yy-HH:mm tt");
             var fakeReport = new ReportDefinition()
             {
                 name = $"fakeReportName-{timeStamp}",
@@ -240,14 +240,45 @@ namespace Machete.Test.Integration.Services
                 sqlquery = "select * from ReportDefinitions",
                 inputsJson = "{\"beginDate\":false,\"endDate\":false,\"memberNumber\":false}"
             };
-            var originalRecord = frb.ToServ<IReportsV2Service>().Create(fakeReport, "test");
-            originalRecord.sqlquery = "SELECT name, commonName, description FROM ReportDefinitions";
-            frb.ToServ<IReportsV2Service>().Save(originalRecord, "testbot");
-            var result = frb.ToServ<IReportsV2Service>().Get($"fakeReportName-{timeStamp}");
 
-            Assert.AreEqual(fakeReport.name, result.name);
-            Assert.AreEqual(fakeReport.columnsJson, "[{\"field\":\"name\",\"header\":\"name\",\"visible\":true},{\"field\":\"commonName\",\"header\":\"commonName\",\"visible\":true},{\"field\":\"description\",\"header\":\"description\",\"visible\":true}]");
+            var expectedCreatedColumns = "[{\"field\":\"ID\",\"header\":\"ID\",\"visible\":true},{\"field\":\"name\",\"header\":\"name\",\"visible\":true},{\"field\":\"commonName\",\"header\":\"commonName\",\"visible\":true},{\"field\":\"title\",\"header\":\"title\",\"visible\":true},{\"field\":\"description\",\"header\":\"description\",\"visible\":true},{\"field\":\"sqlquery\",\"header\":\"sqlquery\",\"visible\":true},{\"field\":\"category\",\"header\":\"category\",\"visible\":true},{\"field\":\"subcategory\",\"header\":\"subcategory\",\"visible\":true},{\"field\":\"inputsJson\",\"header\":\"inputsJson\",\"visible\":true},{\"field\":\"columnsJson\",\"header\":\"columnsJson\",\"visible\":true},{\"field\":\"datecreated\",\"header\":\"datecreated\",\"visible\":true},{\"field\":\"dateupdated\",\"header\":\"dateupdated\",\"visible\":true},{\"field\":\"Createdby\",\"header\":\"Createdby\",\"visible\":true},{\"field\":\"Updatedby\",\"header\":\"Updatedby\",\"visible\":true}]";
+            // act
+            var createResult = frb.ToServ<IReportsV2Service>().Create(fakeReport, "test");
+
+            // assert
+            Assert.AreEqual(createResult.columnsJson, expectedCreatedColumns);
+            createResult.sqlquery = "SELECT name, commonName, description FROM ReportDefinitions";
+            frb.ToServ<IReportsV2Service>().Save(createResult, "testbot");
+            var saveResult = frb.ToServ<IReportsV2Service>().Get($"fakeReportName-{timeStamp}");
+
+            // assert
+            Assert.AreEqual(saveResult.columnsJson, "[{\"field\":\"name\",\"header\":\"name\",\"visible\":true},{\"field\":\"commonName\",\"header\":\"commonName\",\"visible\":true},{\"field\":\"description\",\"header\":\"description\",\"visible\":true}]");
+            Assert.AreNotEqual(saveResult.columnsJson, expectedCreatedColumns);
+
+            // clean up
+            frb.ToServ<IReportsV2Service>().Delete(createResult.ID, "test bot");
         }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
+        public void Delete_Removes_Record()
+        {
+            // setup
+            var timeStamp = DateTime.UtcNow.ToString("MM-dd-yy-HH-mm-tt");
+            var fakeReport = new ReportDefinition()
+            {
+                name = $"fakeReportName-{timeStamp}",
+                commonName = $"Fake Report Name {timeStamp}",
+                sqlquery = "select * from ReportDefinitions",
+                inputsJson = "{\"beginDate\":false,\"endDate\":false,\"memberNumber\":false}"
+            };
+            var reportToDelete = frb.ToServ<IReportsV2Service>().Create(fakeReport, "test bot");
+            // act
+            frb.ToServ<IReportsV2Service>().Delete(reportToDelete.ID, "test bot");
+            var exists = frb.ToServ<IReportsV2Service>().Get(reportToDelete.ID) != null;
+            // assert
+            Assert.IsFalse(exists);
+        }
+
     }
 
 }

@@ -277,5 +277,97 @@ namespace Machete.Test.UnitTests.Controllers.Api
         
         #endregion
 
+        #region CreateDefinition
+
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Reports)]
+        public void Create_Definition_with_existing_name_returns_BadRequest()
+        {
+             // Arrange
+            _reportsServ.Setup(s => s.Exists("existing"))
+                .Returns(true);
+            // act
+            var result =_controller.Create(new ReportDefinitionVM(){name = "existing"}).Result;
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
+            Assert.IsNotInstanceOfType(result, typeof(OkResult));
+            Assert.IsNotInstanceOfType(result, typeof(NotFoundObjectResult));
+        }
+
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Reports)]
+        public void Create_validation_fails_when_empty_query_passed()
+        {
+            // Arrange
+            _reportsServ.Setup(s => s.Exists("reportWithoutQuery"))
+                .Returns(true);
+            _controller.ModelState.AddModelError("sqlquery", "Required");
+            // act
+            var result =_controller.Create(new ReportDefinitionVM(){name = "reportWithValidQuery"}).Result;
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
+            Assert.IsNotInstanceOfType(result, typeof(OkResult));
+        }
+
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Reports)]
+        public void Create_Returns_OKResult_when_valid_query_passed()
+        {
+            // Arrange
+            _reportsServ.Setup(s => s.ValidateQuery("validQuery"))
+                .Returns(new List<string>());
+            _reportsServ.Setup(s => s.Exists("reportWithValidQuery"))
+                .Returns(false);
+            _reportsServ.Setup(s => s.Create(It.IsAny<ReportDefinition>(), It.IsAny<string>()))
+                .Returns(_fakeReport);
+            // act
+            var result =_controller.Create(new ReportDefinitionVM()
+                {
+                    name = "reportWithValidQuery",
+                    sqlquery = "validQuery"
+                })
+                .Result;
+            var resultStatusCode = UnitTestExtensions.ExtractFromUntypedProp<int>(result, "StatusCode");
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(ObjectResult));
+            Assert.IsTrue((int)resultStatusCode == (int)HttpStatusCode.Created);
+        }
+
+        #endregion
+
+        #region delete
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Reports)]
+        public void Delete_invalid_id_returns_BadRequest()
+        {
+            // arrange
+            _reportsServ.Setup(s => s.Exists("nonExistant"))
+                .Returns(false);
+
+            // act
+            var result = _controller.Delete("nonExistant");
+
+            // assert
+            Assert.IsInstanceOfType(result, typeof(BadRequestResult));
+            Assert.IsNotInstanceOfType(result, typeof(OkResult));
+        }
+
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Reports)]
+        public void Delete_valid_id_returns_OkResult()
+        {
+            // arrange
+            _reportsServ.Setup(s => s.Exists("existing"))
+                .Returns(true);
+            _reportsServ.Setup(s => s.Delete(1, "test bot"))
+                .Verifiable();
+            _reportsServ.Setup(s => s.Get("existing"))
+                .Returns(new ReportDefinition());
+
+            // act
+            var result = _controller.Delete("existing");
+
+            // assert
+            Assert.IsInstanceOfType(result, typeof(OkResult));
+            Assert.IsNotInstanceOfType(result, typeof(BadRequestResult));
+        }
+
+        #endregion delete
     }
 }

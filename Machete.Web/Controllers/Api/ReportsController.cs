@@ -108,7 +108,7 @@ namespace Machete.Web.Controllers.Api
                var validationMessages = serv.ValidateQuery(query);
                if (validationMessages.Count == 0) {
 
-                   serv.Save(map.Map<ReportDefinition>(reportDefinitionVM), HttpContext.User.ToString());
+                   serv.Save(map.Map<ReportDefinition>(reportDefinitionVM), UserEmail);
                 //    return StatusCode((int)HttpStatusCode.OK);
                    return Ok(new { data = map.Map<ReportDefinitionVM>(serv.Get(id))});
                } else {
@@ -126,17 +126,20 @@ namespace Machete.Web.Controllers.Api
         // POST api/values
        [Authorize(Roles = "Administrator")]
        [HttpPost]
-       public ActionResult<ReportDefinitionVM> Post([FromBody] ReportDefinitionVM reportDefinitionVM)
+       public ActionResult<ReportDefinitionVM> Create([FromBody] ReportDefinitionVM reportDefinitionVM)
        {
            if (!ModelState.IsValid) return BadRequest(ModelState);
-        //    if (!serv.Exists(id)) return NotFound();
+
+           // if common name converted to name as ID already exists
+           if (serv.Exists(MapperHelpers.ToNameAsId(reportDefinitionVM.commonName)))
+            return BadRequest("Report with this name already exists");
 
            string query = reportDefinitionVM.sqlquery;
            try {
                var validationMessages = serv.ValidateQuery(query);
                if (validationMessages.Count == 0) {
 
-                   var createdRecord = serv.Create(map.Map<ReportDefinition>(reportDefinitionVM), HttpContext.User.ToString());
+                   var createdRecord = serv.Create(map.Map<ReportDefinition>(reportDefinitionVM), UserEmail);
                 //    return StatusCode((int)HttpStatusCode.OK);
                 return CreatedAtAction(nameof(Get), new {createdRecord.name}, new {data = map.Map<ReportDefinitionVM>(createdRecord)});
                } else {
@@ -149,6 +152,17 @@ namespace Machete.Web.Controllers.Api
                var message = ex.Message;
                return StatusCode((int)HttpStatusCode.InternalServerError, message);
            }
+       }
+
+       // DELETE
+       [Authorize(Roles = "Administrator")]
+       [HttpDelete("{id}")]
+       public ActionResult Delete([FromRoute] string id)
+       {
+           if (!serv.Exists(id)) return BadRequest();
+           var record = serv.Get(id);
+           serv.Delete(record.ID, UserEmail);
+           return Ok();
        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoMapper;
 using Machete.Domain;
+using Machete.Web.Helpers;
 using Machete.Web.ViewModel.Api;
 using Newtonsoft.Json;
 
@@ -19,6 +20,7 @@ namespace Machete.Web.Maps.Api
                 .ForMember(d => d.ID, opt => opt.MapFrom(v => v.id))
                 .ForMember(d => d.inputsJson, opt => opt.MapFrom(v => JsonConvert.SerializeObject(v.inputs)))
                 .ForMember(d => d.columnsJson, opt => opt.MapFrom(v => JsonConvert.SerializeObject(v.columns)))
+                .ForMember(d => d.name, opt => opt.MapFrom(v => MapperHelpers.ToNameAsId(v.commonName)))
                 ;
         }
     }

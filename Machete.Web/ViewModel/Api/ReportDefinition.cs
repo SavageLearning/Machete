@@ -8,9 +8,10 @@ namespace Machete.Web.ViewModel.Api
         public object columns { get; set; }
         [Required]
         public object inputs { get; set; }
-        [Required]
         public string name          { get; set; } // used in URLs, needs to be url-friendly, no spaces
         [Required]
+        [RegularExpression("^[A-Za-z ]+$", ErrorMessage = "Only alphabet characters allowed")]
+
         public string commonName    { get; set; } // used for dropdowns and titles
         [JsonIgnore] // !!todo deprecate. Not in use
         public string title         { get; set; } // if null use commonName

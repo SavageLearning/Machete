@@ -215,16 +215,19 @@ SET @dwccardnum = 10000
 
         public override void Save(ReportDefinition reportDefinition, string user)
         {
-            var cols = GetJsonColumns(reportDefinition.sqlquery);
-            reportDefinition.columnsJson = cols;
+            OnChanges(ref reportDefinition);
             base.Save(reportDefinition, user);
         }
 
         public override ReportDefinition Create(ReportDefinition reportDefinition, string user)
         {
-            var cols = GetJsonColumns(reportDefinition.sqlquery);
-            reportDefinition.columnsJson = cols;
+            OnChanges(ref reportDefinition);
             return base.Create(reportDefinition, user);
+        }
+
+        private void OnChanges(ref ReportDefinition record)
+        {
+            record.columnsJson = GetJsonColumns(record.sqlquery);
         }
     }
 }
