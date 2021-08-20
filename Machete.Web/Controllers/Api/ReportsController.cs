@@ -96,10 +96,27 @@ namespace Machete.Web.Controllers.Api
 //        }
 
         // PUT api/values
+        /// <summary>
+        /// Validates report definitions based on the View Model.
+        /// Also validates the query and returns errors
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="reportDefinitionVM"></param>
+        /// <returns></returns>
        [Authorize(Roles = "Administrator")]
        [HttpPut("{id}")]
        public ActionResult<ReportDefinitionVM> Put([FromRoute] string id, [FromBody] ReportDefinitionVM reportDefinitionVM)
        {
+           /***
+                Applies to both Put and Create
+                Return all errors in the format:
+                    new { errors = errorLabel, errorsList) }
+                where label is a string and error list is a list of strings 
+                You can use the private method ArrangeReportErrors() to simply return
+                new { errors = ArrangeReportErrors("sqlQuery", validationMessages) }
+                The frontend client expects this as it is also the format that is returned 
+                with ModelState errors.
+           ***/
            if (!ModelState.IsValid) return BadRequest(ModelState);
            if (!serv.Exists(id)) return NotFound();
 
@@ -113,21 +130,44 @@ namespace Machete.Web.Controllers.Api
                    return Ok(new { data = map.Map<ReportDefinitionVM>(serv.Get(id))});
                } else {
                    // 400; we wanted validation messages, and got them.
-                   return BadRequest(new { data = validationMessages });
+                   return BadRequest(new { errors = ArrangeReportErrors("sqlQuery", validationMessages) });
                }
            } catch (Exception ex) {
                // SQL errors are expected but they will be returned as strings (400).
                // in this case, something happened that we were not expecting; return 500.
-               var message = ex.Message;
-               return StatusCode((int)HttpStatusCode.InternalServerError, message);
+               return StatusCode((int)HttpStatusCode.InternalServerError,
+                    new { errors = ArrangeReportErrors("Server Error", new List<string>(){ex.Message}) });
            }
        }
 
+       [NonAction]
+       private Dictionary<string, List<string>> ArrangeReportErrors(string label, List<string> errors) =>
+            new Dictionary<string, List<string>>()
+            {
+                {label, errors}
+            };
+        
         // POST api/values
+        /// <summary>
+        /// Validates report definitions based on the View Model.
+        /// Also validates the query and returns errors
+        /// </summary>
+        /// <param name="reportDefinitionVM"></param>
+        /// <returns></returns>
        [Authorize(Roles = "Administrator")]
        [HttpPost]
        public ActionResult<ReportDefinitionVM> Create([FromBody] ReportDefinitionVM reportDefinitionVM)
        {
+            /***
+                Applies to both Put and Create
+                Return all errors in the format:
+                    new { errors = errorLabel, errorsList) }
+                where label is a string and error list is a list of strings 
+                You can use the private method ArrangeReportErrors() to simply return
+                new { errors = ArrangeReportErrors("sqlQuery", validationMessages) }
+                The frontend client expects this as it is also the format that is returned 
+                with ModelState errors.
+           ***/
            if (!ModelState.IsValid) return BadRequest(ModelState);
 
            // if common name converted to name as ID already exists
@@ -144,13 +184,14 @@ namespace Machete.Web.Controllers.Api
                 return CreatedAtAction(nameof(Get), new {createdRecord.name}, new {data = map.Map<ReportDefinitionVM>(createdRecord)});
                } else {
                    // 400; we wanted validation messages, and got them.
-                   return BadRequest(new { data = validationMessages });
+                   return BadRequest(new { errors = ArrangeReportErrors("sqlQuery", validationMessages) });
                }
            } catch (Exception ex) {
                // SQL errors are expected but they will be returned as strings (400).
                // in this case, something happened that we were not expecting; return 500.
                var message = ex.Message;
-               return StatusCode((int)HttpStatusCode.InternalServerError, message);
+               return StatusCode((int)HttpStatusCode.InternalServerError,
+                    new { errors = ArrangeReportErrors("Server Error", new List<string>(){ex.Message}) });
            }
        }
 

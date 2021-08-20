@@ -193,6 +193,26 @@ namespace Machete.Test.UnitTests.Controllers.Api
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Reports)]
+        public void Put_when_invalid_query_passed_returns_errors_as_expected()
+        {
+            // Arrange
+            List<string> fakeValidationErrors = new List<string>() {"blah"};
+            _reportsServ.Setup(s => s.ValidateQuery("badquery"))
+                .Returns(fakeValidationErrors);
+            _reportsServ.Setup(s => s.Exists("badDef"))
+                .Returns(true);
+            // act
+            var result =_controller.Put("badDef", new ReportDefinitionVM(){sqlquery = "badquery"}).Result as ObjectResult;
+            var typedErrors = result.Value.GetType().GetProperty("errors").GetValue(result.Value, null) as Dictionary<string,List<string>>;
+            var constorlTypedErrors = result.Value.GetType().GetProperty("errors").GetValue(result.Value, null) as string;
+            // Assert
+            Assert.IsTrue(result.Value.GetType().GetProperty("errors") != null);
+            Assert.IsFalse(result.Value.GetType().GetProperty("random") != null);
+            Assert.IsTrue(typedErrors != null);
+            Assert.IsTrue(constorlTypedErrors == null);
+        }
+
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Reports)]
         public void Put_validation_fails_when_empty_query_passed()
         {
             // Arrange
@@ -306,6 +326,30 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // Assert
             Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
             Assert.IsNotInstanceOfType(result, typeof(OkResult));
+        }
+
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Reports)]
+        public void Create_when_invalid_query_passed_returns_errors_as_expected()
+        {
+            // Arrange
+            List<string> fakeValidationErrors = new List<string>() {"blah"};
+            _reportsServ.Setup(s => s.ValidateQuery("badquery"))
+                .Returns(fakeValidationErrors);
+            _reportsServ.Setup(s => s.Exists("badDef"))
+                .Returns(true);
+            // act
+            var result =_controller.Create(new ReportDefinitionVM()
+                {
+                    sqlquery = "badquery",
+                    commonName = "Bad Def"
+                }).Result as ObjectResult;
+            var typedErrors = result.Value.GetType().GetProperty("errors").GetValue(result.Value, null) as Dictionary<string,List<string>>;
+            var constorlTypedErrors = result.Value.GetType().GetProperty("errors").GetValue(result.Value, null) as string;
+            // Assert
+            Assert.IsTrue(result.Value.GetType().GetProperty("errors") != null);
+            Assert.IsFalse(result.Value.GetType().GetProperty("random") != null);
+            Assert.IsTrue(typedErrors != null);
+            Assert.IsTrue(constorlTypedErrors == null);
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Reports)]
