@@ -68,7 +68,7 @@ namespace Machete.Web.Helpers
         //     converts into a string ID, no spaces and camelcased. Used for report name identifier
         // 
         //
-        public static string ToNameAsId(string commonName)
+        public static string NormalizeName(string commonName)
         {
             TextInfo tInfo = new CultureInfo("en-US", false).TextInfo;
             var commonNameTitleCase = tInfo.ToTitleCase(commonName);

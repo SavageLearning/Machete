@@ -27,7 +27,7 @@ namespace Machete.Service
         List<dynamic> GetDynamicQuery(int id, SearchOptions o);
         DataTable GetDataTable(string query);
         List<string> Validate(string query);
-        bool Exists(string id);
+        bool Exists(string name);
     }
 
     public class ReportsV2Service : ServiceBase2<ReportDefinition>, IReportsV2Service
@@ -76,7 +76,7 @@ namespace Machete.Service
             return result;
         }
 
-        public bool Exists(string id) => dbset.Count(r => r.name == id) >= 1;
+        public bool Exists(string name) => dbset.Count(r => r.name == name) >= 1;
 
         public List<QueryMetadata> GetColumns(string tableName)
         {
@@ -196,6 +196,8 @@ namespace Machete.Service
         public List<string> Validate(string query)
         {
 
+            // because query definition doesn't contain the parameters
+            // and the goal is only to return query errors to UI
             string vars = @"DECLARE @beginDate Date
 SET @beginDate = '2021-01-01'
 DECLARE @endDate Date

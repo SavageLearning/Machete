@@ -93,6 +93,7 @@ namespace Machete.Service
                         try {
                             if (reader[property.Name] is System.DBNull)
                             {
+                                // When nullable DB type, set returned value to empty string
                                 property.SetValue(instance, String.Empty);
                             } else {
                                 var value = reader[property.Name];

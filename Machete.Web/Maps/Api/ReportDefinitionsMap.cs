@@ -20,7 +20,7 @@ namespace Machete.Web.Maps.Api
                 .ForMember(d => d.ID, opt => opt.MapFrom(v => v.id))
                 .ForMember(d => d.inputsJson, opt => opt.MapFrom(v => JsonConvert.SerializeObject(v.inputs)))
                 .ForMember(d => d.columnsJson, opt => opt.MapFrom(v => JsonConvert.SerializeObject(v.columns)))
-                .ForMember(d => d.name, opt => opt.MapFrom(v => MapperHelpers.ToNameAsId(v.commonName)))
+                .ForMember(d => d.name, opt => opt.MapFrom(v => MapperHelpers.NormalizeName(v.commonName)))
                 ;
         }
     }

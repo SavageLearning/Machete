@@ -65,36 +65,6 @@ namespace Machete.Web.Controllers.Api
             return Ok(new { data = result });
         }
 
-        // POST api/values
-//        [Authorize(Roles = "Administrator")]
-//        [HttpPost("{data}")]
-//        public ActionResult Post(Machete.Web.ViewModel.Api.ReportQuery data)
-//        {
-//            string query = data.query;
-//            if (string.IsNullOrEmpty(query)) {
-//                if (query == string.Empty) { // query is blank
-//                    return StatusCode((int)HttpStatusCode.NoContent);
-//                } else { // query is null; query cannot be null
-//                    return StatusCode((int)HttpStatusCode.BadRequest);
-//                }
-//            }
-//            try {
-//                var validationMessages = serv.validateQuery(query);
-//                if (validationMessages.Count == 0) {
-//                    // "no modification needed"; http speak good human
-//                    return StatusCode((int)HttpStatusCode.NotModified);
-//                } else {
-//                    // 200; we wanted validation messages, and got them.
-//                    return new JsonResult(new { data = validationMessages });
-//                }
-//            } catch (Exception ex) {
-//                // SQL errors are expected but they will be returned as strings (200).
-//                // in this case, something happened that we were not expecting; return 500.
-//                var message = ex.Message;
-//                return StatusCode((int)HttpStatusCode.InternalServerError, message);
-//            }
-//        }
-
         // PUT api/values
         /// <summary>
         /// Validates report definitions based on the View Model.
@@ -127,7 +97,7 @@ namespace Machete.Web.Controllers.Api
 
                    serv.Save(map.Map<ReportDefinition>(reportDefinitionVM), UserEmail);
                 //    return StatusCode((int)HttpStatusCode.OK);
-                   return Ok(new { data = map.Map<ReportDefinitionVM>(serv.Get(id))});
+                   return Ok(new { data = map.Map<ReportDefinitionVM>(serv.Get(reportDefinitionVM.id))});
                } else {
                    // 400; we wanted validation messages, and got them.
                    return BadRequest(new { errors = ArrangeReportErrors("sqlQuery", validationMessages) });
@@ -171,7 +141,7 @@ namespace Machete.Web.Controllers.Api
            if (!ModelState.IsValid) return BadRequest(ModelState);
 
            // if common name converted to name as ID already exists
-           if (serv.Exists(MapperHelpers.ToNameAsId(reportDefinitionVM.commonName)))
+           if (serv.Exists(MapperHelpers.NormalizeName(reportDefinitionVM.commonName)))
             return BadRequest("Report with this name already exists");
 
            string query = reportDefinitionVM.sqlquery;
@@ -200,7 +170,14 @@ namespace Machete.Web.Controllers.Api
        [HttpDelete("{id}")]
        public ActionResult Delete([FromRoute] string id)
        {
-           if (!serv.Exists(id)) return BadRequest();
+           if (!serv.Exists(id))
+            return BadRequest(new 
+                {
+                    errors = ArrangeReportErrors("Server Error", new List<string>()
+                    {
+                        $"Error, delete failed: report '{id}' not found"
+                    }) 
+                });
            var record = serv.Get(id);
            serv.Delete(record.ID, UserEmail);
            return Ok();

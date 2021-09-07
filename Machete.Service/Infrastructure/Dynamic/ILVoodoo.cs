@@ -41,6 +41,8 @@ namespace Machete.Service.Dynamic {
                 case "VARB":
                 case "NULL":
                     return null; // not implementing varbinary
+                case "UNIQ":
+                    return typeof(Guid);
                 default:
                     return null;
             }
