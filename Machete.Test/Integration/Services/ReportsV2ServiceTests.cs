@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Machete.Domain;
 using Machete.Service;
 using Machete.Test.Integration.Fluent;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -215,6 +216,69 @@ namespace Machete.Test.Integration.Services
             Assert.AreEqual(1, errorList.Count);
             Assert.IsTrue(errorList[0].Equals("Cannot drop the table 'ReportDefinitions', because it does not exist or you do not have permission."));
         }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
+        public void Validate_Returns_Empty_List_of_Errors_When_Query_references_params()
+        {
+            // queries reference pre-defined params defined outside of query,
+            // Method should account for them
+            var errorList = new List<string>();
+            var query = "SELECT @beginDate, @endDate, @dwccardnum";
+            errorList = frb.ToServ<IReportsV2Service>().ValidateQuery(query);
+            Assert.AreEqual(0, errorList.Count);
+        }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
+        public void Definition_Save_and_create_Updates_Columns()
+        {
+            // arrange
+            var timeStamp = DateTime.UtcNow.ToString("MM-dd-yy-HH:mm tt");
+            var fakeReport = new ReportDefinition()
+            {
+                name = $"fakeReportName-{timeStamp}",
+                commonName = $"Fake Report Name {timeStamp}",
+                sqlquery = "select * from ReportDefinitions",
+                inputsJson = "{\"beginDate\":false,\"endDate\":false,\"memberNumber\":false}"
+            };
+
+            var expectedCreatedColumns = "[{\"field\":\"ID\",\"header\":\"ID\",\"visible\":true},{\"field\":\"name\",\"header\":\"name\",\"visible\":true},{\"field\":\"commonName\",\"header\":\"commonName\",\"visible\":true},{\"field\":\"title\",\"header\":\"title\",\"visible\":true},{\"field\":\"description\",\"header\":\"description\",\"visible\":true},{\"field\":\"sqlquery\",\"header\":\"sqlquery\",\"visible\":true},{\"field\":\"category\",\"header\":\"category\",\"visible\":true},{\"field\":\"subcategory\",\"header\":\"subcategory\",\"visible\":true},{\"field\":\"inputsJson\",\"header\":\"inputsJson\",\"visible\":true},{\"field\":\"columnsJson\",\"header\":\"columnsJson\",\"visible\":true},{\"field\":\"datecreated\",\"header\":\"datecreated\",\"visible\":true},{\"field\":\"dateupdated\",\"header\":\"dateupdated\",\"visible\":true},{\"field\":\"Createdby\",\"header\":\"Createdby\",\"visible\":true},{\"field\":\"Updatedby\",\"header\":\"Updatedby\",\"visible\":true}]";
+            // act
+            var createResult = frb.ToServ<IReportsV2Service>().Create(fakeReport, "test");
+
+            // assert
+            Assert.AreEqual(createResult.columnsJson, expectedCreatedColumns);
+            createResult.sqlquery = "SELECT name, commonName, description FROM ReportDefinitions";
+            frb.ToServ<IReportsV2Service>().Save(createResult, "testbot");
+            var saveResult = frb.ToServ<IReportsV2Service>().Get($"fakeReportName-{timeStamp}");
+
+            // assert
+            Assert.AreEqual(saveResult.columnsJson, "[{\"field\":\"name\",\"header\":\"name\",\"visible\":true},{\"field\":\"commonName\",\"header\":\"commonName\",\"visible\":true},{\"field\":\"description\",\"header\":\"description\",\"visible\":true}]");
+            Assert.AreNotEqual(saveResult.columnsJson, expectedCreatedColumns);
+
+            // clean up
+            frb.ToServ<IReportsV2Service>().Delete(createResult.ID, "test bot");
+        }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
+        public void Delete_Removes_Record()
+        {
+            // setup
+            var timeStamp = DateTime.UtcNow.ToString("MM-dd-yy-HH-mm-tt");
+            var fakeReport = new ReportDefinition()
+            {
+                name = $"fakeReportName-{timeStamp}",
+                commonName = $"Fake Report Name {timeStamp}",
+                sqlquery = "select * from ReportDefinitions",
+                inputsJson = "{\"beginDate\":false,\"endDate\":false,\"memberNumber\":false}"
+            };
+            var reportToDelete = frb.ToServ<IReportsV2Service>().Create(fakeReport, "test bot");
+            // act
+            frb.ToServ<IReportsV2Service>().Delete(reportToDelete.ID, "test bot");
+            var exists = frb.ToServ<IReportsV2Service>().Get(reportToDelete.ID) != null;
+            // assert
+            Assert.IsFalse(exists);
+        }
+
     }
 
 }

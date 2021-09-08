@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Machete.Domain;
 using Machete.Service.DTO;
 
@@ -61,5 +62,18 @@ namespace Machete.Web.Helpers
         //     }
         //     return "unknown";
         // }
+
+        //
+        // Summary:
+        //     converts into a string ID, no spaces and camelcased. Used for report name identifier
+        // 
+        //
+        public static string NormalizeName(string commonName)
+        {
+            var name = commonName ?? String.Empty;
+            TextInfo tInfo = new CultureInfo("en-US", false).TextInfo;
+            var commonNameTitleCase = tInfo.ToTitleCase(name);
+            return String.Concat(commonNameTitleCase.Where(c => !Char.IsWhiteSpace(c)));
+        }
     }
 }

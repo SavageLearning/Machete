@@ -91,8 +91,14 @@ namespace Machete.Service
                         if (property == null) continue;
                         if (!property.CanWrite) continue;
                         try {
-                            var value = reader[property.Name];
-                            property.SetValue(instance, value);
+                            if (reader[property.Name] is System.DBNull)
+                            {
+                                // When nullable DB type, set returned value to empty string
+                                property.SetValue(instance, String.Empty);
+                            } else {
+                                var value = reader[property.Name];
+                                property.SetValue(instance, value);
+                            }
                         } catch (IndexOutOfRangeException) { /* the value is out of range and therefore not set */ }
                     }
                     result.Add(instance);

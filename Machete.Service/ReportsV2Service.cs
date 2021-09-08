@@ -27,6 +27,7 @@ namespace Machete.Service
         List<dynamic> GetDynamicQuery(int id, SearchOptions o);
         DataTable GetDataTable(string query);
         List<string> Validate(string query);
+        bool Exists(string name);
     }
 
     public class ReportsV2Service : ServiceBase2<ReportDefinition>, IReportsV2Service
@@ -74,6 +75,8 @@ namespace Machete.Service
             }
             return result;
         }
+
+        public bool Exists(string name) => dbset.Count(r => r.name == name) >= 1;
 
         public List<QueryMetadata> GetColumns(string tableName)
         {
@@ -192,7 +195,41 @@ namespace Machete.Service
 
         public List<string> Validate(string query)
         {
-            return MacheteAdoContext.ValidateQuery(query, _readonlyConnectionString).ToList();
+
+            // because query definition doesn't contain the parameters
+            // and the goal is only to return query errors to UI
+            string vars = @"DECLARE @beginDate Date
+SET @beginDate = '2021-01-01'
+DECLARE @endDate Date
+SET @endDate = '2022-01-01'
+DECLARE @dwccardnum int
+SET @dwccardnum = 10000
+";
+            string fullQuery = string.Concat(vars, query);
+            var result = MacheteAdoContext.ValidateQuery(fullQuery, _readonlyConnectionString).ToList();
+            return result;
+        }
+
+        private string GetJsonColumns(string query)
+        {
+            return MacheteAdoContext.getUIColumnsJson(query, _readonlyConnectionString);
+        }
+
+        public override void Save(ReportDefinition reportDefinition, string user)
+        {
+            OnChanges(ref reportDefinition);
+            base.Save(reportDefinition, user);
+        }
+
+        public override ReportDefinition Create(ReportDefinition reportDefinition, string user)
+        {
+            OnChanges(ref reportDefinition);
+            return base.Create(reportDefinition, user);
+        }
+
+        private void OnChanges(ref ReportDefinition record)
+        {
+            record.columnsJson = GetJsonColumns(record.sqlquery);
         }
     }
 }

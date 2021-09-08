@@ -9,6 +9,7 @@ using Machete.Web.Helpers;
 using Machete.Web.ViewModel.Api;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace Machete.Web.Controllers.Api
 {
@@ -35,6 +36,15 @@ namespace Machete.Web.Controllers.Api
             return Ok(new {data = result});
         }
 
+        // GET api/<controller>/definition/ReportId
+        [HttpGet("definition/{id?}"), Authorize(Roles = "Administrator")]
+        public ActionResult<ReportDefinitionVM> Get([FromRoute] string id)
+        {
+            if (!serv.Exists(id)) return NotFound();
+            var result = map.Map<ReportDefinitionVM>(serv.Get(id));
+            return Ok(new {data = result});
+        }
+
         [HttpGet("{id?}"), Authorize(Roles = "Administrator")]
         public ActionResult<List<dynamic>> Get(
             [FromRoute] string id,
@@ -55,35 +65,122 @@ namespace Machete.Web.Controllers.Api
             return Ok(new { data = result });
         }
 
-        // POST api/values
-//        [Authorize(Roles = "Administrator")]
-//        [HttpPost("{data}")]
-//        public ActionResult Post(Machete.Web.ViewModel.Api.ReportQuery data)
-//        {
-//            string query = data.query;
-//            if (string.IsNullOrEmpty(query)) {
-//                if (query == string.Empty) { // query is blank
-//                    return StatusCode((int)HttpStatusCode.NoContent);
-//                } else { // query is null; query cannot be null
-//                    return StatusCode((int)HttpStatusCode.BadRequest);
-//                }
-//            }
-//            try {
-//                var validationMessages = serv.validateQuery(query);
-//                if (validationMessages.Count == 0) {
-//                    // "no modification needed"; http speak good human
-//                    return StatusCode((int)HttpStatusCode.NotModified);
-//                } else {
-//                    // 200; we wanted validation messages, and got them.
-//                    return new JsonResult(new { data = validationMessages });
-//                }
-//            } catch (Exception ex) {
-//                // SQL errors are expected but they will be returned as strings (200).
-//                // in this case, something happened that we were not expecting; return 500.
-//                var message = ex.Message;
-//                return StatusCode((int)HttpStatusCode.InternalServerError, message);
-//            }
-//        }
+        // PUT api/values
+        /// <summary>
+        /// Validates report definitions based on the View Model.
+        /// Also validates the query and returns errors
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="reportDefinitionVM"></param>
+        /// <returns></returns>
+       [Authorize(Roles = "Administrator")]
+       [HttpPut("{id}")]
+       public ActionResult<ReportDefinitionVM> Put([FromRoute] string id, [FromBody] ReportDefinitionVM reportDefinitionVM)
+       {
+           /***
+                Applies to both Put and Create
+                Return all errors in the format:
+                    new { errors = errorLabel, errorsList) }
+                where label is a string and error list is a list of strings 
+                You can use the private method ArrangeReportErrors() to simply return
+                new { errors = ArrangeReportErrors("sqlQuery", validationMessages) }
+                The frontend client expects this as it is also the format that is returned 
+                with ModelState errors.
+           ***/
+           if (!ModelState.IsValid) return BadRequest(ModelState);
+           if (!serv.Exists(id)) return NotFound();
 
+           string query = reportDefinitionVM.sqlquery;
+           try {
+               var validationMessages = serv.ValidateQuery(query);
+               if (validationMessages.Count == 0) {
+
+                   serv.Save(map.Map<ReportDefinition>(reportDefinitionVM), UserEmail);
+                //    return StatusCode((int)HttpStatusCode.OK);
+                   return Ok(new { data = map.Map<ReportDefinitionVM>(serv.Get(reportDefinitionVM.id))});
+               } else {
+                   // 400; we wanted validation messages, and got them.
+                   return BadRequest(new { errors = ArrangeReportErrors("sqlQuery", validationMessages) });
+               }
+           } catch (Exception ex) {
+               // SQL errors are expected but they will be returned as strings (400).
+               // in this case, something happened that we were not expecting; return 500.
+               return StatusCode((int)HttpStatusCode.InternalServerError,
+                    new { errors = ArrangeReportErrors("Server Error", new List<string>(){ex.Message}) });
+           }
+       }
+
+       [NonAction]
+       private Dictionary<string, List<string>> ArrangeReportErrors(string label, List<string> errors) =>
+            new Dictionary<string, List<string>>()
+            {
+                {label, errors}
+            };
+        
+        // POST api/values
+        /// <summary>
+        /// Validates report definitions based on the View Model.
+        /// Also validates the query and returns errors
+        /// </summary>
+        /// <param name="reportDefinitionVM"></param>
+        /// <returns></returns>
+       [Authorize(Roles = "Administrator")]
+       [HttpPost]
+       public ActionResult<ReportDefinitionVM> Create([FromBody] ReportDefinitionVM reportDefinitionVM)
+       {
+            /***
+                Applies to both Put and Create
+                Return all errors in the format:
+                    new { errors = errorLabel, errorsList) }
+                where label is a string and error list is a list of strings 
+                You can use the private method ArrangeReportErrors() to simply return
+                new { errors = ArrangeReportErrors("sqlQuery", validationMessages) }
+                The frontend client expects this as it is also the format that is returned 
+                with ModelState errors.
+           ***/
+           if (!ModelState.IsValid) return BadRequest(ModelState);
+
+           // if common name converted to name as ID already exists
+           if (serv.Exists(MapperHelpers.NormalizeName(reportDefinitionVM.commonName)))
+            return BadRequest("Report with this name already exists");
+
+           string query = reportDefinitionVM.sqlquery;
+           try {
+               var validationMessages = serv.ValidateQuery(query);
+               if (validationMessages.Count == 0) {
+
+                   var createdRecord = serv.Create(map.Map<ReportDefinition>(reportDefinitionVM), UserEmail);
+                //    return StatusCode((int)HttpStatusCode.OK);
+                return CreatedAtAction(nameof(Get), new {createdRecord.name}, new {data = map.Map<ReportDefinitionVM>(createdRecord)});
+               } else {
+                   // 400; we wanted validation messages, and got them.
+                   return BadRequest(new { errors = ArrangeReportErrors("sqlQuery", validationMessages) });
+               }
+           } catch (Exception ex) {
+               // SQL errors are expected but they will be returned as strings (400).
+               // in this case, something happened that we were not expecting; return 500.
+               var message = ex.Message;
+               return StatusCode((int)HttpStatusCode.InternalServerError,
+                    new { errors = ArrangeReportErrors("Server Error", new List<string>(){ex.Message}) });
+           }
+       }
+
+       // DELETE
+       [Authorize(Roles = "Administrator")]
+       [HttpDelete("{id}")]
+       public ActionResult Delete([FromRoute] string id)
+       {
+           if (!serv.Exists(id))
+            return BadRequest(new 
+                {
+                    errors = ArrangeReportErrors("Server Error", new List<string>()
+                    {
+                        $"Error, delete failed: report '{id}' not found"
+                    }) 
+                });
+           var record = serv.Get(id);
+           serv.Delete(record.ID, UserEmail);
+           return Ok();
+       }
     }
 }

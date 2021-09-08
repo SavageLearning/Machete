@@ -22,6 +22,24 @@ namespace Machete.Test.UnitTests.Controllers.Helpers
             return data;
         }
 
+        public static T GetPrimitiveProp<T>(object obj, string propname)
+        {
+            var data = obj
+                .GetType()
+                .GetProperty(propname)
+                .GetValue(obj, null);
+            return (T)data;
+        }  
+
+        public static T GetProp<T>(object obj, string propname) where T : class
+        {
+            var data = obj
+                .GetType()
+                .GetProperty(propname)
+                .GetValue(obj, null) as T;
+            return data;
+        } 
+
         public static bool HasDataProperty(ObjectResult result) =>
             result?.Value.GetType().GetProperty("data") != null;
         
