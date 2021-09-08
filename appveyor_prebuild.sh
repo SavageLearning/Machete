@@ -4,8 +4,8 @@ set -ex
 node --version
 dotnet --version
 pwd
-git submodule init
-git submodule update
+#git submodule init
+#git submodule update
 cd UI
 npm install
 npm run --silent build-prod
