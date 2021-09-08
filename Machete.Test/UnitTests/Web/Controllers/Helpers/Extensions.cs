@@ -22,7 +22,7 @@ namespace Machete.Test.UnitTests.Controllers.Helpers
             return data;
         }
 
-        public static T ExtractFromUntypedProp<T>(object obj, string propname)
+        public static T GetPrimitiveProp<T>(object obj, string propname)
         {
             var data = obj
                 .GetType()
@@ -30,6 +30,15 @@ namespace Machete.Test.UnitTests.Controllers.Helpers
                 .GetValue(obj, null);
             return (T)data;
         }  
+
+        public static T GetProp<T>(object obj, string propname) where T : class
+        {
+            var data = obj
+                .GetType()
+                .GetProperty(propname)
+                .GetValue(obj, null) as T;
+            return data;
+        } 
 
         public static bool HasDataProperty(ObjectResult result) =>
             result?.Value.GetType().GetProperty("data") != null;

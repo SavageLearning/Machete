@@ -16,6 +16,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using System.Globalization;
 
 namespace Machete.Test.UnitTests.Controllers.Api
 {
@@ -184,12 +185,13 @@ namespace Machete.Test.UnitTests.Controllers.Api
                 .Returns(true);
             // act
             var result =_controller.Put("placeholder", new ReportDefinitionVM()).Result as ObjectResult;
-            var resPayload = UnitTestExtensions.ExtractFromDataObject<List<string>>(result.Value);
+            var typedErrors = result.Value.GetType().GetProperty("errors").GetValue(result.Value, null) as Dictionary<string, List<string>>;
+            var err = typedErrors.First().Value as List<string>;
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
-            Assert.IsTrue(fakeValidationErrors.FirstOrDefault() == resPayload.FirstOrDefault());
-            Assert.IsTrue(fakeValidationErrors.Count() == resPayload.Count());
+            Assert.IsTrue(fakeValidationErrors.FirstOrDefault() == err.FirstOrDefault());
+            Assert.IsTrue(fakeValidationErrors.Count() == typedErrors.Count());
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Reports)]
@@ -204,12 +206,12 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // act
             var result =_controller.Put("badDef", new ReportDefinitionVM(){sqlquery = "badquery"}).Result as ObjectResult;
             var typedErrors = result.Value.GetType().GetProperty("errors").GetValue(result.Value, null) as Dictionary<string,List<string>>;
-            var constorlTypedErrors = result.Value.GetType().GetProperty("errors").GetValue(result.Value, null) as string;
+            var controlTypedErrors = result.Value.GetType().GetProperty("errors").GetValue(result.Value, null) as string;
             // Assert
             Assert.IsTrue(result.Value.GetType().GetProperty("errors") != null);
             Assert.IsFalse(result.Value.GetType().GetProperty("random") != null);
             Assert.IsTrue(typedErrors != null);
-            Assert.IsTrue(constorlTypedErrors == null);
+            Assert.IsTrue(controlTypedErrors == null);
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Reports)]
@@ -237,7 +239,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
                 .Verifiable();
             // act
             var result =_controller.Put("placeholder", new ReportDefinitionVM()).Result;
-            var resultStatusCode = UnitTestExtensions.ExtractFromUntypedProp<int>(result, "StatusCode");
+            var resultStatusCode = UnitTestExtensions.GetPrimitiveProp<int>(result, "StatusCode");
             // Assert
             Assert.IsInstanceOfType(result, typeof(ObjectResult));
             Assert.IsTrue((int)resultStatusCode == (int)HttpStatusCode.OK);
@@ -255,12 +257,13 @@ namespace Machete.Test.UnitTests.Controllers.Api
                 .Callback(() => throw new Exception());
             // act
             var result =_controller.Put("placeholder", new ReportDefinitionVM()).Result;
-            var resultStatusCode = UnitTestExtensions.ExtractFromUntypedProp<int>(result, "StatusCode");
-            var message = UnitTestExtensions.ExtractFromUntypedProp<string>(result, "Value");
+            var resultStatusCode = UnitTestExtensions.GetPrimitiveProp<int>(result, "StatusCode");
+            var value = result.GetType().GetProperty("Value").GetValue(result, null);
+            var typedErrors = UnitTestExtensions.GetProp<Dictionary<string, List<string>>>(value, "errors");
             // Assert
             Assert.IsInstanceOfType(result, typeof(ObjectResult));
             Assert.IsTrue((int)resultStatusCode == (int)HttpStatusCode.InternalServerError);
-            Assert.IsTrue(message == "Exception of type 'System.Exception' was thrown.");
+            Assert.IsTrue(typedErrors.First().Value.First() == "Exception of type 'System.Exception' was thrown.");
         }
 
         #endregion Put
@@ -303,10 +306,14 @@ namespace Machete.Test.UnitTests.Controllers.Api
         public void Create_Definition_with_existing_name_returns_BadRequest()
         {
              // Arrange
-            _reportsServ.Setup(s => s.Exists("existing"))
+            TextInfo tInfo = new CultureInfo("en-US", false).TextInfo;
+            var commonNameTitleCase = tInfo.ToTitleCase("existing");
+            _reportsServ.Setup(s => s.Exists(commonNameTitleCase))
                 .Returns(true);
+            _reportsServ.Setup(s => s.ValidateQuery("query"))
+                .Returns(new List<string>());
             // act
-            var result =_controller.Create(new ReportDefinitionVM(){name = "existing"}).Result;
+            var result =_controller.Create(new ReportDefinitionVM(){commonName = "existing", sqlquery = "query"}).Result;
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
@@ -369,7 +376,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
                     sqlquery = "validQuery"
                 })
                 .Result;
-            var resultStatusCode = UnitTestExtensions.ExtractFromUntypedProp<int>(result, "StatusCode");
+            var resultStatusCode = UnitTestExtensions.GetPrimitiveProp<int>(result, "StatusCode");
             // Assert
             Assert.IsInstanceOfType(result, typeof(ObjectResult));
             Assert.IsTrue((int)resultStatusCode == (int)HttpStatusCode.Created);
@@ -389,7 +396,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             var result = _controller.Delete("nonExistant");
 
             // assert
-            Assert.IsInstanceOfType(result, typeof(BadRequestResult));
+            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
             Assert.IsNotInstanceOfType(result, typeof(OkResult));
         }
 

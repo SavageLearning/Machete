@@ -70,8 +70,9 @@ namespace Machete.Web.Helpers
         //
         public static string NormalizeName(string commonName)
         {
+            var name = commonName ?? String.Empty;
             TextInfo tInfo = new CultureInfo("en-US", false).TextInfo;
-            var commonNameTitleCase = tInfo.ToTitleCase(commonName);
+            var commonNameTitleCase = tInfo.ToTitleCase(name);
             return String.Concat(commonNameTitleCase.Where(c => !Char.IsWhiteSpace(c)));
         }
     }
