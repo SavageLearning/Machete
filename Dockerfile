@@ -14,7 +14,7 @@ RUN apt-get update && \
     chown root:root /etc/apt/trusted.gpg.d/microsoft.asc.gpg && \
     chown root:root /etc/apt/sources.list.d/microsoft-prod.list && \
     apt-get update && \
-    apt-get install -yq aspnetcore-runtime-2.2 && \
+    apt-get install -yq aspnetcore-runtime-3.1 && \
     apt-get clean -y && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
