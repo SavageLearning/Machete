@@ -18,6 +18,7 @@ services:
     volumes:
       - .:/code
       - ./opt/logs/dotnet:/var/log
+      - ./appsettings.json:/app/api/appsettings.json
     networks:
       - machete-bridge
   sqlserver:
