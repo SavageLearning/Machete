@@ -1,5 +1,5 @@
 
-FROM ndlonmachete/nginx-base:0.1.14
+FROM nginx:1.19.10
 
 LABEL maintainer="chaimeliyah@gmail.com"
 ENV MACHETE_USE_HTTPS_SCHEME=https
@@ -20,23 +20,13 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # create and set working directory
-RUN mkdir -p /app/api/Content && \
-    mkdir /app/api/Identity && \
-    mkdir /app/api/dist && \
-    rm /etc/nginx/conf.d/default.conf
+RUN mkdir -p /app/api/Content /app/api/Identity /app/api/dist 
 
 COPY ./Machete.Web/published/ /app/api
 COPY ./Machete.Web/Content /app/api/Content
 COPY ./Machete.Web/Identity /app/api/Identity
 COPY ./UI/dist /app/api/dist
-COPY ./nginx/machete.sh /app/api
-COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
-COPY ./nginx/conf.d/ /etc/nginx/conf.d/
-
-# TODO this shouldn't be in the Dockerfile
-COPY ./UI/ssl /app/certs
+COPY ./appsettings.json /app/api
 WORKDIR /app/api
 
-# start app
-# CMD "/app/api/machete.sh"
-CMD "/bin/bash"
+ENTRYPOINT ["dotnet", "Machete.Web.dll"]
