@@ -48,20 +48,13 @@ Machete.Web/Content/css.css
 .idea/
 
 Machete\.Web/Content/reports\.min\.js
-
 Machete\.Web/Content/reports\.js
-
 Machete\.Web/Content/reportcss\.min\.css
-
 Machete\.Web/Content/reportcss\.css
-
 Machete\.Web/Content/jquery\.min\.js
-
 Machete\.Web/Content/jquery\.js
-
 Machete\.Web/Content/Machete\.css
 Machete\.Web/Content/Machete\.min\.css
-
 Machete\.Web/published
 
 machete1env.list
@@ -69,6 +62,8 @@ machete1env.list
 node_modules/
 
 Machete\.Web/appsettings\.json
+opt/
+env_variables.conf
 
 # Mono auto generated files
 mono_crash.*
