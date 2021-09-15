@@ -9,12 +9,6 @@
     ]
   },
   {
-    "outputFileName": "Content/reportcss.css",
-    "inputFiles": [
-      "Content/jquery.jqplot.css"
-    ]
-  },
-  {
     "outputFileName": "Content/jquery.js",
     "inputFiles": [
       "Scripts/jquery-1.7.1.js",

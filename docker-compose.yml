@@ -8,8 +8,7 @@ services:
       - ./nginx/conf.d/:/etc/nginx/conf.d/
       - ./opt/secrets:/app/certs
       - ./opt/logs/nginx:/app/api/logs
-    networks:
-      - machete-bridge      
+
   dotnet:
     env_file: "./env_variables.conf"
     build: .
@@ -19,8 +18,7 @@ services:
       - .:/code
       - ./opt/logs/dotnet:/var/log
       - ./appsettings.json:/app/api/appsettings.json
-    networks:
-      - machete-bridge
+
   sqlserver:
     env_file: "./env_variables.conf"
     environment:
@@ -28,9 +26,5 @@ services:
     image: mcr.microsoft.com/mssql/server
     ports:
       - 1433:1433
-    networks:
-      - machete-bridge
 
-networks:
-  machete-bridge:
-    driver: bridge
+

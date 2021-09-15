@@ -11,7 +11,6 @@ COPY ./Machete.Web/published/ /app/api
 COPY ./Machete.Web/Content /app/api/Content
 COPY ./Machete.Web/Identity /app/api/Identity
 COPY ./UI/dist /app/api/dist
-COPY ./appsettings.json /app/api
 WORKDIR /app/api
 
 ENTRYPOINT ["dotnet", "Machete.Web.dll"]
