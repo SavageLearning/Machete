@@ -22,13 +22,13 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-      - run: ./appveyor_prebuild.sh    
+      - run: ./github_install_build_UI.sh    
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.x
       - name: Restore dependencies
-        run:  ./appveyor_install.sh
+        run:  dotnet restore
       - name: Build dotnet
         run: dotnet build --no-restore
       - name: Publish dotnet to disk

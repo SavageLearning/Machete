@@ -8,6 +8,7 @@ pwd
 #git submodule update
 cd UI
 npm install
+npm install @angular/cli
 npm run --silent build-prod
 ls -l .
 ls -l ./dist/
