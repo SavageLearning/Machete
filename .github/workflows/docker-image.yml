@@ -17,12 +17,7 @@ jobs:
       - name: Check out Machete
         uses: actions/checkout@v2
       - name: Checkout submodules
-        uses: textbook/git-checkout-submodule-action@master        
-      - name: Setup Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: '12.x'
-      - run: ./github_install_build_UI.sh    
+        uses: textbook/git-checkout-submodule-action@master           
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
         with:
