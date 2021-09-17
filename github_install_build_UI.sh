@@ -1,11 +1,8 @@
 #!/bin/bash
 set -ex
-
 node --version
 dotnet --version
 pwd
-#git submodule init
-#git submodule update
 cd UI
 npm install
 npm install @angular/cli

@@ -1,11 +1,6 @@
-
-# First stage of multi-stage build
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-dotnet
 WORKDIR /admin
-# copy the contents of agent working directory on host to workdir in container
 COPY . ./
-
-# dotnet commands to build, test, and publish
 RUN dotnet build --no-incremental
 RUN dotnet publish -o output Machete.Web
 
