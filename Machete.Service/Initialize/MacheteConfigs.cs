@@ -27,41 +27,31 @@ namespace Machete.Service
             new Config { key = Cfg.WorkCenterDescription,         category = "OnlineOrders", publicConfig = true, value = 
             "<p>Casa Latina is nonprofit organization that empowers Latino immigrants through educational and economic opportunities. Our employment program connects immigrants with individuals and businesses looking for temporary labor. Our workers are skilled and dependable. From landscaping to dry walling to catering and housecleaning, if you can dream the project our workers can do it! <a href=\"http://casa-latina.org/get-involved/hire-worker \" target=\"_blank\">Learn more about Casa Latina</a>.</p>"},
             new Config { key = Cfg.DisableOnlineOrders,           category = "OnlineOrders", publicConfig = true, value = "TRUE"},
-            new Config { key = Cfg.DisableOnlineOrdersBanner,     category = "OnlineOrders", publicConfig = true, value = "Online orders are currently disabled. Please call the center."}
+            new Config { key = Cfg.DisableOnlineOrdersBanner,     category = "OnlineOrders", publicConfig = true, value = "Online orders are currently disabled. Please call the center."},
+            new Config { key = Cfg.MicrosoftTimeZoneIndex, category = "Tenants", publicConfig = true }
         };
 
-        public static void Initialize(MacheteContext context)
+        /// <summary>
+        /// Checks if a config exists, if it doesn't, it creates one
+        /// This method should always check if tenant has all configs,
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="tenantTimeZone"></param>
+        public static void Synchronize(MacheteContext context, string tenantTimeZone)
         {
             foreach (var c in list)
             {
-                c.datecreated = DateTime.Now;
-                c.dateupdated = DateTime.Now;
-                c.createdby = "Init T. Script";
-                c.updatedby = "Init T. Script";
-                context.Configs.Add((Config) c.Clone());
-                context.SaveChanges();
-            }
-        }
-
-        public static void SetWindowsTimeZones(MacheteContext context, string tenantTimeZone)
-        {
-            Func<Config, bool> configIsMicrosoftTimezone = config => config.key == Cfg.MicrosoftTimeZoneIndex;
-
-            if (!context.Configs.Any(configIsMicrosoftTimezone))
-            {
-                var configEntry = new Config()
+                if (!context.Configs.Any(config => config.key == c.key))
                 {
-                    key = Cfg.MicrosoftTimeZoneIndex,
-                    category = "Tenants",
-                    publicConfig = true,
-                    value = TZConvert.IanaToWindows(tenantTimeZone),
-                    datecreated = DateTime.Now,
-                    dateupdated = DateTime.Now,
-                    createdby = "Init T. Script",
-                    updatedby = "Init T. Script",
-                };
-                context.Configs.Add(configEntry);
-                context.SaveChanges();
+                    if (c.key == Cfg.MicrosoftTimeZoneIndex)
+                        c.value = TZConvert.IanaToWindows(tenantTimeZone); 
+                    c.datecreated = DateTime.Now;
+                    c.dateupdated = DateTime.Now;
+                    c.createdby = "Init T. Script";
+                    c.updatedby = "Init T. Script";
+                    context.Configs.Add((Config) c.Clone());
+                    context.SaveChanges();
+                }
             }
         }
     }

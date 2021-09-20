@@ -44,13 +44,10 @@ namespace Machete.Service.Initialize
                 MacheteLookups.Initialize(db);
             if (!db.TransportProviders.Any() || !db.TransportProviderAvailabilities.Any())
                 MacheteTransports.Initialize(db);
-            if (!db.Configs.Any())
-                MacheteConfigs.Initialize(db);
-            if (!db.Configs.Any(config => config.key == Cfg.MicrosoftTimeZoneIndex))
-                MacheteConfigs.SetWindowsTimeZones(db, tenantTimeZone);
+            MacheteConfigs.Synchronize(db, tenantTimeZone);
             if (!db.TransportRules.Any())
                 MacheteRules.Initialize(db);
-            if (db.ReportDefinitions.Count() != MacheteReportDefinitions._cache.Count)
+            if (db.ReportDefinitions.Count() == 0) // Reports are manged in UI now
                 MacheteReportDefinitions.Initialize(db);
         }
 
