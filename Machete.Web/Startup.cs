@@ -238,7 +238,8 @@ namespace Machete.Web
             // This refers to the policies set in the services object. An invalid name will force the default policy.
             app.UseCors(StartupConfiguration.AllowCredentials);
             app.UseCookiePolicy(new CookiePolicyOptions {
-                MinimumSameSitePolicy = env.IsDevelopment() ? SameSiteMode.Lax : SameSiteMode.None
+                // https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#samesite_attribute
+                MinimumSameSitePolicy = env.IsDevelopment() ? SameSiteMode.Lax : SameSiteMode.Strict
             });
 
             app.UseAuthentication();
