@@ -40,7 +40,7 @@ class ExternalLoginForm extends React.Component {
   buildQuery(which) {
     switch (which) {
       case 'facebook':
-        return 'https://www.facebook.com/v3.2/dialog/oauth?'
+        return 'https://www.facebook.com/v12.0/dialog/oauth?'
                 + 'client_id=' + this.state.app_id + '&'
                 + 'redirect_uri=' + this.state.redirect_uri + 'facebook&'
                 + 'state=' + this.state.oauthState + '&'
