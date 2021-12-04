@@ -24,7 +24,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
       - name: Build Docker container
-        run: docker build . -t ndlonmachete/debian:latest -t ndlonmachete/debian:1.15.${{ github.run_number }}
+        run: docker build . -t ndlonmachete/debian:latest -t ndlonmachete/debian:1.15.${{ github.run_number }} --build-arg machete_version=1.15.${{ github.run_number }}
       - name: Push versioned container
         run: docker push ndlonmachete/debian:1.15.${{ github.run_number }}
       - name: Push latest tag
