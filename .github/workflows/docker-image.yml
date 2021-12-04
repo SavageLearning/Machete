@@ -7,17 +7,17 @@ on:
     workflows: ["Build and test dotnet core"]
     branches: [ master ]
     types:
-      - completed    
+      - completed
 
 jobs:
-  build_angular:
+  build:
     name: Build for production and publish
     runs-on: ubuntu-latest
     steps:
       - name: Check out Machete
         uses: actions/checkout@v2
-      - name: Checkout submodules
-        uses: textbook/git-checkout-submodule-action@master           
+        with:
+          submodules: recursive
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
         with:
@@ -26,4 +26,4 @@ jobs:
       - name: Build Docker container
         run: docker build . -t ndlonmachete/debian:1.15.${{ github.run_number }}
       - name: Push to Docker Hub
-        run: docker push ndlonmachete/debian:1.15.${{ github.run_number }}      
+        run: docker push ndlonmachete/debian:1.15.${{ github.run_number }}
