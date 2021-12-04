@@ -24,6 +24,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
       - name: Build Docker container
-        run: docker build . -t ndlonmachete/debian:1.15.${{ github.run_number }}
+        run: docker build . -t ndlonmachete/debian:1.15.${{ github.run_number }} -t ndlonmachete/debian
       - name: Push to Docker Hub
         run: docker push ndlonmachete/debian:1.15.${{ github.run_number }}
