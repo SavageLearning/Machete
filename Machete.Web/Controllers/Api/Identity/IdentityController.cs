@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
@@ -59,7 +60,7 @@ namespace Machete.Web.Controllers.Api.Identity
         private readonly JwtIssuerOptions _jwtOptions;
         private readonly List<MacheteRole> _roles;
         private readonly IConfiguration _configuration;
-
+        private readonly ILogger<IdentityController> _logger;
         const string CookieName = ".AspNetCore.Identity.Application";
         const string CookieAuthenticationType = "Identity.Application";
 
@@ -69,7 +70,8 @@ namespace Machete.Web.Controllers.Api.Identity
             RoleManager<MacheteRole> roleManager,
             IJwtFactory jwtFactory,
             IOptions<JwtIssuerOptions> jwtOptions,
-            IConfiguration configuration
+            IConfiguration configuration,
+            ILogger<IdentityController> logger
         )
         {
             ThrowIfInvalidOptions(jwtOptions.Value);
@@ -81,7 +83,8 @@ namespace Machete.Web.Controllers.Api.Identity
             _jwtFactory = jwtFactory;
             _jwtOptions = jwtOptions.Value;
             _configuration = configuration;
-        }
+            _logger = logger;
+    }
         
         [HttpGet]
         [Route("authorize")]
@@ -142,7 +145,12 @@ namespace Machete.Web.Controllers.Api.Identity
                     $"client_secret={appSecret}&" +
                     $"code={viewModel.Code}");
 
-                await SigninByEmailAsync(tokenResponse, httpClient, "facebook", redirectUri);
+                var sucess = await SigninByEmailAsync(tokenResponse, httpClient, "facebook", redirectUri);
+                                
+                if (!sucess)
+                {                    
+                    return await Task.FromResult<IActionResult>(new RedirectResult(host.V2FailedFacebookLoginEndpoint()));
+                }
             }
             // They're either logged in now, or they aren't.
             return await Task.FromResult<IActionResult>(new RedirectResult(host.V2AuthorizationEndpoint()));
@@ -183,8 +191,9 @@ namespace Machete.Web.Controllers.Api.Identity
             return await Task.FromResult<IActionResult>(new RedirectResult(host.V2AuthorizationEndpoint()));
         }
 
-        private async Task SigninByEmailAsync(HttpResponseMessage tokenResponse, HttpClient httpClient, string provider, string redirectUri)
+        private async Task<bool> SigninByEmailAsync(HttpResponseMessage tokenResponse, HttpClient httpClient, string provider, string redirectUri)
         {
+            bool result = false;
             var tokenResponseContent = tokenResponse.Content.ReadAsStringAsync();
             if (tokenResponse.IsSuccessStatusCode)
             {
@@ -212,6 +221,16 @@ namespace Machete.Web.Controllers.Api.Identity
                 var profileResponse = await httpClient.GetAsync(profileResponseUrl);
                 var profileResponseContent = profileResponse.Content.ReadAsStringAsync();
                 var profile = JsonConvert.DeserializeObject<ExternalLoginProfile>(profileResponseContent.Result);
+
+                var validateProfile = profile.email != null;
+                _logger.LogInformation($"{provider} login profile has a valid email?: {validateProfile}");
+                if (validateProfile) 
+                {
+                    _logger.LogWarning($"{provider} login failed!: {provider} profile did not contain an email");
+                    result = false;
+                    return result;
+                }
+
                 var user = await _userManager.FindByEmailAsync(profile.email);
                 if (user == null)
                 {
@@ -234,10 +253,12 @@ namespace Machete.Web.Controllers.Api.Identity
 
                 await VerifyClaimsExistFor(user.UserName);
                 await _signinManager.SignInAsync(user, true);
+                result = true;
             }
             else throw new AuthenticationException(
               $"Results: {tokenResponseContent.Result}\nRedirectUri: {redirectUri}\nRequest Scheme: {Environment.GetEnvironmentVariable("MACHETE_USE_HTTPS_SCHEME")}"
             );
+            return result;
         }
 
         //https://www.c-sharpcorner.com/article/claim-based-and-policy-based-authorization-with-asp-net-core-2-1/
@@ -264,6 +285,8 @@ namespace Machete.Web.Controllers.Api.Identity
                 ModelState.TryAddModelError("login_failure", "Invalid username or password.");
             return ModelState.ErrorCount == 0;
         }
+
+        // private bool Validate
         
         // GET: /id/logoff
         [AllowAnonymous]

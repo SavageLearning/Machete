@@ -24,6 +24,7 @@ namespace Machete.Web.Helpers.Api
         public static string FacebookSignin(string host) =>  $"{host.IdentityRoute()}signin-facebook";
         public static string GoogleSignin(string host) =>  $"{host.IdentityRoute()}signin-google";
         public static string V2AuthorizationEndpoint(this string host) => $"{host.V2Route()}authorize";
+        public static string V2FailedFacebookLoginEndpoint(this string host) => $"{host.V2Route()}welcome/fb-fail=true";
         public static string WellKnownConfigurationEndpoint(this string host) =>
             $"{host.WellKnownRoute()}openid-configuration";
         public static string JsonWebKeySetEndpoint(this string host) => $"{host.WellKnownRoute()}jwks";
