@@ -224,7 +224,7 @@ namespace Machete.Web.Controllers.Api.Identity
 
                 var validateProfile = profile.email != null;
                 _logger.LogInformation($"{provider} login profile has a valid email?: {validateProfile}");
-                if (validateProfile) 
+                if (!validateProfile) 
                 {
                     _logger.LogWarning($"{provider} login failed!: {provider} profile did not contain an email");
                     result = false;
