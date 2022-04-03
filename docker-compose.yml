@@ -2,9 +2,9 @@ version: '2.0'
 services:
   nginx:
     image: nginx:1.21.3
-    ports: 
+    ports:
       - 443:443
-    volumes: 
+    volumes:
       - ./nginx/conf.d/:/etc/nginx/conf.d/
       - ./opt/secrets:/app/certs
       - ./opt/logs/nginx:/app/api/logs
@@ -27,4 +27,9 @@ services:
     ports:
       - 1433:1433
 
+  # keyclock:
+  #   image: quay.io/keycloak/keycloak:latest
+  #   ports:
+  #     - 8080:8080
+  #   env_file: "./env_variables.conf"
 
