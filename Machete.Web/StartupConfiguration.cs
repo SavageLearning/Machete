@@ -123,6 +123,7 @@ namespace Machete.Web
             {
                 origins.Add("http://" + tenant + ":4213");
                 origins.Add("http://" + tenant + ":4200");
+                origins.Add("http://" + tenant + ":3000");
                 origins.Add("http://" + tenant);
             }
             

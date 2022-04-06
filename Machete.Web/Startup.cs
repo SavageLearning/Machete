@@ -266,17 +266,20 @@ namespace Machete.Web
             // https://stackoverflow.com/questions/48216929/how-to-configure-asp-net-core-server-routing-for-multiple-spas-hosted-with-spase
             app.Map("/rx", rx => {
                 rx.UseSpa(rxApp => {
-                     rxApp.Options.SourcePath = "../RX";
+                     rxApp.Options.SourcePath = "../RX/build/";
+                     rxApp.Options.DefaultPageStaticFileOptions = new StaticFileOptions {
+                         FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "..", "RX", "build"))
+                     };
                     if (envIsDevelopment) rxApp.UseProxyToSpaDevelopmentServer("http://localhost:3000");
                 });
             });
             app.Map("/V2", ng => {
                 // https://docs.microsoft.com/en-us/aspnet/core/client-side/spa/angular?view=aspnetcore-2.2
-                app.UseSpa(angularApp =>
+                app.UseSpa(ngApp =>
                 {
-                    angularApp.Options.SourcePath = "../UI";
+                    ngApp.Options.SourcePath = "../UI";
 
-                    if (envIsDevelopment) angularApp.UseProxyToSpaDevelopmentServer("http://localhost:4200");
+                    if (envIsDevelopment) ngApp.UseProxyToSpaDevelopmentServer("http://localhost:4200");
                 });
             });
 
