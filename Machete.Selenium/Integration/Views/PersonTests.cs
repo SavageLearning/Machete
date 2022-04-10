@@ -12,6 +12,7 @@ using Machete.Domain;
 using Machete.Web.Maps;
 using Machete.Test.Integration.Fluent;
 using Machete.Test.Integration.HttpClientUtil;
+using Machete.Service;
 
 namespace Machete.Test.Selenium.View
 {
@@ -159,6 +160,27 @@ namespace Machete.Test.Selenium.View
             ui.activitySignIn(_act.idChild,_wkr.dwccardnum);
             //Assert
             Assert.IsTrue(ui.activitySignInIsSanctioned());
+        }
+
+        [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Persons)]
+        public void SePerson_Filter_On_Skillcodes_returns_filtered_list()
+        {
+            //Arrange
+            var _per = (Web.ViewModel.Person)ViewModelRecords.person.Clone();
+            var _wkr = (Web.ViewModel.Worker)ViewModelRecords.worker.Clone();
+            _wkr.memberexpirationdate = DateTime.Now.AddYears(1);
+            _wkr.skill1 = HttpClientUtil.GetFirstThreeSkills(true)[0].ID;
+            _wkr.skill2 = HttpClientUtil.GetFirstThreeSkills(true)[1].ID;
+            _wkr.skill3 = HttpClientUtil.GetFirstThreeSkills(true)[2].ID;
+            _wkr.dwccardnum = sharedUI.nextAvailableDwccardnum(frb.ToFactory());
+
+            //Act
+            ui.personCreate(_per);
+            _wkr.ID = _per.ID;
+            ui.workerCreate(_wkr, testimagefile);
+
+            Worker dbWorker = frb.ToServ<IWorkerService>().Get(_wkr.ID);
+            Assert.IsTrue(ui.FilterWorker(_per, dbWorker));
         }
     }
 }

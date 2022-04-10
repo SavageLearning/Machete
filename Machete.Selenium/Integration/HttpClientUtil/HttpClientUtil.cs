@@ -88,6 +88,23 @@ namespace Machete.Test.Integration.HttpClientUtil
             }
             return lu.ID;
         }
+
+        public static List<Lookup> GetFirstThreeSkills(bool speciality)
+        {
+            var lus = _tenantLookupsCache
+                .Where(lu => lu.category == "skill" && lu.speciality == speciality)
+                .Take(3)
+                .ToList();
+            return lus;
+        }
+
+        public static List<Lookup> FilterSkills(Func<Lookup, bool> predicate)
+        {
+            var lus = _tenantLookupsCache
+                .Where(predicate)
+                .ToList();
+            return lus;
+        }
         
         public static string GetFirstLookupTextEn(int id)
         {

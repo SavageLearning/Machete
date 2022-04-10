@@ -176,11 +176,49 @@ namespace Machete.Test.Selenium.View
             SelectOption(By.Id(prefix + "typeOfWorkID"), HttpClientUtil.GetFirstLookupInCategory(LCategory.worktype).TextEN());
             SelectOption(By.Id(prefix + "englishlevelID"), "1");
             SelectOption(By.Id(prefix + "incomeID"), HttpClientUtil.GetFirstLookupInCategory(LCategory.income).TextEN());
+            SelectOptionByValue(By.Id("skill1"), _wkr.skill1.ToString());
+            SelectOptionByValue(By.Id("skill2"), _wkr.skill2.ToString());
+            SelectOptionByValue(By.Id("skill3"), _wkr.skill3.ToString());
             _d.FindElement(By.Id(prefix + "imagefile")).SendKeys(imagepath);
             _d.FindElement(By.Id("createWorkerBtn")).Click();
             //
             //
             _d.FindElement(By.Id("workerCreateTab")).Click();            
+            return true;
+        }
+
+        public bool FilterWorker(Person person, Domain.Worker worker)
+        {
+            string[] skillCodes = worker.skillCodes
+                                            .Trim()
+                                            .Split(" ")
+                                            .Where(code => !code.Contains("E")) // filter out the english level
+                                            .ToArray();
+            WaitThenClickElement(By.Id("menulinkperson"));
+            WaitForElement(By.Id("personSearchBox")).SendKeys($"skill: {string.Join(", ", skillCodes)}");
+            Thread.Sleep(2000);
+
+            string tableText = WaitForElementDisplayed(By.Id("personTable")).Text;
+
+            Assert.IsTrue(tableText.Contains(person.firstname1));
+            Assert.IsTrue(tableText.Contains(person.lastname1));
+            Assert.IsTrue(tableText.Contains(worker.dwccardnum.ToString()));
+
+            Domain.Lookup skillWithout = HttpClientUtil.FilterSkills(lu =>
+                                        lu.category == "skill" &&
+                                        lu.speciality &&
+                                        !worker.skillCodes.Contains(lu.ltrCode + lu.level)
+                                    )[0];
+            // test for false positive
+            WaitForElement(By.Id("personSearchBox")).Clear();
+            WaitForElement(By.Id("personSearchBox")).SendKeys($"skill: {skillWithout.ltrCode}{skillWithout.level}");
+            Thread.Sleep(2000);
+
+            tableText = WaitForElementDisplayed(By.Id("personTable")).Text;
+
+            Assert.IsFalse(tableText.Contains(person.firstname1));
+            Assert.IsFalse(tableText.Contains(person.lastname1));
+            Assert.IsFalse(tableText.Contains(worker.dwccardnum.ToString()));
             return true;
         }
 
