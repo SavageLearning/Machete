@@ -88,5 +88,70 @@ namespace Machete.Test.Integration.Services
             Assert.IsNotNull(person.ID);
             Assert.IsTrue(reccount == 3, "Expected record count of 3, received {0}", reccount);
         }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Persons)]
+        public void GetIndexView_Filters_Workes_When_Skill_Codes_when_keyword_passed()
+        {
+            // Arrange
+            viewOptions vo = new viewOptions
+            {
+                sSearch = "skill: a, b ,c", // skill codes
+                sortColName = "text_EN",
+            };
+
+            var skill1 = frb.ToServ<ILookupService>().Create(new Lookup
+                {
+                    text_EN = "special skill 1",
+                    text_ES = "special skill 1",
+                    speciality = true,
+                    ltrCode = "a",
+                    level = 1,
+                    category = "skill",
+                    subcategory = "general",
+                    wage = 23,
+                    minHour = 3,
+                    typeOfWorkID = 20
+                }, "fake");
+            var skill2 = frb.ToServ<ILookupService>().Create(new Lookup
+                {
+                    text_EN = "special skill 2",
+                    text_ES = "special skill 2",
+                    ltrCode = "b",
+                    speciality = true,
+                    level = 1,
+                    category = "skill",
+                    subcategory = "general",
+                    wage = 23,
+                    minHour = 3,
+                    typeOfWorkID = 20
+                }, "fake");
+            var skill3 = frb.ToServ<ILookupService>().Create(new Lookup
+                {
+                    text_EN = "special skill 3",
+                    text_ES = "special skill 3",
+                    ltrCode = "c",
+                    speciality = true,
+                    level = 1,
+                    category = "skill",
+                    subcategory = "general",
+                    wage = 23,
+                    minHour = 3,
+                    typeOfWorkID = 20 
+                }, "fake");
+
+            var w = frb.AddWorker(skill1.ID, skill2.ID, skill3.ID);
+
+            // Act
+            dataTableResult<Service.DTO.PersonList> result = frb.ToServ<IPersonService>().GetIndexView(vo);
+
+            // Assert
+            Assert.IsTrue(result.filteredCount == 1);
+
+            // Clean up
+            frb.ToServ<ILookupService>().Delete(skill1.ID, "fake");
+            frb.ToServ<ILookupService>().Delete(skill2.ID, "fake");
+            frb.ToServ<ILookupService>().Delete(skill3.ID, "fake");
+            frb.ToServ<IWorkerService>().Delete(w.ID, "test");
+        }
     }
 }

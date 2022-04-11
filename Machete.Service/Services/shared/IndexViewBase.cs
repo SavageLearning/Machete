@@ -488,13 +488,18 @@ namespace Machete.Service
         #region PERSONS
         public static void search(viewOptions o, ref IQueryable<Person> q)
         {
-            q = q
-                .Where(p => p.Worker.dwccardnum.ToString().Contains(o.sSearch) ||
-                            p.firstname1.Contains(o.sSearch) ||
-                            p.firstname2.Contains(o.sSearch) ||
-                            p.lastname1.Contains(o.sSearch) ||
-                            p.lastname2.Contains(o.sSearch) ||
-                            p.phone.Contains(o.sSearch));
+            if (o.sSearch.Contains("skill:"))
+            {
+                IndexViewBase.filterBySkill(o, ref q);
+            } else {
+                q = q
+                    .Where(p => p.Worker.dwccardnum.ToString().Contains(o.sSearch) ||
+                                p.firstname1.Contains(o.sSearch) ||
+                                p.firstname2.Contains(o.sSearch) ||
+                                p.lastname1.Contains(o.sSearch) ||
+                                p.lastname2.Contains(o.sSearch) ||
+                                p.phone.Contains(o.sSearch));
+            }
         }
         public static void sortOnColName(string name, bool descending, ref IQueryable<Person> q)
         {
@@ -558,6 +563,47 @@ namespace Machete.Service
                             p.Person.lastname2.Contains(o.sSearch)
                             );
         }
+
+        public static void filterBySkill(viewOptions o, ref IQueryable<Person> q)
+        {
+            // expected skillcode: "skill: b, c, f"
+            string search = o.sSearch.Trim().Split("skill:")[1].ToLower();
+
+            if (search.Contains(","))
+            {
+                string skillCode1;
+                string skillCode2;
+                string skillCode3;
+
+                string[] skillCodes = search.Split(",");
+
+                if ( skillCodes.Length == 2)
+                {
+                    skillCode1 = skillCodes[0].Trim();
+                    skillCode2 = skillCodes[1].Trim();
+
+                    q = q.Where(p => p.Worker.skillCodes.Contains(skillCode1) &&
+                                    p.Worker.skillCodes.Contains(skillCode2));
+                }
+
+                if ( skillCodes.Length == 3)
+                {
+                    skillCode1 = skillCodes[0].Trim();
+                    skillCode2 = skillCodes[1].Trim();
+                    skillCode3 = skillCodes[2].Trim();
+
+                    q = q.Where(p => p.Worker.skillCodes.Contains(skillCode1) &&
+                                    p.Worker.skillCodes.Contains(skillCode2) &&
+                                    p.Worker.skillCodes.Contains(skillCode2));
+                }
+            
+            }
+            else
+            {
+                q = q.Where(p => p.Worker.skillCodes.Contains(search));
+            }
+        }
+
         public static void sortOnColName(string name, bool descending, ref IQueryable<Worker> q)
         {
             switch (name)
