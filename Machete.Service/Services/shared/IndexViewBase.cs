@@ -488,13 +488,18 @@ namespace Machete.Service
         #region PERSONS
         public static void search(viewOptions o, ref IQueryable<Person> q)
         {
-            q = q
-                .Where(p => p.Worker.dwccardnum.ToString().Contains(o.sSearch) ||
-                            p.firstname1.Contains(o.sSearch) ||
-                            p.firstname2.Contains(o.sSearch) ||
-                            p.lastname1.Contains(o.sSearch) ||
-                            p.lastname2.Contains(o.sSearch) ||
-                            p.phone.Contains(o.sSearch));
+            if (o.sSearch.Contains("skill:"))
+            {
+                IndexViewBase.filterBySkill(o, ref q);
+            } else {
+                q = q
+                    .Where(p => p.Worker.dwccardnum.ToString().Contains(o.sSearch) ||
+                                p.firstname1.Contains(o.sSearch) ||
+                                p.firstname2.Contains(o.sSearch) ||
+                                p.lastname1.Contains(o.sSearch) ||
+                                p.lastname2.Contains(o.sSearch) ||
+                                p.phone.Contains(o.sSearch));
+            }
         }
         public static void sortOnColName(string name, bool descending, ref IQueryable<Person> q)
         {
