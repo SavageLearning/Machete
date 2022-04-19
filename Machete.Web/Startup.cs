@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,21 +41,21 @@ namespace Machete.Web
         {
             Configuration = configuration;
             LocalEnv = env;
-            
-            // wrapping in using () {} statememt throws as it interfears with 
+
+            // wrapping in using () {} statememt throws as it interfears with
             // DI life mamangement: https://docs.microsoft.com/en-us/dotnet/core/extensions/dependency-injection#service-lifetimes
             RSA rsa = RSA.Create();
-            rsa.KeySize = 4096;                
+            rsa.KeySize = 4096;
             _signingKey = new RsaSecurityKey(rsa);
         }
 
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment LocalEnv { get; }
 
-    /// <summary>
-    /// Defines the ASP.NET Core middleware pipeline. This method gets called by the runtime.
-    /// </summary>
-    public void ConfigureServices(IServiceCollection services)
+        /// <summary>
+        /// Defines the ASP.NET Core middleware pipeline. This method gets called by the runtime.
+        /// </summary>
+        public void ConfigureServices(IServiceCollection services)
         {
             var tenants = Configuration.GetSection("Tenants").Get<TenantMapping>();
             var connString = Configuration.GetConnectionString(tenants.Tenants["default"]);
@@ -102,17 +103,17 @@ namespace Machete.Web
                 options.MaxValidationDepth = 4; // if there is a recursive error, don't go crazy
                 options.SuppressChildValidationForOneToManyRelationships();
                 // if (LocalEnv.IsDevelopment()) options.Filters.Add(new AllowAnonymousFilter());
-                // options.Filters.Add(new AuthorizeFilter()); }) // <~ for JWT auth                    
+                // options.Filters.Add(new AuthorizeFilter()); }) // <~ for JWT auth
             })
 
             .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
             .AddDataAnnotationsLocalization()
             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-                            
+
             services.AddSpaStaticFiles(angularApp =>
             {
                 angularApp.RootPath = "dist";
-            });            
+            });
 
             services.ConfigureDependencyInjection();
 
@@ -172,9 +173,9 @@ namespace Machete.Web
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/localization?view=aspnetcore-2.2 (Ibid.)
             var esCulture = CultureInfo.CreateSpecificCulture("es-US");
             var dateformat = new DateTimeFormatInfo
-            { 
-                ShortDatePattern = "MM/dd/yyyy", 
-                LongDatePattern = "MM/dd/yyyy hh:mm:ss tt" 
+            {
+                ShortDatePattern = "MM/dd/yyyy",
+                LongDatePattern = "MM/dd/yyyy hh:mm:ss tt"
             };
             esCulture.DateTimeFormat = dateformat;
             var supportedCultures = new[]
@@ -196,7 +197,7 @@ namespace Machete.Web
             });
             // the preceding will attempt to guess the user's culture. For several reasons that's not what we want.
             // Ibid. #set-the-culture-programmatically
-            
+
 
             //app.UseHttpsRedirection();
 
@@ -230,14 +231,15 @@ namespace Machete.Web
             // end React login page
 
             // https://docs.microsoft.com/en-us/aspnet/core/client-side/spa/angular?view=aspnetcore-2.2
-            app.UseSpaStaticFiles();            
+            app.UseSpaStaticFiles();
             //Add the EndpointRoutingMiddleware
             app.UseRouting();
             // Migration from 2.2 to 3.1 MS recommends this order
             // https://docs.microsoft.com/en-us/aspnet/core/migration/22-to-30?view=aspnetcore-3.1&tabs=visual-studio#routing-startup-code
             // This refers to the policies set in the services object. An invalid name will force the default policy.
             app.UseCors(StartupConfiguration.AllowCredentials);
-            app.UseCookiePolicy(new CookiePolicyOptions {
+            app.UseCookiePolicy(new CookiePolicyOptions
+            {
                 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#samesite_attribute
                 MinimumSameSitePolicy = env.IsDevelopment() ? SameSiteMode.Lax : SameSiteMode.Strict
             });
@@ -245,11 +247,12 @@ namespace Machete.Web
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseSwagger();
-            app.UseSwaggerUI(c => {
+            app.UseSwaggerUI(c =>
+            {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Machete API v1");
-                //c.RoutePrefix = string.Empty;            
+                //c.RoutePrefix = string.Empty;
             });
-            // Endpoint order based on MS recommendation 
+            // Endpoint order based on MS recommendation
             // https://docs.microsoft.com/en-us/aspnet/core/migration/22-to-30?view=aspnetcore-3.1&tabs=visual-studio#authorization
             app.UseEndpoints(endpoints =>
             {
@@ -259,21 +262,29 @@ namespace Machete.Web
             });
             // https://github.com/aspnet/Mvc/issues/4842
             // app.UseMvc(routes => {
-                // keep separate for future api-only port:
-                // routes.MapLegacyMvcRoutes();
-                // routes.MapApiRoutes();
+            // keep separate for future api-only port:
+            // routes.MapLegacyMvcRoutes();
+            // routes.MapApiRoutes();
             // });
             // https://stackoverflow.com/questions/48216929/how-to-configure-asp-net-core-server-routing-for-multiple-spas-hosted-with-spase
-            app.Map("/rx", rx => {
-                rx.UseSpa(rxApp => {
-                     rxApp.Options.SourcePath = "../RX/build/";
-                     rxApp.Options.DefaultPageStaticFileOptions = new StaticFileOptions {
-                         FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "..", "RX", "build"))
-                     };
-                    if (envIsDevelopment) rxApp.UseProxyToSpaDevelopmentServer("http://localhost:3000");
+            app.Map("/RX", rx =>
+            {
+                rx.UseSpa(rxApp =>
+                {
+                    rxApp.Options.SourcePath = "RX";
+                    // rxApp.Options.DefaultPageStaticFileOptions = new StaticFileOptions
+                    // {
+                    //     FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "..", "RX", "build"))
+                    // };
+                    if (envIsDevelopment)
+                    {
+                        rxApp.UseProxyToSpaDevelopmentServer("http://localhost:3000");
+                        //rxApp.UseReactDevelopmentServer(npmScript: "start");
+                    }
                 });
             });
-            app.Map("/V2", ng => {
+            app.Map("/V2", ng =>
+            {
                 // https://docs.microsoft.com/en-us/aspnet/core/client-side/spa/angular?view=aspnetcore-2.2
                 app.UseSpa(ngApp =>
                 {
