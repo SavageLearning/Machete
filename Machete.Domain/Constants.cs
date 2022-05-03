@@ -113,6 +113,7 @@ namespace Machete.Domain
         public const string TimeZoneDifferenceFromPacific = "TimeZoneDifferenceFromPacific";
         public const string WorkCenterDescription = "WorkCenterDescription_EN";
         public const string MicrosoftTimeZoneIndex = "MicrosoftTimeZoneIndex";
+        public const string DisableVaxxedWorkersRequirement = "DisableVaxxedWorkersRequirement";
         public const string DisableOnlineOrders = "DisableOnlineOrders";
         public const string DisableOnlineOrdersBanner = "DisableOnlineOrdersBanner";
     }
