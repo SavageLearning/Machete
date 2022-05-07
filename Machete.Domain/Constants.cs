@@ -112,8 +112,13 @@ namespace Machete.Domain
         public const string EmailEnableSimple = "true";
         public const string TimeZoneDifferenceFromPacific = "TimeZoneDifferenceFromPacific";
         public const string WorkCenterDescription = "WorkCenterDescription_EN";
+        public const string OnlineOrdersIntroMessage = "OnlineOrdersIntroMessage";
+        public const string OnlineOrdersTerms = "OnlineOrdersTerms";
+        public const string OnlineOrdersTransportDetailsLink = "OnlineOrdersTransportDetailsLink";
+        public const string OrderConfirmTransportFeesNotice = "OrderConfirmTransportFeesNotice";
         public const string MicrosoftTimeZoneIndex = "MicrosoftTimeZoneIndex";
         public const string DisableOnlineOrders = "DisableOnlineOrders";
         public const string DisableOnlineOrdersBanner = "DisableOnlineOrdersBanner";
+        public const string DisableOnlineOrdersBannerInfoUrl = "DisableOnlineOrdersBannerInfoUrl";
     }
 }
