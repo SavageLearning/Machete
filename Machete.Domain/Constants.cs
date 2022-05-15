@@ -116,6 +116,8 @@ namespace Machete.Domain
         public const string OnlineOrdersTerms = "OnlineOrdersTerms";
         public const string OnlineOrdersTransportDetailsLink = "OnlineOrdersTransportDetailsLink";
         public const string OrderConfirmTransportFeesNotice = "OrderConfirmTransportFeesNotice";
+        public const string OrderReviewWorkerCountLabel = "OrderReviewWorkerCountLabel";
+        public const string OrderReviewSkillsSummaryLabel = "OrderReviewSkillsSummaryLabel";
         public const string MicrosoftTimeZoneIndex = "MicrosoftTimeZoneIndex";
         public const string DisableOnlineOrders = "DisableOnlineOrders";
         public const string DisableOnlineOrdersBanner = "DisableOnlineOrdersBanner";
