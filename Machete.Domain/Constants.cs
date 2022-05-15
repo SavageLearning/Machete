@@ -114,10 +114,16 @@ namespace Machete.Domain
         public const string WorkCenterDescription = "WorkCenterDescription_EN";
         public const string OnlineOrdersIntroMessage = "OnlineOrdersIntroMessage";
         public const string OnlineOrdersTerms = "OnlineOrdersTerms";
+        public const string OnlineOrdersEnglishReqNote = "OnlineOrdersEnglishReqNote";
         public const string OnlineOrdersTransportDetailsLink = "OnlineOrdersTransportDetailsLink";
         public const string OrderConfirmTransportFeesNotice = "OrderConfirmTransportFeesNotice";
         public const string OrderReviewWorkerCountLabel = "OrderReviewWorkerCountLabel";
         public const string OrderReviewSkillsSummaryLabel = "OrderReviewSkillsSummaryLabel";
+        public const string OrderReviewTransportFeeMethodHelper = "OrderReviewTransportFeeMethodHelper";
+        public const string OrderReviewLaborCostMethodHelper = "OrderRevOrderReviewLaborCostMethodHelperiewLaborCostPayMethodHelper";
+        public const string OrderReviewTransportFeeAboutUrl = "OrderReviewTransportFeeEmplanationUrl";
+        public const string OrderReviewLaborCostAboutUrl = "OrderReviewLaborCostPayMethodHelper";
+        public const string OrderReviewNextStepsHelper = "OrderReviewNextStepsHelper";
         public const string MicrosoftTimeZoneIndex = "MicrosoftTimeZoneIndex";
         public const string DisableOnlineOrders = "DisableOnlineOrders";
         public const string DisableOnlineOrdersBanner = "DisableOnlineOrdersBanner";
