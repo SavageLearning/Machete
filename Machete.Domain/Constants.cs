@@ -120,7 +120,7 @@ namespace Machete.Domain
         public const string OrderReviewWorkerCountLabel = "OrderReviewWorkerCountLabel";
         public const string OrderReviewSkillsSummaryLabel = "OrderReviewSkillsSummaryLabel";
         public const string OrderReviewTransportFeeMethodHelper = "OrderReviewTransportFeeMethodHelper";
-        public const string OrderReviewLaborCostMethodHelper = "OrderRevOrderReviewLaborCostMethodHelperiewLaborCostPayMethodHelper";
+        public const string OrderReviewLaborCostMethodHelper = "OrderReviewLaborCostMethodHelper";
         public const string OrderReviewTransportFeeAboutUrl = "OrderReviewTransportFeeEmplanationUrl";
         public const string OrderReviewLaborCostAboutUrl = "OrderReviewLaborCostPayMethodHelper";
         public const string OrderReviewNextStepsHelper = "OrderReviewNextStepsHelper";
