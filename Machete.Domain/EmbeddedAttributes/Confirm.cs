@@ -12,7 +12,6 @@ namespace Machete.Domain.EmbeddedAttributes
     public class Confirm
     {
         public string name { get; set; }
-        public string description { get; set; }
-        public bool confirmed { get; set; } = false;
+        public string text { get; set; }
     }
 }
