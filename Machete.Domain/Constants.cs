@@ -124,6 +124,7 @@ namespace Machete.Domain
         public const string OrderReviewTransportFeeAboutUrl = "OrderReviewTransportFeeEmplanationUrl";
         public const string OrderReviewLaborCostAboutUrl = "OrderReviewLaborCostPayMethodHelper";
         public const string OrderReviewNextStepsHelper = "OrderReviewNextStepsHelper";
+        public const string DisableWorkersVaccineRequirement = "DisableWorkersVaccineRequirement";
         public const string MicrosoftTimeZoneIndex = "MicrosoftTimeZoneIndex";
         public const string DisableOnlineOrders = "DisableOnlineOrders";
         public const string DisableOnlineOrdersBanner = "DisableOnlineOrdersBanner";
