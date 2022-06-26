@@ -63,6 +63,8 @@ env_variables.conf
 # Mono auto generated files
 mono_crash.*
 output/
+migration-provider/
+
 
 # auto-generated
 Machete.Web/swagger/v1/swagger.json

@@ -1,4 +1,8 @@
-version: '2.0'
+version: '3'
+
+networks:
+  machete:
+    driver: bridge
 services:
   nginx:
     image: nginx:1.21.3
@@ -26,10 +30,31 @@ services:
     image: mcr.microsoft.com/mssql/server
     ports:
       - 1433:1433
+  postgres:
+    image: postgres:9.6-alpine
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      machete:
+        aliases:
+          - "postgres"
+    volumes:
+      - ./postgres_init.sql:/docker-entrypoint-initdb.d/init.sql
 
-  # keyclock:
-  #   image: quay.io/keycloak/keycloak:latest
-  #   ports:
-  #     - 8080:8080
-  #   env_file: "./env_variables.conf"
-
+  keycloak:
+    image: quay.io/keycloak/keycloak:nightly
+    ports:
+      - 0.0.0.0:8100:8100
+      - 0.0.0.0:8101:8101
+    env_file: "./env_variables.conf"
+    command: ["start-dev --auto-build --http-port=8100 --https-port=8101 --log-level=DEBUG --db=postgres --features=token-exchange --db-url=jdbc:postgresql://postgres:5432/keycloak --db-username=postgres --db-password=postgres --import-realm"]
+    volumes:
+      - './keycloak-test-realm.json:/opt/keycloak/data/import/keycloak-test-realm.json'
+    networks:
+      machete:
+        aliases:
+          - "keycloak"
+    depends_on:
+      - postgres
