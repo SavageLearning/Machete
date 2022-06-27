@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Machete.Test", "Machete.Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Machete.Selenium", "Machete.Selenium\Machete.Selenium.csproj", "{C3939DD2-C63A-4473-B163-CCEB8B463015}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Machete.Api", "Machete.Api\Machete.Api.csproj", "{F824F2B5-4FE8-4239-97B8-4909C3A99BAB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -86,5 +88,17 @@ Global
 		{C3939DD2-C63A-4473-B163-CCEB8B463015}.Release|x64.Build.0 = Release|Any CPU
 		{C3939DD2-C63A-4473-B163-CCEB8B463015}.Release|x86.ActiveCfg = Release|Any CPU
 		{C3939DD2-C63A-4473-B163-CCEB8B463015}.Release|x86.Build.0 = Release|Any CPU
+		{F824F2B5-4FE8-4239-97B8-4909C3A99BAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F824F2B5-4FE8-4239-97B8-4909C3A99BAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F824F2B5-4FE8-4239-97B8-4909C3A99BAB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F824F2B5-4FE8-4239-97B8-4909C3A99BAB}.Debug|x64.Build.0 = Debug|Any CPU
+		{F824F2B5-4FE8-4239-97B8-4909C3A99BAB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F824F2B5-4FE8-4239-97B8-4909C3A99BAB}.Debug|x86.Build.0 = Debug|Any CPU
+		{F824F2B5-4FE8-4239-97B8-4909C3A99BAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F824F2B5-4FE8-4239-97B8-4909C3A99BAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F824F2B5-4FE8-4239-97B8-4909C3A99BAB}.Release|x64.ActiveCfg = Release|Any CPU
+		{F824F2B5-4FE8-4239-97B8-4909C3A99BAB}.Release|x64.Build.0 = Release|Any CPU
+		{F824F2B5-4FE8-4239-97B8-4909C3A99BAB}.Release|x86.ActiveCfg = Release|Any CPU
+		{F824F2B5-4FE8-4239-97B8-4909C3A99BAB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
