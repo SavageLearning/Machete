@@ -7,11 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Machete.Domain;
-using Machete.Web.Maps.Api;
-using Machete.Web.ViewModel.Api;
+using Machete.Api.Maps;
+using Machete.Api.ViewModel;
 using Newtonsoft.Json;
-using LookupViewModel = Machete.Web.ViewModel.Api.LookupVM;
-using WorkAssignmentViewModel = Machete.Web.ViewModel.Api.WorkAssignmentVM;
+using LookupViewModel = Machete.Api.ViewModel.LookupVM;
+using WorkAssignmentViewModel = Machete.Api.ViewModel.WorkAssignmentVM;
 
 namespace Machete.Test.Integration.HttpClientUtil
 {
@@ -26,14 +26,14 @@ namespace Machete.Test.Integration.HttpClientUtil
 
         public static List<Lookup> TenantLookupsCache => _tenantLookupsCache;
         private static List<Lookup> _tenantLookupsCache;
-        
+
         /// <summary>
         /// Initializes httpClient instance with a cookie container
         /// Initializes automapper with the necessary profiles
         /// </summary>
         static HttpClientUtil()
         {
-            HttpClientHandler clientHandler = 
+            HttpClientHandler clientHandler =
                 new HttpClientHandler();
             clientHandler.UseCookies = true;
             clientHandler.CookieContainer = new CookieContainer();
@@ -46,9 +46,9 @@ namespace Machete.Test.Integration.HttpClientUtil
             );
             _mapper = new Mapper(configuration);
         }
-        
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="url">The base url for the Machete tenant e.g. https://tenant.example.com/</param>
         /// <returns></returns>
@@ -78,7 +78,7 @@ namespace Machete.Test.Integration.HttpClientUtil
             }
             return lu.ID;
         }
-        
+
         public static int GetFirstLookupInCategory(string category)
         {
             var lu = _tenantLookupsCache.FirstOrDefault(x => x.category == category);
@@ -105,7 +105,7 @@ namespace Machete.Test.Integration.HttpClientUtil
                 .ToList();
             return lus;
         }
-        
+
         public static string GetFirstLookupTextEn(int id)
         {
             var lu = _tenantLookupsCache.FirstOrDefault(x => x.ID == id);

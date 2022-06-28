@@ -41,13 +41,13 @@ namespace KeycloakAuth.Controllers
          * If nothing works, try to test just with [Authorize] to see that you can get a token from your keycloak
          */
 
-        [Authorize]
+        [Authorize(Policy = "admins")]
         public IActionResult AuthenticationAdmin()
         {
             return View();
         }
 
-        [Authorize]
+        [Authorize(Policy = "noaccess")]
         public IActionResult AuthenticationNoAccess()
         {
             //Test that your identity does not have this claim attaced
@@ -55,7 +55,7 @@ namespace KeycloakAuth.Controllers
         }
 
         //A policy was defined, so authorize must use a policy instead of a role.
-        [Authorize]
+        [Authorize(Policy = "users")]
         public async Task<IActionResult> AuthenticationAsync()
         {
 
@@ -73,7 +73,7 @@ namespace KeycloakAuth.Controllers
             //Get all claims for roles that you have been granted access to
             IEnumerable<Claim> roleClaims = User.FindAll(ClaimTypes.Role);
             IEnumerable<string> roles = roleClaims.Select(r => r.Value);
-            foreach(var role in roles)
+            foreach (var role in roles)
             {
                 _logger.LogError(role);
             }

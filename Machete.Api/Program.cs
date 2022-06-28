@@ -7,13 +7,15 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace KeycloakAuth
+namespace Machete.Api
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            IHost webhost = CreateHostBuilder(args).Build();
+
+            webhost.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

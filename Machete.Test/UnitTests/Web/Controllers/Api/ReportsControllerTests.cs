@@ -8,9 +8,9 @@ using Machete.Domain;
 using Machete.Service;
 using Machete.Service.DTO;
 using Machete.Test.UnitTests.Controllers.Helpers;
-using Machete.Web.Controllers.Api;
-using Machete.Web.Maps.Api;
-using Machete.Web.ViewModel.Api;
+using Machete.Api.Controllers;
+using Machete.Api.Maps;
+using Machete.Api.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -53,7 +53,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
                 sqlquery = "SELECT * FROM FOO"
             };
             _fakeDynamicReportResult = new List<dynamic>();
-            _fakeDynamicReportResult.Add(new {fakeData = "fake AF"});
+            _fakeDynamicReportResult.Add(new { fakeData = "fake AF" });
             _fakeReports.Add(_fakeReport);
             _fakeReports.Add(new ReportDefinition()
             {
@@ -64,17 +64,17 @@ namespace Machete.Test.UnitTests.Controllers.Api
                 sqlquery =
                     @"all active"
             });
-            
+
             _tenantServ = new Mock<ITenantService>();
             _reportsServ = new Mock<IReportsV2Service>();
-            
+
             _tenantServ.Setup(s => s.GetCurrentTenant())
-                .Returns(new Tenant() {Timezone = FAKETIMEZONE});
+                .Returns(new Tenant() { Timezone = FAKETIMEZONE });
             _reportsServ.Setup(s => s.GetList())
                 .Returns(_fakeReports);
             _reportsServ.Setup(r => r.Get("fakeReportName"))
                 .Returns(new ReportDefinition());
-            _reportsServ.Setup(s => s.GetQuery(It.Is<SearchOptions>(so=> so.idOrName == "fakeReportName")))
+            _reportsServ.Setup(s => s.GetQuery(It.Is<SearchOptions>(so => so.idOrName == "fakeReportName")))
                 .Returns(_fakeDynamicReportResult);
 
             var mapperConfig = new MapperConfiguration(config =>
@@ -84,11 +84,11 @@ namespace Machete.Test.UnitTests.Controllers.Api
             _mapper = mapperConfig.CreateMapper();
 
             _controller = new ReportsController(_reportsServ.Object, _tenantServ.Object, _mapper);
-             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
-            {
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+           {
                 new Claim(ClaimTypes.Email, "jciispam@gmail.com"),
                 new Claim(ClaimTypes.NameIdentifier, (new Guid("9245fe4a-d402-451c-b9ed-9c1a04247482")).ToString()),
-            }, "mock"));
+           }, "mock"));
             _controller.ControllerContext = new ControllerContext()
             {
                 HttpContext = new DefaultHttpContext() { User = user }
@@ -100,7 +100,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             var tzInfo = TimeZoneInfo.FindSystemTimeZoneById(tz);
             return TimeZoneInfo.ConvertTime(DateTime.UtcNow, tzInfo);
         }
-        
+
         #region GetMany
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Reports)]
@@ -111,7 +111,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // assert
             Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Reports)]
         public void GetMany_with_existing_returns_all_records_of_type()
         {
@@ -122,7 +122,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             Assert.IsTrue(viewModelList.Count() == _fakeReports.Count);
             Assert.IsInstanceOfType(viewModelList, typeof(IEnumerable<ReportDefinitionVM>));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Reports)]
         public void GetMany_with_existing_returns_records_in_data_prop()
         {
@@ -131,7 +131,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // Assert
             Assert.IsTrue(UnitTestExtensions.HasDataProperty(result));
         }
-        
+
         #endregion GetMany
         #region GetOne
 
@@ -143,7 +143,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // assert
             Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Reports)]
         public void Get_by_existing_Id_returns_correct_item_in_data_obj()
         {
@@ -156,7 +156,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             Assert.AreEqual(singleRecord?.GetType().GetProperty("fakeData").GetValue(singleRecord, null), "fake AF");
             Assert.IsTrue(UnitTestExtensions.HasDataProperty(result));
         }
-        
+
         #endregion GetOne
 
         #region Put
@@ -168,7 +168,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             _reportsServ.Setup(s => s.Exists(It.IsAny<string>()))
                 .Returns(false);
             // act
-            var result =_controller.Put("placeholder", new ReportDefinitionVM()).Result;
+            var result = _controller.Put("placeholder", new ReportDefinitionVM()).Result;
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(NotFoundResult));
@@ -178,13 +178,13 @@ namespace Machete.Test.UnitTests.Controllers.Api
         public void Put_Returns_BadRequest_when_invalid_query_passed()
         {
             // Arrange
-            List<string> fakeValidationErrors = new List<string>() {"blah"};
+            List<string> fakeValidationErrors = new List<string>() { "blah" };
             _reportsServ.Setup(s => s.ValidateQuery(It.IsAny<string>()))
                 .Returns(fakeValidationErrors);
             _reportsServ.Setup(s => s.Exists(It.IsAny<string>()))
                 .Returns(true);
             // act
-            var result =_controller.Put("placeholder", new ReportDefinitionVM()).Result as ObjectResult;
+            var result = _controller.Put("placeholder", new ReportDefinitionVM()).Result as ObjectResult;
             var typedErrors = result.Value.GetType().GetProperty("errors").GetValue(result.Value, null) as Dictionary<string, List<string>>;
             var err = typedErrors.First().Value as List<string>;
 
@@ -198,14 +198,14 @@ namespace Machete.Test.UnitTests.Controllers.Api
         public void Put_when_invalid_query_passed_returns_errors_as_expected()
         {
             // Arrange
-            List<string> fakeValidationErrors = new List<string>() {"blah"};
+            List<string> fakeValidationErrors = new List<string>() { "blah" };
             _reportsServ.Setup(s => s.ValidateQuery("badquery"))
                 .Returns(fakeValidationErrors);
             _reportsServ.Setup(s => s.Exists("badDef"))
                 .Returns(true);
             // act
-            var result =_controller.Put("badDef", new ReportDefinitionVM(){sqlquery = "badquery"}).Result as ObjectResult;
-            var typedErrors = result.Value.GetType().GetProperty("errors").GetValue(result.Value, null) as Dictionary<string,List<string>>;
+            var result = _controller.Put("badDef", new ReportDefinitionVM() { sqlquery = "badquery" }).Result as ObjectResult;
+            var typedErrors = result.Value.GetType().GetProperty("errors").GetValue(result.Value, null) as Dictionary<string, List<string>>;
             var controlTypedErrors = result.Value.GetType().GetProperty("errors").GetValue(result.Value, null) as string;
             // Assert
             Assert.IsTrue(result.Value.GetType().GetProperty("errors") != null);
@@ -222,7 +222,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
                 .Returns(true);
             _controller.ModelState.AddModelError("sqlquery", "Required");
             // act
-            var result =_controller.Put("placeholder", new ReportDefinitionVM());
+            var result = _controller.Put("placeholder", new ReportDefinitionVM());
             // Assert
             Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
         }
@@ -238,7 +238,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             _reportsServ.Setup(s => s.Save(It.IsAny<ReportDefinition>(), It.IsAny<string>()))
                 .Verifiable();
             // act
-            var result =_controller.Put("placeholder", new ReportDefinitionVM()).Result;
+            var result = _controller.Put("placeholder", new ReportDefinitionVM()).Result;
             var resultStatusCode = UnitTestExtensions.GetPrimitiveProp<int>(result, "StatusCode");
             // Assert
             Assert.IsInstanceOfType(result, typeof(ObjectResult));
@@ -256,7 +256,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             _reportsServ.Setup(s => s.Save(It.IsAny<ReportDefinition>(), It.IsAny<string>()))
                 .Callback(() => throw new Exception());
             // act
-            var result =_controller.Put("placeholder", new ReportDefinitionVM()).Result;
+            var result = _controller.Put("placeholder", new ReportDefinitionVM()).Result;
             var resultStatusCode = UnitTestExtensions.GetPrimitiveProp<int>(result, "StatusCode");
             var value = result.GetType().GetProperty("Value").GetValue(result, null);
             var typedErrors = UnitTestExtensions.GetProp<Dictionary<string, List<string>>>(value, "errors");
@@ -297,7 +297,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // assert
             Assert.IsInstanceOfType(result, typeof(NotFoundResult));
         }
-        
+
         #endregion
 
         #region CreateDefinition
@@ -305,7 +305,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Reports)]
         public void Create_Definition_with_existing_name_returns_BadRequest()
         {
-             // Arrange
+            // Arrange
             TextInfo tInfo = new CultureInfo("en-US", false).TextInfo;
             var commonNameTitleCase = tInfo.ToTitleCase("existing");
             _reportsServ.Setup(s => s.Exists(commonNameTitleCase))
@@ -313,7 +313,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             _reportsServ.Setup(s => s.ValidateQuery("query"))
                 .Returns(new List<string>());
             // act
-            var result =_controller.Create(new ReportDefinitionVM(){commonName = "existing", sqlquery = "query"}).Result;
+            var result = _controller.Create(new ReportDefinitionVM() { commonName = "existing", sqlquery = "query" }).Result;
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
@@ -329,7 +329,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
                 .Returns(true);
             _controller.ModelState.AddModelError("sqlquery", "Required");
             // act
-            var result =_controller.Create(new ReportDefinitionVM(){name = "reportWithValidQuery"}).Result;
+            var result = _controller.Create(new ReportDefinitionVM() { name = "reportWithValidQuery" }).Result;
             // Assert
             Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
             Assert.IsNotInstanceOfType(result, typeof(OkResult));
@@ -339,18 +339,18 @@ namespace Machete.Test.UnitTests.Controllers.Api
         public void Create_when_invalid_query_passed_returns_errors_as_expected()
         {
             // Arrange
-            List<string> fakeValidationErrors = new List<string>() {"blah"};
+            List<string> fakeValidationErrors = new List<string>() { "blah" };
             _reportsServ.Setup(s => s.ValidateQuery("badquery"))
                 .Returns(fakeValidationErrors);
             _reportsServ.Setup(s => s.Exists("badDef"))
                 .Returns(true);
             // act
-            var result =_controller.Create(new ReportDefinitionVM()
-                {
-                    sqlquery = "badquery",
-                    commonName = "Bad Def"
-                }).Result as ObjectResult;
-            var typedErrors = result.Value.GetType().GetProperty("errors").GetValue(result.Value, null) as Dictionary<string,List<string>>;
+            var result = _controller.Create(new ReportDefinitionVM()
+            {
+                sqlquery = "badquery",
+                commonName = "Bad Def"
+            }).Result as ObjectResult;
+            var typedErrors = result.Value.GetType().GetProperty("errors").GetValue(result.Value, null) as Dictionary<string, List<string>>;
             var constorlTypedErrors = result.Value.GetType().GetProperty("errors").GetValue(result.Value, null) as string;
             // Assert
             Assert.IsTrue(result.Value.GetType().GetProperty("errors") != null);
@@ -370,11 +370,11 @@ namespace Machete.Test.UnitTests.Controllers.Api
             _reportsServ.Setup(s => s.Create(It.IsAny<ReportDefinition>(), It.IsAny<string>()))
                 .Returns(_fakeReport);
             // act
-            var result =_controller.Create(new ReportDefinitionVM()
-                {
-                    name = "reportWithValidQuery",
-                    sqlquery = "validQuery"
-                })
+            var result = _controller.Create(new ReportDefinitionVM()
+            {
+                name = "reportWithValidQuery",
+                sqlquery = "validQuery"
+            })
                 .Result;
             var resultStatusCode = UnitTestExtensions.GetPrimitiveProp<int>(result, "StatusCode");
             // Assert

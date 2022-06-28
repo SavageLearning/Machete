@@ -28,6 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Machete.Service\Machete.Service.csproj" />
     <ProjectReference Include="..\Machete.Web\Machete.Web.csproj" />
+    <ProjectReference Include="..\Machete.Api\Machete.Api.csproj" />
   </ItemGroup>
 
 </Project>

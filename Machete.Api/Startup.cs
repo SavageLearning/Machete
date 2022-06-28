@@ -8,27 +8,98 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.HttpOverrides;
+using Machete.Service.Tenancy;
+using System.Security.Cryptography;
+using Machete.Service;
+using AutoMapper;
+using Machete.Api.Maps;
+using Machete.Api.Controllers;
+using Microsoft.OpenApi.Models;
+using System.Linq;
+using Machete.Api.Helpers;
+using System.IO;
+using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
+using Machete.Service.Infrastructure;
+using Microsoft.AspNetCore.Identity;
+using Machete.Service.Identity;
+using Machete.Service.BackgroundServices;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace KeycloakAuth
+namespace Machete.Api
 {
     public class Startup
     {
-
-        public Startup(IConfiguration configuration)
+        private readonly RsaSecurityKey _signingKey;
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            LocalEnv = env;
+
+            // wrapping in using () {} statememt throws as it interfears with
+            // DI life mamangement: https://docs.microsoft.com/en-us/dotnet/core/extensions/dependency-injection#service-lifetimes
+            RSA rsa = RSA.Create();
+            rsa.KeySize = 4096;
+            _signingKey = new RsaSecurityKey(rsa);
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment LocalEnv { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var tenants = Configuration.GetSection("Tenants").Get<TenantMapping>();
+            var connString = Configuration.GetConnectionString(tenants.Tenants["default"]);
             services.AddControllersWithViews();
+
+            services.AddDbContext<MacheteContext>(builder =>
+            {
+                builder.UseLazyLoadingProxies()
+                       .UseSqlServer(connString, with => with.MigrationsAssembly("Machete.Service"));
+            });
+
+            services.AddHostedService<RecurringBackgroundService>();
+            services.AddTransient<UserManager<MacheteUser>, UserManager<MacheteUser>>();
+            services.AddTransient<IPasswordHasher<MacheteUser>, PasswordHasher<MacheteUser>>();
+            services.AddTransient<ILookupNormalizer, UpperInvariantLookupNormalizer>();
+            services.AddTransient<IdentityErrorDescriber, IdentityErrorDescriber>();
+            services.AddTransient<IUserStore<MacheteUser>, MacheteUserStore>();
+            services.AddTransient<IRoleStore<MacheteRole>, MacheteRoleStore>();
+            services.AddScoped<ITenantIdentificationService, TenantIdentificationService>();
+            services.AddScoped<ITenantService, TenantService>();
+            services.AddScoped<IDatabaseFactory, DatabaseFactory>();
+            services.AddScoped<IEmailConfig, EmailConfig>();
+            services.AddScoped<IActivityService, ActivityService>();
+            services.AddScoped<IActivitySigninService, ActivitySigninService>();
+            services.AddScoped<IConfigService, ConfigService>();
+            services.AddScoped<IEmployerService, EmployerService>();
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IEventService, EventService>();
+            services.AddScoped<IImageService, ImageService>();
+            services.AddScoped<ILookupService, LookupService>();
+            services.AddScoped<IOnlineOrdersService, OnlineOrdersService>();
+            services.AddScoped<IPersonService, PersonService>();
+            services.AddScoped<IReportsV2Service, ReportsV2Service>();
+            services.AddScoped<IScheduleRuleService, ScheduleRuleService>();
+            services.AddScoped<ITransportRuleService, TransportRuleService>();
+            services.AddScoped<ITransportCostRuleService, TransportCostRuleService>();
+            services.AddScoped<ITransportProvidersService, TransportProvidersService>();
+            services.AddScoped<ITransportProvidersAvailabilityService, TransportProvidersAvailabilityService>();
+            services.AddScoped<IWorkAssignmentService, WorkAssignmentService>();
+            services.AddScoped<IWorkerRequestService, WorkerRequestService>();
+            services.AddScoped<IWorkerSigninService, WorkerSigninService>();
+            services.AddScoped<IWorkerService, WorkerService>();
+            services.AddScoped<IWorkOrderService, WorkOrderService>();
+            services.AddTransient<IWorkerActions, WorkerActions>();
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
 
             services.AddAuthentication(options =>
             {
@@ -89,23 +160,9 @@ namespace KeycloakAuth
 
 
             });
-
-            /*
-             * For roles, that are defined in the keycloak, you need to use ClaimTypes.Role
-             * You also need to configure keycloak, to set the correct name on each token.
-             * Keycloak Admin Console -> Client Scopes -> roles -> mappers -> create
-             * Name: "role client mapper" or whatever you prefer
-             * Mapper Type: "User Client Role"
-             * Multivalued: True
-             * Token Claim Name: role
-             * Add to access token: True
-             */
-
-
             /*
              * Policy based authentication
              */
-
             services.AddAuthorization(options =>
             {
                 //Create policy with more than one claim
@@ -121,13 +178,26 @@ namespace KeycloakAuth
                     policy.RequireClaim(ClaimTypes.Role, "noaccess"));
             });
 
+            var mapperConfig = new MapperConfiguration(maps =>
+            {
+                maps.AllowNullCollections = true;
+                //maps.CreateMissingTypeMaps = false;
+                maps.ConfigureApi();
+            });
+            var mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
 
-            /*
-             * Non policy based authentication
-             * Uncomment below and comment the policy section
-             */
+            services.AddSwaggerGen(c =>
+            {
+                c.SchemaFilter<PaginationMetaDataSchemaFilter>();
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Machete.Api", Version = "v1" });
+                c.ResolveConflictingActions(a => a.First()); // necessary for controller action inheritance
+            });
 
-            //services.AddAuthorization();
+            services.AddSpaStaticFiles(angularApp =>
+            {
+                angularApp.RootPath = "dist";
+            });
 
         }
 
@@ -137,6 +207,8 @@ namespace KeycloakAuth
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
+
             }
             else
             {
@@ -157,18 +229,101 @@ namespace KeycloakAuth
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            // begin React login page
+            var identityFileProvider =
+                new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Identity"));
+            var identityRequestPath = new PathString("/id/login");
+            app.UseDefaultFiles(new DefaultFilesOptions
+            {
+                FileProvider = identityFileProvider,
+                RequestPath = identityRequestPath,
+                DefaultFileNames = new[] { "index.html" }
+            });
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = identityFileProvider,
+                RequestPath = identityRequestPath
+            });
+            // end React login page
+
             app.UseRouting();
 
             //Uses the defined policies and customizations from configure services
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Machete API v1");
+                //c.RoutePrefix = string.Empty;
+            });
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                var host = string.Empty;
+                endpoints.MapControllerRoute(
+                    name: "DefaultApi",
+                    pattern: "api/{controller}/{id?}",
+                    defaults: new { controller = "Home" },
+                    constraints: new { controller = GetControllerNames() }
+                    );
+                endpoints.MapControllerRoute(
+                    name: "LoginApi",
+                    pattern: $"{host.IdentityRoute()}{{action}}",
+                    defaults: new { controller = "Identity" },
+                    constraints: new { action = "accounts|login|authorize|logoff" }
+                );
+                endpoints.MapControllerRoute(
+                    name: "WellKnownToken",
+                    pattern: $"{host.WellKnownRoute()}{{action}}",
+                    defaults: new { controller = "Identity" },
+                    constraints: new { action = "openid-configuration|jwks" }
+                );
+                endpoints.MapControllerRoute(
+                    name: "NotFound",
+                    pattern: "{*path}",
+                    defaults: new { controller = "Error", action = "NotFound" }
+                );
+            });
+            // https://stackoverflow.com/questions/48216929/how-to-configure-asp-net-core-server-routing-for-multiple-spas-hosted-with-spase
+            // app.Map("/rx", rx =>
+            // {
+            //     rx.UseSpa(rxApp =>
+            //     {
+            //         rxApp.Options.SourcePath = "../RX";
+            //         if (envIsDevelopment) rxApp.UseProxyToSpaDevelopmentServer("http://localhost:3000");
+            //     });
+            // });
+            app.Map("/V2", ng =>
+            {
+                // https://docs.microsoft.com/en-us/aspnet/core/client-side/spa/angular?view=aspnetcore-2.2
+                app.UseSpa(angularApp =>
+                {
+                    angularApp.Options.SourcePath = "../UI";
+
+                    if (env.IsDevelopment()) angularApp.UseProxyToSpaDevelopmentServer("http://localhost:4200");
+                });
             });
         }
+        /// <summary>
+        /// Return the names of the Machete API controllers within the calling assembly (e.g., Machete.Web).
+        /// </summary>
+        private static string GetControllerNames()
+        {
+            var controllerNames = Assembly.GetCallingAssembly()
+                .GetTypes()
+                .Where(x =>
+                    x.IsSubclassOf(typeof(ControllerBase)) &&
+                    x.FullName.StartsWith(MethodBase.GetCurrentMethod().DeclaringType.Namespace + ".Controllers"))
+                .ToList()
+                .Select(x => x.Name.Replace("Controller", ""));
+
+            return string.Join("|", controllerNames);
+        }
     }
+
 }

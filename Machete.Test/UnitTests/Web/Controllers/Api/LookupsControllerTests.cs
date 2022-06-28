@@ -6,9 +6,9 @@ using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Test.UnitTests.Controllers.Helpers;
-using Machete.Web.Controllers.Api;
-using Machete.Web.Maps.Api;
-using Machete.Web.ViewModel.Api;
+using Machete.Api.Controllers;
+using Machete.Api.Maps;
+using Machete.Api.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -47,7 +47,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
                 text_EN = "pendiente",
                 text_ES = "pending"
             });
-            
+
             var mapperConfig = new MapperConfiguration(config =>
             {
                 config.ConfigureApi();
@@ -60,7 +60,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             _lookupServ.Setup(s => s.Get(1))
                 .Returns(_fakeLookup);
             _lookupServ.Setup(s => s.Get(1000))
-                .Returns((Lookup) null);
+                .Returns((Lookup)null);
             _lookupServ.Setup(s => s.Create(It.IsAny<Lookup>(), It.IsAny<string>()))
                 .Returns(_fakeLookup);
             _lookupServ.Setup(s => s.Save(It.Is<Lookup>(l => l.key == "blah"), It.IsAny<string>()))
@@ -68,7 +68,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
 
             _controller = new LookupsController(_lookupServ.Object, _mapper);
         }
-        
+
         #region GetMany
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Lookups)]
@@ -79,7 +79,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // assert
             Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Lookups)]
         public void GetMany_with_existing_returns_all_records_of_type()
         {
@@ -90,7 +90,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             Assert.IsTrue(viewModelList.Count() == _fakeLookups.Count);
             Assert.IsInstanceOfType(viewModelList, typeof(IEnumerable<LookupVM>));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Lookups)]
         public void GetMany_with_existing_returns_records_in_data_prop()
         {
@@ -100,7 +100,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // Assert
             Assert.IsTrue(resultHasDataProp);
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Lookups)]
         public void GetMany_with_service_throw_returns_server_error()
         {
@@ -133,7 +133,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // assert
             Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Lookups)]
         public void Get_by_existing_Id_returns_correct_item()
         {
@@ -144,7 +144,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             Assert.IsInstanceOfType(data, typeof(LookupVM));
             Assert.AreEqual(_fakeLookup.ID, data.id);
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Lookups)]
         public void Get_by_Id_pass_existing_id_returns_record_in_data_object()
         {
@@ -180,7 +180,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             //assert
             Assert.IsInstanceOfType(result.Result, typeof(CreatedAtActionResult));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Lookups)]
         public void Post_valid_data_returns_new_record_in_data_oject()
         {
@@ -195,7 +195,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             Assert.IsTrue(resultHasDataProp);
         }
 
-        #endregion Post 
+        #endregion Post
         #region PUT
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Lookups)]
@@ -233,7 +233,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
         public void Put_invalid_id_returns_not_found()
         {
             // act
-            var result = _controller.Put(1000,  new LookupVM());
+            var result = _controller.Put(1000, new LookupVM());
             // assert
             Assert.IsInstanceOfType(result.Result, typeof(NotFoundResult));
         }
@@ -252,7 +252,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // assert
             Assert.IsInstanceOfType(deleteResult, typeof(NotFoundResult));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Lookups)]
         public void Delete_existing_record_returns_ok()
         {
@@ -260,7 +260,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // assert
             Assert.IsInstanceOfType(deleteResult, typeof(OkResult));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Lookups)]
         public void Delete_existing_item_removes_record()
         {

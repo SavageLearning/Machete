@@ -1,25 +1,25 @@
 #region COPYRIGHT
 // File:     ActivityController.cs
 // Author:   Savage Learning, LLC.
-// Created:  2012/06/17 
+// Created:  2012/06/17
 // License:  GPL v3
 // Project:  Machete.Web
 // Contact:  savagelearning
-// 
+//
 // Copyright 2011 Savage Learning, LLC., all rights reserved.
-// 
+//
 // This source file is free software, under either the GPL v3 license or a
 // BSD style license, as supplied with this software.
-// 
-// This source file is distributed in the hope that it will be useful, but 
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+//
+// This source file is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
 // or FITNESS FOR A PARTICULAR PURPOSE. See the license files for details.
-//  
-// For details please refer to: 
-// http://www.savagelearning.com/ 
+//
+// For details please refer to:
+// http://www.savagelearning.com/
 //    or
 // http://www.github.com/jcii/machete/
-// 
+//
 #endregion
 
 using System;
@@ -30,7 +30,6 @@ using System.Threading.Tasks;
 using Machete.Service;
 using Machete.Service.Identity;
 using Machete.Web.Helpers;
-using Machete.Web.Helpers.Api;
 using Machete.Web.Resources;
 using Machete.Web.ViewModel;
 using Microsoft.AspNetCore.Authorization;
@@ -43,16 +42,16 @@ using HelperUserRoles = Machete.Web.Helpers.UserRoles;
 namespace Machete.Web.Controllers
 {
     [Authorize]
-        public class AccountController : MacheteController
+    public class AccountController : MacheteController
     {
         private UserManager<MacheteUser> _userManager { get; }
         private SignInManager<MacheteUser> _signinManager { get; }
         private RoleManager<MacheteRole> _roleManager { get; }
-        
+
         private readonly Logger _logger = LogManager.GetCurrentClassLogger();
         private readonly LogEventInfo _levent = new LogEventInfo(LogLevel.Debug, "AccountController", "");
         private readonly MacheteContext _context;
-        private const int PasswordExpirationInMonths = 6; // represents number of months where users passwords expire 
+        private const int PasswordExpirationInMonths = 6; // represents number of months where users passwords expire
 
         public AccountController(
             UserManager<MacheteUser> userManager,
@@ -75,7 +74,7 @@ namespace Machete.Web.Controllers
 
             var hirers = await _userManager.GetUsersInRoleAsync(HelperUserRoles.Hirer);
             var hirerIDs = hirers.Select(hirer => hirer.Id).ToList();
-            
+
             if (User.Identity.Name == "jadmin" || User.Identity.Name.Contains("ndlon"))
             {
                 foreach (var user in _context.Users)
@@ -83,23 +82,23 @@ namespace Machete.Web.Controllers
                     var isHirer = hirerIDs.Contains(user.Id);
                     model.Add(user.ToUserSettingsViewModel(isHirer));
                 }
-                
+
                 return View(model);
             }
-            
+
 
             foreach (var user in _context.Users)
             {
                 if (user.UserName.Equals("jadmin") || user.UserName.Contains("ndlon")) continue;
-                
+
                 if (hirerIDs.Contains(user.Id)) continue;
-                   
+
                 model.Add(user.ToUserSettingsViewModel(false));
             }
 
             return View(model);
         }
-        
+
         // GET: /Account/Login
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
@@ -110,7 +109,8 @@ namespace Machete.Web.Controllers
                 return View(new LoginViewModel { Action = "ExternalLogin", ReturnUrl = returnUrl });
 
             // Employers could still have a link to the old page, so redirect them
-            if (User.IsInRole("Hirer")) {
+            if (User.IsInRole("Hirer"))
+            {
                 if (Url.IsLocalUrl("/V2/Onlineorders")) return Redirect("/V2/Onlineorders");
                 return RedirectToAction("Index", "Home");
             }
@@ -126,16 +126,16 @@ namespace Machete.Web.Controllers
         {
             _levent.Level = LogLevel.Info;
             _levent.Message = "Logon failed for " + model.UserName;
-            _logger.Log(_levent);            
+            _logger.Log(_levent);
 
             if (ModelState.IsValid)
             {
-                var user = await VerifyClaimsExistFor(model.UserName);
-                
-                if (user == null) return View(model);
+                // var user = await VerifyClaimsExistFor(model.UserName);
+
+                // if (user == null) return View(model);
 
                 var result = await _signinManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
-                
+
                 if (result?.Succeeded == true)
                 {
                     _levent.Level = LogLevel.Info;
@@ -262,7 +262,8 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, Teacher")]
         public async Task<ActionResult> Manage(ManageMessageId? message)
         {
-            switch (message) {
+            switch (message)
+            {
                 case ManageMessageId.ChangePasswordSuccess:
                     ViewBag.StatusMessage = "Your password has been changed.";
                     break;
@@ -286,10 +287,10 @@ namespace Machete.Web.Controllers
             ViewBag.ReturnUrl = Url.Action("Manage");
 
             var model = new ManageUserViewModel { Action = "LinkLogin", ReturnUrl = "Manage" };
-            
+
             ModelState["OldPassword"]?.Errors.Clear();
             ModelState["NewPassword"]?.Errors.Clear();
-            
+
             return View(model);
         }
 
@@ -300,14 +301,14 @@ namespace Machete.Web.Controllers
         public async Task<ActionResult> Manage(ManageUserViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
-            
+
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var hasPassword = user.PasswordHash != null;
             ViewBag.HasLocalPassword = hasPassword;
             ViewBag.ReturnUrl = Url.Action("Manage");
             IdentityResult result;
             ManageMessageId success;
-            
+
             if (hasPassword)
             {
                 result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
@@ -315,7 +316,9 @@ namespace Machete.Web.Controllers
                 _context.Entry(user).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 success = ManageMessageId.ChangePasswordSuccess;
-            } else {
+            }
+            else
+            {
                 // User does not have a password so remove any validation errors caused by a missing OldPassword field
                 var state = ModelState["OldPassword"];
                 state?.Errors.Clear();
@@ -323,7 +326,8 @@ namespace Machete.Web.Controllers
                 success = ManageMessageId.SetPasswordSuccess;
             }
 
-            if (result.Succeeded) {
+            if (result.Succeeded)
+            {
                 return RedirectToAction("Manage", new { Message = success });
             }
 
@@ -341,16 +345,16 @@ namespace Machete.Web.Controllers
             var user = _context.Users.First(u => u.Id == id);
             if (user == null) return StatusCode(404);
             var editUserViewModel = new EditUserViewModel(user);
-            
+
             editUserViewModel.Id = id;
-            
+
             return View(editUserViewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Manager")]
-        public async Task<ActionResult> Edit([Bind]EditUserViewModel model)
+        public async Task<ActionResult> Edit([Bind] EditUserViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -360,13 +364,13 @@ namespace Machete.Web.Controllers
                 user.LoweredUserName = macheteUserName.ToLower();
                 user.Email = model.Email.Trim();
                 //Check for duplicate emails, if any, show error message
-                var users = _context.Users.Select(u => new {u.Id, u.Email}).ToList();
+                var users = _context.Users.Select(u => new { u.Id, u.Email }).ToList();
                 var dupeUsers = users.Where(u => u.Email == user.Email);
                 if (dupeUsers.Any(u => u.Id != model.Id))
                 {
                     ModelState.AddModelError("", ValidationStrings.dupeEmail);
                     return View(model);
-                }   
+                }
                 user.LoweredEmail = model.Email.Trim().ToLower();
                 user.IsApproved = model.IsApproved;
                 user.IsLockedOut = model.IsLockedOut;
@@ -394,7 +398,7 @@ namespace Machete.Web.Controllers
         private async Task<List<string>> TryChangePassword(MacheteUser user, string attemptedValue)
         {
             var errors = new List<string>();
-            
+
             if (string.IsNullOrEmpty(attemptedValue)) return new List<string>();
 
             if (string.IsNullOrEmpty(user.PasswordHash))
@@ -416,7 +420,7 @@ namespace Machete.Web.Controllers
             }
 
             if (errors.Any()) return errors;
-            
+
             user.LastPasswordChangedDate = DateTime.Today.AddMonths(-PasswordExpirationInMonths);
             ViewBag.Message = "Password successfully updated.";
 
@@ -459,7 +463,7 @@ namespace Machete.Web.Controllers
             if (!ModelState.IsValid) return View();
 
             var userBeingModified = await _userManager.FindByNameAsync(model.UserName);
-            
+
             foreach (var role in model.Roles)
             {
                 // Only administrators can provide administrator access
@@ -467,18 +471,18 @@ namespace Machete.Web.Controllers
                     continue;
 
                 bool userIsInRole = await _userManager.IsInRoleAsync(userBeingModified, role.RoleName);
-                
+
                 if ((role.Selected && userIsInRole) || (!role.Selected && !userIsInRole)) // then we don't care
                     continue;
 
                 var result = new IdentityResult();
-                
+
                 if (role.Selected && !userIsInRole)
                     result = await _userManager.AddToRoleAsync(userBeingModified, role.RoleName);
-                
+
                 if (!role.Selected && userIsInRole)
                     result = await _userManager.RemoveFromRoleAsync(userBeingModified, role.RoleName);
-                
+
                 if (!result.Succeeded)
                 {
                     throw new Exception("AccountController, UserRoles method, `result` failed: " + result.Errors);
@@ -495,26 +499,26 @@ namespace Machete.Web.Controllers
             await _signinManager.SignOutAsync();
             return RedirectToAction("Login", "Account");
         }
-        
+
         //https://www.c-sharpcorner.com/article/claim-based-and-policy-based-authorization-with-asp-net-core-2-1/
-        private async Task<MacheteUser> VerifyClaimsExistFor(string username)
-        {
-            // They are probably using an email, but not necessarily. Either way, it should be "username" in the db.
-            var user = await _userManager.FindByNameAsync(username);
-            
-            if (user == null) return user;
-            
-            var claims = await _userManager.GetClaimsAsync(user);
-            var claimsList = claims.Select(claim => claim.Type).ToList();
-            
-            if (!claimsList.Contains(CAType.nameidentifier))
-                await _userManager.AddClaimAsync(user, new Claim(CAType.nameidentifier, user.Id));           
-            if (!claimsList.Contains(CAType.email))
-                await _userManager.AddClaimAsync(user, new Claim(CAType.email, user.Email));
-            // In the above we use the user.Email regardless of UserName. TODO inform them if a discrepancy exists.
-            
-            return user;
-        }
+        // private async Task<MacheteUser> VerifyClaimsExistFor(string username)
+        // {
+        //     // They are probably using an email, but not necessarily. Either way, it should be "username" in the db.
+        //     var user = await _userManager.FindByNameAsync(username);
+
+        //     if (user == null) return user;
+
+        //     var claims = await _userManager.GetClaimsAsync(user);
+        //     var claimsList = claims.Select(claim => claim.Type).ToList();
+
+        //     if (!claimsList.Contains(CAType.nameidentifier))
+        //         await _userManager.AddClaimAsync(user, new Claim(CAType.nameidentifier, user.Id));
+        //     if (!claimsList.Contains(CAType.email))
+        //         await _userManager.AddClaimAsync(user, new Claim(CAType.email, user.Email));
+        //     // In the above we use the user.Email regardless of UserName. TODO inform them if a discrepancy exists.
+
+        //     return user;
+        // }
 
         public enum ManageMessageId
         {

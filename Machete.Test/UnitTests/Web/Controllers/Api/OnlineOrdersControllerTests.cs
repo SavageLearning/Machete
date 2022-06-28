@@ -8,9 +8,9 @@ using Machete.Domain;
 using Machete.Service;
 using Machete.Service.DTO;
 using Machete.Test.UnitTests.Controllers.Helpers;
-using Machete.Web.Controllers.Api;
-using Machete.Web.Maps.Api;
-using Machete.Web.ViewModel.Api;
+using Machete.Api.Controllers;
+using Machete.Api.Maps;
+using Machete.Api.ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -47,7 +47,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
                 state = "wa",
                 email = "jciispam@gmail.com"
             };
-            
+
             // Only used in get many
             _fakeWorkOrderDTO = new Service.DTO.WorkOrdersList()
             {
@@ -56,18 +56,18 @@ namespace Machete.Test.UnitTests.Controllers.Api
             };
             _fakeWorOrderDTOList = new List<Service.DTO.WorkOrdersList>();
             _fakeWorOrderDTOList.Add(_fakeWorkOrderDTO);
-            _fakeWorOrderDTOList.Add( new Service.DTO.WorkOrdersList
+            _fakeWorOrderDTOList.Add(new Service.DTO.WorkOrdersList
             {
                 ID = 2,
-                dateTimeofWork =  DateTime.Now.Add(TimeSpan.FromDays(2))
+                dateTimeofWork = DateTime.Now.Add(TimeSpan.FromDays(2))
             });
-           
+
             _onlineOrdersServ = new Mock<IOnlineOrdersService>();
             _tenantServ = new Mock<ITenantService>();
             _configServ = new Mock<IConfigService>();
 
             _tenantServ.Setup(s => s.GetCurrentTenant())
-                .Returns(new Tenant() {Timezone = "America/Los_Angeles"});
+                .Returns(new Tenant() { Timezone = "America/Los_Angeles" });
             _configServ.Setup(s => s.getConfig(Cfg.PaypalId))
                 .Returns("adsfadfadf145345");
             _configServ.Setup(s => s.getConfig(Cfg.PaypalSecret))
@@ -75,7 +75,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             _configServ.Setup(s => s.getConfig(Cfg.PaypalUrl))
                 .Returns("https://test.com/test?test=test");
             _onlineOrdersServ.Setup(s => s.GetIndexView(It.IsAny<viewOptions>()))
-                .Returns(new dataTableResult<WorkOrdersList>() {query = _fakeWorOrderDTOList.AsEnumerable()});
+                .Returns(new dataTableResult<WorkOrdersList>() { query = _fakeWorOrderDTOList.AsEnumerable() });
             _onlineOrdersServ.Setup(s => s.Get(1))
                 .Returns(_fakeWorkOrder);
             _onlineOrdersServ.Setup(s => s.Get(1000))
@@ -88,7 +88,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
                 config.ConfigureApi();
             });
             _mapper = mapperConfig.CreateMapper();
-            
+
             _controller = new OnlineOrdersController(
                 _onlineOrdersServ.Object,
                 _tenantServ.Object,
@@ -102,7 +102,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
                 new Claim(ClaimTypes.Email, "jciispam@gmail.com"),
                 new Claim(ClaimTypes.NameIdentifier, (new Guid("9245fe4a-d402-451c-b9ed-9c1a04247482")).ToString()),
             }, "mock"));
-            
+
             _controller.ControllerContext = new ControllerContext()
             {
                 HttpContext = new DefaultHttpContext() { User = user }
@@ -111,7 +111,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             _onlineOrdersServ.Setup(s => s.GetEmployer("9245fe4a-d402-451c-b9ed-9c1a04247482"))
                 .Returns(_fakeEmployer);
         }
-         
+
         #region GetMany
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.OnlineOrders)]
@@ -122,7 +122,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // assert
             Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.OnlineOrders)]
         public void GetMany_with_existing_returns_all_records_of_type()
         {
@@ -160,7 +160,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // assert
             Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.OnlineOrders)]
         public void Get_by_existing_Id_returns_correct_item()
         {
@@ -203,7 +203,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             //assert
             Assert.IsInstanceOfType(result.Result, typeof(CreatedAtActionResult));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Lookups)]
         public void Post_valid_data_returns_new_record_in_data_oject()
         {

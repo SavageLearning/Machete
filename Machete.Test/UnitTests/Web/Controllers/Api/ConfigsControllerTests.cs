@@ -5,8 +5,8 @@ using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Test.UnitTests.Controllers.Helpers;
-using Machete.Web.Controllers.Api;
-using Machete.Web.Maps.Api;
+using Machete.Api.Controllers;
+using Machete.Api.Maps;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -38,7 +38,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             };
             _fakeConfigs.Add(_fakeConfig);
             _fakeConfigs.Add(new Config
-                {ID = 2, key = "fakeOrgName2", value = "Machete"});
+            { ID = 2, key = "fakeOrgName2", value = "Machete" });
 
             var mapperConfig = new MapperConfiguration(config => config.ConfigureApi());
             _map = mapperConfig.CreateMapper();
@@ -48,7 +48,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             _serv.Setup(s => s.GetMany(It.IsAny<Func<Config, bool>>()))
                 .Returns(_fakeConfigs.AsQueryable);
             _serv.Setup(s => s.Get(1000))
-                .Returns((Config) null);
+                .Returns((Config)null);
             _serv.Setup(s => s.Get(1))
                 .Returns(_fakeConfig);
             _serv.Setup(s => s.Create(It.IsAny<Config>(), It.IsAny<string>()))
@@ -160,7 +160,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
         public void Post_invalid_data_returns_bad_request()
         {
             // Arrange
-            var invalidConfig = new ConfigVM() {key = "fake key"};
+            var invalidConfig = new ConfigVM() { key = "fake key" };
             _controller.ModelState.AddModelError("value", "Required");
             // Act
             var result = _controller.Post(invalidConfig);
@@ -172,7 +172,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
         public void Post_valid_data_returns_created_at_route()
         {
             // arrange
-            var validConfig = new ConfigVM() {key = "fakeOrgName", value = "Machete"};
+            var validConfig = new ConfigVM() { key = "fakeOrgName", value = "Machete" };
             // act
             var result = _controller.Post(validConfig);
             //assert
@@ -183,7 +183,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
         public void Post_valid_data_returns_new_record_in_data_oject()
         {
             // arrange
-            var validConfig = new ConfigVM() { value = "Machete"};
+            var validConfig = new ConfigVM() { key = "fakeOrgName", value = "Machete" };
             // act
             var result = _controller.Post(validConfig);
             var typedResult = (result.Result as ObjectResult).Value;
@@ -195,8 +195,8 @@ namespace Machete.Test.UnitTests.Controllers.Api
             Assert.AreEqual("Machete", configVM.value);
         }
 
-        #endregion Post        
-        
+        #endregion Post
+
         #region PUT
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Configs)]
@@ -232,7 +232,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
         public void Put_invalid_data_returns_bad_request()
         {
             // Arrange
-            var invalidConfig = new ConfigVM() {id = 1, key = "fake key"};
+            var invalidConfig = new ConfigVM() { id = 3, key = "fake key" };
             _controller.ModelState.AddModelError("value", "Required");
             // Act
             var result = _controller.Put(invalidConfig.id, invalidConfig);
@@ -263,7 +263,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
         {
             // arrange
             // act
-            var deleteResult = _controller.Put(1000,  _map.Map<ConfigVM>(_fakeConfig));
+            var deleteResult = _controller.Put(1000, _map.Map<ConfigVM>(_fakeConfig));
             // assert
             Assert.IsInstanceOfType(deleteResult.Result, typeof(NotFoundResult));
         }

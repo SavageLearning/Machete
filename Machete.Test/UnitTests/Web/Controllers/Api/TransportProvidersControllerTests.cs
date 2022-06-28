@@ -6,9 +6,9 @@ using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Test.UnitTests.Controllers.Helpers;
-using Machete.Web.Controllers.Api;
-using Machete.Web.Maps.Api;
-using Machete.Web.ViewModel.Api;
+using Machete.Api.Controllers;
+using Machete.Api.Maps;
+using Machete.Api.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -18,13 +18,13 @@ namespace Machete.Test.UnitTests.Controllers.Api
     [TestClass]
     public class TransportProvidersControllerTests
     {
-        private Mock<ITransportProvidersService> _transportProvidersServ ;
+        private Mock<ITransportProvidersService> _transportProvidersServ;
         private IMapper _mapper;
         private List<TransportProvider> _fakeTransportProviders;
         private TransportProvider _fakeTransportProvider;
         private TransportProvider _savedTransportProvider;
         private TransportProvidersController _controller;
-        
+
         [TestInitialize]
         public void TestInitialize()
         {
@@ -38,7 +38,8 @@ namespace Machete.Test.UnitTests.Controllers.Api
                 text_EN = "asdf"
             };
             _fakeTransportProviders = new List<TransportProvider>();
-            _fakeTransportProviders.Add(new TransportProvider()            {
+            _fakeTransportProviders.Add(new TransportProvider()
+            {
                 active = true,
                 defaultAttribute = true,
                 ID = 2,
@@ -46,20 +47,20 @@ namespace Machete.Test.UnitTests.Controllers.Api
                 text_EN = "wert"
             });
 
-            _transportProvidersServ  = new Mock<ITransportProvidersService>();
-            _transportProvidersServ .Setup(s => s.GetMany(It.IsAny<Func<TransportProvider,bool>>()))
+            _transportProvidersServ = new Mock<ITransportProvidersService>();
+            _transportProvidersServ.Setup(s => s.GetMany(It.IsAny<Func<TransportProvider, bool>>()))
                 .Returns(_fakeTransportProviders.AsQueryable);
-            _transportProvidersServ .Setup(s => s.Get(1))
-                .Returns(_fakeTransportProvider);            
-            _transportProvidersServ .Setup(s => s.Get(1000))
-                .Returns((TransportProvider)null);
-            _transportProvidersServ .Setup(s => s.Create(It.IsAny<TransportProvider>(), It.IsAny<string>()))
+            _transportProvidersServ.Setup(s => s.Get(1))
                 .Returns(_fakeTransportProvider);
-            _transportProvidersServ .Setup(s => s.Save(It.Is<TransportProvider>(r => r.ID == 1), It.IsAny<string>()))
+            _transportProvidersServ.Setup(s => s.Get(1000))
+                .Returns((TransportProvider)null);
+            _transportProvidersServ.Setup(s => s.Create(It.IsAny<TransportProvider>(), It.IsAny<string>()))
+                .Returns(_fakeTransportProvider);
+            _transportProvidersServ.Setup(s => s.Save(It.Is<TransportProvider>(r => r.ID == 1), It.IsAny<string>()))
                 .Callback((TransportProvider tp, string user) => _savedTransportProvider = tp);
-            _transportProvidersServ .Setup(s => s.Delete(1, It.IsAny<string>()))
+            _transportProvidersServ.Setup(s => s.Delete(1, It.IsAny<string>()))
                 .Verifiable();
-            
+
             var mapperConfig = new MapperConfiguration(config =>
             {
                 config.ConfigureApi();
@@ -68,7 +69,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
 
             _controller = new TransportProvidersController(_transportProvidersServ.Object, _mapper);
         }
-        
+
         #region GetMany
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.TransportProviders)]
@@ -79,7 +80,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // assert
             Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.TransportProviders)]
         public void GetMany_with_existing_returns_all_records_of_type_in_data_object()
         {
@@ -91,12 +92,12 @@ namespace Machete.Test.UnitTests.Controllers.Api
             Assert.IsInstanceOfType(viewModelList, typeof(IEnumerable<TransportProviderVM>));
             Assert.IsTrue(UnitTestExtensions.HasDataProperty(result));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.TransportProviders)]
         public void GetMany_service_exception_returns_server_error()
         {
             // arrange
-            _transportProvidersServ.Setup(s => s.GetMany(It.IsAny<Func<TransportProvider,bool>>())).Throws(new Exception());
+            _transportProvidersServ.Setup(s => s.GetMany(It.IsAny<Func<TransportProvider, bool>>())).Throws(new Exception());
             // Act
             var result = _controller.Get().Result as ObjectResult;
             // Assert
@@ -114,7 +115,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // assert
             Assert.IsInstanceOfType(result.Result, typeof(NotFoundResult));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.TransportProviders)]
         public void Get_by_ID_existing_returns_OkResult()
         {
@@ -123,7 +124,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // assert
             Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.TransportProviders)]
         public void Get_by_existing_Id_returns_correct_item_in_data_obj()
         {
@@ -135,7 +136,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             Assert.AreEqual(_fakeTransportProvider.ID, data.id);
             Assert.IsTrue(UnitTestExtensions.HasDataProperty(result));
         }
-        
+
         #endregion GetOne
         #region Post
 
@@ -150,7 +151,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // Assert
             Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.TransportProviders)]
         public void Post_valid_data_returns_created_at_route()
         {
@@ -161,7 +162,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             //assert
             Assert.IsInstanceOfType(result.Result, typeof(CreatedAtActionResult));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.TransportProviders)]
         public void Post_valid_data_returns_new_record_in_data_object()
         {
@@ -175,7 +176,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             Assert.IsTrue(UnitTestExtensions.HasDataProperty(result));
         }
 
-        #endregion Post 
+        #endregion Post
         #region PUT
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.TransportProviders)]
@@ -189,7 +190,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // Assert
             Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.TransportProviders)]
         public void Put_valid_data_returns_ok_result_and_updated_record()
         {
@@ -208,12 +209,12 @@ namespace Machete.Test.UnitTests.Controllers.Api
             Assert.IsInstanceOfType(returnedViewModel, typeof(TransportProviderVM));
             Assert.IsTrue(UnitTestExtensions.HasDataProperty(result));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.TransportProviders)]
         public void Put_invalid_id_returns_not_found()
         {
             // act
-            var result = _controller.Put(1000,  new TransportProviderVM());
+            var result = _controller.Put(1000, new TransportProviderVM());
             // assert
             Assert.IsInstanceOfType(result.Result, typeof(NotFoundResult));
         }
@@ -229,7 +230,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // assert
             Assert.IsInstanceOfType(deleteResult, typeof(NotFoundResult));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.TransportProviders)]
         public void Delete_existing_record_returns_ok()
         {
@@ -237,7 +238,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // assert
             Assert.IsInstanceOfType(deleteResult, typeof(OkResult));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.TransportProviders)]
         public void Delete_existing_item_removes_record()
         {

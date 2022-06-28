@@ -31,7 +31,7 @@ using Machete.Service.Tenancy;
 using Machete.Domain;
 using Machete.Web;
 using Machete.Web.Maps;
-using Machete.Web.Maps.Api;
+using Machete.Api.Maps;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,7 +43,7 @@ namespace Machete.Test.Integration.Fluent
     public partial class FluentRecordBase : IDisposable
     {
         public TimeZoneInfo ClientTimeZoneInfo { get; }
-    
+
         private IWorkerService _servW;
         private IImageService _servI;
         private IWorkerRequestService _servWR;
@@ -54,8 +54,8 @@ namespace Machete.Test.Integration.Fluent
         private ILookupService _servL;
         private Email _email;
         private Event _event;
-        private WorkerRequest  _wr;
-        private Activity  _a;
+        private WorkerRequest _wr;
+        private Activity _a;
         private ActivitySignin _as;
         private Lookup _l;
         private Image _i;
@@ -95,13 +95,13 @@ namespace Machete.Test.Integration.Fluent
                         .UseStartup<Startup>();
                 });
             IHost webHost = webHostBuilder.Build();
-            
+
             webHost.CreateOrMigrateDatabase().GetAwaiter().GetResult();
-                
+
             var serviceScope = webHost.Services.CreateScope();
-            
+
             container = serviceScope.ServiceProvider;
-            
+
             ClientTimeZoneInfo = TimeZoneInfo
                 .FindSystemTimeZoneById(serviceScope.ServiceProvider.GetRequiredService<ITenantService>().GetCurrentTenant().Timezone);
         }
@@ -110,7 +110,7 @@ namespace Machete.Test.Integration.Fluent
 
         public MacheteContext ToFactory()
         {
-//            return _dbContext ?? (_dbContext = container.GetRequiredService<MacheteContext>());
+            //            return _dbContext ?? (_dbContext = container.GetRequiredService<MacheteContext>());
             return container.GetRequiredService<MacheteContext>();
         }
 
@@ -119,7 +119,7 @@ namespace Machete.Test.Integration.Fluent
             return container.GetRequiredService<T>();
             //return default(T);
         }
-        
+
         #region Workers
         public Worker AddWorker(
             int? skill1 = null,
@@ -182,11 +182,11 @@ namespace Machete.Test.Integration.Fluent
             _wr.workerRequested = worker ?? AddWorker();
             if (datecreated != null) _wr.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _wr.dateupdated = (DateTime)dateupdated;
-            
+
             // ACT //huh?
-//            var Wentry = _dbContext.Entry(_w);
-//            var WOentry = _dbContext.Entry(_wo);
-//            var WRentry = _dbContext.Entry(_wr);
+            //            var Wentry = _dbContext.Entry(_w);
+            //            var WOentry = _dbContext.Entry(_wo);
+            //            var WRentry = _dbContext.Entry(_wr);
             _servWR.Create(_wr, _user);
             return this;
         }
@@ -229,7 +229,7 @@ namespace Machete.Test.Integration.Fluent
         #endregion
 
         #region Lookups
-       
+
 
         public FluentRecordBase AddLookup(
             DateTime? datecreated = null,
@@ -264,7 +264,7 @@ namespace Machete.Test.Integration.Fluent
             DateTime? dateupdated = null,
             DateTime? startTime = null,
             DateTime? endTime = null,
-            string    teacher = null
+            string teacher = null
         )
         {
             //
@@ -323,7 +323,7 @@ namespace Machete.Test.Integration.Fluent
 
         #region Reports
 
- 
+
         #endregion
 
         #region Emails
@@ -406,10 +406,10 @@ namespace Machete.Test.Integration.Fluent
         public IMapper ToWebMapper()
         {
             if (_webMap != null) return _webMap;
-            
+
             var mapperConfig = new MapperConfiguration(config => { config.ConfigureMvc(); });
             _webMap = mapperConfig.CreateMapper();
-            
+
             return _webMap;
         }
 
@@ -421,7 +421,7 @@ namespace Machete.Test.Integration.Fluent
             _apiMap = apiConfig.CreateMapper();
 
             return _apiMap;
-        }    
+        }
 
         public string RandomString(int size)
         {

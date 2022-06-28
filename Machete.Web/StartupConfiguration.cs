@@ -13,9 +13,6 @@ using Machete.Service.Tenancy;
 using Machete.Domain;
 using Machete.Service.BackgroundServices;
 using Machete.Web.Helpers;
-using Machete.Web.Helpers.Api;
-using Machete.Web.Helpers.Api.Identity;
-using Machete.Web.ViewModel.Api.Identity;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -54,7 +51,7 @@ namespace Machete.Web
                     var factory = serviceScope.ServiceProvider.GetService<IDatabaseFactory>();
                     var macheteContext = factory.Get(tenant);
                     var readonlyBuilder = new SqlConnectionStringBuilder(tenant.ReadOnlyConnectionString);
-                    
+
                     await macheteContext.Database.MigrateAsync();
                     MacheteConfiguration.Seed(macheteContext, tenant.Timezone);
                     StartupConfiguration.AddDBReadOnlyUser(macheteContext, readonlyBuilder.Password);
@@ -125,7 +122,7 @@ namespace Machete.Web
                 origins.Add("http://" + tenant + ":4200");
                 origins.Add("http://" + tenant);
             }
-            
+
             services.AddCors(options =>
             {
                 options.AddPolicy(StartupConfiguration.AllowCredentials, builder =>
@@ -138,7 +135,7 @@ namespace Machete.Web
                 });
             });
         }
-        
+
         /// <summary>
         /// Populate the DI container, which is part of the IServiceCollection. Extension method.
         /// https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-2.2
@@ -146,10 +143,10 @@ namespace Machete.Web
         public static void ConfigureDependencyInjection(this IServiceCollection services)
         {
             services.AddHostedService<RecurringBackgroundService>();
-            
+
             services.AddTransient<IUserStore<MacheteUser>, MacheteUserStore>();
             services.AddTransient<IRoleStore<MacheteRole>, MacheteRoleStore>();
-            
+
             services.AddScoped<ITenantIdentificationService, TenantIdentificationService>();
             services.AddScoped<ITenantService, TenantService>();
             services.AddScoped<IDatabaseFactory, DatabaseFactory>();
@@ -183,22 +180,6 @@ namespace Machete.Web
         }
 
         /// <summary>
-        /// Return the names of the Machete API controllers within the calling assembly (e.g., Machete.Web).
-        /// </summary>
-        private static string GetControllerNames()
-        {
-            var controllerNames = Assembly.GetCallingAssembly()
-                .GetTypes()
-                .Where(x =>
-                    x.IsSubclassOf(typeof(ControllerBase)) &&
-                    x.FullName.StartsWith(MethodBase.GetCurrentMethod().DeclaringType.Namespace + ".Controllers"))
-                .ToList()
-                .Select(x => x.Name.Replace("Controller", ""));
-
-            return string.Join("|", controllerNames);
-        }
-        
-        /// <summary>
         /// IRouteBuilder extension method. Defines the routes for the legacy application.
         /// </summary>
         public static void MapLegacyMvcRoutes(this IEndpointRouteBuilder routes)
@@ -210,99 +191,68 @@ namespace Machete.Web
                 "default",
                 "{controller=Account}/{action=Login}/{id?}");
         }
-        
-        /// <summary>
-        /// IRouteBuilder extension method. Defines the routes for the API.
-        /// </summary>
-        public static void MapApiRoutes(this IEndpointRouteBuilder routes)
-        {
-            var host = string.Empty;
-            routes.MapControllerRoute(
-                name: "DefaultApi",
-                pattern: "api/{controller}/{id?}",
-                defaults: new {controller = "Home"},
-                constraints: new {controller = GetControllerNames()}
-                );
-            routes.MapControllerRoute(
-                name: "LoginApi",
-                pattern: $"{host.IdentityRoute()}{{action}}",
-                defaults: new { controller = "Identity" },
-                constraints: new { action = "accounts|login|authorize|logoff" }
-            );
-            routes.MapControllerRoute(
-                name: "WellKnownToken",
-                pattern: $"{host.WellKnownRoute()}{{action}}",
-                defaults: new { controller = "Identity" },
-                constraints: new { action = "openid-configuration|jwks" }
-            );
-            routes.MapControllerRoute(
-                name: "NotFound",
-                pattern: "{*path}",
-                defaults: new { controller = "Error", action = "NotFound" }
-            );
-        }
-        
+
         /// <summary>
         /// Extension method for the IServiceCollection object in the ConfigureServices method called by the runtime.
         /// Configures options for the issuance of JWTs.
         /// </summary>
         /// <param name="signingKey">An RSA encrypted signing key (https://tools.ietf.org/html/rfc3447#section-3.2).</param>
         /// <param name="configuration">The Configuration field of the Startup class initialized by the runtime.</param>
-        public static void ConfigureJwt(
-            this IServiceCollection services,
-            RsaSecurityKey signingKey,
-            IConfiguration configuration
-        )
-        {
-            var configurationSection = configuration.GetSection(nameof(JwtIssuerOptions));
-            
-            var credentials = new SigningCredentials(signingKey, SecurityAlgorithms.RsaSha256);
-            services.AddSingleton<IJwtFactory, JwtFactory>();
-            services.Configure<JwtIssuerOptions>(options =>
-            {
-                options.Issuer = configurationSection[nameof(JwtIssuerOptions.Issuer)];
-                options.Audience = configurationSection[nameof(JwtIssuerOptions.Audience)];
-                options.SigningCredentials = credentials;
-            });
-            
-            #region future use
-            // Do the following if you want to switch to JWT auth. We currently only generate a token for future use.
-            //
-                                                             // // PLEASE DO NOT REMOVE // //            
-//            var tokenValidationParameters = new TokenValidationParameters
-//            {
-//                ValidateIssuer = true,
-//                ValidIssuer = configurationSection[nameof(JwtIssuerOptions.Issuer)],
-//
-//                ValidateAudience = true,
-//                ValidAudience = configurationSection[nameof(JwtIssuerOptions.Audience)],
-//
-//                ValidateIssuerSigningKey = true,
-//                IssuerSigningKey = signingKey,
-//
-//                RequireExpirationTime = true,
-//                ValidateLifetime = true,
-//
-//                ClockSkew = TimeSpan.Zero
-//            };
-//            services.AddAuthentication(options => {
-//                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-//                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-//            }).AddJwtBearer(configureOptions => {
-//                configureOptions.ClaimsIssuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)];
-//                configureOptions.TokenValidationParameters = tokenValidationParameters;
-//                configureOptions.SaveToken = true;
-//            });
-//            services.AddAuthorization(options =>
-//            {
-//                // TODO put roles here, if using JWT for auth; this will require refactoring attribute methods:
-//                options.AddPolicy("ApiUser", policy =>
-//                    policy.RequireClaim("role", "api_access"));
-//            });
-            #endregion future use
+        // public static void ConfigureJwt(
+        //     this IServiceCollection services,
+        //     RsaSecurityKey signingKey,
+        //     IConfiguration configuration
+        // )
+        // {
+        //     var configurationSection = configuration.GetSection(nameof(JwtIssuerOptions));
 
-            services.AddScoped<JwtIssuerOptions>();
-        }
+        //     var credentials = new SigningCredentials(signingKey, SecurityAlgorithms.RsaSha256);
+        //     services.AddSingleton<IJwtFactory, JwtFactory>();
+        //     services.Configure<JwtIssuerOptions>(options =>
+        //     {
+        //         options.Issuer = configurationSection[nameof(JwtIssuerOptions.Issuer)];
+        //         options.Audience = configurationSection[nameof(JwtIssuerOptions.Audience)];
+        //         options.SigningCredentials = credentials;
+        //     });
+
+        //     #region future use
+        // Do the following if you want to switch to JWT auth. We currently only generate a token for future use.
+        //
+        // // PLEASE DO NOT REMOVE // //
+        //            var tokenValidationParameters = new TokenValidationParameters
+        //            {
+        //                ValidateIssuer = true,
+        //                ValidIssuer = configurationSection[nameof(JwtIssuerOptions.Issuer)],
+        //
+        //                ValidateAudience = true,
+        //                ValidAudience = configurationSection[nameof(JwtIssuerOptions.Audience)],
+        //
+        //                ValidateIssuerSigningKey = true,
+        //                IssuerSigningKey = signingKey,
+        //
+        //                RequireExpirationTime = true,
+        //                ValidateLifetime = true,
+        //
+        //                ClockSkew = TimeSpan.Zero
+        //            };
+        //            services.AddAuthentication(options => {
+        //                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        //                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        //            }).AddJwtBearer(configureOptions => {
+        //                configureOptions.ClaimsIssuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)];
+        //                configureOptions.TokenValidationParameters = tokenValidationParameters;
+        //                configureOptions.SaveToken = true;
+        //            });
+        //            services.AddAuthorization(options =>
+        //            {
+        //                // TODO put roles here, if using JWT for auth; this will require refactoring attribute methods:
+        //                options.AddPolicy("ApiUser", policy =>
+        //                    policy.RequireClaim("role", "api_access"));
+        //            });
+        //     #endregion future use
+
+        //     services.AddScoped<JwtIssuerOptions>();
+        // }
 
         private static void AddDBReadOnlyUser(MacheteContext context, string readonlyPassword)
         {

@@ -5,9 +5,9 @@ using System.Security.Claims;
 using AutoMapper;
 using Machete.Service;
 using Machete.Test.UnitTests.Controllers.Helpers;
-using Machete.Web.Controllers.Api;
-using Machete.Web.Maps.Api;
-using Machete.Web.ViewModel.Api;
+using Machete.Api.Controllers;
+using Machete.Api.Maps;
+using Machete.Api.ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -27,7 +27,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
         private Employer _savedEmployer;
         private Service.DTO.EmployersList _fakeEmployersListObject;
         private IMapper _mapper;
-        
+
         [TestInitialize]
         public void TestInitialize()
         {
@@ -57,7 +57,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
                 city = "Seattle",
                 name = "Cesar Chavez"
             });
-            
+
             var mapperConfig = new MapperConfiguration(config =>
             {
                 config.ConfigureApi();
@@ -68,9 +68,9 @@ namespace Machete.Test.UnitTests.Controllers.Api
             _workerServ = new Mock<IWorkOrderService>();
 
             _employerServ.Setup(s => s.GetIndexView(It.IsAny<viewOptions>()))
-                .Returns(new dataTableResult<Service.DTO.EmployersList>() {query = _fakeEmployers.AsEnumerable()});
+                .Returns(new dataTableResult<Service.DTO.EmployersList>() { query = _fakeEmployers.AsEnumerable() });
             _employerServ.Setup(s => s.Get(1000))
-                .Returns((Employer) null);
+                .Returns((Employer)null);
             _employerServ.Setup(s => s.Get(1))
                 .Returns(_fakeEmployer);
             _employerServ.Setup(s => s.Create(It.IsAny<Employer>(), It.IsAny<string>()))
@@ -91,24 +91,24 @@ namespace Machete.Test.UnitTests.Controllers.Api
             var result = _controller.Get(new ApiRequestParams());
             Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
         public void GetMany_with_existing_returns_all_records_of_type()
         {
             // Act
-            var result = _controller.Get(new ApiRequestParams() {pageNumber = 1, pageSize = 10});
+            var result = _controller.Get(new ApiRequestParams() { pageNumber = 1, pageSize = 10 });
             var typedResult = (result.Result as ObjectResult).Value;
             var employersVMList = UnitTestExtensions.ExtractFromDataObject<IEnumerable<Service.DTO.EmployersList>>(typedResult);
             // Assert
             Assert.IsTrue(employersVMList.Count() == _fakeEmployers.Count);
             Assert.IsInstanceOfType(employersVMList, typeof(IEnumerable<Service.DTO.EmployersList>));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
         public void GetMany_with_existing_returns_records_in_data_prop()
         {
             // Act
-            var result = _controller.Get(new ApiRequestParams() {pageNumber = 1, pageSize = 10});
+            var result = _controller.Get(new ApiRequestParams() { pageNumber = 1, pageSize = 10 });
             var typedResult = (result.Result as ObjectResult).Value;
             var resultHasDataProp = typedResult.GetType().GetProperty("data") != null;
 
@@ -163,7 +163,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
         }
 
         #endregion GetOne
-        
+
         #region Post
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
@@ -182,7 +182,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
         public void Post_valid_data_returns_created_at_route()
         {
             // arrange
-            var validViewModel = new EmployerVM() { name = "Peter Parker"};
+            var validViewModel = new EmployerVM() { name = "Peter Parker" };
             // act
             var result = _controller.Post(validViewModel);
             //assert
@@ -193,7 +193,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
         public void Post_valid_data_returns_new_record_in_data_oject()
         {
             // arrange
-            var validViewModel = new EmployerVM() {name = "Jimmy Hendrix"};
+            var validViewModel = new EmployerVM() { name = "Jimmy Hendrix" };
             // act
             var result = _controller.Post(validViewModel);
             var typedResult = (result.Result as ObjectResult).Value;
@@ -204,8 +204,8 @@ namespace Machete.Test.UnitTests.Controllers.Api
             Assert.IsTrue(resultHasDataProp);
         }
 
-        #endregion Post  
-        
+        #endregion Post
+
         #region PUT
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
@@ -245,13 +245,13 @@ namespace Machete.Test.UnitTests.Controllers.Api
         {
             // arrange
             // act
-            var deleteResult = _controller.Put(1000,  new EmployerVM());
+            var deleteResult = _controller.Put(1000, new EmployerVM());
             // assert
             Assert.IsInstanceOfType(deleteResult.Result, typeof(NotFoundResult));
         }
 
         #endregion PUT
-        
+
         #region Delete
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
@@ -295,10 +295,10 @@ namespace Machete.Test.UnitTests.Controllers.Api
             _fakeEmployer.onlineSigninID = employerGuidString;
             fakeEmployersD.Add(_fakeEmployer);
             _employerServ.Setup(s => s.Get(userGuidString))
-                .Returns((Employer) null);
+                .Returns((Employer)null);
             _employerServ.Setup(s => s.GetMany(It.IsAny<Func<Employer, bool>>()))
                 .Returns(fakeEmployersD.AsQueryable);
-            
+
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
                 new Claim(ClaimTypes.Email, "jciispam@gmail.com"),
@@ -316,10 +316,10 @@ namespace Machete.Test.UnitTests.Controllers.Api
             var fakeEmployersD = new List<Employer>();
             fakeEmployersD.Add(_fakeEmployer);
             _employerServ.Setup(s => s.Get("9245fe4a-d402-451c-b9ed-9c1a04247482"))
-                .Returns((Employer) null);
+                .Returns((Employer)null);
             _employerServ.Setup(s => s.GetMany(It.IsAny<Func<Employer, bool>>()))
                 .Returns(fakeEmployersD.AsQueryable);
-            
+
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
                 new Claim(ClaimTypes.Email, "jciispam@gmail.com"),
@@ -336,16 +336,16 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // arrange
             var fakeEmployersD = new List<Employer>();
             _employerServ.Setup(s => s.Get("9245fe4a-d402-451c-b9ed-9c1a04247482"))
-                .Returns((Employer) null);
+                .Returns((Employer)null);
             _employerServ.Setup(s => s.GetMany(It.IsAny<Func<Employer, bool>>()))
                 .Returns(fakeEmployersD.AsQueryable);
-            
+
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
                 new Claim(ClaimTypes.Email, "jciispam@gmail.com"),
                 new Claim(ClaimTypes.NameIdentifier, (new Guid("9245fe4a-d402-451c-b9ed-9c1a04247482")).ToString()),
             }, "mock"));
-            
+
             _controller.ControllerContext = new ControllerContext()
             {
                 HttpContext = new DefaultHttpContext() { User = user }
@@ -359,11 +359,11 @@ namespace Machete.Test.UnitTests.Controllers.Api
             ArrangeForEmployerNotFound();
             // act
             var result = _controller.ProfileGet();
-            // assert 
+            // assert
             Assert.IsInstanceOfType(result.Result, typeof(NotFoundResult));
         }
-        
-        
+
+
         [TestMethod]
         public void ProfileGet_finds_employer_returns_profile()
         {
@@ -373,12 +373,12 @@ namespace Machete.Test.UnitTests.Controllers.Api
             var result = _controller.ProfileGet();
             var typedResult = (result.Result as ObjectResult).Value;
             var data = UnitTestExtensions.ExtractFromDataObject<EmployerVM>(typedResult);
-            
-            // assert 
+
+            // assert
             Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
             Assert.IsTrue(data.email == "jciispam@gmail.com");
         }
-        
+
         [TestMethod]
         public void ProfileGet_finds_employer_with_different_onlineSigninID_returns_Conflict()
         {
@@ -386,11 +386,11 @@ namespace Machete.Test.UnitTests.Controllers.Api
             ArrangeDifferentGuidsForUserAndEmployer();
             // act
             var result = _controller.ProfileGet();
-            
-            // assert 
+
+            // assert
             Assert.IsInstanceOfType(result.Result, typeof(ConflictResult));
         }
-        
+
         [TestMethod]
         public void ProfilePost_employer_exists_with_same_onlineid_returns_conflict()
         {
@@ -398,8 +398,8 @@ namespace Machete.Test.UnitTests.Controllers.Api
             ArrangeForEmployerFound();
             // act
             var result = _controller.ProfilePost(_mapper.Map<EmployerVM>(_fakeEmployer));
-            
-            // assert 
+
+            // assert
             Assert.IsInstanceOfType(result.Result, typeof(ConflictResult));
         }
 
@@ -414,6 +414,6 @@ namespace Machete.Test.UnitTests.Controllers.Api
             Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
 
         }
-        #endregion 
+        #endregion
     }
 }

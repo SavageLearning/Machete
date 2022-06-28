@@ -17,7 +17,7 @@ using Machete.Test.Integration.Fluent;
 using Machete.Test.Integration.HttpClientUtil;
 using Machete.Web.Helpers;
 using Machete.Web.ViewModel;
-using Machete.Web.ViewModel.Api;
+using Machete.Api.ViewModel;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical;
 using Activity = Machete.Web.ViewModel.Activity;
 using Employer = Machete.Web.ViewModel.Employer;
@@ -50,7 +50,7 @@ namespace Machete.Test.Selenium.View
             return true;
         }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public bool login(string user = "jadmin", string password = "ChangeMe")
@@ -136,7 +136,7 @@ namespace Machete.Test.Selenium.View
             Assert.IsNotNull(selectedTab, "Failed to find Person selected tab element");
             IWebElement tabAnchor = selectedTab.FindElement(By.CssSelector("a"));
             Assert.IsNotNull(tabAnchor, "Failed to find Person selected tab element anchor");
-            var name = _per.firstname1 + " " + (_per.firstname2 != null ? _per.firstname2 + " " : "") + _per.lastname1 + (_per.lastname2 != null ? " " + _per.lastname2: "");
+            var name = _per.firstname1 + " " + (_per.firstname2 != null ? _per.firstname2 + " " : "") + _per.lastname1 + (_per.lastname2 != null ? " " + _per.lastname2 : "");
 
             Assert.IsTrue(tabAnchor.Text == name, "Person anchor label doesn't match person name");
 
@@ -152,15 +152,15 @@ namespace Machete.Test.Selenium.View
             Assert.AreEqual(_per.state, WaitForElement(By.Id(prefix + "state")).GetAttribute("value"));
             Assert.AreEqual(_per.zipcode, WaitForElement(By.Id(prefix + "zipcode")).GetAttribute("value"));
             //Assert.AreEqual(_per.active, WaitForElement(By.Id(prefix + "active")).Selected);
-            Assert.AreEqual(_per.gender.ToString(), GetOptionValue(By.Id(prefix + "gender"))); 
+            Assert.AreEqual(_per.gender.ToString(), GetOptionValue(By.Id(prefix + "gender")));
             return true;
         }
 
         public bool workerCreate(Worker _wkr, string imagepath)
         {
-            string prefix = "worker"+_wkr.ID+"-";
+            string prefix = "worker" + _wkr.ID + "-";
             WaitThenClickElement(By.Id("workerCreateTab"));
-            WaitForElement(By.Id(prefix + "dateOfMembership"));            
+            WaitForElement(By.Id(prefix + "dateOfMembership"));
             _d.FindElement(By.Id(prefix + "dateOfMembership")).SendKeys(_wkr.dateOfMembership.ToShortDateString());
             _d.FindElement(By.Id(prefix + "dateOfBirth")).SendKeys(((DateTime)_wkr.dateOfBirth.Value).ToShortDateString());
             _d.FindElement(By.Id(prefix + "dateinUSA")).SendKeys(((DateTime)_wkr.dateinUSA.Value).ToShortDateString());
@@ -183,7 +183,7 @@ namespace Machete.Test.Selenium.View
             _d.FindElement(By.Id("createWorkerBtn")).Click();
             //
             //
-            _d.FindElement(By.Id("workerCreateTab")).Click();            
+            _d.FindElement(By.Id("workerCreateTab")).Click();
             return true;
         }
 
@@ -227,16 +227,16 @@ namespace Machete.Test.Selenium.View
             Thread.Sleep(2000);
             WaitThenClickElement(By.Id("workerCreateTab"));
             WaitForElement(By.Id(_wkr.idPrefix + "memberStatusID"));
-            
+
             Thread.Sleep(5000);
-            
+
             WaitThenClickElement(By.Id(_wkr.idPrefix + "memberStatusID"));
             Thread.Sleep(1000);
             SelectOption(By.Id(_wkr.idPrefix + "memberStatusID"), HttpClientUtil.GetLookup(LCategory.memberstatus, "Sanctioned").TextEN());
             Thread.Sleep(1000);
             WaitThenClickElement(By.Id(_wkr.idPrefix + "SaveButton"));
             Thread.Sleep(1000);
-            _d.FindElement(By.Id("workerCreateTab")).Click();  
+            _d.FindElement(By.Id("workerCreateTab")).Click();
             return true;
         }
 
@@ -245,7 +245,7 @@ namespace Machete.Test.Selenium.View
             WaitThenClickElement((By.Id("personGeneralTab")));
             Thread.Sleep(1000);
             WaitThenClickElement((By.Id("workerCreateTab")));
-            string prefix = "worker"+_wkr.ID+"-";
+            string prefix = "worker" + _wkr.ID + "-";
             Thread.Sleep(1000);
             bool result = WaitForElementValue(By.Id("workerCreateTab"), "Worker information");
             string dateFormat2 = "MM/dd/yyyy";
@@ -254,21 +254,21 @@ namespace Machete.Test.Selenium.View
             Thread.Sleep(3000);
             var actualDateOfMembership = WaitForElement(By.Id(prefix + "dateOfMembership")).GetAttribute("value");
             Assert.AreEqual(expectedDateOfMembership, actualDateOfMembership);
-            var expectedDateOfBirth = ((DateTime) _wkr.dateOfBirth.Value).ToString(dateFormat2);
+            var expectedDateOfBirth = ((DateTime)_wkr.dateOfBirth.Value).ToString(dateFormat2);
             Thread.Sleep(3000);
             var actualDateOfBirth = WaitForElement(By.Id(prefix + "dateOfBirth")).GetAttribute("value");
             Assert.AreEqual(expectedDateOfBirth, actualDateOfBirth);
-            
+
             Thread.Sleep(5000);
-            
+
             Assert.AreEqual(((DateTime)_wkr.dateinUSA).ToString(dateFormat2), WaitForElement(By.Id(prefix + "dateinUSA")).GetAttribute("value"));
             Assert.AreEqual(((DateTime)_wkr.dateinseattle).ToString(dateFormat2), WaitForElement(By.Id(prefix + "dateinseattle")).GetAttribute("value"));
             Assert.AreEqual(_wkr.memberexpirationdate.ToString(dateFormat2), WaitForElement(By.Id(prefix + "memberexpirationdate")).GetAttribute("value"));
             Assert.AreEqual(_wkr.height, WaitForElement(By.Id(prefix + "height")).GetAttribute("value"));
             Assert.AreEqual(_wkr.weight, WaitForElement(By.Id(prefix + "weight")).GetAttribute("value"));
-            
+
             Thread.Sleep(5000);
-            
+
             Assert.AreEqual(_wkr.dwccardnum.ToString(), WaitForElement(By.Id(prefix + "dwccardnum")).GetAttribute("value"));
             Assert.AreEqual("Active", GetOptionText(WaitForElement(By.Id(prefix + "memberStatusID"))));
             Assert.AreEqual(HttpClientUtil.GetFirstLookupInCategory(LCategory.neighborhood).TextEN(), GetOptionText(WaitForElement(By.Id(prefix + "neighborhoodID"))));
@@ -314,7 +314,7 @@ namespace Machete.Test.Selenium.View
                 }
 
                 //personCreate(_per);
-                
+
                 _wkr.ID = _per.ID;
                 //workerCreate(_wkr, SolutionDirectory() + "\\Machete.test\\jimmy_machete.jpg");
             }
@@ -323,7 +323,7 @@ namespace Machete.Test.Selenium.View
 
         public bool eventCreate(Event _ev)
         {
-            string prefix = "event"+ _ev.ID +"-";
+            string prefix = "event" + _ev.ID + "-";
             WaitThenClickElement(By.Id("eventCreateTab"));
             WaitForElement(By.Id(prefix + "eventType"));
             SelectOptionByValue(By.Id(prefix + "eventType"), _ev.eventTypeID.ToString());
@@ -336,7 +336,7 @@ namespace Machete.Test.Selenium.View
             }
             WaitForElement(By.Id(prefix + "notes")).SendKeys(_ev.notes);
             WaitThenClickElement(By.Id("eventCreateBtn"));
-            
+
             Thread.Sleep(5000); // need tabs to change; should build label and wait on it
 
             var selectedTab = _d.FindElements(By.CssSelector("li.ui-tabs-selected"))[1];
@@ -359,7 +359,7 @@ namespace Machete.Test.Selenium.View
 
         #region employers
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="_emp"></param>
         /// <returns></returns>
@@ -393,7 +393,7 @@ namespace Machete.Test.Selenium.View
             SelectOptionByIndex(By.Id(prefix + "active"), _emp.active ? 2 : 1);
             SelectOptionByIndex(By.Id(prefix + "blogparticipate"), _emp.blogparticipate.Value ? 2 : 1);
             SelectOptionByIndex(By.Id(prefix + "business"), _emp.business ? 2 : 1);
-            SelectOption(By.Id(prefix + "referredby"), 
+            SelectOption(By.Id(prefix + "referredby"),
                 HttpClientUtil.GetFirstLookupTextEn((int)_emp.referredby));
             // save employer
             _d.FindElement(By.Id(prefix + "SaveBtn")).Click();
@@ -418,7 +418,7 @@ namespace Machete.Test.Selenium.View
             return true;
         }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="_emp"></param>
         /// <returns></returns>
@@ -502,14 +502,14 @@ namespace Machete.Test.Selenium.View
             //ReplaceElementText(By.Id(prefix + "englishRequiredNote"), _wo.englishRequiredNote);
             ReplaceElementText(By.Id(prefix + "description"), _wo.description);
 
-           // SelectOption(By.Id(prefix + "status"), MacheteLookup.cache.First(c => c.category == "orderstatus" && c.ID == _wo.status).text_EN);
+            // SelectOption(By.Id(prefix + "status"), MacheteLookup.cache.First(c => c.category == "orderstatus" && c.ID == _wo.status).text_EN);
             SelectOptionByIndex(By.Id(prefix + "transportMethodID"), _wo.transportProviderID);
             //SelectOptionByIndex(By.Id(prefix + "transportTransactType"), _wo.transportTransactType);
             SelectOptionByIndex(By.Id(prefix + "timeFlexible"), _wo.timeFlexible ? 2 : 1);
             SelectOptionByIndex(By.Id(prefix + "permanentPlacement"), _wo.permanentPlacement ? 2 : 1);
             SelectOptionByIndex(By.Id(prefix + "englishRequired"), _wo.englishRequired ? 2 : 1);
             SelectOptionByIndex(By.Id(prefix + "lunchSupplied"), _wo.lunchSupplied ? 2 : 1);
-            
+
             Thread.Sleep(1000); //prevent race condition
             if (_wo.workerRequestsAAA != null)
                 foreach (var request in _wo.workerRequestsAAA)
@@ -533,9 +533,9 @@ namespace Machete.Test.Selenium.View
                                                             Convert.ToString(_wo.paperOrderNum) +
                                                             " @ " + _wo.workSiteAddress1;
             Assert.IsTrue(_d.FindElement(By.CssSelector("li.WO.ui-tabs-selected > a"))
-                                            .Text == _wo.tablabel, 
+                                            .Text == _wo.tablabel,
                 "Work order anchor label doesn't match work order");
-            
+
             return true;
         }
 
@@ -548,7 +548,7 @@ namespace Machete.Test.Selenium.View
             return Convert.ToInt32(tabAnchor.GetAttribute("recordid"));
         }
 
-        public bool workOrderValidate(Web.ViewModel.WorkOrderMVC _wo) 
+        public bool workOrderValidate(Web.ViewModel.WorkOrderMVC _wo)
         {
             string prefix = "WO" + _wo.ID.ToString() + "-";
             Func<string, string, bool> getAttributeAssertEqual = ((p, q) =>
@@ -575,7 +575,7 @@ namespace Machete.Test.Selenium.View
             var actual = HttpClientUtil.GetLookup(LCategory.orderstatus, optionText);
             Assert.AreEqual(_wo.statusID, actual);
             WaitForElement(By.Id(prefix + "timeFlexible"));
-            Assert.AreEqual(_wo.timeFlexible ? 2:1, GetOptionIndex(By.Id(prefix + "timeFlexible")));
+            Assert.AreEqual(_wo.timeFlexible ? 2 : 1, GetOptionIndex(By.Id(prefix + "timeFlexible")));
             WaitForElement(By.Id(prefix + "permanentPlacement"));
             Assert.AreEqual(_wo.permanentPlacement ? 2 : 1, GetOptionIndex(By.Id(prefix + "permanentPlacement")));
             WaitForElement(By.Id(prefix + "englishRequired"));
@@ -628,7 +628,7 @@ namespace Machete.Test.Selenium.View
             return true;
         }
         /// <summary>
-        /// Activate work order. Assumes start at WA ListTab. 
+        /// Activate work order. Assumes start at WA ListTab.
         /// </summary>
         /// <param name="_emp"></param>
         /// <param name="_wo"></param>
@@ -641,14 +641,14 @@ namespace Machete.Test.Selenium.View
             // Look for WA datatable to have a first row (at least one record)
             By walt = By.XPath("//table[@id='workAssignTable-wo-" + _wo.ID + "']/tbody/tr/td[1]");
             // The #####-## order number from the first column
-            
+
             Thread.Sleep(5000);
-            
+
             var waltText = "Assignment #: " + WaitForElement(walt).Text;
             WaitForElementValue(walt, _wa.tablabel);
-            
+
             Thread.Sleep(5000);
-            
+
             Assert.AreEqual(_wa.tablabel, waltText, "Unexpected PseudoID in assignment's list");
             Thread.Sleep(1000);
             WaitThenClickElement(By.Id("activateWorkOrderButton-" + _wo.ID));
@@ -707,7 +707,7 @@ namespace Machete.Test.Selenium.View
             WaitForElement(By.Id(prefix + "hourlyWage"));
             Assert.AreEqual(_wa.hourlyWage.ToString("F2"), WaitForElement(By.Id(prefix + "hourlyWage")).GetAttribute("value"));
             WaitForElement(By.Id(prefix + "total"));
-            Assert.AreEqual("$" +(_wa.hourlyWage * _wa.hours * _wa.days).ToString("F2"), WaitForElement(By.Id(prefix + "total")).GetAttribute("value"));
+            Assert.AreEqual("$" + (_wa.hourlyWage * _wa.hours * _wa.days).ToString("F2"), WaitForElement(By.Id(prefix + "total")).GetAttribute("value"));
             Assert.AreEqual(_wa.pseudoID.ToString(), WaitForElement(By.Id(prefix + "pseudoID")).GetAttribute("Value"));
 
             // Now change field values and check field relationships
@@ -724,7 +724,7 @@ namespace Machete.Test.Selenium.View
             //check default form response
             Assert.AreEqual("not calculable", WaitForElement(By.Id(prefix + "total")).GetAttribute("value"));
             Assert.AreEqual("not calculable", WaitForElement(By.Id(prefix + "totalRange")).GetAttribute("value"));
-            
+
             //change skill and make sure wage and hours changed
             SelectOptionByIndex(By.Id(prefix + "skillID"), 1);
             Assert.IsFalse(Convert.ToInt32(WaitForElement(By.Id(prefix + "hourlyWage")).GetAttribute("value")) == 0, "Hourly Wage failed reaction to skill selection");
@@ -794,7 +794,7 @@ namespace Machete.Test.Selenium.View
 
 
             return true;
-            
+
         }
         public bool activityValidate(Activity _act)
         {
@@ -821,9 +821,11 @@ namespace Machete.Test.Selenium.View
         public bool activitySignInIsSanctioned()
         {
             //var sanctionedBox = WaitForElement(By.ClassName("ui-dialog"));
-            if (WaitForElementExists(By.ClassName("ui-dialog"))) {
+            if (WaitForElementExists(By.ClassName("ui-dialog")))
+            {
                 var elem = _d.FindElement(By.ClassName("ui-dialog"));
-                if (elem.Displayed) {
+                if (elem.Displayed)
+                {
                     elem.FindElement(By.ClassName("ui-button")).Click();
                     return true;
                 }
@@ -834,7 +836,7 @@ namespace Machete.Test.Selenium.View
         public bool activitySignInValidate(string idPrefix, int dwccardnum, int rowcount)
         {
             // Example of validating a row that returns from a sign-in
-            return WaitForElementValue(By.XPath("//table[@id='"+idPrefix+"asiTable']/tbody/tr[" + rowcount + "]/td[2]"), dwccardnum.ToString());
+            return WaitForElementValue(By.XPath("//table[@id='" + idPrefix + "asiTable']/tbody/tr[" + rowcount + "]/td[2]"), dwccardnum.ToString());
         }
 
         #endregion
@@ -905,7 +907,7 @@ namespace Machete.Test.Selenium.View
             var elem = _d.FindElement(by);
             try
             {
-                
+
                 elem.Clear();
                 elem.SendKeys(text);
                 return true;
@@ -919,12 +921,12 @@ namespace Machete.Test.Selenium.View
         public bool WaitThenClickElement(By by)
         {
             IWebElement elem = WaitForElement(by);
-            if (elem != null && elem.Displayed) 
+            if (elem != null && elem.Displayed)
             {
                 elem.Click();
                 return true;
             }
-            else 
+            else
             {
                 return false;
             }
@@ -955,9 +957,9 @@ namespace Machete.Test.Selenium.View
             for (int second = 0; second < maxwait; second++)
             {
                 elem = elementExists(by);
-                if (elem) 
+                if (elem)
                     return true;
-                else 
+                else
                     Thread.Sleep(_sleepFor);
             }
             return false;
@@ -1033,7 +1035,7 @@ namespace Machete.Test.Selenium.View
             {
                 _d.FindElement(by);
             }
-            catch(NoSuchElementException)
+            catch (NoSuchElementException)
             {
                 return false;
             }
@@ -1088,7 +1090,7 @@ namespace Machete.Test.Selenium.View
                 return false;
             }
         }
-        #endregion 
+        #endregion
         public string RandomString(int size)
         {
             StringBuilder builder = new StringBuilder();

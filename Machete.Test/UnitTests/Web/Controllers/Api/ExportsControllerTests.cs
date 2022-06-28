@@ -4,7 +4,7 @@ using Machete.Service.Dynamic;
 using Machete.Service.Tenancy;
 using Machete.Service;
 using Machete.Test.UnitTests.Controllers.Helpers;
-using Machete.Web.Controllers.Api;
+using Machete.Api.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -43,7 +43,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // assert
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));
         }
-        
+
         [TestMethod]
         public void Reports_controller_get_tables_returns_records_in_data_obj()
         {
@@ -58,7 +58,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
         // Necessary for mocking methods with a ref
         // https://github.com/moq/moq4/issues/105#issuecomment-334575881
         private delegate void getXlsxFile(Service.DTO.SearchOptions o, ref byte[] bytes);
-        
+
         [TestMethod]
         public void Reports_controller_table_execute_returns_FileContentResult()
         {
@@ -69,7 +69,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
                 .Verifiable();
             _controller.Request.QueryString = new QueryString(queryString);
             // act
-            var result = _controller.Execute(ValidTableNames.Activities.ToString(), "dateEnd", new DateTime(2021,3,15),new DateTime(2021,3,21));
+            var result = _controller.Execute(ValidTableNames.Activities.ToString(), "dateEnd", new DateTime(2021, 3, 15), new DateTime(2021, 3, 21));
             // assert
             Assert.IsInstanceOfType(result, typeof(FileContentResult));
         }

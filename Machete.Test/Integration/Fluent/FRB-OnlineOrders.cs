@@ -1,4 +1,4 @@
-﻿using Machete.Web.ViewModel.Api;
+﻿using Machete.Api.ViewModel;
 
 namespace Machete.Test.Integration.Fluent
 {

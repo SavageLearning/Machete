@@ -1,25 +1,25 @@
 ﻿#region COPYRIGHT
 // File:     Records.cs
 // Author:   Savage Learning, LLC.
-// Created:  2012/06/17 
+// Created:  2012/06/17
 // License:  GPL v3
 // Project:  Machete.Test.Old
 // Contact:  savagelearning
-// 
+//
 // Copyright 2011 Savage Learning, LLC., all rights reserved.
-// 
+//
 // This source file is free software, under either the GPL v3 license or a
 // BSD style license, as supplied with this software.
-// 
-// This source file is distributed in the hope that it will be useful, but 
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+//
+// This source file is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
 // or FITNESS FOR A PARTICULAR PURPOSE. See the license files for details.
-//  
-// For details please refer to: 
-// http://www.savagelearning.com/ 
+//
+// For details please refer to:
+// http://www.savagelearning.com/
 //    or
 // http://www.github.com/jcii/machete/
-// 
+//
 #endregion
 
 using System;
@@ -28,9 +28,9 @@ using System.Linq;
 using Machete.Domain;
 using Microsoft.EntityFrameworkCore;
 using Machete.Service.Initialize;
-using Machete.Web.ViewModel.Api;
+using Machete.Api.ViewModel;
 
-namespace Machete.Test 
+namespace Machete.Test
 {
     public static class Records
     {
@@ -66,7 +66,7 @@ namespace Machete.Test
         public static Worker worker = new Worker
         {
             typeOfWorkID = 20,
-            RaceID = MacheteLookups.cache.First(x => x.category == "race" && x.text_EN =="Latino").ID,                     //byte
+            RaceID = MacheteLookups.cache.First(x => x.category == "race" && x.text_EN == "Latino").ID,                     //byte
             raceother = "Records._worker1", //string
             height = "too tall",            //string
             weight = "too big",             //string
@@ -146,7 +146,7 @@ namespace Machete.Test
             createdby = "TestInitializer",
             updatedby = "TestInitializer"
         };
-//
+        //
         public static Employer employer = new Employer
         {
             name = "Willy Wonka",
@@ -215,8 +215,8 @@ namespace Machete.Test
             //typeOfWorkID = 20,
             timeFlexible = true,
             englishRequired = false,
-           // lunchSupplied = false,
-           // permanentPlacement = false,
+            // lunchSupplied = false,
+            // permanentPlacement = false,
             transportProviderID = 1,
             transportFee = 20.75,
             //transportFeeExtra = 0,
@@ -224,11 +224,11 @@ namespace Machete.Test
             description = "description string",
             dateTimeofWork = DateTime.Today.ToString("o", CultureInfo.InvariantCulture),
             datecreated = DateTime.Now,
-            dateupdated = DateTime.Now,       
+            dateupdated = DateTime.Now,
             createdby = "initialization script",
             updatedby = "initialization script",
             //transportTransactType = 256,
-           // transportTransactID = "#6169"
+            // transportTransactID = "#6169"
         };
 
         public static WorkAssignment assignment = new WorkAssignment

@@ -5,14 +5,14 @@ using System.Linq;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Test.Integration.Fluent;
-using Machete.Web.ViewModel.Api;
+using Machete.Api.ViewModel;
 
 namespace Machete.Test.Integration.Services
 {
     [TestClass]
     public class OnlineOrdersServiceTest
     {
-        
+
         FluentRecordBase frb;
 
         [ClassInitialize]
@@ -30,7 +30,7 @@ namespace Machete.Test.Integration.Services
             //Arrange
             var wo = frb.CloneOnlineOrder();
             var map = frb.ToApiMapper();
-            
+
             //Act
             var result = map.Map<WorkOrderVM, WorkOrder>(wo);
 
@@ -55,12 +55,12 @@ namespace Machete.Test.Integration.Services
             wo.transportProviderID = ll.ID;
             wo.workAssignments = new List<WorkAssignment>();
             var wa = frb.CloneDomainWorkAssignment();
-            wa.transportCost = 5; 
+            wa.transportCost = 5;
             wa.ID = 1; // this causes EF Core to fail
             wo.workAssignments.Add(wa);
             var serv = frb.ToServ<IOnlineOrdersService>();
 
-            // 
+            //
             // Act
             var result = serv.Create(wo, "CreateOnlineOrder_Succeeds");
             //
@@ -87,7 +87,7 @@ namespace Machete.Test.Integration.Services
             wo.workAssignments = new List<WorkAssignment>();
             var serv = frb.ToServ<IOnlineOrdersService>();
 
-            // 
+            //
             // Act
             var result = serv.Create(wo, "CreateOnlineOrder_WA_empty_throws_error");
         }
@@ -112,7 +112,7 @@ namespace Machete.Test.Integration.Services
             wo.workAssignments.Add(wa);
             var serv = frb.ToServ<IOnlineOrdersService>();
 
-            // 
+            //
             // Act
             var result = serv.Create(wo, "CreateOnlineOrder_wrong_cost_throws_error");
         }
@@ -137,7 +137,7 @@ namespace Machete.Test.Integration.Services
             wo.workAssignments.Add(wa);
             var serv = frb.ToServ<IOnlineOrdersService>();
 
-            // 
+            //
             // Act
             var result = serv.Create(wo, "CreateOnlineOrder_unknown_zipcode_throws_error");
             //
@@ -155,7 +155,7 @@ namespace Machete.Test.Integration.Services
             var wo = frb.CloneDomainWorkOrder();
             var tpServ = frb.ToServ<ITransportProvidersService>();
 
-            wo.zipcode = "98118"; // affects transport cost 
+            wo.zipcode = "98118"; // affects transport cost
             wo.EmployerID = e.ID;
             var ll = tpServ.GetMany(a => a.key == "transport_van").SingleOrDefault();
             wo.transportProviderID = ll.ID;
@@ -194,7 +194,7 @@ namespace Machete.Test.Integration.Services
             var wo = frb.CloneDomainWorkOrder();
             var tpServ = frb.ToServ<ITransportProvidersService>();
 
-            wo.zipcode = "98118"; // affects transport cost 
+            wo.zipcode = "98118"; // affects transport cost
             wo.EmployerID = e.ID;
             var ll = tpServ.GetMany(a => a.key == "transport_bus").SingleOrDefault();
             wo.transportProviderID = ll.ID;
@@ -211,7 +211,7 @@ namespace Machete.Test.Integration.Services
 
             var serv = frb.ToServ<IOnlineOrdersService>();
 
-            // 
+            //
             // Act
             var result = serv.Create(wo, "tiered_IDs_throws_error");
             //
@@ -226,9 +226,9 @@ namespace Machete.Test.Integration.Services
             var serv = frb.ToServ<IOnlineOrdersService>();
             // act
             var result = serv.Get(wo.ID);
-            // 
+            //
             Assert.IsNotNull(result);
         }
     }
-    
+
 }

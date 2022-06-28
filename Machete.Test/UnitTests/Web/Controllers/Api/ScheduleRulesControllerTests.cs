@@ -6,9 +6,9 @@ using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Test.UnitTests.Controllers.Helpers;
-using Machete.Web.Controllers.Api;
-using Machete.Web.Maps.Api;
-using Machete.Web.ViewModel.Api;
+using Machete.Api.Controllers;
+using Machete.Api.Maps;
+using Machete.Api.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -47,12 +47,12 @@ namespace Machete.Test.UnitTests.Controllers.Api
                 minStartMin = 2,
                 ID = 2
             });
-            
+
             _scheduleRuleServ = new Mock<IScheduleRuleService>();
             _scheduleRuleServ.Setup(s => s.GetAll())
                 .Returns(_fakeScheduleRules.AsQueryable);
             _scheduleRuleServ.Setup(s => s.Get(1000))
-                .Returns((ScheduleRule) null);
+                .Returns((ScheduleRule)null);
             _scheduleRuleServ.Setup(s => s.Get(1))
                 .Returns(_fakeScheduleRule);
             _scheduleRuleServ.Setup(s => s.Create(It.IsAny<ScheduleRule>(), It.IsAny<string>()))
@@ -71,8 +71,8 @@ namespace Machete.Test.UnitTests.Controllers.Api
             _mapper = mapperConfig.CreateMapper();
 
             _controller = new ScheduleRulesController(_scheduleRuleServ.Object, _mapper);
-        }   
-        
+        }
+
         #region GetMany
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.ScheduleRules)]
@@ -83,7 +83,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // assert
             Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.ScheduleRules)]
         public void GetMany_with_existing_returns_all_records_of_type_in_data_object()
         {
@@ -127,7 +127,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // assert
             Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.ScheduleRules)]
         public void Get_by_existing_Id_returns_correct_item_in_data_obj()
         {
@@ -139,7 +139,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             Assert.AreEqual(_fakeScheduleRule.ID, data.id);
             Assert.IsTrue(UnitTestExtensions.HasDataProperty(result));
         }
-        
+
         #endregion GetOne
         #region Post
 
@@ -154,7 +154,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // Assert
             Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.ScheduleRules)]
         public void Post_valid_data_returns_created_at_route()
         {
@@ -165,7 +165,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             //assert
             Assert.IsInstanceOfType(result.Result, typeof(ObjectResult));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.ScheduleRules)]
         public void Post_valid_data_returns_new_record_in_data_object()
         {
@@ -179,7 +179,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             Assert.IsTrue(UnitTestExtensions.HasDataProperty(result));
         }
 
-        #endregion Post 
+        #endregion Post
         #region PUT
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.ScheduleRules)]
@@ -193,7 +193,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // Assert
             Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.ScheduleRules)]
         public void Put_valid_data_returns_ok_result_and_updated_record()
         {
@@ -210,12 +210,12 @@ namespace Machete.Test.UnitTests.Controllers.Api
             Assert.IsInstanceOfType(returnedViewModel, typeof(ScheduleRuleVM));
             Assert.IsTrue(UnitTestExtensions.HasDataProperty(result));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.ScheduleRules)]
         public void Put_invalid_id_returns_not_found()
         {
             // act
-            var result = _controller.Put(1000,  new ScheduleRuleVM());
+            var result = _controller.Put(1000, new ScheduleRuleVM());
             // assert
             Assert.IsInstanceOfType(result.Result, typeof(NotFoundResult));
         }
@@ -231,7 +231,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // assert
             Assert.IsInstanceOfType(deleteResult, typeof(NotFoundResult));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.ScheduleRules)]
         public void Delete_existing_record_returns_ok()
         {
@@ -239,7 +239,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             // assert
             Assert.IsInstanceOfType(deleteResult, typeof(OkResult));
         }
-        
+
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.ScheduleRules)]
         public void Delete_existing_item_removes_record()
         {
