@@ -9,7 +9,7 @@ namespace Machete.Domain.EmbeddedAttributes
     /// A class to type-safety a text-as-json return value in the Configs
     /// Used to track an array of objects for the client to parse as JSON
     /// </summary>
-    public class Confirm
+    public class OnlineOrderTerm
     {
         public string name { get; set; }
         public string text { get; set; }

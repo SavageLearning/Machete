@@ -32,8 +32,8 @@ namespace Machete.Service
             new Config { key = Cfg.OnlineOrdersIntroMessage,         category = "OnlineOrders", publicConfig = true, value = "OnlineOrdersIntroMessage", description = "Displays in the 1st step of the online hiring. Include your center's basic information and how you program works, contact number, etc. Links to your website will also work." },
             new Config { key = Cfg.OnlineOrdersTerms,             category = "OnlineOrders", publicConfig = true, value = JsonConvert.SerializeObject(new[] 
                                                                                                                                 {
-                                                                                                                                    new Confirm() { name = "term1", text = "This is the term one" },
-                                                                                                                                    new Confirm() { name = "term2", text = "This is the term two" }
+                                                                                                                                    new OnlineOrderTerm() { name = "term1", text = "This is the term one" },
+                                                                                                                                    new OnlineOrderTerm() { name = "term2", text = "This is the term two" }
                                                                                                                                 }), description = "The terms that an employer has to accept before proceding with creating a work order"},
             new Config { key = Cfg.OnlineOrdersEnglishReqNote, category = "OnlineOrders", publicConfig = true, value = "OnlineOrdersEnglishReqNote", description = "Displayed in the site details step. When employers requests an English-speaking worker, this note provides any center-specific details"},
             new Config { key = Cfg.OnlineOrdersTransportDetailsLink, category = "OnlineOrders", publicConfig = true, value = "OnlineOrdersTransportDetailsLink", description = "Will display if your transport provider cost rules have any fees. Include the link to your website with transport cost info "},
@@ -65,7 +65,7 @@ namespace Machete.Service
                 if (!context.Configs.Any(config => config.key == c.key))
                 {
                     if (c.key == Cfg.MicrosoftTimeZoneIndex)
-                        c.value = TZConvert.IanaToWindows(tenantTimeZone); 
+                        c.value = TZConvert.IanaToWindows(tenantTimeZone);
                     c.datecreated = DateTime.Now;
                     c.dateupdated = DateTime.Now;
                     c.createdby = "Init T. Script";
