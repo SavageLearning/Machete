@@ -6,6 +6,9 @@
 // The ID values in the Lookup table may vary from installation to installation, these values should be
 // the same. These values are used in the lookup table's category and key columns. Machete may behave in 
 // unexpected ways if you modify these. 
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
 namespace Machete.Domain
 {
     public struct LCategory
@@ -129,5 +132,36 @@ namespace Machete.Domain
         public const string DisableOnlineOrders = "DisableOnlineOrders";
         public const string DisableOnlineOrdersBanner = "DisableOnlineOrdersBanner";
         public const string DisableOnlineOrdersBannerInfoUrl = "DisableOnlineOrdersBannerInfoUrl";
+    }
+
+    public static class UserDefinedConfigs
+    {
+        private static readonly List<string> _userDefinedConfigs = new List<string>()
+        {
+            Cfg.OrganizationName,
+            Cfg.OrganizationAddress,
+            Cfg.WorkCenterDescription,
+            Cfg.OnlineOrdersIntroMessage,
+            Cfg.OnlineOrdersTerms,
+            Cfg.OnlineOrdersEnglishReqNote,
+            Cfg.OnlineOrdersTransportDetailsLink,
+            Cfg.OrderConfirmTransportFeesNotice,
+            Cfg.OrderReviewWorkerCountLabel,
+            Cfg.OrderReviewSkillsSummaryLabel,
+            Cfg.OrderReviewTransportFeeMethodHelper,
+            Cfg.OrderReviewLaborCostMethodHelper,
+            Cfg.OrderReviewTransportFeeAboutUrl,
+            Cfg.OrderReviewLaborCostAboutUrl,
+            Cfg.OrderReviewNextStepsHelper,
+            Cfg.DisableWorkersVaccineRequirement,
+            Cfg.DisableOnlineOrders,
+            Cfg.DisableOnlineOrdersBanner,
+            Cfg.DisableOnlineOrdersBannerInfoUrl
+        };
+
+        public static ReadOnlyCollection<string> Pascal = _userDefinedConfigs.AsReadOnly();
+        public static ReadOnlyCollection<string> Lower = _userDefinedConfigs
+                                                            .ConvertAll(item => item.ToLower())
+                                                            .AsReadOnly();
     }
 }

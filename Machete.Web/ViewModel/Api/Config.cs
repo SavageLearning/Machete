@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using Machete.Service.CustomValidators;
 using Machete.Web.ViewModel.Api;
 
 namespace Machete.Web.Controllers.Api
@@ -7,6 +8,7 @@ namespace Machete.Web.Controllers.Api
 public class ConfigVM : RecordVM {
         [StringLength(50)]
         [Required]
+        [UserEditableConfig]
         public string key { get; set; }
         [StringLength(5000)]
         [Required]
