@@ -68,7 +68,7 @@ namespace Machete.Web.Controllers.Api
         public new ActionResult<ConfigVM> Post([FromBody] ConfigVM value) { return base.Post(value); }
 
         [HttpPut("{id}"), Authorize(Roles = "Administrator")]
-        public ActionResult<ConfigVM> Put([FromRoute] int id, [FromBody] ConfigVM value)
+        public new ActionResult<ConfigVM> Put([FromRoute] int id, [FromBody] ConfigVM value)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
