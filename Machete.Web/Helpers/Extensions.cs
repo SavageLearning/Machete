@@ -34,6 +34,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Machete.Domain;
 
 namespace Machete.Web.Helpers
 {
@@ -106,5 +107,9 @@ namespace Machete.Web.Helpers
             
             return userSettingsViewModel;
         }
+
+        public static bool IsUserDefined(this Config config) => 
+            UserDefinedConfigs.Lower.Contains(config.key.ToLower());
+        
     }
 }

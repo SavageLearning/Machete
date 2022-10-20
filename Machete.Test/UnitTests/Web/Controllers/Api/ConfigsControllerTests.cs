@@ -33,7 +33,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             _fakeConfig = new Config
             {
                 ID = 1,
-                key = "fakeOrgName",
+                key = Cfg.OrganizationName,
                 value = "Machete"
             };
             _fakeConfigs.Add(_fakeConfig);
@@ -55,7 +55,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
                 .Returns(_fakeConfig);
             _serv.Setup(s => s.Delete(It.IsAny<int>(), It.IsAny<string>()))
                 .Verifiable();
-            _serv.Setup(s => s.Save(It.Is<Config>(c => c.key == "fakeOrgName"), It.IsAny<string>()))
+            _serv.Setup(s => s.Save(It.Is<Config>(c => c.key == Cfg.OrganizationName), It.IsAny<string>()))
                 .Callback((Config c, string s) => _savedConfig = c);
 
             _configuration.SetupGet(x => x[It.Is<string>(s => s == "Authentication:Facebook:AppId")])
@@ -183,7 +183,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
         public void Post_valid_data_returns_new_record_in_data_oject()
         {
             // arrange
-            var validConfig = new ConfigVM() {key = "fakeOrgName", value = "Machete"};
+            var validConfig = new ConfigVM() { value = "Machete"};
             // act
             var result = _controller.Post(validConfig);
             var typedResult = (result.Result as ObjectResult).Value;
@@ -192,7 +192,7 @@ namespace Machete.Test.UnitTests.Controllers.Api
             //assert
             Assert.IsInstanceOfType(configVM, typeof(ConfigVM));
             Assert.IsTrue(resultHasDataProp);
-            Assert.AreEqual("fakeOrgName", configVM.key);
+            Assert.AreEqual("Machete", configVM.value);
         }
 
         #endregion Post        
@@ -200,15 +200,46 @@ namespace Machete.Test.UnitTests.Controllers.Api
         #region PUT
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Configs)]
+        public void PUT_non_UserDefinedConfigs_key_should_return_BadRequestObjectResponse()
+        {
+            // Arrange
+            var validConfig = _map.Map<ConfigVM>(_fakeConfig);
+            _controller.ModelState.AddModelError("value", "UserEditableConfig");
+            // Act
+            var result = _controller.Put(validConfig.id, validConfig);
+            // Assert
+            Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
+            Assert.IsNotInstanceOfType(result.Result, typeof(NotFoundObjectResult));
+            Assert.IsNotInstanceOfType(result.Result, typeof(OkObjectResult));
+        }
+
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Configs)]
+        public void Put_when_client_edits_key_config_key_is_not_changed()
+        {
+            // arrange
+            var validConfig = _map.Map<ConfigVM>(_fakeConfig);
+            validConfig.key = Cfg.OnlineOrdersTerms; // any other key
+            // act
+            var result = _controller.Put(1, validConfig);
+            //assert
+            Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
+            Assert.IsNotInstanceOfType(result.Result, typeof(NotFoundObjectResult));
+            Assert.IsNotInstanceOfType(result.Result, typeof(BadRequestObjectResult));
+            _serv.Verify(t => t.Save(It.Is<Config>(s => s.key.Equals("OrganizationName")), It.IsAny<string>()));
+        }
+
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Configs)]
         public void Put_invalid_data_returns_bad_request()
         {
             // Arrange
-            var invalidConfig = new ConfigVM() {id = 3, key = "fake key"};
+            var invalidConfig = new ConfigVM() {id = 1, key = "fake key"};
             _controller.ModelState.AddModelError("value", "Required");
             // Act
             var result = _controller.Put(invalidConfig.id, invalidConfig);
             // Assert
             Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
+            Assert.IsNotInstanceOfType(result.Result, typeof(NotFoundObjectResult));
+            Assert.IsNotInstanceOfType(result.Result, typeof(OkObjectResult));
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Configs)]
@@ -221,8 +252,9 @@ namespace Machete.Test.UnitTests.Controllers.Api
             var result = _controller.Put(1, validConfig);
             //assert
             Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
+            Assert.IsNotInstanceOfType(result.Result, typeof(NotFoundObjectResult));
+            Assert.IsNotInstanceOfType(result.Result, typeof(BadRequestObjectResult));
             Assert.AreEqual(_fakeConfig, _savedConfig);
-            Assert.AreEqual("fakeOrgName", _savedConfig.key);
             Assert.AreEqual("Machete", _savedConfig.value);
         }
 

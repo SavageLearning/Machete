@@ -5,6 +5,7 @@ using System.Linq;
 using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
+using Machete.Web.Helpers;
 using Machete.Web.Helpers.Api;
 using Machete.Web.ViewModel.Api;
 using Microsoft.AspNetCore.Authorization;
@@ -67,7 +68,32 @@ namespace Machete.Web.Controllers.Api
         public new ActionResult<ConfigVM> Post([FromBody] ConfigVM value) { return base.Post(value); }
 
         [HttpPut("{id}"), Authorize(Roles = "Administrator")]
-        public new ActionResult<ConfigVM> Put([FromRoute] int id, [FromBody] ConfigVM value) { return base.Put(id, value); }
+        public new ActionResult<ConfigVM> Put([FromRoute] int id, [FromBody] ConfigVM value)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            Config dbRecord = service.Get(id);
+            ConfigVM updatedRecordAsVM;
+
+            if (dbRecord is null) return NotFound();
+
+            if (!dbRecord.IsUserDefined()) return BadRequest("Record not editable by user");
+            try
+            {
+                // key shouldn't change
+                var ogKey = dbRecord.key;
+                Config mappedAsDomain = map.Map(value, dbRecord);
+                mappedAsDomain.key = ogKey;
+                mappedAsDomain.ID = id;
+                service.Save(mappedAsDomain, UserEmail);
+                updatedRecordAsVM = map.Map<Config, ConfigVM>(service.Get(id));   
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+            return Ok(new {data = updatedRecordAsVM});
+        }
 
         [HttpDelete("{id}"), Authorize(Roles = "Administrator")]
         public new ActionResult Delete([FromRoute] int id) { return base.Delete(id); }
