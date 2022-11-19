@@ -124,8 +124,8 @@ namespace Machete.Domain
         public const string OrderReviewSkillsSummaryLabel = "OrderReviewSkillsSummaryLabel";
         public const string OrderReviewTransportFeeMethodHelper = "OrderReviewTransportFeeMethodHelper";
         public const string OrderReviewLaborCostMethodHelper = "OrderReviewLaborCostMethodHelper";
-        public const string OrderReviewTransportFeeAboutUrl = "OrderReviewTransportFeeEmplanationUrl";
-        public const string OrderReviewLaborCostAboutUrl = "OrderReviewLaborCostPayMethodHelper";
+        public const string OrderReviewTransportFeeAboutUrl = "OrderReviewTransportFeeAboutUrl";
+        public const string OrderReviewLaborCostAboutUrl = "OrderReviewLaborCostAboutUrl";
         public const string OrderReviewNextStepsHelper = "OrderReviewNextStepsHelper";
         public const string DisableWorkersVaccineRequirement = "DisableWorkersVaccineRequirement";
         public const string MicrosoftTimeZoneIndex = "MicrosoftTimeZoneIndex";
