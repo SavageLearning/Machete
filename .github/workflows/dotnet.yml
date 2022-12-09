@@ -51,17 +51,18 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: 16
-#     - name: Download a single artifact
-#       uses: actions/download-artifact@v3
-#       with:
-#         name: openapi-spec
+    - name: Download a single artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: openapi-spec
+    - run: ls -ahlR
     - name: Remove version from swagger.json
-      run:  sed -i 's/\"v1\",/\"1\"/g' ./Machete.Web/swagger/v1/swagger.json
+      run:  sed -i 's/\"v1\",/\"1\"/g' swagger.json
     - name: Generate openapi angular client
       uses: openapi-generators/openapitools-generator-action@v1
       with:
         generator: typescript-angular
-        openapi-file: ./Machete.Web/swagger/v1/swagger.json
+        openapi-file: swagger.json
         command-args: "--additional-properties=withInterfaces=true,ngVersion=12"
     - name: Publish api client sdk NPM 📦
       run: cd typescript-angular-client && npm publish --tag pre-prod
