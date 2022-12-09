@@ -2,10 +2,10 @@ name: Build and test dotnet core
 
 on:
   workflow_dispatch:
-    branches: [ master, feature/generate-openapiclient ]
+    branches: [ master, feature/* ]
   workflow_run:
     workflows: ["Build and publish api client sdk NPM 📦"]
-    branches: [ master, feature/generate-openapiclient ]
+    branches: [ master, feature/* ]
     types:
       - completed
 
