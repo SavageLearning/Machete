@@ -51,6 +51,7 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: 16
+    - run: rm -rf ./swagger.json
     - name: Download a single artifact
       uses: actions/download-artifact@v3
       with:
@@ -64,6 +65,7 @@ jobs:
         generator: typescript-angular
         openapi-file: swagger.json
         command-args: "--additional-properties=withInterfaces=true,ngVersion=12"
+    - run: ls -ahlR
     - name: Publish api client sdk NPM 📦
       run: cd typescript-angular-client && npm publish --tag pre-prod
       env:
