@@ -60,8 +60,11 @@ jobs:
       with:
         generator: typescript-angular
         openapi-file: swagger.json
-        command-args: "--additional-properties=withInterfaces=true,ngVersion=12,npmName=machete-client"
+        command-args: "--additional-properties=withInterfaces=true,ngVersion=12"
+    - name: Remove version from swagger.json
+      run: sed -i '5d' ./swagger.json && sed -i 's/\"Machete.Api\",/\"Machete.Api\"/g' ./swagger.json
     - name: Publish api client sdk NPM 📦
-      run: cd typescript-angular-client && npm publish --tag pre-prod
+      working-directory: ./typescript-angular-client
+      run: npm publish --tag pre-prod
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
