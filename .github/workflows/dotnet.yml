@@ -56,7 +56,7 @@ jobs:
       with:
         name: openapi-spec
     - name: Remove version from swagger.json
-      run: sed -i '5d' ./swagger.json && sed -i 's/\"Machete.Api\",/\"Machete.Api\"/g' ./swagger.json
+      run:  sed -i 's/\"v1\",/\"1\"/g'
     - name: Generate openapi angular client
       uses: openapi-generators/openapitools-generator-action@v1
       with:
