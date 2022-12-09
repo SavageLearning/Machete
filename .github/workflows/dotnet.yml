@@ -64,7 +64,8 @@ jobs:
         openapi-file: swagger.json
         command-args: "--additional-properties=withInterfaces=true,ngVersion=12"
     - run: pwd
+    - run: ls -ahl
     - name: Publish api client sdk NPM 📦
-      run: cd /github/workspace/typescript-angular-client && npm publish --tag pre-prod
+      run: cd /home/runner/work/Machete/Machete/typescript-angular-client && npm publish --tag pre-prod
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
