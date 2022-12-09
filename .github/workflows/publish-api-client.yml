@@ -1,8 +1,10 @@
 name: Build and test dotnet core
-
 on:
-  push:
+  workflow_run:
+    workflows: ["Build and test dotnet core"]
     branches: [ master, feature/generate-openapiclient ] # !TODO: only master
+    types:
+      - completed
 
 jobs:
   build:
