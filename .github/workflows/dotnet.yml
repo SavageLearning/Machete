@@ -43,6 +43,9 @@ jobs:
       run: dotnet test Machete.Test --no-build --verbosity normal --filter '(TestCategory!=Area-Reports)'
   
   publish-angular-sdk:
+    defaults:
+      run:
+        working-directory: ./api-client
     needs: build
     runs-on: ubuntu-latest
     # https://docs.github.com/en/actions/guides/about-service-containers
@@ -66,6 +69,6 @@ jobs:
     - run: pwd
     - run: ls -ahl
     - name: Publish api client sdk NPM 📦
-      run: cd /home/runner/work/Machete/Machete/typescript-angular-client && npm publish --tag pre-prod
+      run: cd typescript-angular-client && npm publish --tag pre-prod
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
