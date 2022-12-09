@@ -58,11 +58,8 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: openapi-spec
-        path: ./swagger
-    
     - name: Display structure of downloaded files
       run: ls -R
-      working-directory: ./swagger
     - name: Remove version from swagger.json
       run:  sed -i 's/\"v1\",/\"1\"/g' ./swagger.json
     - name: Generate openapi angular client
