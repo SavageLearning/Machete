@@ -55,16 +55,16 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: openapi-spec
+    - name: Remove version from swagger.json
+      run: sed -i '5d' ./swagger.json && sed -i 's/\"Machete.Api\",/\"Machete.Api\"/g' ./swagger.json
     - name: Generate openapi angular client
       uses: openapi-generators/openapitools-generator-action@v1
       with:
         generator: typescript-angular
         openapi-file: swagger.json
         command-args: "--additional-properties=withInterfaces=true,ngVersion=12"
-    - name: Remove version from swagger.json
-      run: sed -i '5d' ./swagger.json && sed -i 's/\"Machete.Api\",/\"Machete.Api\"/g' ./swagger.json
     - name: Publish api client sdk NPM 📦
-      working-directory: ./typescript-angular-client
+      working-directory: /github/workspace/typescript-angular-client
       run: npm publish --tag pre-prod
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
