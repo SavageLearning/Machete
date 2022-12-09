@@ -1,13 +1,8 @@
 name: Build and test dotnet core
 
 on:
-  workflow_dispatch:
-    branches: [ master, feature/* ]
-  workflow_run:
-    workflows: ["Build and publish api client sdk NPM 📦"]
-    branches: [ master, feature/* ]
-    types:
-      - completed
+  push:
+    branches: [ master, feature/generate-openapiclient ] # !TODO: only master
 
 jobs:
   build:
@@ -28,6 +23,6 @@ jobs:
         openapi-file: swagger/v1/swagger.json
         command-args: "withInterfaces=true,ngVersion=12,npmName=machete-client"
     - name: Publish api client sdk NPM 📦
-      run: cd typescript-angular-client && npm publish
+      run: cd typescript-angular-client && npm publish --tag 1.15.${{ github.run_number }}
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
