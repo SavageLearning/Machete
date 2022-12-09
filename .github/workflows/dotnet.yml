@@ -45,7 +45,7 @@ jobs:
   publish-angular-sdk:
     defaults:
       run:
-        working-directory: ./api-client
+        working-directory: api-client
     needs: build
     runs-on: ubuntu-latest
     # https://docs.github.com/en/actions/guides/about-service-containers
