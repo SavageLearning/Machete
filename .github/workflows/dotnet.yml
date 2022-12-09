@@ -59,7 +59,7 @@ jobs:
       with:
         name: openapi-spec
     - name: Display structure of downloaded files
-      run: ls -R
+      run: ls
     - name: Remove version from swagger.json
       run:  sed -i 's/\"v1\",/\"1\"/g' ./swagger.json
     - name: Generate openapi angular client
