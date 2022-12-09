@@ -25,10 +25,19 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.x
+    - name: Restore dotnet tools
+      run: dotnet tool restore
     - name: Restore dependencies
       run:  dotnet restore
     - name: Build
       run: dotnet build --no-restore
+    - name: Cache sagger.json
+      uses: actions/upload-artifact@v3
+      with:
+        name: openapi-spec
+        path: |
+          Machete.Web/swagger/v1/swagger.json
+        retention-days: 1
     - name: Test
     # skipping reports tests because of 'first-run' issues we dont want to deal with
       run: dotnet test Machete.Test --no-build --verbosity normal --filter '(TestCategory!=Area-Reports)'
