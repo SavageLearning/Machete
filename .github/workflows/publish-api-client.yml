@@ -2,7 +2,7 @@ name: Publish NPM Anguler sdk
 on:
   workflow_run:
     workflows: ["Build and test dotnet core"]
-    branches: [ master, feature/generate-openapiclient ] # !TODO: only master
+    branches: [ master ]
     types:
       - completed
 
