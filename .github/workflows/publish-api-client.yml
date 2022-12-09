@@ -1,0 +1,37 @@
+name: Build and test dotnet core
+
+on:
+  workflow_dispatch:
+    branches: [ master, feature/generate-openapiclient ]
+  workflow_run:
+    workflows: ["Build and publish api client sdk NPM 📦"]
+    branches: [ master, feature/generate-openapiclient ]
+    types:
+      - completed
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    # https://docs.github.com/en/actions/guides/about-service-containers
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
+    - name: Restore dependencies
+      run:  dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Generate openapi angular client
+      uses: openapi-generators/openapitools-generator-action@v1
+      with:
+        generator: typescript-angular
+        openapi-file: swagger/v1/swagger.json
+        command-args: "withInterfaces=true,ngVersion=12,npmName=machete-client"
+    - name: Publish api client sdk NPM 📦
+      run: cd typescript-angular-client && npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

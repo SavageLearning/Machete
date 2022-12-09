@@ -63,3 +63,6 @@ env_variables.conf
 # Mono auto generated files
 mono_crash.*
 output/
+
+# auto-generated
+swagger/v1/swagger.json
