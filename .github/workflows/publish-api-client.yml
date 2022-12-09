@@ -21,8 +21,10 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.x
+    - name: Restore dotnet tools
+      run: dotnet tool restore
     - name: Restore dependencies
-      run: dotnet tool restore && dotnet restore
+      run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
     - name: Generate openapi angular client

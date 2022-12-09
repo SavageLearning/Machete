@@ -65,4 +65,4 @@ mono_crash.*
 output/
 
 # auto-generated
-swagger/v1/swagger.json
+Machete.Web/swagger/v1/swagger.json
