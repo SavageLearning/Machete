@@ -58,7 +58,7 @@ jobs:
       with:
         generator: typescript-angular
         openapi-file: swagger/v1/swagger.json
-        command-args: "withInterfaces=true,ngVersion=12,npmName=machete-client"
+        command-args: "--additional-properties=withInterfaces=true,ngVersion=12,npmName=machete-client"
     - name: Publish api client sdk NPM 📦
       run: cd typescript-angular-client && npm publish --tag 1.15.${{ github.run_number }}
       env:
