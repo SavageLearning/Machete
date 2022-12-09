@@ -58,8 +58,6 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: openapi-spec
-    - name: Display structure of downloaded files
-      run: ls
     - name: Remove version from swagger.json
       run:  sed -i 's/\"v1\",/\"1\"/g' ./swagger.json
     - name: Generate openapi angular client
@@ -68,8 +66,6 @@ jobs:
         generator: typescript-angular
         openapi-file: swagger.json
         command-args: "--additional-properties=withInterfaces=true,ngVersion=12"
-    - run: pwd
-    - run: ls -ahl
     - name: Publish api client sdk NPM 📦
       run: cd typescript-angular-client && npm publish --tag pre-prod
       env:
