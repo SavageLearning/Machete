@@ -1,4 +1,4 @@
-name: Build and test dotnet core
+name: Publish NPM Anguler sdk
 on:
   workflow_run:
     workflows: ["Build and test dotnet core"]
