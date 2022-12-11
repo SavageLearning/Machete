@@ -51,12 +51,10 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: 16
-    - run: rm -rf ./swagger.json
     - name: Download a single artifact
       uses: actions/download-artifact@v3
       with:
         name: openapi-spec
-    - run: ls -ahlR
     - name: Remove version from swagger.json
       run:  sed -i 's/\"v1\",/\"1\"/g' swagger.json
     - name: Generate openapi angular client
@@ -65,7 +63,6 @@ jobs:
         generator: typescript-angular
         openapi-file: swagger.json
         command-args: --additional-properties=withInterfaces=true,ngVersion=12,npmVersion=1.15.${{ github.run_number }},npmName=machete-client
-    - run: ls -ahlR
     - name: Add npm secrets
     # https://docs.npmjs.com/using-private-packages-in-a-ci-cd-workflow
       run: touch ~/.npmrc && echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
