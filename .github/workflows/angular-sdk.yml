@@ -33,7 +33,7 @@ jobs:
       uses: openapi-generators/openapitools-generator-action@v1
       with:
         generator: typescript-angular
-        openapi-file: swagger.json
+        openapi-file: Machete.Web/swagger/v1/swagger.json
         command-args: --additional-properties=withInterfaces=true,ngVersion=12,npmVersion=1.15.${{ github.run_number }},npmName=machete-client
 
     - uses: actions/setup-node@v3
