@@ -3,6 +3,7 @@ ARG machete_version=UNSET
 ENV machete_version=$machete_version
 WORKDIR /admin
 COPY . ./
+RUN dotnet tool restore
 RUN dotnet build --no-incremental
 RUN sed -i "s/APPVEYOR_VERSION/$machete_version/" "./Machete.Web/Views/Home/Index.cshtml"
 RUN dotnet publish -o output Machete.Web

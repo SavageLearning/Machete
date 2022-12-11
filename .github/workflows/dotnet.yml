@@ -31,45 +31,6 @@ jobs:
       run:  dotnet restore
     - name: Build
       run: dotnet build --no-restore
-    - name: Cache sagger.json
-      uses: actions/upload-artifact@v3
-      with:
-        name: openapi-spec
-        path: |
-          Machete.Web/swagger/v1/swagger.json
-        retention-days: 1
     - name: Test
     # skipping reports tests because of 'first-run' issues we dont want to deal with
       run: dotnet test Machete.Test --no-build --verbosity normal --filter '(TestCategory!=Area-Reports)'
-  
-  publish-angular-sdk:
-    needs: build
-    runs-on: ubuntu-latest
-    # https://docs.github.com/en/actions/guides/about-service-containers
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v3
-      with:
-        node-version: 16
-    - run: rm -rf ./swagger.json
-    - name: Download a single artifact
-      uses: actions/download-artifact@v3
-      with:
-        name: openapi-spec
-    - run: ls -ahlR
-    - name: Remove version from swagger.json
-      run:  sed -i 's/\"v1\",/\"1\"/g' swagger.json
-    - name: Generate openapi angular client
-      uses: openapi-generators/openapitools-generator-action@v1
-      with:
-        generator: typescript-angular
-        openapi-file: swagger.json
-        command-args: --additional-properties=withInterfaces=true,ngVersion=12,npmVersion=1.15.${{ github.run_number }},npmName=machete-client
-    - run: ls -ahlR
-    - name: Add npm secrets
-    # https://docs.npmjs.com/using-private-packages-in-a-ci-cd-workflow
-      run: touch ~/.npmrc && echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-    - name: Publish api client sdk NPM 📦
-      run: cd typescript-angular-client && npm publish --tag pre-prod
-      env:
-        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
