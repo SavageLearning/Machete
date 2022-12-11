@@ -27,7 +27,7 @@ jobs:
       run: dotnet build --no-restore
 
     - name: Remove version prefix from swagger.json
-      run:  sed -i 's/\"v1\",/\"1\"/g' swagger.json
+      run:  sed -i 's/\"v1\",/\"1\"/g' ./Machete.Web/swagger/v1/swagger.json
 
     - name: Generate openapi angular client
       uses: openapi-generators/openapitools-generator-action@v1
