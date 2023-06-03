@@ -11,12 +11,12 @@ namespace Machete.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class PersonsController
-        : MacheteApi2Controller<Person, PersonVM>
+        : MacheteApiController<Person, PersonVM, PersonListVM>
     {
         public PersonsController(IPersonService serv, IMapper map) : base(serv, map) { }
 
         [HttpGet, Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
-        public new ActionResult<IEnumerable<PersonVM>> Get(
+        public new ActionResult<IEnumerable<PersonListVM>> Get(
             [FromQuery] ApiRequestParams apiRequestParams)
         {
             return base.Get(apiRequestParams);

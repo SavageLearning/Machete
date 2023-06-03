@@ -13,12 +13,12 @@ namespace Machete.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class WorkAssignmentsController
-        : MacheteApi2Controller<WorkAssignment, WorkAssignmentVM>
+        : MacheteApiController<WorkAssignment, WorkAssignmentVM, WorkAssignmentListVM>
     {
         public WorkAssignmentsController(IWorkAssignmentService serv, IMapper map) : base(serv, map) { }
 
         [HttpGet, Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
-        public new ActionResult<IEnumerable<WorkAssignmentVM>> Get(ApiRequestParams apiRequestParams)
+        public new ActionResult<IEnumerable<WorkAssignmentListVM>> Get(ApiRequestParams apiRequestParams)
         {
             return base.Get(apiRequestParams);
         }

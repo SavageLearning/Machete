@@ -7,6 +7,7 @@ using Machete.Service;
 using Machete.Api.Helpers;
 using Machete.Api.ViewModel;
 using Microsoft.AspNetCore.Mvc;
+using Machete.Service.DTO;
 
 namespace Machete.Api.Controllers
 {
@@ -16,8 +17,10 @@ namespace Machete.Api.Controllers
     //
     // Controllers that extend this class will need to `new` an override method that calls the base method for each
     // method that is mean to be re-used.
-    public abstract class MacheteApi2Controller<TD, TVM> : ControllerBase
-        where TD : Record where TVM : RecordVM
+    public abstract class MacheteApiController<TD, TVM, TLVM> : ControllerBase
+        where TD : Record
+        where TVM : RecordVM
+        where TLVM : ListVM
     {
         protected string UserSubject => User?.FindFirst(CAType.nameidentifier)?.Value;
         protected string UserEmail => User?.FindFirst(CAType.email)?.Value;
@@ -28,12 +31,12 @@ namespace Machete.Api.Controllers
             ControllerContext = controllerContext;
         }
 
-        protected MacheteApi2Controller(IService<TD> service, IMapper map)
+        protected MacheteApiController(IService<TD> service, IMapper map)
         {
             this.service = service;
             this.map = map;
         }
-        protected virtual ActionResult<IEnumerable<TVM>> Get(
+        protected virtual ActionResult<IEnumerable<TLVM>> Get(
             ApiRequestParams requestParams
         )
         {
@@ -44,12 +47,12 @@ namespace Machete.Api.Controllers
                     return Ok(new
                     {
                         data = service.GetAll()
-                        .Select(e => map.Map<TD, TVM>(e))
+                        .Select(e => map.Map<TD, TLVM>(e))
                     });
                 var result = service.GetAll()
                     .Skip(requestParams.Skip)
                     .Take(requestParams.pageSize)
-                    .Select(e => map.Map<TD, TVM>(e))
+                    .Select(e => map.Map<TD, TLVM>(e))
                     .AsEnumerable();
                 //!!TODO Implement pagination and filtering
                 var paginationMetaData = new PaginationMetaData();

@@ -28,4 +28,9 @@ namespace Machete.Api.ViewModel
         public double? wage { get; set; }
         public string clientRules { get; set; }
     }
+
+    public class LookupListVM : ListVM
+    {
+
+    }
 }

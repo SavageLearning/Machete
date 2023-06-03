@@ -8,4 +8,9 @@
         public int maxEndMin { get; set; }
 
     }
+
+    public class ScheduleRuleListVM : ListVM
+    {
+
+    }
 }

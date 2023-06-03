@@ -12,7 +12,7 @@ namespace Machete.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TransportRulesController : MacheteApi2Controller<TransportRule, TransportRuleVM>
+    public class TransportRulesController : MacheteApiController<TransportRule, TransportRuleVM, TransportRuleListVM>
     {
         private readonly ITransportCostRuleService _costServ;
         public TransportRulesController(

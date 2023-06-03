@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Machete.Api.ViewModel
 {
@@ -34,5 +35,36 @@ namespace Machete.Api.ViewModel
         public string workSiteAddress2 { get; set; }
         public string zipcode { get; set; }
         public Collection<WorkAssignmentVM> workAssignments { get; set; }
+    }
+
+    public class WorkOrderListVM : ListVM
+    {
+        public string EID { get; set; }
+        public string WOID { get; set; }
+        public string dateTimeofWork { get; set; }
+        public string status { get; set; }
+        public int statusID { get; set; }
+        public string displayState { get; set; }
+        public string transportMethod { get; set; }
+        public int WAcount { get; set; }
+        public string contactName { get; set; }
+        public string workSiteAddress1 { get; set; }
+        public string zipcode { get; set; }
+        public string onlineSource { get; set; }
+        public string emailSentCount { get; set; }
+        public string emailErrorCount { get; set; }
+        public string updatedby { get; set; }
+        public string dateupdated { get; set; }
+        public string recordid { get; set; }
+        public IEnumerable<WorkerAssignedListVM> workers { get; set; }
+    }
+
+    public class WorkerAssignedListVM : ListVM
+    {
+        public int WID { get; set; }
+        public string name { get; set; }
+        public string skill { get; set; }
+        public double hours { get; set; }
+        public double wage { get; set; }
     }
 }

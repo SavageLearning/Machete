@@ -3,22 +3,22 @@ using System.Linq;
 using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
-using Machete.Service.DTO;
 using Machete.Api.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using DTO = Machete.Service.DTO;
 
 namespace Machete.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class WorkersController
-        : MacheteApi2Controller<Worker, WorkerVM>
+        : MacheteApiController<Worker, WorkerVM, WorkerListVM>
     {
         public WorkersController(IWorkerService serv, IMapper map) : base(serv, map) { }
 
         [HttpGet, Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
-        public new ActionResult<IEnumerable<WorkerVM>> Get(
+        public new ActionResult<IEnumerable<WorkerListVM>> Get(
             [FromQuery] ApiRequestParams apiRequestParams)
         {
             return base.Get(apiRequestParams);

@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Machete.Domain;
 using Machete.Service;
 using Machete.Service.Identity;
 using Machete.Web.Helpers;
@@ -37,7 +38,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NLog;
-using HelperUserRoles = Machete.Web.Helpers.UserRoles;
 
 namespace Machete.Web.Controllers
 {
@@ -72,7 +72,7 @@ namespace Machete.Web.Controllers
         {
             List<UserSettingsViewModel> model = new List<UserSettingsViewModel>();
 
-            var hirers = await _userManager.GetUsersInRoleAsync(HelperUserRoles.Hirer);
+            var hirers = await _userManager.GetUsersInRoleAsync(LUserRoles.Hirer);
             var hirerIDs = hirers.Select(hirer => hirer.Id).ToList();
 
             if (User.Identity.Name == "jadmin" || User.Identity.Name.Contains("ndlon"))

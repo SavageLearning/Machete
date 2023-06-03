@@ -16,7 +16,7 @@ namespace Machete.Api.Controllers
 {
     [Route("api/workorders")]
     [ApiController]
-    public class WorkOrdersController : MacheteApi2Controller<WorkOrder, WorkOrderVM>
+    public class WorkOrdersController : MacheteApiController<WorkOrder, WorkOrderVM, WorkOrderListVM>
     {
         private readonly IWorkOrderService serv;
 
@@ -41,7 +41,7 @@ namespace Machete.Api.Controllers
 
             var result = list.query
                 .Select(
-                    e => map.Map<DTO.WorkOrdersList, WorkOrderVM>(e)
+                    e => map.Map<DTO.WorkOrdersList, WorkOrderListVM>(e)
                 ).AsEnumerable();
             return Ok(new { data = result });
         }

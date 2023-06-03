@@ -12,19 +12,19 @@ namespace Machete.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LookupsController : MacheteApi2Controller<Lookup, LookupVM>
+    public class LookupsController : MacheteApiController<Lookup, LookupVM, LookupListVM>
     {
         public LookupsController(ILookupService serv, IMapper map) : base(serv, map) { }
 
         // GET: api/Lookups
         [HttpGet]
-        public virtual ActionResult<IEnumerable<LookupVM>> Get()
+        public virtual ActionResult<IEnumerable<LookupListVM>> Get()
         {
-            IEnumerable<LookupVM> result;
+            IEnumerable<LookupListVM> result;
             try
             {
                 result = service.GetMany(l => l.active)
-                    .Select(e => map.Map<Lookup, LookupVM>(e))
+                    .Select(e => map.Map<Lookup, LookupListVM>(e))
                     .AsEnumerable();
             }
             catch (Exception ex)

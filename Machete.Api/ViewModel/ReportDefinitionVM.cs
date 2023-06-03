@@ -27,4 +27,9 @@ namespace Machete.Api.ViewModel
         public string columnsJson { get; set; } // must match order in sqlquery
 
     }
+
+    public class ReportDefinitionListVM : ListVM
+    {
+
+    }
 }

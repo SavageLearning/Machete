@@ -15,4 +15,17 @@ namespace Machete.Api.ViewModel
             return this.MemberwiseClone();
         }
     }
+
+    public class ListVM : ICloneable
+    {
+        public int ID { get; set; }
+        public string dateupdated { get; set; }
+        public string updatedby { get; set; }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
+
+    }
 }

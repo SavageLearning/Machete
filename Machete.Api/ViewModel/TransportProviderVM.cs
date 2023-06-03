@@ -11,4 +11,9 @@ namespace Machete.Api.ViewModel
         public string text { get; set; }
         public List<TransportProviderAvailabilityVM> availabilityRules { get; set; }
     }
+
+    public class TransportProviderListVM : ListVM
+    {
+
+    }
 }

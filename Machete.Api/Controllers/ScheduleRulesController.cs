@@ -12,14 +12,14 @@ namespace Machete.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ScheduleRulesController : MacheteApi2Controller<ScheduleRule, ScheduleRuleVM>
+    public class ScheduleRulesController : MacheteApiController<ScheduleRule, ScheduleRuleVM, ScheduleRuleListVM>
     {
 
         public ScheduleRulesController(IScheduleRuleService serv, IMapper map) : base(serv, map) { }
 
         // GET: api/ScheduleRules
         [HttpGet, Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
-        public ActionResult<IEnumerable<ScheduleRuleVM>> Get()
+        public ActionResult<IEnumerable<ScheduleRuleListVM>> Get()
         {
             return base.Get(new ApiRequestParams() { AllRecords = true });
         }

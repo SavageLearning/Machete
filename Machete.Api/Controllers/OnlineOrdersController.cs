@@ -20,7 +20,7 @@ namespace Machete.Api.Controllers
 {
     [Route("api/onlineorders")]
     [ApiController]
-    public class OnlineOrdersController : MacheteApi2Controller<WorkOrder, WorkOrderVM>
+    public class OnlineOrdersController : MacheteApiController<WorkOrder, WorkOrderVM, WorkOrderListVM>
     {
         private readonly IOnlineOrdersService serv;
         private readonly string paypalId;

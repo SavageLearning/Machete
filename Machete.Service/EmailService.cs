@@ -18,7 +18,6 @@ namespace Machete.Service
         Email GetExclusive(int eid, string user);
         Email Create(Email email, string userName, int? woid = null);
         Email Duplicate(int id, int? woid, string userName);
-        WorkOrder GetAssociatedWorkOrderFor(Email email);
         WorkOrder GetAssociatedWorkOrderFor(int woid);
         new IEnumerable<Email> GetMany(Func<Email, bool> predicate);
         IEnumerable<Email> GetEmailsToSend();
@@ -70,7 +69,7 @@ namespace Machete.Service
 
         public override void Save(Email email, string userName)
         {
-            if (email.statusID == Email.iSent) { return; } 
+            if (email.statusID == Email.iSent) { return; }
             if (email.statusID == Email.iReadyToSend)
             {
                 SendSmtpSimple(email);
@@ -83,21 +82,8 @@ namespace Machete.Service
             var wo = db.WorkOrders.Find(woid);
             if (wo == null) throw new MacheteServiceException("Cannot find workorder.");
             var email = wo.Emails.OrderByDescending(e => e.datecreated).FirstOrDefault();
-            if (email == null) {return null;}
+            if (email == null) { return null; }
             return email;
-        }
-
-        public WorkOrder GetAssociatedWorkOrderFor(Email email)
-        {
-            if (!email.isAssociatedToWorkOrder) throw new MacheteServiceException("No WorkOrder associated with Email");
-            try
-            {
-                return email.WorkOrders.Single();
-            }
-            catch (Exception ex)
-            {
-                throw new MacheteIntegrityException("Email is associated with more than one Workorder", ex);
-            }
         }
 
         public WorkOrder GetAssociatedWorkOrderFor(int woid)
@@ -112,7 +98,7 @@ namespace Machete.Service
         /// <returns></returns>
         public Email GetExclusive(int eid, string user)
         {
-            var e =  dbset.Find(eid);
+            var e = dbset.Find(eid);
             if (e.statusID == Email.iSending ||
                 e.statusID == Email.iSent)
             {

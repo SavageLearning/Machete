@@ -1,25 +1,25 @@
 #region COPYRIGHT
 // File:     ActivityController.cs
 // Author:   Savage Learning, LLC.
-// Created:  2012/06/17 
+// Created:  2012/06/17
 // License:  GPL v3
 // Project:  Machete.Web
 // Contact:  savagelearning
-// 
+//
 // Copyright 2011 Savage Learning, LLC., all rights reserved.
-// 
+//
 // This source file is free software, under either the GPL v3 license or a
 // BSD style license, as supplied with this software.
-// 
-// This source file is distributed in the hope that it will be useful, but 
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+//
+// This source file is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
 // or FITNESS FOR A PARTICULAR PURPOSE. See the license files for details.
-//  
-// For details please refer to: 
-// http://www.savagelearning.com/ 
+//
+// For details please refer to:
+// http://www.savagelearning.com/
 //    or
 // http://www.github.com/jcii/machete/
-// 
+//
 #endregion
 
 using System;
@@ -37,10 +37,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Activity = Machete.Domain.Activity;
 using ActivityList = Machete.Service.DTO.ActivityList;
+using Machete.Domain;
 
 namespace Machete.Web.Controllers
 {
-        public class ActivityController : MacheteController
+    public class ActivityController : MacheteController
     {
         private readonly IActivityService _serv;
         private readonly IMapper _map;
@@ -49,7 +50,7 @@ namespace Machete.Web.Controllers
         private readonly UserManager<MacheteUser> _userManager;
 
         public ActivityController(
-            IActivityService aServ, 
+            IActivityService aServ,
             IDefaults defaults,
             UserManager<MacheteUser> userManager,
             IMapper map,
@@ -64,7 +65,7 @@ namespace Machete.Web.Controllers
         }
 
         /// <summary>
-        ///  
+        ///
         /// </summary>
         /// <returns></returns>
         [Authorize(Roles = "Administrator, Manager, Teacher")]
@@ -84,14 +85,14 @@ namespace Machete.Web.Controllers
             MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
 
             var vo = _map.Map<jQueryDataTableParam, viewOptions>(param);
-            
+
             dataTableResult<ActivityList> list = _serv.GetIndexView(vo);
 
             var result = list.query
                 .Select(
                     e => _map.Map<ActivityList, ViewModel.ActivityList>(e)
                 ).AsEnumerable();
-                
+
             return Json(new
             {
                 param.sEcho,
@@ -109,22 +110,22 @@ namespace Machete.Web.Controllers
         public async Task<ActionResult> Create()
         {
             var utcNow = DateTime.UtcNow;
-            
+
             var activity = new Activity
             {
                 dateStart = utcNow,
                 dateEnd = utcNow.AddHours(1)
             };
 
-            var teachers = await _userManager.GetUsersInRoleAsync(UserRoles.Teacher);
+            var teachers = await _userManager.GetUsersInRoleAsync(LUserRoles.Teacher);
             var teacherNames = teachers.Select(teach => teach.UserName).ToList();
-            
+
             MapperHelpers.Defaults = _defaults;
             MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
             MapperHelpers.UserNames = teacherNames;
-            
+
             var m = _map.Map<Activity, ViewModel.Activity>(activity);
-            
+
             return PartialView("Create", m);
         }
         /// <summary>
@@ -136,7 +137,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Teacher")]
         public async Task<JsonResult> Create(Activity activity, string userName)
         {
-            if (!await TryUpdateModelAsync(activity, "")) return Json(new {jobSuccess = false});
+            if (!await TryUpdateModelAsync(activity, "")) return Json(new { jobSuccess = false });
             if (activity.dateEnd < activity.dateStart)
                 return Json(new { jobSuccess = false, rtnMessage = "End date must be greater than start date." });
 
@@ -146,11 +147,11 @@ namespace Machete.Web.Controllers
             activity.dateEnd = TimeZoneInfo.ConvertTimeToUtc(activity.dateEnd, _clientTimeZoneInfo);
 
             activity = _serv.Create(activity, userName);
-    
+
             MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
-            
+
             var result = _map.Map<Activity, ViewModel.Activity>(activity);
-    
+
             return Json(new
             {
                 sNewRef = result.tabref,
@@ -165,13 +166,13 @@ namespace Machete.Web.Controllers
         {
             Activity firstAct = _serv.Get(id);
 
-            var teachers = await _userManager.GetUsersInRoleAsync(UserRoles.Teacher);
+            var teachers = await _userManager.GetUsersInRoleAsync(LUserRoles.Teacher);
             var teacherNames = teachers.Select(teach => teach.UserName).ToList();
-            
+
             MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
             MapperHelpers.Defaults = _defaults;
             MapperHelpers.UserNames = teacherNames;
-            
+
             var m = _map.Map<Activity, ActivitySchedule>(firstAct);
 
             return PartialView("CreateMany", m);
@@ -182,15 +183,16 @@ namespace Machete.Web.Controllers
         public async Task<ViewResult> CreateMany(ActivitySchedule actSched, string userName)
         {
             var instances = actSched.stopDate.Subtract(actSched.dateStart).Days;
-            if (!await TryUpdateModelAsync(actSched) || instances == 0) {
-                ModelState.AddModelError("ActivitySchedule", "Select an appropriate length of time for these events."); 
+            if (!await TryUpdateModelAsync(actSched) || instances == 0)
+            {
+                ModelState.AddModelError("ActivitySchedule", "Select an appropriate length of time for these events.");
                 return View("CreateMany", actSched);
             }
 
             var length = actSched.dateEnd.Subtract(actSched.dateStart).TotalMinutes;
             var utcDate = TimeZoneInfo.ConvertTimeToUtc(actSched.dateStart, _clientTimeZoneInfo);
 
-            for (var i = 1; i <= instances; i++) 
+            for (var i = 1; i <= instances; i++)
             {
                 var currentDate = utcDate.AddDays(i);
                 var day = currentDate.DayOfWeek;
@@ -206,34 +208,34 @@ namespace Machete.Web.Controllers
                     case DayOfWeek.Saturday when !actSched.saturday:
                         continue;
                     default:
-                    {
-                        var activity = new Activity
                         {
-                            nameID = actSched.name,
-                            typeID = actSched.type,
-                            dateStart = currentDate,
-                            dateEnd = currentDate.AddMinutes(length),
-                            recurring = true,
-                            firstID = actSched.firstID,
-                            teacher = actSched.teacher,
-                            notes = actSched.notes ?? ""
-                        };
+                            var activity = new Activity
+                            {
+                                nameID = actSched.name,
+                                typeID = actSched.type,
+                                dateStart = currentDate,
+                                dateEnd = currentDate.AddMinutes(length),
+                                recurring = true,
+                                firstID = actSched.firstID,
+                                teacher = actSched.teacher,
+                                notes = actSched.notes ?? ""
+                            };
 
-                        _serv.Create(activity, userName);
-                        break;
-                    }
+                            _serv.Create(activity, userName);
+                            break;
+                        }
                 }
             }
 
             // Machete: A series of good intentions, marinated in panic ~C
-//            var result = _map.Map<Activity, ViewModel.Activity>(firstActivity);
-//            return Json(new
-//            {
-//                sNewRef = result.tabref,
-//                sNewLabel = result.tablabel,
-//                iNewID = firstActivity.ID,
-//                jobSuccess = true
-//            });
+            //            var result = _map.Map<Activity, ViewModel.Activity>(firstActivity);
+            //            return Json(new
+            //            {
+            //                sNewRef = result.tabref,
+            //                sNewLabel = result.tablabel,
+            //                iNewID = firstActivity.ID,
+            //                jobSuccess = true
+            //            });
             return View("Index");
         }
         /// <summary>
@@ -246,14 +248,14 @@ namespace Machete.Web.Controllers
         {
             var activity = _serv.Get(id);
 
-            var teachers = await _userManager.GetUsersInRoleAsync(UserRoles.Teacher);
+            var teachers = await _userManager.GetUsersInRoleAsync(LUserRoles.Teacher);
             var teacherNames = teachers.Select(teach => teach.UserName).ToList();
-            
+
             MapperHelpers.Defaults = _defaults;
             MapperHelpers.StartDate = TimeZoneInfo.ConvertTimeFromUtc(activity.dateStart, _clientTimeZoneInfo);
             MapperHelpers.EndDate = TimeZoneInfo.ConvertTimeFromUtc(activity.dateEnd, _clientTimeZoneInfo);
             MapperHelpers.UserNames = teacherNames;
-            
+
             var viewModel = _map.Map<Activity, ViewModel.Activity>(activity);
 
             return PartialView("Edit", viewModel);
@@ -268,7 +270,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Teacher")]
         public async Task<JsonResult> Edit(Activity activity, string userName)
         {
-            if (!await TryUpdateModelAsync(activity, "")) return Json(new {jobSuccess = false});
+            if (!await TryUpdateModelAsync(activity, "")) return Json(new { jobSuccess = false });
             if (activity.dateEnd < activity.dateStart)
                 return Json(new { jobSuccess = false, rtnMessage = "End date must be greater than start date." });
 
@@ -276,13 +278,13 @@ namespace Machete.Web.Controllers
             activity.notes = activity.notes ?? "";
             activity.dateStart = TimeZoneInfo.ConvertTimeToUtc(activity.dateStart, _clientTimeZoneInfo);
             activity.dateEnd = TimeZoneInfo.ConvertTimeToUtc(activity.dateEnd, _clientTimeZoneInfo);
-            
+
             _serv.Save(activity, userName);
-    
+
             MapperHelpers.ClientTimeZoneInfo = _clientTimeZoneInfo;
 
             var result = _map.Map<Activity, ViewModel.Activity>(activity);
-    
+
             return Json(new
             {
                 sNewRef = result.tabref,

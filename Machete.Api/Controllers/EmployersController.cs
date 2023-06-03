@@ -12,7 +12,7 @@ namespace Machete.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EmployersController : MacheteApi2Controller<Employer, EmployerVM>
+    public class EmployersController : MacheteApiController<Employer, EmployerVM, EmployersListVM>
     {
         private readonly IEmployerService serv;
         private readonly IWorkOrderService woServ;
@@ -30,24 +30,16 @@ namespace Machete.Api.Controllers
         // TODO Add real permissions
         [Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
         [HttpGet]
-        public new ActionResult<IEnumerable<EmployersList>> Get(
+        public new ActionResult<IEnumerable<EmployersListVM>> Get(
             [FromQuery] ApiRequestParams apiRequestParams
             )
         {
-            var list = serv.GetIndexView(new viewOptions
-            {
-                displayLength = apiRequestParams.pageSize,
-                displayStart = apiRequestParams.Skip
-            });
-
-            if (list.query == null) return NotFound();
-            return Ok(new { data = list.query });
+            return base.Get(apiRequestParams);
         }
 
         // GET api/values/5
         [HttpGet("{id}"), Authorize(Roles = "Administrator, Manager, Phonedesk")]
         public new ActionResult<EmployerVM> Get(int id) { return base.Get(id); }
-
 
         [Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
         [HttpGet]
@@ -103,7 +95,10 @@ namespace Machete.Api.Controllers
         // POST api/values
         // This action method is for ANY employer
         [HttpPost, Authorize(Roles = "Administrator, Manager, Phonedesk")]
-        public new ActionResult<EmployerVM> Post([FromBody] EmployerVM employer) { return base.Post(employer); }
+        public new ActionResult<EmployerVM> Post([FromBody] EmployerVM employer)
+        {
+            return base.Post(employer);
+        }
 
         // For an employer creating his/her own record
         [Authorize(Roles = "Administrator, Hirer")]
@@ -124,9 +119,6 @@ namespace Machete.Api.Controllers
             {
                 newEmployer = map.Map<Employer, EmployerVM>(serv.Create(domain, UserEmail));
             }
-            // catch (DbExpception e) {
-
-            // }
             catch (Exception ex)
             {
                 return StatusCode(500, ex);

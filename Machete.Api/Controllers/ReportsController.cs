@@ -15,7 +15,7 @@ namespace Machete.Api.Controllers
 {
     [Route("api/reports")]
     [ApiController]
-    public class ReportsController : MacheteApi2Controller<ReportDefinition, ReportDefinitionVM>
+    public class ReportsController : MacheteApiController<ReportDefinition, ReportDefinitionVM, ReportDefinitionListVM>
     {
         private readonly IReportsV2Service serv;
         private ITenantService _tenantService;

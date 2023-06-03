@@ -1,25 +1,25 @@
 #region COPYRIGHT
 // File:     Employer.cs
 // Author:   Savage Learning, LLC.
-// Created:  2012/06/17 
+// Created:  2012/06/17
 // License:  GPL v3
 // Project:  Machete.Domain
 // Contact:  savagelearning
-// 
+//
 // Copyright 2011 Savage Learning, LLC., all rights reserved.
-// 
+//
 // This source file is free software, under either the GPL v3 license or a
 // BSD style license, as supplied with this software.
-// 
-// This source file is distributed in the hope that it will be useful, but 
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+//
+// This source file is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
 // or FITNESS FOR A PARTICULAR PURPOSE. See the license files for details.
-//  
-// For details please refer to: 
-// http://www.savagelearning.com/ 
+//
+// For details please refer to:
+// http://www.savagelearning.com/
 //    or
 // http://www.github.com/jcii/machete/
-// 
+//
 #endregion
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -35,7 +35,7 @@ namespace Machete.Domain
         public bool returnCustomer { get; set; }
         public bool receiveUpdates { get; set; }
         public bool business { get; set; }
-        public string businessname { get; set;}
+        public string businessname { get; set; }
 
         [StringLength(50), Required]
         public string name { get; set; }

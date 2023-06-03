@@ -11,11 +11,21 @@ namespace Machete.Api.ViewModel
         public List<TransportCostRuleVM> costRules { get; set; }
     }
 
+    public class TransportRuleListVM : ListVM
+    {
+
+    }
+
     public class TransportCostRuleVM : RecordVM
     {
         public int transportRuleId { get; set; }
         public int minWorker { get; set; }
         public int maxWorker { get; set; }
         public double cost { get; set; }
+    }
+
+    public class TransportCostRuleListVM : ListVM
+    {
+
     }
 }

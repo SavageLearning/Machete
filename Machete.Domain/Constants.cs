@@ -4,8 +4,8 @@
 // depends on for proper functionality.
 //
 // The ID values in the Lookup table may vary from installation to installation, these values should be
-// the same. These values are used in the lookup table's category and key columns. Machete may behave in 
-// unexpected ways if you modify these. 
+// the same. These values are used in the lookup table's category and key columns. Machete may behave in
+// unexpected ways if you modify these.
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -45,22 +45,22 @@ namespace Machete.Domain
 
     public struct LMemberStatus
     {
-        public const string Active= "Active";
-        public const string Sanctioned= "Sanctioned";
-        public const string Expelled= "Expelled";
-        public const string Expired= "Expired";
+        public const string Active = "Active";
+        public const string Sanctioned = "Sanctioned";
+        public const string Expelled = "Expelled";
+        public const string Expired = "Expired";
         public const string Inactive = "Inactive";
     }
 
     public struct LOrderStatus
     {
-        public const string Active= "Active";
-        public const string Pending= "Pending";
-        public const string Completed= "Completed";
-        public const string Cancelled= "Cancelled";
+        public const string Active = "Active";
+        public const string Pending = "Pending";
+        public const string Completed = "Completed";
+        public const string Cancelled = "Cancelled";
         public const string Expired = "Expired";
         // Adding orphaned and unassigned here, but not in Lookups
-        // These status options shouldn't be selectable by the user; they're 
+        // These status options shouldn't be selectable by the user; they're
         // the result of an expression that detects incomplete records
         public const string Orphaned = "Orphaned";
         public const string Unassigned = "Unassigned";
@@ -96,6 +96,12 @@ namespace Machete.Domain
     {
         public const string Assembly = "Assembly";
         public const string OrgMtg = "Organizing Meeting";
+    }
+
+    public struct LUserRoles
+    {
+        public const string Hirer = "Hirer";
+        public const string Teacher = "Teacher";
     }
 
     public struct Cfg

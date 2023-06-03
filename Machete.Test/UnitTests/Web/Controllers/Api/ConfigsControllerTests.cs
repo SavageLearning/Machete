@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Extensions.Configuration;
 using Moq;
+using Machete.Api.ViewModel;
 
 namespace Machete.Test.UnitTests.Controllers.Api
 {

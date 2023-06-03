@@ -15,18 +15,18 @@ namespace Machete.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TransportProvidersController : MacheteApi2Controller<TransportProvider, TransportProviderVM>
+    public class TransportProvidersController : MacheteApiController<TransportProvider, TransportProviderVM, TransportProviderListVM>
     {
-        private ITransportProvidersService _serv;
+        private ITransportProvidersService serv;
 
         public TransportProvidersController(ITransportProvidersService serv, IMapper map) : base(serv, map)
         {
-            _serv = serv;
+            this.serv = serv;
         }
 
         // GET: api/TransportRule
         [HttpGet, Authorize(Roles = "Administrator, Check-in, Hirer, Manager, PhoneDesk, Teacher, User")]
-        public ActionResult<TransportProviderVM> Get()
+        public ActionResult<TransportProviderListVM> Get()
         {
             try
             {
@@ -83,7 +83,7 @@ namespace Machete.Api.Controllers
 
             try
             {
-                var entity = _serv.CreateAvailability(tpid, domain, UserEmail);
+                var entity = serv.CreateAvailability(tpid, domain, UserEmail);
                 var result = map.Map<TransportProviderAvailability, TransportProviderAvailabilityVM>(entity);
                 return Ok(new { data = result });
             }

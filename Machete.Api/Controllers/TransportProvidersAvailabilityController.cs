@@ -4,18 +4,19 @@ using Machete.Service;
 using Machete.Api.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Machete.Domain;
 
 namespace Machete.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class TransportProvidersAvailabilityController
-        : MacheteApi2Controller<Machete.Domain.TransportProviderAvailability, TransportProviderAvailabilityVM>
+        : MacheteApiController<TransportProviderAvailability, TransportProviderAvailabilityVM, TransportProviderAvailabilityListVM>
     {
         public TransportProvidersAvailabilityController(ITransportProvidersAvailabilityService serv, IMapper map) : base(serv, map) { }
 
         [HttpGet, Authorize(Roles = "Administrator, Manager, Phonedesk, Hirer")]
-        public ActionResult<IEnumerable<TransportProviderAvailabilityVM>> Get()
+        public ActionResult<IEnumerable<TransportProviderAvailabilityListVM>> Get()
         {
             return base.Get(new ApiRequestParams() { AllRecords = true });
         }

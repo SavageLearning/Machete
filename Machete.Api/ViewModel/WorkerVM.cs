@@ -98,4 +98,9 @@ namespace Machete.Api.ViewModel
         public bool? lgbtq { get; set; }
 
     }
+
+    public class WorkerListVM : ListVM
+    {
+
+    }
 }

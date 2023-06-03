@@ -42,4 +42,9 @@ namespace Machete.Api.ViewModel
         public string genderother { get; set; }
         public string fullName { get; set; }
     }
+
+    public class PersonListVM : ListVM
+    {
+
+    }
 }
