@@ -1,0 +1,50 @@
+name: Publish angular sdk to npm
+
+on:
+  workflow_dispatch:
+    branches: [ master ]
+  workflow_run:
+    workflows: ["Build and publish docker image"]
+    branches: [ master ]
+    types:
+      - completed
+
+jobs:
+  publish-angular-sdk:
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 16
+
+    - name: Restore dotnet tools
+      run: dotnet tool restore
+    - name: Restore dependencies
+      run:  dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+
+    - run: node Machete.Web/swagger/current-docker-version.js
+    - run: export CURRENT_MACHETE_VERSION=$(cat Machete.Web/swagger/curent-docker-version.txt)
+
+    - name: Generate openapi angular client
+      uses: openapi-generators/openapitools-generator-action@v1
+      with:
+        generator: typescript-angular
+        openapi-file: Machete.Web/swagger/v1/swagger.json
+        command-args: --additional-properties=ngVersion=12,npmVersion=$(cat Machete.Web/swagger/curent-docker-version.txt),npmName=machete-client
+
+    - name: Add npm secrets
+    # https://docs.npmjs.com/using-private-packages-in-a-ci-cd-workflow
+      run: touch ~/.npmrc && echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > ~/.npmrc
+
+    - name: Publish NPM api client sdk 📦
+      run: cd typescript-angular-client && npm install && npm run build && cd dist && npm publish
+      env:
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
