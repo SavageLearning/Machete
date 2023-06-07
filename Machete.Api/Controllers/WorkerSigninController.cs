@@ -23,13 +23,8 @@
 #endregion
 
 using System;
-using System.Globalization;
-using System.Linq;
 using AutoMapper;
-using Machete.Service.Tenancy;
 using Machete.Service;
-using Machete.Service.DTO;
-using Machete.Api.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Machete.Domain;
@@ -41,12 +36,13 @@ namespace Machete.Api.Controllers
 {
     public class WorkerSigninController : MacheteApiController<WorkerSignin, WorkerSigninVM, WorkerSigninListVM>
     {
-        private readonly IWorkerSigninService serv;
+        private new readonly IWorkerSigninService service;
 
         public WorkerSigninController(
             IWorkerSigninService serv,
             IMapper map) : base(serv, map)
         {
+            service = serv;
         }
 
         // GET: /WorkerSignin/Delete/5
@@ -59,7 +55,7 @@ namespace Machete.Api.Controllers
         [HttpDelete, Authorize(Roles = "Administrator, Manager, Check-in")]
         public new ActionResult Delete(int id)
         {
-            var record = serv.Get(id);
+            var record = service.Get(id);
             if (record.WorkAssignmentID != null)
             {
                 return StatusCode(400, new Exception("You cannot delete a signin that has been associated with an Assignment. Disassociate the sigin with the assignment first."));
@@ -86,7 +82,7 @@ namespace Machete.Api.Controllers
         [HttpPost, Authorize(Roles = "Administrator, Manager")]
         public ActionResult moveDown(int id)
         {
-            serv.moveDown(id, UserEmail);
+            service.moveDown(id, UserEmail);
             return Ok();
         }
 
@@ -102,7 +98,7 @@ namespace Machete.Api.Controllers
         [HttpPost, Authorize(Roles = "Administrator, Manager")]
         public ActionResult moveUp(int id)
         {
-            serv.moveUp(id, UserEmail);
+            service.moveUp(id, UserEmail);
             return Ok();
         }
     }

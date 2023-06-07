@@ -27,7 +27,6 @@ using System.Linq;
 using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
-using DTO = Machete.Service.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Machete.Api.ViewModel;
@@ -38,13 +37,15 @@ namespace Machete.Api.Controllers
 {
     public class ActivitySigninController : MacheteApiController<ActivitySignin, ActivitySigninVM, ActivitySigninListVM>
     {
-        private readonly IActivitySigninService serv;
+        private new readonly IActivitySigninService service;
 
         public ActivitySigninController(
             IActivitySigninService serv,
             IMapper map
         ) : base(serv, map)
-        { }
+        {
+            service = serv;
+        }
 
         [HttpGet, Authorize(Roles = "Administrator, Manager, Check-in, Teacher")]
         public new ActionResult<IEnumerable<ActivitySigninListVM>> Get(
@@ -65,12 +66,12 @@ namespace Machete.Api.Controllers
             _asi.dwccardnum = dwccardnum;
 
             //Get picture from checkin, show with next view
-            string imageRef = serv.getImageRef(dwccardnum);
+            string imageRef = service.getImageRef(dwccardnum);
 
             Worker w;
             try
             {
-                w = serv.CreateSignin(_asi, UserEmail);
+                w = service.CreateSignin(_asi, UserEmail);
             }
             catch (NullReferenceException)
             {

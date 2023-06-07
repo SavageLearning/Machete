@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Machete.Service.Tenancy;
 using Machete.Service;
@@ -11,7 +10,6 @@ using Microsoft.Net.Http.Headers;
 
 namespace Machete.Api.Controllers
 {
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public enum ValidTableNames
     {
         Activities,

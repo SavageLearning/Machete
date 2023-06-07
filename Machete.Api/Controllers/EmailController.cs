@@ -18,13 +18,15 @@ namespace Machete.Api.Controllers
 {
     public class EmailController : MacheteApiController<Email, EmailVM, EmailListVM>
     {
-        private readonly IEmailService serv;
+        private new readonly IEmailService service;
 
         public EmailController(
             IEmailService serv,
             IMapper map
             ) : base(serv, map)
-        { }
+        {
+            service = serv;
+        }
 
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public new ActionResult<IEnumerable<EmailListVM>> Get(
@@ -47,11 +49,11 @@ namespace Machete.Api.Controllers
                 }
                 if (emailview.woid.HasValue)
                 {
-                    newEmail = serv.Create(email, userName, emailview.woid);
+                    newEmail = service.Create(email, userName, emailview.woid);
                 }
                 else
                 {
-                    newEmail = serv.Create(email, userName);
+                    newEmail = service.Create(email, userName);
                 }
 
                 return Ok(new
@@ -68,7 +70,7 @@ namespace Machete.Api.Controllers
         [HttpPost, Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Duplicate(int id, int? woid, string userName)
         {
-            var duplicate = serv.Duplicate(id, woid, userName);
+            var duplicate = service.Duplicate(id, woid, userName);
             return Ok(new
             {
                 iNewID = duplicate.ID
@@ -86,14 +88,14 @@ namespace Machete.Api.Controllers
         public ActionResult Edit(EmailViewVM emailview, FormCollection collection)
         {
             //UpdateModel(emailview);
-            var email = serv.Get(emailview.id);
+            var email = service.Get(emailview.id);
             var newemail = map.Map(emailview, email);
             if (emailview.attachment != null)
             {
                 newemail.attachment = HttpUtility.HtmlDecode(emailview.attachment);
                 newemail.attachmentContentType = MediaTypeNames.Text.Html;
             }
-            serv.Save(newemail, UserEmail);
+            service.Save(newemail, UserEmail);
             return Ok();
         }
         /// <summary>

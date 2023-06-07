@@ -9,8 +9,6 @@ namespace Machete.Api.Controllers
 {
     public class ImageController : MacheteApiController<Image, ImageVM, ImageListVM>
     {
-        private readonly IImageService serv;
-
         // GET: /Image/
         public ImageController(IImageService serv, IMapper map) : base(serv, map)
         {
@@ -26,7 +24,7 @@ namespace Machete.Api.Controllers
         {
             if (ID == 0) return null;
 
-            var image = serv.Get(ID);
+            var image = service.Get(ID);
             return File(image.ImageData, image.ImageMimeType, image.filename);
         }
     }

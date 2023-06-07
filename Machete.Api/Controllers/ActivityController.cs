@@ -13,13 +13,14 @@ namespace Machete.Api.Controllers
 {
     public class ActivityController : MacheteApiController<Activity, ActivityVM, ActivityListVM>
     {
-        private readonly IActivityService serv;
+        private new readonly IActivityService service;
 
         public ActivityController(
             IActivityService serv,
             IMapper map
         ) : base(serv, map)
         {
+            service = serv;
         }
 
         [HttpGet, Authorize(Roles = "Administrator, Manager, Teacher, Check-in")]
@@ -51,7 +52,7 @@ namespace Machete.Api.Controllers
 
             try
             {
-                newActivity = map.Map<Activity, ActivityVM>(serv.Create(domain, UserEmail));
+                newActivity = map.Map<Activity, ActivityVM>(service.Create(domain, UserEmail));
             }
             catch (Exception ex)
             {
@@ -102,7 +103,7 @@ namespace Machete.Api.Controllers
                                 notes = actSched.notes ?? ""
                             };
 
-                            serv.Create(activity, UserEmail);
+                            service.Create(activity, UserEmail);
                             break;
                         }
                 }
@@ -116,26 +117,16 @@ namespace Machete.Api.Controllers
         /// </summary>
         [HttpPut]
         [Authorize(Roles = "Administrator, Manager, Teacher")]
-        public async Task<ActionResult> Put(Activity activity)
+        public ActionResult<ActivityVM> Put(ActivityVM activity)
         {
-            ActivityVM newActivity = null;
             if (activity.dateEnd < activity.dateStart)
             {
                 return StatusCode(400, new Exception("End date must be greater than start date."));
             }
 
-            activity.firstID = activity.ID;
+            activity.firstID = activity.id;
             activity.notes = activity.notes ?? "";
-
-            try
-            {
-                newActivity = map.Map<Activity, ActivityVM>(serv.Create(activity, UserEmail));
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex);
-            }
-            return Ok(new { data = newActivity });
+            return base.Put(activity.id, activity);
         }
 
         /// <summary>
@@ -154,7 +145,7 @@ namespace Machete.Api.Controllers
         public ActionResult Assign(int personID, List<int> actList)
         {
             if (actList == null) throw new Exception("Activity List is null");
-            serv.AssignList(personID, actList, UserEmail);
+            service.AssignList(personID, actList, UserEmail);
 
             return Ok();
         }
@@ -164,7 +155,7 @@ namespace Machete.Api.Controllers
         public ActionResult Unassign(int personID, List<int> actList)
         {
             if (actList == null) throw new Exception("Activity List is null");
-            serv.UnassignList(personID, actList, UserEmail);
+            service.UnassignList(personID, actList, UserEmail);
 
             return Ok();
         }

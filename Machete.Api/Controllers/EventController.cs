@@ -16,13 +16,14 @@ namespace Machete.Api.Controllers
 {
     public class EventController : MacheteApiController<Event, EventVM, EventListVM>
     {
-        private readonly IEventService serv;
+        private new readonly IEventService service;
         private readonly IImageService _imageServ;
 
         public EventController(IEventService serv,
             IImageService imageServ,
             IMapper map) : base(serv, map)
         {
+            service = serv;
             _imageServ = imageServ;
         }
 
@@ -60,7 +61,7 @@ namespace Machete.Api.Controllers
 
             var joiner = new JoinEventImage();
 
-            var evnt = serv.Get(id);
+            var evnt = service.Get(id);
 
             var image = new Image();
             image.ImageMimeType = imagefile.ContentType;
@@ -83,9 +84,9 @@ namespace Machete.Api.Controllers
             joiner.updatedby = userName;
             joiner.createdby = userName;
 
-            serv.JoinEventImages(evnt, joiner, userName);
+            service.JoinEventImages(evnt, joiner, userName);
 
-            serv.Save(evnt, userName);
+            service.Save(evnt, userName);
 
             return Ok();
         }
@@ -98,7 +99,7 @@ namespace Machete.Api.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult DeleteImage(int evntID, int jeviID)
         {
-            var evnt = serv.Get(evntID);
+            var evnt = service.Get(evntID);
             var joinEventImage = evnt.JoinEventImages.Single(e => e.ID == jeviID);
             var deletedImageId = joinEventImage.ID;
             _imageServ.Delete(joinEventImage.ImageID, UserEmail);

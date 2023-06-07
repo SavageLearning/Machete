@@ -53,8 +53,6 @@ namespace Machete.Api.ViewModel
         public string onlineSource { get; set; }
         public string emailSentCount { get; set; }
         public string emailErrorCount { get; set; }
-        public string updatedby { get; set; }
-        public string dateupdated { get; set; }
         public string recordid { get; set; }
         public IEnumerable<WorkerAssignedListVM> workers { get; set; }
     }
