@@ -22,24 +22,14 @@ employer requests.
 
 [![Machete Workflow](https://raw.githubusercontent.com/wiki/savagelearning/machete/images/8-point-workflow.png)](https://github.com/SavageLearning/Machete/wiki)
 
-This README is mostly for software developers. If you would like to know more about Machete or are interested in a demo,
-please contact chaim@ndlon.org.
 
-`☮️ 💟 🍁`
 
-## How to get started
-<hr>
 
-`☕️ 💻 🐈`
-
-### Setup scripts
-<hr>
-
-There are a few setup scripts that can help get you up and running. These scripts are _experimental_ and any problems or
-inquiries should be directed to the [email](chaim@ndlon.org) above.
+## Setup scripts
+There are a few setup scripts that can help get you up and running. 
 
 `./Machete.Util/sh/new-db-use-with-caution.sh`  
-Aptly named, this file will dispose of whatever database container you have running (as long as you have the environment
+Disposes of whatever database container you have running (as long as you have the environment
 variable for it set, which the script does), and create an entirely new database container.
 
 `./make_env_file.sh`  
@@ -55,31 +45,9 @@ This file will:
 6. Start the Angular webpack server as a background process.
 7. Build and run Machete.
 
-`🎺 💃 🇲🇽`
-
-### How to connect to the database
-<hr>
-Download DataGrip. It has a 30 day evaluation period, but is not free software.
-
-*`⌘-;`* will configure a data source, if you have one defined; *`⌘-↵`* is execute query, NOT F5
-if you don't you'll need the drivers for your data source. it will prompt you in the config window. right click on the area to the left to add a data source.
-
-1.14:
-if prod: Create SSH tunnel
-Host: `localhost`  Port: `1433` (or whatever you configure in the tunnel)
-User: `ask admins`
-Password: `ask admins`
-
-Test Connection + Select Schemas from the middle tab
-
-Select two databases using *`⌘`* to select multiple, then *`⌘-D`* will schema compare.
-
-
 ## People who use this free software include:
 <hr>
 
 [![Casa Latina](./Machete.Util/misc/casa-latina.png)](https://casa-latina.org/)
 [![Portland Voz](./Machete.Util/misc/voz.png)](https://portlandvoz.org/)
 [![NDLON](https://ndlon.org/wp-content/uploads/2017/12/NDLON-Logo-Wide-Red-60.png)](https://ndlon.org/)
-
-#### ...and many more!
